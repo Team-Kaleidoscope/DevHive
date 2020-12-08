@@ -7,7 +7,11 @@
 		{
 			"name": "Web",
 			"path": "./Web"
-		}
+		},
+        {
+            "name": "Models",
+            "path": "./Models"
+        }
 	],
 	"settings": {
 		"files.exclude": {
