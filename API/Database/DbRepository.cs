@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Camera_Shop.Database;
+using Models.Interfaces.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Database
@@ -37,6 +37,7 @@ namespace API.Database
 		{
 			return this._context
 				.Set<TEntity>()
+				.AsNoTracking()
 				.Take(count)
 				.AsAsyncEnumerable();
 		}
