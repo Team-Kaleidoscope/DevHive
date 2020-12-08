@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Database
 {
-	public class DevHiveContext : IdentityDbContext<IdentityUser<int>, IdentityRole<int>, int>
+	public class DevHiveContext : IdentityDbContext<User<int>, IdentityRole<int>, int>
 	{
 		public DevHiveContext(DbContextOptions options)
 			: base(options) { }
