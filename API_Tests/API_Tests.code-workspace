@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/.vscode": true,
+			"**/bin": true,
+			"**/obj": true,
+			".gitignore" : true,
+			"**/README.md" : true,
+			"**/LICENSE" : true,
+			"**/Properties" : true,
+			"**/*.code-workspace" : true
+		}
+	}
+}
