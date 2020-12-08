@@ -53,7 +53,11 @@ namespace Models.Classes
         }
 
         public List<User<T>> Friends { get; set; }
-
+        
+        /// <summary>
+        /// Throws an argument exception if the given value is not composed only of letters, and if specified, also of digits.
+        /// Does nothing otherwise.
+        /// </summary>
         private static void ValidateString(string name, int minLength, int maxLength, string value, bool canBeDigit) {
             if (value.Length < minLength || value.Length > maxLength)
                     throw new ArgumentException($"{name} length cannot be less than {minLength} and more than {maxLength}.");
@@ -64,6 +68,10 @@ namespace Models.Classes
             }
         }
 
+        /// <summary>
+        /// Throws an exception if the absolute url isn't valid.
+        /// Does nothing otherwise.
+        /// </summary>
         private static void ValidateURL(string urlValue) {
             // Throws an error is URL is invalid
             Uri validatedUri;
