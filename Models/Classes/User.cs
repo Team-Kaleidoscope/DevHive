@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Models.Classes
 {
 	[Table("Users")]
-	public class User<T> : IdentityUser<int>
+	public class User : IdentityUser<int>
 	{
 		private string firstName;
 		private string lastName;
@@ -60,7 +60,7 @@ namespace Models.Classes
 			}
 		}
 		
-		public List<User<T>> Friends { get; set; }
+		public List<User> Friends { get; set; }
 
 		/// <summary>
 		/// Throws an argument exception if the given value is not composed only of letters, and if specified, also of digits.
