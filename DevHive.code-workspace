@@ -1,7 +1,12 @@
 {
 	"folders": [
 		{
-			"path": "."
+			"name": "API",
+			"path": "./API"
+		},
+		{
+			"name": "Web",
+			"path": "./Web"
 		}
 	],
 	"settings": {
@@ -13,7 +18,7 @@
 			"**/README.md" : true,
 			"**/LICENSE" : true,
 			"**/Properties" : true,
-			"**/*.code-workspace" : true
+			"**/*.code-workspace" : false
 		}
 	}
 }
