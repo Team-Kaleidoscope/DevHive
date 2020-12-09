@@ -72,9 +72,10 @@ namespace Models.Classes
 				throw new ArgumentException($"{name} length cannot be less than {minLength} and more than {maxLength}.");
 
 			foreach (char character in value) // more efficient than Linq
-			{ 				
-				if (!Char.IsLetter(character) || (canBeDigit && !Char.IsDigit(character)))
-					throw new ArgumentException($"{name} contains invalid characters."); 
+			{ 	
+				if (!Char.IsLetter(character))
+					if (!(Char.IsDigit(character) && canBeDigit))
+						throw new ArgumentException($"{name} contains invalid characters."); 
 			}
 		}
 
