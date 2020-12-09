@@ -30,8 +30,9 @@ namespace API
 				.AddAuthentication()
 				.AddJwtBearer();
 
-			services.AddIdentity<User, IdentityRole<int>>();
-			//services.AddAuthentication();
+			services.AddIdentity<User, Roles>()
+				.AddEntityFrameworkStores<DevHiveContext>();
+			services.AddAuthentication();
 
 			services.Configure<IdentityOptions>(options =>
 			{
