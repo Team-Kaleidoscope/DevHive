@@ -9,9 +9,9 @@ namespace Models.Classes
 	[Table("Users")]
 	public class User : IdentityUser<int>
 	{
-		private string firstName;
-		private string lastName;
-		private string profilePicture;
+		private string _firstName;
+		private string _lastName;
+		private string _profilePicture;
 
 		[Required]
 		[Range(3, 50)]
@@ -30,11 +30,11 @@ namespace Models.Classes
 		[Range(3, 30)]
 		public string FirstName 
 		{
-			get => this.firstName;
+			get => this._firstName;
 			set 
 			{
 				ValidateString("FirstName", 3, 30, value, false);
-				this.firstName = value;
+				this._firstName = value;
 			}
 		}
 		
@@ -42,21 +42,21 @@ namespace Models.Classes
 		[Range(3, 30)]
 		public string LastName 
 		{ 
-			get => this.lastName;
+			get => this._lastName;
 			set 
 			{
 				ValidateString("LastName", 3, 30, value, false);
-				this.lastName = value;
+				this._lastName = value;
 			}
 		}
 
 		public string ProfilePicture 
 		{
-			get => this.profilePicture;
+			get => this._profilePicture;
 			set 
 			{
 				ValidateURL(value);
-				this.profilePicture = value;
+				this._profilePicture = value;
 			}
 		}
 		
@@ -72,9 +72,10 @@ namespace Models.Classes
 				throw new ArgumentException($"{name} length cannot be less than {minLength} and more than {maxLength}.");
 
 			foreach (char character in value) // more efficient than Linq
-			{ 				
-				if (!Char.IsLetter(character) || (canBeDigit && !Char.IsDigit(character)))
-					throw new ArgumentException($"{name} contains invalid characters."); 
+			{ 	
+				if (!Char.IsLetter(character))
+					if (!(Char.IsDigit(character) && canBeDigit))
+						throw new ArgumentException($"{name} contains invalid characters."); 
 			}
 		}
 
