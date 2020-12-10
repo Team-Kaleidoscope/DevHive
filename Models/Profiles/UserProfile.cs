@@ -8,7 +8,7 @@ namespace Models.Profiles
 	{
 		public UserProfile() 
 		{
-			// CreateMap<UserDTO, User>();
+			CreateMap<UserDTO, User>();
 		}
 	} 
 }
