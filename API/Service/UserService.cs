@@ -20,11 +20,8 @@ namespace API.Service
 		public UserService(DevHiveContext context, IMapper mapper)
 		{
 			this._dbRepository = new DbRepository<User>(context);
-			this._userMapper = new Mapper
-			(
-			 	new MapperConfiguration
-					(cfg => cfg.CreateMap<UserDTO, User>())
-			 );
+			this._userMapper = new Mapper(new MapperConfiguration(cfg => 
+				cfg.CreateMap<UserDTO, User>()));
 		}
 	
 		public async Task<HttpStatusCode> CreateUser(UserDTO userDTO)
@@ -46,7 +43,6 @@ namespace API.Service
 		public async Task<HttpStatusCode> UpdateUser(int id, UserDTO userDTO)
 		{
 			User user = this._userMapper.Map<User>(userDTO);
-		   	user.Id = id;	
 			await this._dbRepository.EditAsync(id, user);
 
 			return HttpStatusCode.OK;

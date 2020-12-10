@@ -82,21 +82,8 @@ namespace API
 				//cfg.DestinationMemberNamingConvention = new ExactMatchNamingConvention();
 
 				cfg.CreateMap<User, UserDTO>();
-				cfg.CreateMap<UserDTO, User>()
-					.ForMember(x => x.AccessFailedCount, o => o.Ignore())
-					.ForMember(x => x.ConcurrencyStamp, o => o.Ignore())
-					.ForMember(x => x.EmailConfirmed, o => o.Ignore())
-					.ForMember(x => x.Id, o => o.Ignore())
-					.ForMember(x => x.LockoutEnabled, o => o.Ignore())
-					.ForMember(x => x.LockoutEnd, o => o.Ignore())
-					.ForMember(x => x.NormalizedEmail, o => o.Ignore())
-					.ForMember(x => x.NormalizedUserName, o => o.Ignore())
-					.ForMember(x => x.PasswordHash, o => o.Ignore())
-					.ForMember(x => x.PhoneNumber, o => o.Ignore())
-					.ForMember(x => x.PhoneNumberConfirmed, o => o.Ignore())
-					.ForMember(x => x.ProfilePicture, o => o.Ignore())
-					.ForMember(x => x.SecurityStamp, o => o.Ignore())
-					.ForMember(x => x.TwoFactorEnabled, o => o.Ignore());
+				cfg.CreateMap<UserDTO, User>();
+				
 			}).CreateMapper();
 		}
 }
