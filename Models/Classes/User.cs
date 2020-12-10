@@ -60,7 +60,7 @@ namespace Models.Classes
 			}
 		}
 		
-		public List<User> Friends { get; set; }
+		// public List<User> Friends { get; set; }
 
 		/// <summary>
 		/// Throws an argument exception if the given value is not composed only of letters, and if specified, also of digits.

@@ -29,5 +29,28 @@ namespace API.Service
 			//await this._dbRepository.AddAsync(newUser);
 			return HttpStatusCode.OK;
 		}
+
+		[HttpGet]
+		public async Task<string> GetUserById(int id) 
+		{
+			User user = await this._dbRepository.FindByIdAsync(id);
+			return JsonConvert.SerializeObject(user);
+		}
+
+		[HttpPut]
+		public async Task<HttpStatusCode> UpdateUser(int id, UserDTO userDTO)
+		{
+			// TODO: add mapper (UserDTO to User)
+			User user = new User{
+				Id = id,
+				FirstName = "Misho",
+				LastName = "Mishov",
+				UserName = "cheese"
+			};
+			await this._dbRepository.EditAsync(id, user);
+
+			return HttpStatusCode.OK;
+		}
+
 	}
 }
