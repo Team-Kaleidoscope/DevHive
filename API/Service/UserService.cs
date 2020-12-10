@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using API.Database;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Models.Classes;
 using Models.DTOs;
@@ -14,18 +15,20 @@ namespace API.Service
 	public class UserService
 	{
 		private readonly DbRepository<User> _dbRepository;
+		private readonly IMapper _mapper;
 
-		public UserService(DevHiveContext context)
+		public UserService(DevHiveContext context, IMapper mapper)
 		{
 			this._dbRepository = new DbRepository<User>(context);
+			this._mapper = mapper;
 		}
 	
 		public async Task<HttpStatusCode> CreateUser(UserDTO userDTO)
 		{
 			//TODO: MAKE VALIDATIONS OF PROPER REQUEST
 
-			User user = Mapper.UserDtoToUser(userDTO);
-			await this._dbRepository.AddAsync(user);
+			//User user = this._mapper.Map<UserDTO, User>(userDTO);
+			//await this._dbRepository.AddAsync(user);
 
 			return HttpStatusCode.OK;
 		}

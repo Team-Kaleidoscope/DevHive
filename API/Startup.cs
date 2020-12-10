@@ -1,4 +1,6 @@
+using System;
 using API.Database;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Models.Classes;
+using Models.DTOs;
 
 namespace API
 {
@@ -25,7 +28,7 @@ namespace API
 		{
 			services.AddControllers();
 
-			services.AddDbContext<DevHiveContext>(options => 
+			services.AddDbContext<DevHiveContext>(options =>
 				options.UseNpgsql(Configuration.GetConnectionString("DEV")))
 				.AddAuthentication()
 				.AddJwtBearer();
@@ -45,6 +48,8 @@ namespace API
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
 			});
+
+			services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,6 +76,28 @@ namespace API
 			{
 				endpoints.MapControllers();
 			});
+
+			IMapper configuration = new MapperConfiguration(cfg =>
+			{
+				//cfg.DestinationMemberNamingConvention = new ExactMatchNamingConvention();
+
+				cfg.CreateMap<User, UserDTO>();
+				cfg.CreateMap<UserDTO, User>()
+					.ForMember(x => x.AccessFailedCount, o => o.Ignore())
+					.ForMember(x => x.ConcurrencyStamp, o => o.Ignore())
+					.ForMember(x => x.EmailConfirmed, o => o.Ignore())
+					.ForMember(x => x.Id, o => o.Ignore())
+					.ForMember(x => x.LockoutEnabled, o => o.Ignore())
+					.ForMember(x => x.LockoutEnd, o => o.Ignore())
+					.ForMember(x => x.NormalizedEmail, o => o.Ignore())
+					.ForMember(x => x.NormalizedUserName, o => o.Ignore())
+					.ForMember(x => x.PasswordHash, o => o.Ignore())
+					.ForMember(x => x.PhoneNumber, o => o.Ignore())
+					.ForMember(x => x.PhoneNumberConfirmed, o => o.Ignore())
+					.ForMember(x => x.ProfilePicture, o => o.Ignore())
+					.ForMember(x => x.SecurityStamp, o => o.Ignore())
+					.ForMember(x => x.TwoFactorEnabled, o => o.Ignore());
+			}).CreateMapper();
 		}
-	}
+}
 }

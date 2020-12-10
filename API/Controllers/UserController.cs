@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using API.Database;
 using API.Service;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Models.Classes;
 using Models.DTOs;
@@ -15,9 +16,9 @@ namespace API.Controllers
 	{
 		private readonly UserService _service;
 
-		public UserController(DevHiveContext context)
+		public UserController(DevHiveContext context, IMapper mapper)
 		{
-			this._service = new UserService(context);
+			this._service = new UserService(context, mapper);
 		}
 
 		//Create

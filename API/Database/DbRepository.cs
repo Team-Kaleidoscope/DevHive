@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Models.Interfaces.Database;
 using Microsoft.EntityFrameworkCore;
+using Models.Classes;
 
 namespace API.Database
 {
