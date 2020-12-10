@@ -2,10 +2,10 @@ using System;
 
 namespace API.Controllers
 {
+	[ApiController]
 	public class ErrorController
 	{
-		//FIXME: SHOULD NOT BE VOID
-		public void Error(Exception exception)
+		public HttpStatusCode Error(Exception exception)
 		{
 			
 		}
