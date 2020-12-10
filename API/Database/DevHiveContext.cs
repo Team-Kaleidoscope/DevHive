@@ -19,6 +19,12 @@ namespace API.Database
 			builder.Entity<User>()
 				.HasKey(x => x.Id);
 
+			builder.Entity<Language>()
+				.HasKey(x => x.Id);
+
+			builder.Entity<Technology>()
+				.HasKey(x => x.Id);
+
 			base.OnModelCreating(builder);
 		}
 	}
