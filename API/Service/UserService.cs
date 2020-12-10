@@ -15,9 +15,9 @@ namespace API.Service
 	public class UserService
 	{
 		private readonly DbRepository<User> _dbRepository;
-		private readonly Mapper _userMapper;
+		private readonly IMapper _userMapper;
 
-		public UserService(DevHiveContext context, Mapper mapper)
+		public UserService(DevHiveContext context, IMapper mapper)
 		{
 			this._dbRepository = new DbRepository<User>(context);
 			this._userMapper = mapper;

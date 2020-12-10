@@ -77,12 +77,13 @@ namespace API
 				endpoints.MapControllers();
 			});
 
-			var configuration = new MapperConfiguration(cfg =>
-			{
-				cfg.CreateMap<User, UserDTO>();
-				cfg.CreateMap<UserDTO, User>();
-
-			}).CreateMapper();
+			// Mapper configuration = new Mapper(new MapperConfiguration(cfg =>
+			// {
+			// 	cfg.CreateMap<User, UserDTO>();
+			// 	cfg.CreateMap<UserDTO, User>();
+			// }));
+			
+			
 		}
-}
+	}
 }
