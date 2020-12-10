@@ -33,13 +33,13 @@ namespace API.Database
 				.FindAsync(id);
 		}
 
-		public async Task<IAsyncEnumerable<TEntity>> Query(int count)
+		public IEnumerable<TEntity> Query(int count)
 		{
 			return this._context
 				.Set<TEntity>()
 				.AsNoTracking()
 				.Take(count)
-				.AsAsyncEnumerable();
+				.AsEnumerable();
 		}
 
 		//Update
