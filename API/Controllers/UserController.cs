@@ -16,7 +16,7 @@ namespace API.Controllers
 	{
 		private readonly UserService _service;
 
-		public UserController(DevHiveContext context, IMapper mapper)
+		public UserController(DevHiveContext context, Mapper mapper)
 		{
 			this._service = new UserService(context, mapper);
 		}

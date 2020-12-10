@@ -17,11 +17,10 @@ namespace API.Service
 		private readonly DbRepository<User> _dbRepository;
 		private readonly Mapper _userMapper;
 
-		public UserService(DevHiveContext context, IMapper mapper)
+		public UserService(DevHiveContext context, Mapper mapper)
 		{
 			this._dbRepository = new DbRepository<User>(context);
-			this._userMapper = new Mapper(new MapperConfiguration(cfg => 
-				cfg.CreateMap<UserDTO, User>()));
+			this._userMapper = mapper;
 		}
 	
 		public async Task<HttpStatusCode> CreateUser(UserDTO userDTO)

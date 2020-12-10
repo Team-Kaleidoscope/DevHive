@@ -77,13 +77,11 @@ namespace API
 				endpoints.MapControllers();
 			});
 
-			IMapper configuration = new MapperConfiguration(cfg =>
+			var configuration = new MapperConfiguration(cfg =>
 			{
-				//cfg.DestinationMemberNamingConvention = new ExactMatchNamingConvention();
-
 				cfg.CreateMap<User, UserDTO>();
 				cfg.CreateMap<UserDTO, User>();
-				
+
 			}).CreateMapper();
 		}
 }
