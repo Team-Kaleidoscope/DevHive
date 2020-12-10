@@ -22,7 +22,7 @@ namespace API.Controllers
 
 		//Create
 		[HttpPost]
-		public async Task<HttpStatusCode> Create([FromForm] UserDTO userDTO)
+		public async Task<HttpStatusCode> Create([FromBody] UserDTO userDTO)
 		{
 			HttpStatusCode returnStatusCode = await this._service.CreateUser(userDTO);
 
