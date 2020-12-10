@@ -41,7 +41,7 @@ namespace API
 			{
 				options.User.RequireUniqueEmail = true;
 
-				// options.Password.RequiredLength = 5;
+				options.Password.RequiredLength = 5;
 			});
 
 			services.AddSwaggerGen(c =>
@@ -76,14 +76,6 @@ namespace API
 			{
 				endpoints.MapControllers();
 			});
-
-			// Mapper configuration = new Mapper(new MapperConfiguration(cfg =>
-			// {
-			// 	cfg.CreateMap<User, UserDTO>();
-			// 	cfg.CreateMap<UserDTO, User>();
-			// }));
-			
-			
 		}
 	}
 }
