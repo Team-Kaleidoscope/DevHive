@@ -24,9 +24,9 @@ namespace API.Service
 		{
 			//TODO: MAKE VALIDATIONS OF PROPER REQUEST
 
-			//Map UserDTO -> User
+			User user = Mapper.UserDtoToUser(userDTO);
+			await this._dbRepository.AddAsync(user);
 
-			//await this._dbRepository.AddAsync(newUser);
 			return HttpStatusCode.OK;
 		}
 
