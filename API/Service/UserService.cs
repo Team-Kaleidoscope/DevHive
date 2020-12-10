@@ -20,24 +20,22 @@ namespace API.Service
 			this._dbRepository = new DbRepository<User>(context);
 		}
 	
-		[HttpPost]
 		public async Task<HttpStatusCode> CreateUser(UserDTO userDTO)
 		{
 			//TODO: MAKE VALIDATIONS OF PROPER REQUEST
-			//UserDTO newUser = JsonConvert.DeserializeObject<UserDTO>(userDTO);
+
+			//Map UserDTO -> User
 
 			//await this._dbRepository.AddAsync(newUser);
 			return HttpStatusCode.OK;
 		}
 
-		[HttpGet]
 		public async Task<string> GetUserById(int id) 
 		{
 			User user = await this._dbRepository.FindByIdAsync(id);
 			return JsonConvert.SerializeObject(user);
 		}
 
-		[HttpPut]
 		public async Task<HttpStatusCode> UpdateUser(int id, UserDTO userDTO)
 		{
 			// TODO: add mapper (UserDTO to User)
@@ -52,5 +50,11 @@ namespace API.Service
 			return HttpStatusCode.OK;
 		}
 
+		public async Task<HttpStatusCode> DeleteUser(int id)
+		{
+			await this._dbRepository.DeleteAsync(id);
+
+			return HttpStatusCode.OK;
+		}
 	}
 }

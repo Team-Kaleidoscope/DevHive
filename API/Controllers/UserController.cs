@@ -24,14 +24,12 @@ namespace API.Controllers
 		[HttpPost]
 		public async Task<HttpStatusCode> Create([FromBody] UserDTO userDTO)
 		{
-			HttpStatusCode returnStatusCode = await this._service.CreateUser(userDTO);
-
-			return returnStatusCode;
+			return await this._service.CreateUser(userDTO);
 		}
 
 		//Read
 		[HttpGet]
-		public async Task<string> GetById(int id) 
+		public async Task<string> GetById(int id)
 		{
 			return await this._service.GetUserById(id);
 		}
@@ -43,7 +41,11 @@ namespace API.Controllers
 			return await this._service.UpdateUser(id, userDTO);
 		}
 
-		// //Delete
-		// [HttpDelete]
+		//Delete
+		[HttpDelete] 
+		public async Task<HttpStatusCode> Delete(int id)
+		{
+			return await this._service.DeleteUser(id);
+		}
 	}
 }
