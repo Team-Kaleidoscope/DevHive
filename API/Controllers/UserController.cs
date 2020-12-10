@@ -36,8 +36,12 @@ namespace API.Controllers
 			return await this._service.GetUserById(id);
 		}
 
-		// //Update
-		// [HttpPut]
+		//Update
+		[HttpPut]
+		public async Task<HttpStatusCode> Update(int id, [FromBody] UserDTO userDTO)
+		{
+			return await this._service.UpdateUser(id, userDTO);
+		}
 
 		// //Delete
 		// [HttpDelete]
