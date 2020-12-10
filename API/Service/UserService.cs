@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Models.Classes;
 using Models.DTOs;
 using Newtonsoft.Json;
+using System;
+using System.Web.Http;
+using System.Collections.Generic;
 
 namespace API.Service
 {
@@ -25,7 +28,13 @@ namespace API.Service
 	
 		public async Task<HttpStatusCode> CreateUser(UserDTO userDTO)
 		{
-			//TODO: MAKE VALIDATIONS OF PROPER REQUEST
+			IEnumerable<User> allUsers = this._dbRepository.Query();
+
+			foreach (var currUser in allUsers)
+			{
+				if (currUser.UserName == userDTO.UserName)
+					return HttpStatusCode.Forbidden;
+			}
 
 			User user = this._userMapper.Map<User>(userDTO);
 			await this._dbRepository.AddAsync(user);
@@ -35,22 +44,48 @@ namespace API.Service
 
 		public async Task<string> GetUserById(int id) 
 		{
-			User user = await this._dbRepository.FindByIdAsync(id);
+			User user = await this._dbRepository.FindByIdAsync(id) ??
+				throw new HttpResponseException(HttpStatusCode.NotFound);
+
 			return JsonConvert.SerializeObject(user);
 		}
 
 		public async Task<HttpStatusCode> UpdateUser(int id, UserDTO userDTO)
 		{
+			IEnumerable<User> allUsers = this._dbRepository.Query();
+
+			bool userExists = false;
+			foreach (var currUser in allUsers)
+			{
+				if (currUser.Id == userDTO.Id)
+				{
+					userExists = true;
+					continue;
+				}	
+
+				if (currUser.UserName == userDTO.UserName)
+					return HttpStatusCode.Forbidden;
+			}
+
+			if (!userExists)
+				return HttpStatusCode.NotFound;
+
 			User user = this._userMapper.Map<User>(userDTO);
 			await this._dbRepository.EditAsync(id, user);
-
 			return HttpStatusCode.OK;
 		}
 
 		public async Task<HttpStatusCode> DeleteUser(int id)
 		{
-			await this._dbRepository.DeleteAsync(id);
-
+			try // This skips having to query the database and check if the user doesn't exist
+			{
+				await this._dbRepository.DeleteAsync(id);
+			}
+			catch (ArgumentNullException)
+			{
+				return HttpStatusCode.NotFound;
+			}
+			
 			return HttpStatusCode.OK;
 		}
 	}
