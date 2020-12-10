@@ -15,20 +15,24 @@ namespace API.Service
 	public class UserService
 	{
 		private readonly DbRepository<User> _dbRepository;
-		private readonly IMapper _mapper;
+		private readonly Mapper _userMapper;
 
 		public UserService(DevHiveContext context, IMapper mapper)
 		{
 			this._dbRepository = new DbRepository<User>(context);
-			this._mapper = mapper;
+			this._userMapper = new Mapper
+			(
+			 	new MapperConfiguration
+					(cfg => cfg.CreateMap<UserDTO, User>())
+			 );
 		}
 	
 		public async Task<HttpStatusCode> CreateUser(UserDTO userDTO)
 		{
 			//TODO: MAKE VALIDATIONS OF PROPER REQUEST
 
-			//User user = this._mapper.Map<UserDTO, User>(userDTO);
-			//await this._dbRepository.AddAsync(user);
+			User user = this._userMapper.Map<User>(userDTO);
+			await this._dbRepository.AddAsync(user);
 
 			return HttpStatusCode.OK;
 		}
