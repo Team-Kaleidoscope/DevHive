@@ -31,7 +31,7 @@ namespace API.Controllers
 
 		//Read
 		[HttpGet]
-		public async Task<string> GetUserById(int id) 
+		public async Task<string> GetById(int id) 
 		{
 			return await this._service.GetUserById(id);
 		}
