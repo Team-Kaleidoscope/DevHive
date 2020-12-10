@@ -11,6 +11,7 @@ namespace API.Database
 		where TEntity : class
 	{
 		private readonly DbContext _context;
+		
 		public DbRepository(DbContext context)
 		{
 			_context = context;
@@ -34,23 +35,18 @@ namespace API.Database
 				.FindAsync(id);
 		}
 
-		public IEnumerable<TEntity> Query()
+		public IEnumerable<TEntity> Query(int count)
 		{
 			return this._context
 				.Set<TEntity>()
 				.AsNoTracking()
+				.Take(count)
 				.AsEnumerable();
-		}
-
-		public IEnumerable<TEntity> Query(int count)
-		{
-			return this.Query().Take(count);
 		}
 
 		//Update
 		public async Task EditAsync(object id, TEntity newEntity)
 		{
-			//Set the Id property to the given id
 			TEntity entity = await FindByIdAsync(id);
 
 			this._context.Entry(entity)
@@ -69,5 +65,7 @@ namespace API.Database
 
 			await this._context.SaveChangesAsync();
 		}
+
+		public DbSet<TEntity> DbSet => this._context.Set<TEntity>();
 	}
 }
