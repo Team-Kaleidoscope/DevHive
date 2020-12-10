@@ -30,7 +30,11 @@ namespace API.Controllers
 		}
 
 		//Read
-		// [HttpGet]
+		[HttpGet]
+		public async Task<string> GetUserById(int id) 
+		{
+			return await this._service.GetUserById(id);
+		}
 
 		// //Update
 		// [HttpPut]
