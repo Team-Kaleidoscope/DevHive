@@ -45,13 +45,8 @@ namespace API.Service
 
 		public async Task<HttpStatusCode> UpdateUser(int id, UserDTO userDTO)
 		{
-			// TODO: add mapper (UserDTO to User)
-			User user = new User{
-				Id = id,
-				FirstName = "Misho",
-				LastName = "Mishov",
-				UserName = "cheese"
-			};
+			User user = this._userMapper.Map<User>(userDTO);
+		   	user.Id = id;	
 			await this._dbRepository.EditAsync(id, user);
 
 			return HttpStatusCode.OK;
