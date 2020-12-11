@@ -46,7 +46,7 @@ namespace API
 			});
 
 			// configure jwt authentication
-            var key = Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings").GetValue("Secret", ")H@McQfTB?E(H+Mb8x/A?D(Gr4u7x!A%WnZr4t7weThWmZq4KbPeShVm*G-KaPdSz%C*F-Ja6w9z$C&F"));
+            var key = Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings").GetSection("Secret").Value);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

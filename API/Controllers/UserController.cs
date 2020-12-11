@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Data.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Data.Models.Classes;
+using Microsoft.Extensions.Configuration;
 
 namespace API.Controllers
 {
@@ -16,9 +17,9 @@ namespace API.Controllers
 	{
 		private readonly UserService _service;
 
-		public UserController(DevHiveContext context, IMapper mapper)
+		public UserController(DevHiveContext context, IMapper mapper, IConfiguration configuration)
 		{
-			this._service = new UserService(context, mapper);
+			this._service = new UserService(context, mapper, configuration.GetSection("AppSettings"));
 		}
 
 		[AllowAnonymous]

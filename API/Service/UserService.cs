@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace API.Service
 {
@@ -17,11 +18,13 @@ namespace API.Service
 	{
 		private readonly UserDbRepository _userDbRepository;
 		private readonly IMapper _userMapper;
+        private readonly IConfiguration _appSettings;
 
-		public UserService(DevHiveContext context, IMapper mapper)
+		public UserService(DevHiveContext context, IMapper mapper, IConfiguration appSettings)
 		{
 			this._userDbRepository = new UserDbRepository(context);
 			this._userMapper = mapper;
+			this._appSettings = appSettings;
 		}
 
 		public async Task<IActionResult> LoginUser(UserDTO userDTO)
@@ -31,9 +34,7 @@ namespace API.Service
 			if (user == null)
 				return new NotFoundObjectResult("User does not exist!");
 
-
-			// Temporary, TODO: get key from appsettings
-			var key = Encoding.ASCII.GetBytes(")H@McQfTB?E(H+Mb8x/A?D(Gr4u7x!A%WnZr4t7weThWmZq4KbPeShVm*G-KaPdSz%C*F-Ja6w9z$C&F");  
+			var key = Encoding.ASCII.GetBytes(_appSettings.GetSection("Secret").Value);  
 
 			var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
