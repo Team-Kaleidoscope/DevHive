@@ -5,8 +5,8 @@ using API.Database;
 using API.Service;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Models.Classes;
-using Models.DTOs;
+using Data.Models.Classes;
+using Data.Models.DTOs;
 
 namespace API.Controllers
 {
@@ -30,7 +30,7 @@ namespace API.Controllers
 
 		//Read
 		[HttpGet]
-		public async Task<string> GetById(int id)
+		public async Task<User> GetById(int id)
 		{
 			return await this._service.GetUserById(id);
 		}

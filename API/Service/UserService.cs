@@ -2,10 +2,14 @@ using System.Net;
 using System.Threading.Tasks;
 using API.Database;
 using AutoMapper;
-using Models.Classes;
-using Models.DTOs;
+using Data.Models.Classes;
+using Data.Models.DTOs;
 using Newtonsoft.Json;
 using System.Web.Http;
+using System.Net.Http;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Query.ExpressionTranslators.Internal;
+using System;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace API.Service
 {
@@ -22,30 +26,32 @@ namespace API.Service
 	
 		public async Task<HttpStatusCode> CreateUser(UserDTO userDTO)
 		{
-			if(this._userDbRepository.DoesUsernameExist(userDTO.UserName))
-				return HttpStatusCode.Forbidden;
+			if (this._userDbRepository.DoesUsernameExist(userDTO.UserName))
+				ThrowHttpRequestException(HttpStatusCode.BadRequest, "Username already exists!");
 
 			User user = this._userMapper.Map<User>(userDTO);
 			await this._userDbRepository.AddAsync(user);
 
-			return HttpStatusCode.OK;
+			return HttpStatusCode.Created;
 		}
 
-		public async Task<string> GetUserById(int id) 
+		public async Task<User> GetUserById(int id) 
 		{
-			User user = await this._userDbRepository.FindByIdAsync(id) ??
-				throw new HttpResponseException(HttpStatusCode.NotFound);
+			User user = await this._userDbRepository.FindByIdAsync(id);
 
-			return JsonConvert.SerializeObject(user);
+			if (user == null)
+				ThrowHttpRequestException(HttpStatusCode.NotFound);
+
+			return user;
 		}
 
 		public async Task<HttpStatusCode> UpdateUser(int id, UserDTO userDTO)
 		{
 			if (!this._userDbRepository.DoesUserExist(id))
-				return HttpStatusCode.NotFound;
+				ThrowHttpRequestException(HttpStatusCode.NotFound);
 
 			if (this._userDbRepository.DoesUsernameExist(userDTO.UserName))
-				return HttpStatusCode.Forbidden;
+				ThrowHttpRequestException(HttpStatusCode.Forbidden);
 
 			User user = this._userMapper.Map<User>(userDTO);
 			await this._userDbRepository.EditAsync(id, user);
@@ -61,6 +67,17 @@ namespace API.Service
 			await this._userDbRepository.DeleteAsync(id);
 			
 			return HttpStatusCode.OK;
+		}
+
+		private void ThrowHttpRequestException(HttpStatusCode statusCode, string errorMessage = "")
+		{
+			HttpResponseMessage message = new()
+			{
+				StatusCode = statusCode,
+				Content = new StringContent(errorMessage)
+			};
+
+			throw new HttpResponseException(message);
 		}
 	}
 }

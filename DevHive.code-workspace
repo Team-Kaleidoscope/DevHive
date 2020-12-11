@@ -9,8 +9,8 @@
 			"path": "./Web"
 		},
         {
-            "name": "Models",
-            "path": "./Models"
+            "name": "Data",
+            "path": "./Data"
         }
 	],
 	"settings": {

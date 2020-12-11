@@ -1,8 +1,8 @@
-using Models.Classes;
-using Models.DTOs;
+using Data.Models.Classes;
+using Data.Models.DTOs;
 using AutoMapper;
 
-namespace Models.Profiles 
+namespace Data.Models.Profiles 
 {
 	public class UserProfile : Profile
 	{

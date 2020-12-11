@@ -1,4 +1,4 @@
-namespace Models.Classes
+namespace Data.Models.Classes
 {
 	public class Language
 	{

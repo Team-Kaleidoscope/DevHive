@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Models.Interfaces.Database;
+using Data.Models.Interfaces.Database;
 using Microsoft.EntityFrameworkCore;
-using Models.Classes;
+using Data.Models.Classes;
 
 namespace API.Database
 {

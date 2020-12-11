@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 
-namespace Models.Classes
+namespace Data.Models.Classes
 {
 	[Table("Users")]
 	public class User : IdentityUser<int>

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Models.Interfaces.Database
+namespace Data.Models.Interfaces.Database
 {
 	public interface IRepository<TEntity>
 		where TEntity : class
