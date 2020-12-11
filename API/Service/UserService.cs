@@ -43,7 +43,7 @@ namespace API.Service
 			if (user == null)
 				return new NotFoundObjectResult("User does not exist!");
 
-			return new OkObjectResult(JsonConvert.SerializeObject(user));
+			return new OkObjectResult(user);
 		}
 
 		public async Task<IActionResult> UpdateUser(int id, UserDTO userDTO)
