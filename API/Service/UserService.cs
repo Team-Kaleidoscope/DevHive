@@ -5,6 +5,12 @@ using Data.Models.Classes;
 using Data.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System;
+using System.Text;
+
 namespace API.Service
 {
 	public class UserService
@@ -12,12 +18,44 @@ namespace API.Service
 		private readonly UserDbRepository _userDbRepository;
 		private readonly IMapper _userMapper;
 
+		private static Random rnd = new Random(); // FOR TESTING PURPOSES ONLY
+
 		public UserService(DevHiveContext context, IMapper mapper)
 		{
 			this._userDbRepository = new UserDbRepository(context);
 			this._userMapper = mapper;
 		}
-	
+
+		public async Task<IActionResult> LoginUser(UserDTO userDTO)
+		{
+			if (userDTO == null)
+				return new NotFoundObjectResult("User does not exist!");
+
+			User user = this._userMapper.Map<User>(userDTO);
+
+
+
+
+			// Key generation
+			var key = Encoding.ASCII.GetBytes(")H@McQfTB?E(H+Mb8x/A?D(Gr4u7x!A%WnZr4t7weThWmZq4KbPeShVm*G-KaPdSz%C*F-Ja6w9z$C&F");  //Startup.Configuration.GetSection("AppSettings").GetValue("Secret", "bruh"));
+
+			var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+			return new OkObjectResult(tokenString);
+		}
+
+
 		public async Task<IActionResult> CreateUser(UserDTO userDTO)
 		{
 			if (this._userDbRepository.DoesUsernameExist(userDTO.UserName))

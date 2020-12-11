@@ -11,6 +11,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Data.Models.Classes;
 
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace API
 {
 	public class Startup
@@ -28,13 +33,10 @@ namespace API
 			services.AddControllers();
 
 			services.AddDbContext<DevHiveContext>(options =>
-				options.UseNpgsql(Configuration.GetConnectionString("DEV")))
-				.AddAuthentication()
-				.AddJwtBearer();
+				options.UseNpgsql(Configuration.GetConnectionString("DEV")));
 
 			services.AddIdentity<User, Roles>()
 				.AddEntityFrameworkStores<DevHiveContext>();
-			services.AddAuthentication();
 
 			services.Configure<IdentityOptions>(options =>
 			{
@@ -43,7 +45,42 @@ namespace API
 				options.Password.RequiredLength = 5;
 			});
 
-			services.AddSwaggerGen(c =>
+			// configure jwt authentication
+            var key = Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings").GetValue("Secret", ")H@McQfTB?E(H+Mb8x/A?D(Gr4u7x!A%WnZr4t7weThWmZq4KbPeShVm*G-KaPdSz%C*F-Ja6w9z$C&F"));
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        // var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+                        // var userId = int.Parse(context.Principal.Identity.Name);
+                        // var user = userService.GetById(userId);
+                        // if (user == null)
+                        // {
+                        //     // return unauthorized if user no longer exists
+                        //     context.Fail("Unauthorized");
+                        // }
+                        return Task.CompletedTask;
+                    }
+                };
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+
+    		services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
 			});

@@ -4,6 +4,8 @@ using API.Service;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Data.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace API.Controllers
 {
@@ -18,6 +20,14 @@ namespace API.Controllers
 			this._service = new UserService(context, mapper);
 		}
 
+		[HttpPost]
+		[Route("login")]
+		public async Task<IActionResult> Login([FromBody] UserDTO userDTO)
+		{
+			return await this._service.LoginUser(userDTO);
+		}
+
+
 		//Create
 		[HttpPost]
 		public async Task<IActionResult> Create([FromBody] UserDTO userDTO)
@@ -26,6 +36,7 @@ namespace API.Controllers
 		}
 
 		//Read
+		[Authorize]
 		[HttpGet]
 		public async Task<IActionResult> GetById(int id)
 		{
