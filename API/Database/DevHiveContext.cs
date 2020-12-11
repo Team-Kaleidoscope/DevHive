@@ -19,6 +19,10 @@ namespace API.Database
 			builder.Entity<User>()
 				.HasKey(x => x.Id);
 
+			builder.Entity<User>()
+				.HasIndex(x => x.UserName)
+				.IsUnique();
+
 			builder.Entity<Language>()
 				.HasKey(x => x.Id);
 
