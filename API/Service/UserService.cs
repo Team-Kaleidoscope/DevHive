@@ -26,10 +26,11 @@ namespace API.Service
 
 		public async Task<IActionResult> LoginUser(UserDTO userDTO)
 		{
-			if (userDTO == null)
+			User user = this._userDbRepository.FindByUsername(userDTO.UserName);
+
+			if (user == null)
 				return new NotFoundObjectResult("User does not exist!");
 
-			User user = this._userMapper.Map<User>(userDTO);
 
 			// Temporary, TODO: get key from appsettings
 			var key = Encoding.ASCII.GetBytes(")H@McQfTB?E(H+Mb8x/A?D(Gr4u7x!A%WnZr4t7weThWmZq4KbPeShVm*G-KaPdSz%C*F-Ja6w9z$C&F");  
@@ -57,6 +58,10 @@ namespace API.Service
 				return new BadRequestObjectResult("Username already exists!");
 
 			User user = this._userMapper.Map<User>(userDTO);
+
+			if (user.Role == null)
+				user.Role = Roles.User;
+
 			await this._userDbRepository.AddAsync(user);
 
 			return new CreatedResult("CreateUser", user);

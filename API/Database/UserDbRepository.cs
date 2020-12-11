@@ -17,6 +17,12 @@ namespace API.Database
 			this._dbRepository = new DbRepository<User>(context);
 		}
 
+		public User FindByUsername(string username)
+		{
+			return this._dbRepository.DbSet
+				.FirstOrDefault(usr => usr.UserName == username);
+		}
+
 		public bool DoesUsernameExist(string username)
 		{
 			return this._dbRepository.DbSet

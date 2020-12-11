@@ -29,7 +29,6 @@ namespace API.Controllers
 			return await this._service.LoginUser(userDTO);
 		}
 
-
 		//Create
 		[AllowAnonymous]
 		[HttpPost]
@@ -40,7 +39,7 @@ namespace API.Controllers
 
 		//Read
 		[HttpGet]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = Data.Models.Classes.Roles.Admin)]
 		public async Task<IActionResult> GetById(int id)
 		{
 			return await this._service.GetUserById(id);
