@@ -23,28 +23,28 @@ namespace API.Controllers
 
 		//Create
 		[HttpPost]
-		public async Task<HttpStatusCode> Create([FromBody] UserDTO userDTO)
+		public async Task<IActionResult> Create([FromBody] UserDTO userDTO)
 		{
 			return await this._service.CreateUser(userDTO);
 		}
 
 		//Read
 		[HttpGet]
-		public async Task<User> GetById(int id)
+		public async Task<IActionResult> GetById(int id)
 		{
 			return await this._service.GetUserById(id);
 		}
 
 		//Update
 		[HttpPut]
-		public async Task<HttpStatusCode> Update(int id, [FromBody] UserDTO userDTO)
+		public async Task<IActionResult> Update(int id, [FromBody] UserDTO userDTO)
 		{
 			return await this._service.UpdateUser(id, userDTO);
 		}
 
 		//Delete
 		[HttpDelete] 
-		public async Task<HttpStatusCode> Delete(int id)
+		public async Task<IActionResult> Delete(int id)
 		{
 			return await this._service.DeleteUser(id);
 		}

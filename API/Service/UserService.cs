@@ -10,6 +10,7 @@ using System.Net.Http;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Query.ExpressionTranslators.Internal;
 using System;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Service
 {
@@ -24,60 +25,49 @@ namespace API.Service
 			this._userMapper = mapper;
 		}
 	
-		public async Task<HttpStatusCode> CreateUser(UserDTO userDTO)
+		public async Task<IActionResult> CreateUser(UserDTO userDTO)
 		{
 			if (this._userDbRepository.DoesUsernameExist(userDTO.UserName))
-				ThrowHttpRequestException(HttpStatusCode.BadRequest, "Username already exists!");
+				return new BadRequestObjectResult("Username already exists!");
 
 			User user = this._userMapper.Map<User>(userDTO);
 			await this._userDbRepository.AddAsync(user);
 
-			return HttpStatusCode.Created;
+			return new OkObjectResult("User created.");
 		}
 
-		public async Task<User> GetUserById(int id) 
+		public async Task<IActionResult> GetUserById(int id) 
 		{
 			User user = await this._userDbRepository.FindByIdAsync(id);
 
 			if (user == null)
-				ThrowHttpRequestException(HttpStatusCode.NotFound);
+				return new NotFoundObjectResult("User does not exist!");
 
-			return user;
+			return new OkObjectResult(JsonConvert.SerializeObject(user));
 		}
 
-		public async Task<HttpStatusCode> UpdateUser(int id, UserDTO userDTO)
+		public async Task<IActionResult> UpdateUser(int id, UserDTO userDTO)
 		{
 			if (!this._userDbRepository.DoesUserExist(id))
-				ThrowHttpRequestException(HttpStatusCode.NotFound);
+				return new NotFoundObjectResult("User does not exist!");
 
 			if (this._userDbRepository.DoesUsernameExist(userDTO.UserName))
-				ThrowHttpRequestException(HttpStatusCode.Forbidden);
+				return new BadRequestObjectResult("Username already exists!");
 
 			User user = this._userMapper.Map<User>(userDTO);
 			await this._userDbRepository.EditAsync(id, user);
 
-			return HttpStatusCode.OK;
+			return new OkObjectResult("User updated.");
 		}
 
-		public async Task<HttpStatusCode> DeleteUser(int id)
+		public async Task<IActionResult> DeleteUser(int id)
 		{
 			if (!this._userDbRepository.DoesUserExist(id))
-				return HttpStatusCode.Forbidden;
+				return new NotFoundObjectResult("User does not exist!");
 
 			await this._userDbRepository.DeleteAsync(id);
 			
-			return HttpStatusCode.OK;
-		}
-
-		private void ThrowHttpRequestException(HttpStatusCode statusCode, string errorMessage = "")
-		{
-			HttpResponseMessage message = new()
-			{
-				StatusCode = statusCode,
-				Content = new StringContent(errorMessage)
-			};
-
-			throw new HttpResponseException(message);
+			return new OkObjectResult("User deleted successfully.");
 		}
 	}
 }
