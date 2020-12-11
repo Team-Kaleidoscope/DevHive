@@ -60,7 +60,7 @@ namespace API.Service
 			User user = this._userMapper.Map<User>(userDTO);
 
 			if (user.Role == null)
-				user.Role = Roles.User;
+				user.Role = UserRoles.User;
 
 			await this._userDbRepository.AddAsync(user);
 

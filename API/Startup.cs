@@ -35,7 +35,7 @@ namespace API
 			services.AddDbContext<DevHiveContext>(options =>
 				options.UseNpgsql(Configuration.GetConnectionString("DEV")));
 
-			services.AddIdentity<User, Roles>()
+			services.AddIdentity<User, UserRoles>()
 				.AddEntityFrameworkStores<DevHiveContext>();
 
 			services.Configure<IdentityOptions>(options =>

@@ -5,7 +5,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Data.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
-
+using Data.Models.Classes;
 
 namespace API.Controllers
 {
@@ -39,7 +39,7 @@ namespace API.Controllers
 
 		//Read
 		[HttpGet]
-		[Authorize(Roles = Data.Models.Classes.Roles.Admin)]
+		[Authorize(Roles = UserRoles.Admin)]
 		public async Task<IActionResult> GetById(int id)
 		{
 			return await this._service.GetUserById(id);
