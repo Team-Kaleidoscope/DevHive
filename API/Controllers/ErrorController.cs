@@ -8,6 +8,7 @@ namespace API.Controllers
 	[Route("/api/[controller]")]
 	public class ErrorController
 	{
+		[HttpGet]
 		public HttpStatusCode Error(Exception exception)
 		{
 			return HttpStatusCode.OK;
