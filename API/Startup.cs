@@ -45,8 +45,9 @@ namespace API
 				options.Password.RequiredLength = 5;
 			});
 
-			// configure jwt authentication
+			// Get key from appsettings.json
             var key = Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings").GetSection("Secret").Value);
+			// Setup Jwt Authentication
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -58,14 +59,7 @@ namespace API
                 {
                     OnTokenValidated = context =>
                     {
-                        // var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                        // var userId = int.Parse(context.Principal.Identity.Name);
-                        // var user = userService.GetById(userId);
-                        // if (user == null)
-                        // {
-                        //     // return unauthorized if user no longer exists
-                        //     context.Fail("Unauthorized");
-                        // }
+                        // TODO: add more authentication
                         return Task.CompletedTask;
                     }
                 };

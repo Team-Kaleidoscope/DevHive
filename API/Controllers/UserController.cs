@@ -40,7 +40,7 @@ namespace API.Controllers
 
 		//Read
 		[HttpGet]
-		[Authorize(Roles = UserRoles.Admin)]
+		[Authorize(Roles = UserRoles.Admin)] // Functionality, only for testing purposes
 		public async Task<IActionResult> GetById(int id)
 		{
 			return await this._service.GetUserById(id);

@@ -34,18 +34,22 @@ namespace API.Service
 			if (user == null)
 				return new NotFoundObjectResult("User does not exist!");
 
+			// Get key from appsettings.json
 			var key = Encoding.ASCII.GetBytes(_appSettings.GetSection("Secret").Value);  
 
+			// Create Jwt Token configuration
 			var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Role, user.Role)
+                    new Claim(ClaimTypes.Role, user.Role) // Authorize user by role
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
+
+			// Create Jwt Token
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
