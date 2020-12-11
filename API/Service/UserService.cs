@@ -22,7 +22,7 @@ namespace API.Service
 	
 		public async Task<HttpStatusCode> CreateUser(UserDTO userDTO)
 		{
-			if(await this._userDbRepository.DoesUsernameExist(userDTO.UserName))
+			if(this._userDbRepository.DoesUsernameExist(userDTO.UserName))
 				return HttpStatusCode.Forbidden;
 
 			User user = this._userMapper.Map<User>(userDTO);
@@ -41,10 +41,10 @@ namespace API.Service
 
 		public async Task<HttpStatusCode> UpdateUser(int id, UserDTO userDTO)
 		{
-			if (!await this._userDbRepository.DoesUserExist(id))
+			if (!this._userDbRepository.DoesUserExist(id))
 				return HttpStatusCode.NotFound;
 
-			if(await this._userDbRepository.DoesUsernameExist(userDTO.UserName))
+			if (this._userDbRepository.DoesUsernameExist(userDTO.UserName))
 				return HttpStatusCode.Forbidden;
 
 			User user = this._userMapper.Map<User>(userDTO);
@@ -55,7 +55,7 @@ namespace API.Service
 
 		public async Task<HttpStatusCode> DeleteUser(int id)
 		{
-			if (!await this._userDbRepository.DoesUserExist(id))
+			if (!this._userDbRepository.DoesUserExist(id))
 				return HttpStatusCode.Forbidden;
 
 			await this._userDbRepository.DeleteAsync(id);

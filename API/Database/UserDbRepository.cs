@@ -17,16 +17,16 @@ namespace API.Database
 			this._dbRepository = new DbRepository<User>(context);
 		}
 
-		public async Task<bool> DoesUsernameExist(string username)
+		public bool DoesUsernameExist(string username)
 		{
-			return await this._dbRepository.DbSet
-				.SingleAsync(x => x.UserName == username) == null;
+			return this._dbRepository.DbSet
+				.Any(x => x.UserName == username);
 		}
 
-		public async Task<bool> DoesUserExist(int id)
+		public bool DoesUserExist(int id)
 		{
-			return await this._dbRepository.DbSet
-				.SingleAsync(x => x.Id == id) == null;
+			return this._dbRepository.DbSet
+				.Any(x => x.Id == id);
 		}
 	}
 }
