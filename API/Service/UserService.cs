@@ -18,8 +18,6 @@ namespace API.Service
 		private readonly UserDbRepository _userDbRepository;
 		private readonly IMapper _userMapper;
 
-		private static Random rnd = new Random(); // FOR TESTING PURPOSES ONLY
-
 		public UserService(DevHiveContext context, IMapper mapper)
 		{
 			this._userDbRepository = new UserDbRepository(context);
@@ -33,18 +31,15 @@ namespace API.Service
 
 			User user = this._userMapper.Map<User>(userDTO);
 
-
-
-
-			// Key generation
-			var key = Encoding.ASCII.GetBytes(")H@McQfTB?E(H+Mb8x/A?D(Gr4u7x!A%WnZr4t7weThWmZq4KbPeShVm*G-KaPdSz%C*F-Ja6w9z$C&F");  //Startup.Configuration.GetSection("AppSettings").GetValue("Secret", "bruh"));
+			// Temporary, TODO: get key from appsettings
+			var key = Encoding.ASCII.GetBytes(")H@McQfTB?E(H+Mb8x/A?D(Gr4u7x!A%WnZr4t7weThWmZq4KbPeShVm*G-KaPdSz%C*F-Ja6w9z$C&F");  
 
 			var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                    new Claim(ClaimTypes.Role, user.Role)
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

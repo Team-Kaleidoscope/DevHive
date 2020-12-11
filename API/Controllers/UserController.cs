@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
+	[Authorize]
 	[ApiController]
 	[Route("/api/[controller]")]
 	public class UserController: ControllerBase
@@ -20,6 +21,7 @@ namespace API.Controllers
 			this._service = new UserService(context, mapper);
 		}
 
+		[AllowAnonymous]
 		[HttpPost]
 		[Route("login")]
 		public async Task<IActionResult> Login([FromBody] UserDTO userDTO)
@@ -29,6 +31,7 @@ namespace API.Controllers
 
 
 		//Create
+		[AllowAnonymous]
 		[HttpPost]
 		public async Task<IActionResult> Create([FromBody] UserDTO userDTO)
 		{
@@ -36,8 +39,8 @@ namespace API.Controllers
 		}
 
 		//Read
-		[Authorize]
 		[HttpGet]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> GetById(int id)
 		{
 			return await this._service.GetUserById(id);

@@ -59,7 +59,9 @@ namespace Data.Models.Classes
 				this._profilePicture = value;
 			}
 		}
-		
+	
+		public string Role { get; set; }
+
 		// public List<User> Friends { get; set; }
 
 		/// <summary>
