@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Data.Models.Interfaces.Database;
 using Microsoft.EntityFrameworkCore;
 using Data.Models.Classes;
+using System.Diagnostics;
 
 namespace API.Database
 {
@@ -48,6 +49,7 @@ namespace API.Database
 		public async Task EditAsync(object id, TEntity newEntity)
 		{
 			TEntity entity = await FindByIdAsync(id);
+			typeof(TEntity).GetProperty("Id").SetValue(newEntity, id);
 
 			this._context.Entry(entity)
 				.CurrentValues

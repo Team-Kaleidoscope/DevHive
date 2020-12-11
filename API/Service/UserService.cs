@@ -1,15 +1,8 @@
-using System.Net;
 using System.Threading.Tasks;
 using API.Database;
 using AutoMapper;
 using Data.Models.Classes;
 using Data.Models.DTOs;
-using Newtonsoft.Json;
-using System.Web.Http;
-using System.Net.Http;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Query.ExpressionTranslators.Internal;
-using System;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Service
@@ -33,7 +26,7 @@ namespace API.Service
 			User user = this._userMapper.Map<User>(userDTO);
 			await this._userDbRepository.AddAsync(user);
 
-			return new OkObjectResult("User created.");
+			return new CreatedResult("CreateUser", user);
 		}
 
 		public async Task<IActionResult> GetUserById(int id) 
@@ -51,13 +44,14 @@ namespace API.Service
 			if (!this._userDbRepository.DoesUserExist(id))
 				return new NotFoundObjectResult("User does not exist!");
 
-			if (this._userDbRepository.DoesUsernameExist(userDTO.UserName))
+			if (!this._userDbRepository.HasThisUsername(id, userDTO.UserName)
+					&& this._userDbRepository.DoesUsernameExist(userDTO.UserName))
 				return new BadRequestObjectResult("Username already exists!");
 
 			User user = this._userMapper.Map<User>(userDTO);
 			await this._userDbRepository.EditAsync(id, user);
 
-			return new OkObjectResult("User updated.");
+			return new AcceptedResult("UpdateUser", user);
 		}
 
 		public async Task<IActionResult> DeleteUser(int id)
@@ -67,7 +61,7 @@ namespace API.Service
 
 			await this._userDbRepository.DeleteAsync(id);
 			
-			return new OkObjectResult("User deleted successfully.");
+			return new OkResult();
 		}
 	}
 }

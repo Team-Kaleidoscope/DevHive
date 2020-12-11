@@ -1,11 +1,8 @@
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using API.Database;
 using API.Service;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Data.Models.Classes;
 using Data.Models.DTOs;
 
 namespace API.Controllers

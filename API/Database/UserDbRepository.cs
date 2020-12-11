@@ -28,5 +28,12 @@ namespace API.Database
 			return this._dbRepository.DbSet
 				.Any(x => x.Id == id);
 		}
+	
+		public bool HasThisUsername(int id, string username)
+		{
+			return this._dbRepository.DbSet
+				.Any(x => x.Id == id &&
+					x.UserName == username);
+		}
 	}
 }
