@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Data.Models.Classes;
-
+using Data.Models.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
@@ -44,6 +44,9 @@ namespace API
 
 				options.Password.RequiredLength = 5;
 			});
+
+			services.AddSingleton<JWTOptions>(
+					new JWTOptions(Configuration.GetSection("AppSettings").GetSection("Secret").Value));
 
 			// Get key from appsettings.json
             var key = Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings").GetSection("Secret").Value);

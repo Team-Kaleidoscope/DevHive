@@ -4,7 +4,7 @@ using AutoMapper;
 using Data.Models.Classes;
 using Data.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
-
+using Data.Models.Options;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -18,13 +18,13 @@ namespace API.Service
 	{
 		private readonly UserDbRepository _userDbRepository;
 		private readonly IMapper _userMapper;
-        private readonly IConfiguration _appSettings;
+        private readonly JWTOptions _jwtOptions;
 
-		public UserService(DevHiveContext context, IMapper mapper, IConfiguration appSettings)
+		public UserService(DevHiveContext context, IMapper mapper, JWTOptions jwtOptions)
 		{
 			this._userDbRepository = new UserDbRepository(context);
 			this._userMapper = mapper;
-			this._appSettings = appSettings;
+			this._jwtOptions = jwtOptions;
 		}
 
 		public async Task<IActionResult> LoginUser(LoginDTO loginDTO)
@@ -35,7 +35,7 @@ namespace API.Service
 				return new NotFoundObjectResult("User does not exist!");
 
 			// Get key from appsettings.json
-			var key = Encoding.ASCII.GetBytes(_appSettings.GetSection("Secret").Value);  
+			var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);  
 
 			if (user.PasswordHash != GeneratePasswordHash(loginDTO.Password))
 				return new BadRequestObjectResult("Incorrect password!");

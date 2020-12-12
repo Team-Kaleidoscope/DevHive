@@ -5,7 +5,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Data.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
-using Data.Models.Classes;
+using Data.Models.Options;
 using Microsoft.Extensions.Configuration;
 
 namespace API.Controllers
@@ -16,9 +16,9 @@ namespace API.Controllers
 	{
 		private readonly UserService _service;
 
-		public UserController(DevHiveContext context, IMapper mapper, IConfiguration configuration)
+		public UserController(DevHiveContext context, IMapper mapper, JWTOptions jwtOptions)
 		{
-			this._service = new UserService(context, mapper, configuration.GetSection("AppSettings"));
+			this._service = new UserService(context, mapper, jwtOptions);
 		}
 
 		[HttpPost]
