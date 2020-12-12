@@ -56,7 +56,10 @@ namespace API.Service
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-			return new OkObjectResult(tokenString);
+			return new OkObjectResult(new 
+				{
+					Token = tokenString
+				});
 		}
 
 		public async Task<IActionResult> RegisterUser(RegisterDTO registerDTO)
