@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Migrations
 {
     [DbContext(typeof(DevHiveContext))]
-    [Migration("20201212135453_JWT_Authorization_Added")]
-    partial class JWT_Authorization_Added
+    [Migration("20201212140557_Authorization_Added")]
+    partial class Authorization_Added
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

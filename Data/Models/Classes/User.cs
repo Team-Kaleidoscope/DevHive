@@ -60,7 +60,7 @@ namespace Data.Models.Classes
 			}
 		}
 	
-		public Roles Role { get; set; }
+		public string Role { get; set; }
 
 		// public List<User> Friends { get; set; }
 
