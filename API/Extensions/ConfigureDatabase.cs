@@ -13,15 +13,11 @@ namespace API.Extensions
 		public static void DatabaseConfiguration(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.AddDbContext<DevHiveContext>(options =>
-				options.UseNpgsql(configuration.GetConnectionString("DEV")))
-				.AddAuthentication()
-				.AddJwtBearer();
+				options.UseNpgsql(configuration.GetConnectionString("DEV")));
 
 			services.AddIdentity<User, Roles>()
 				.AddEntityFrameworkStores<DevHiveContext>();
 				
-			services.AddAuthentication();
-
 			services.Configure<IdentityOptions>(options =>
 			{
 				options.User.RequireUniqueEmail = true;

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-<<<<<<< HEAD
 using Microsoft.OpenApi.Models;
 using Data.Models.Classes;
 using Data.Models.Options;
@@ -13,9 +12,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using System.Threading.Tasks;
-=======
 using API.Extensions;
->>>>>>> 8bd7295dc4694c1c0ed6fbc05d390223bfc4ef05
+using API.Database;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace API
 {
@@ -32,19 +32,6 @@ namespace API
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers();
-
-			services.AddDbContext<DevHiveContext>(options =>
-				options.UseNpgsql(Configuration.GetConnectionString("DEV")));
-
-			services.AddIdentity<User, UserRoles>()
-				.AddEntityFrameworkStores<DevHiveContext>();
-
-			services.Configure<IdentityOptions>(options =>
-			{
-				options.User.RequireUniqueEmail = true;
-
-				options.Password.RequiredLength = 5;
-			});
 
 			services.AddSingleton<JWTOptions>(
 					new JWTOptions(Configuration.GetSection("AppSettings").GetSection("Secret").Value));
@@ -78,11 +65,6 @@ namespace API
                 };
             });
 
-    		services.AddSwaggerGen(c =>
-			{
-				c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
-			});
-
 			services.DatabaseConfiguration(Configuration);
 			services.SwaggerConfiguration();
 			services.JWTConfiguration();
@@ -105,8 +87,9 @@ namespace API
 				app.UseHsts();
 			}
 
+			app.UseDatabaseConfiguration();
 			app.UseJWTConfiguration();
-
+			
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllerRoute(
