@@ -34,6 +34,8 @@ namespace API.Service
 			if (user == null)
 				return new NotFoundObjectResult("User does not exist!");
 
+			//TODO: Clean it
+
 			// Get key from appsettings.json
 			var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);  
 
@@ -57,9 +59,9 @@ namespace API.Service
             var tokenString = tokenHandler.WriteToken(token);
 
 			return new OkObjectResult(new 
-				{
-					Token = tokenString
-				});
+			{
+				Token = tokenString
+			});
 		}
 
 		public async Task<IActionResult> RegisterUser(RegisterDTO registerDTO)
@@ -80,6 +82,7 @@ namespace API.Service
 
 		private string GeneratePasswordHash(string password)
 		{
+			//TODO: Hash password
 			return password; // TEMPORARY!
 		}
 

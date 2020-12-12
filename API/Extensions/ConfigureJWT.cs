@@ -12,11 +12,17 @@ namespace API.Extensions
 	{
 		public static void JWTConfiguration(this IServiceCollection services, IConfiguration configuration)
 		{
-			services.AddSingleton<JWTOptions>(
-					new JWTOptions(configuration.GetSection("AppSettings").GetSection("Secret").Value));
+			services.AddSingleton(new JWTOptions(configuration
+						.GetSection("AppSettings")
+						.GetSection("Secret")
+						.Value));
 
 			// Get key from appsettings.json
-			var key = Encoding.ASCII.GetBytes(configuration.GetSection("AppSettings").GetSection("Secret").Value);
+			var key = Encoding.ASCII.GetBytes(configuration
+						.GetSection("AppSettings")
+						.GetSection("Secret")
+						.Value);
+
 			// Setup Jwt Authentication
 			services.AddAuthentication(x =>
 			{

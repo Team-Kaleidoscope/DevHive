@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Data.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Data.Models.Options;
-using Microsoft.Extensions.Configuration;
 
 namespace API.Controllers
 {
