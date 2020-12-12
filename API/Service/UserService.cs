@@ -27,15 +27,18 @@ namespace API.Service
 			this._appSettings = appSettings;
 		}
 
-		public async Task<IActionResult> LoginUser(UserDTO userDTO)
+		public async Task<IActionResult> LoginUser(LoginDTO loginDTO)
 		{
-			User user = this._userDbRepository.FindByUsername(userDTO.UserName);
+			User user = this._userDbRepository.FindByUsername(loginDTO.UserName);
 
 			if (user == null)
 				return new NotFoundObjectResult("User does not exist!");
 
 			// Get key from appsettings.json
 			var key = Encoding.ASCII.GetBytes(_appSettings.GetSection("Secret").Value);  
+
+			if (user.PasswordHash != GeneratePasswordHash(loginDTO.Password))
+				return new BadRequestObjectResult("Incorrect password!");
 
 			// Create Jwt Token configuration
 			var tokenHandler = new JwtSecurityTokenHandler();
@@ -56,20 +59,25 @@ namespace API.Service
 			return new OkObjectResult(tokenString);
 		}
 
-
-		public async Task<IActionResult> CreateUser(UserDTO userDTO)
+		public async Task<IActionResult> RegisterUser(RegisterDTO registerDTO)
 		{
-			if (this._userDbRepository.DoesUsernameExist(userDTO.UserName))
+
+			if (this._userDbRepository.DoesUsernameExist(registerDTO.UserName))
 				return new BadRequestObjectResult("Username already exists!");
 
-			User user = this._userMapper.Map<User>(userDTO);
+			User user = this._userMapper.Map<User>(registerDTO);
 
-			if (user.Role == null)
-				user.Role = UserRoles.User;
+			user.Role = UserRoles.User;
+			user.PasswordHash = GeneratePasswordHash(registerDTO.Password);
 
 			await this._userDbRepository.AddAsync(user);
 
 			return new CreatedResult("CreateUser", user);
+		}
+
+		private string GeneratePasswordHash(string password)
+		{
+			return password; // TEMPORARY!
 		}
 
 		public async Task<IActionResult> GetUserById(int id) 
