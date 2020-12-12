@@ -18,7 +18,7 @@ namespace API.Service
 	{
 		private readonly UserDbRepository _userDbRepository;
 		private readonly IMapper _userMapper;
-        private readonly JWTOptions _jwtOptions;
+		private readonly JWTOptions _jwtOptions;
 
 		public UserService(DevHiveContext context, IMapper mapper, JWTOptions jwtOptions)
 		{
@@ -34,34 +34,27 @@ namespace API.Service
 			if (user == null)
 				return new NotFoundObjectResult("User does not exist!");
 
-			//TODO: Clean it
-
-			// Get key from appsettings.json
-			var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);  
+			byte[] key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);  
 
 			if (user.PasswordHash != GeneratePasswordHash(loginDTO.Password))
 				return new BadRequestObjectResult("Incorrect password!");
 
 			// Create Jwt Token configuration
-			var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Role, user.Role) // Authorize user by role
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-			// Create Jwt Token
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
-
-			return new OkObjectResult(new 
+			var tokenDescriptor = new SecurityTokenDescriptor
 			{
-				Token = tokenString
-			});
+				Subject = new ClaimsIdentity(new Claim[]
+				{
+					new Claim(ClaimTypes.Role, user.Role) // Authorize user by role
+				}),
+				Expires = DateTime.UtcNow.AddDays(7),
+				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.Sha512)
+			};
+
+			var tokenHandler = new JwtSecurityTokenHandler();
+			var token = tokenHandler.CreateToken(tokenDescriptor);
+			var tokenString = tokenHandler.WriteToken(token);
+
+			return new OkObjectResult(new { Token = tokenString });
 		}
 
 		public async Task<IActionResult> RegisterUser(RegisterDTO registerDTO)
@@ -82,8 +75,8 @@ namespace API.Service
 
 		private string GeneratePasswordHash(string password)
 		{
-			//TODO: Hash password
-			return password; // TEMPORARY!
+			//TODO: Implement
+			return password;
 		}
 
 		public async Task<IActionResult> GetUserById(int id) 
