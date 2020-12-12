@@ -17,7 +17,6 @@ namespace API
 				.ConfigureWebHostDefaults(webBuilder =>
 				{
 					webBuilder.ConfigureKestrel(opt => opt.ListenLocalhost(HTTPS_PORT));
-
 					webBuilder.UseStartup<Startup>();
 				});
 	}
