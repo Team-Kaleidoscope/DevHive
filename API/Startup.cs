@@ -1,13 +1,11 @@
 using System;
-using API.Database;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+<<<<<<< HEAD
 using Microsoft.OpenApi.Models;
 using Data.Models.Classes;
 using Data.Models.Options;
@@ -15,6 +13,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using System.Threading.Tasks;
+=======
+using API.Extensions;
+>>>>>>> 8bd7295dc4694c1c0ed6fbc05d390223bfc4ef05
 
 namespace API
 {
@@ -82,6 +83,10 @@ namespace API
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
 			});
 
+			services.DatabaseConfiguration(Configuration);
+			services.SwaggerConfiguration();
+			services.JWTConfiguration();
+
 			services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 		}
 
@@ -90,25 +95,24 @@ namespace API
 		{
 			if (env.IsDevelopment())
 			{
-				//app.UseDeveloperExceptionPage();
-				app.UseExceptionHandler("/api/Error"); //TESTING
-				app.UseSwagger();
-				app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
+				app.UseDeveloperExceptionPage();
+				//app.UseExceptionHandler("/api/HttpError");
+				app.UseSwaggerConfiguration();
 			}
 			else
 			{
-				app.UseExceptionHandler("/Error");
+				app.UseExceptionHandler("/api/HttpError");
+				app.UseHsts();
 			}
 
-			app.UseHttpsRedirection();
-			app.UseRouting();
-
-			app.UseAuthentication();
-			app.UseAuthorization();
+			app.UseJWTConfiguration();
 
 			app.UseEndpoints(endpoints =>
 			{
-				endpoints.MapControllers();
+				endpoints.MapControllerRoute(
+					name: "default",
+					pattern: "api/{controller}/{action}"
+				);
 			});
 		}
 	}
