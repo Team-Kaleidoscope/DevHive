@@ -9,6 +9,6 @@ namespace Data.Models.Options
 			this.Secret = secret;
 		}
 
-		public string Secret { get; set; }
+		public string Secret { get; init; }
 	}
 }
