@@ -22,14 +22,14 @@ namespace API.Controllers
 		}
 
 		[HttpPost]
-		[Route("login")]
+		[Route("Login")]
 		public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
 		{
 			return await this._service.LoginUser(loginDTO);
 		}
 
 		[HttpPost]
-		[Route("register")]
+		[Route("Register")]
 		public async Task<IActionResult> Register([FromBody] RegisterDTO registerDto)
 		{
 			return await this._service.RegisterUser(registerDto);
