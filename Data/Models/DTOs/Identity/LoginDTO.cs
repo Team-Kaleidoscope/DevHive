@@ -1,4 +1,4 @@
-namespace Data.Models.DTOs
+namespace Data.Models.DTOs.Identity
 {
 	public class LoginDTO
 	{

@@ -1,5 +1,6 @@
 using Data.Models.Classes;
-using Data.Models.DTOs;
+using Data.Models;
+using Data.Models.DTOs.Identity;
 using AutoMapper;
 
 namespace Data.Models.Profiles 
@@ -10,6 +11,7 @@ namespace Data.Models.Profiles
 		{
 			CreateMap<UserDTO, User>();
 			CreateMap<RegisterDTO, User>();
+			CreateMap<UpdateUserDTO, User>();
 		}
 	} 
 }
