@@ -3,7 +3,7 @@ using API.Database;
 using API.Service;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Data.Models.DTOs;
+using Data.Models.DTOs.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Data.Models.Options;
 

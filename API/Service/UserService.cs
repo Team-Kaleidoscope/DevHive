@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using API.Database;
 using AutoMapper;
 using Data.Models.Classes;
-using Data.Models.DTOs;
+using Data.Models.DTOs.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Data.Models.Options;
 using System.IdentityModel.Tokens.Jwt;
@@ -47,7 +47,7 @@ namespace API.Service
 					new Claim(ClaimTypes.Role, user.Role) // Authorize user by role
 				}),
 				Expires = DateTime.UtcNow.AddDays(7),
-				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.Sha512)
+				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
 			};
 
 			var tokenHandler = new JwtSecurityTokenHandler();
