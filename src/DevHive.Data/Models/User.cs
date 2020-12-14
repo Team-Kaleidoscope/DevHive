@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 namespace DevHive.Data.Models
 {
 	[Table("Users")]
-	public class User : IdentityUser<Guid>
+	public class User : IdentityUser<Guid>, IModel
 	{
 		private string _firstName;
 		private string _lastName;

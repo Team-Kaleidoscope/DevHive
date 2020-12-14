@@ -2,7 +2,7 @@ using System;
 
 namespace DevHive.Data.Models
 {
-	public class Language
+	public class Language : IModel
 	{
 		public Guid Id { get; set; }
 	}
