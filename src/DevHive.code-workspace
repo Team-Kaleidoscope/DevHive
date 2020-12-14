@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"name": "DevHive.Web",
+			"path": "./DevHive.Web"
+		},
+		{
+			"name": "DevHive.Services",
+			"path": "./DevHive.Services"
+		},
+		{
+			"name": "DevHive.Data",
+			"path": "./DevHive.Data"
+		},
+	],
+	"settings": {
+		"files.exclude": {
+			"**/.vscode": true,
+			"**/bin": true,
+
+			"**/obj": true,
+			".gitignore" : true,
+		}
+	}
+}
