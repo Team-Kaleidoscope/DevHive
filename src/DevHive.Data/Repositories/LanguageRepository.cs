@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Data.Models.Interfaces.Database;
 using DevHive.Data.Models;
@@ -33,6 +31,22 @@ namespace DevHive.Data.Repositories
 			return await this._context
 				.Set<Language>()
 				.FindAsync(id);
+		}
+
+		public async Task<bool> DoesLanguageNameExist(string languageName)
+		{
+			return await this._context
+				.Set<Language>()
+				.AsNoTracking()
+				.AnyAsync(r => r.Name == languageName);
+		}
+
+		public async Task<bool> DoesLanguageExist(Guid id)
+		{
+			return await this._context
+				.Set<Language>()
+				.AsNoTracking()
+				.AnyAsync(r => r.Id == id);
 		}
 
 		//Update
