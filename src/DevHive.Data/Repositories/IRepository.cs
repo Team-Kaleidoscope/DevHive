@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Data.Models.Interfaces.Database
@@ -9,9 +8,6 @@ namespace Data.Models.Interfaces.Database
 	{
 		//Add Entity to database
 		Task AddAsync(TEntity entity);
-
-		//Return *count* instances of Entity from the database
-		IEnumerable<TEntity> Query(int count);
 
 		//Find entity by id
 		Task<TEntity> GetByIdAsync(Guid id);
