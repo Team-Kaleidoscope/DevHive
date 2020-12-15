@@ -1,14 +1,16 @@
 using AutoMapper;
 using DevHive.Data.Repositories;
 using DevHive.Services.Options;
+using DevHive.Services.Models.Identity.User;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 using DevHive.Data.Models;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace DevHive.Services.Services
 {
@@ -25,61 +27,44 @@ namespace DevHive.Services.Services
 			this._jwtOptions = jwtOptions;
 		}
 
-		public async Task<IActionResult> LoginUser(LoginWebModel loginDTO)
+		public async Task<IActionResult> LoginUser(LoginServiceModel loginModel)
 		{
-			User user = this._userRepository.FindByUsername(loginDTO.UserName);
+			if (!await this._userRepository.IsUsernameValid(loginModel.UserName))
+				return new BadRequestObjectResult("Invalid username!");
 
-			if (user == null)
-				return new NotFoundObjectResult("User does not exist!");
+			User user = await this._userRepository
+				.GetByUsername(loginModel.UserName);
 
-			byte[] key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);  
-
-			if (user.PasswordHash != GeneratePasswordHash(loginDTO.Password))
+			if (user.PasswordHash != GeneratePasswordHash(loginModel.Password))
 				return new BadRequestObjectResult("Incorrect password!");
 
-			// Create Jwt Token configuration
-			var tokenDescriptor = new SecurityTokenDescriptor
+			return new OkObjectResult(new 
 			{
-				Subject = new ClaimsIdentity(new Claim[]
-				{
-					new Claim(ClaimTypes.Role, user.Role) // Authorize user by role
-				}),
-				Expires = DateTime.UtcNow.AddDays(7),
-				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
-			};
-
-			var tokenHandler = new JwtSecurityTokenHandler();
-			var token = tokenHandler.CreateToken(tokenDescriptor);
-			var tokenString = tokenHandler.WriteToken(token);
-
-			return new OkObjectResult(new { Token = tokenString });
+				Token = WriteJWTSecurityToken(user.Role) 
+			});
 		}
 
-		public async Task<IActionResult> RegisterUser(RegisterDTO registerDTO)
+		public async Task<IActionResult> RegisterUser(RegisterServiceModel registerModel)
 		{
 
-			if (this._userRepository.DoesUsernameExist(registerDTO.UserName))
+			if (await this._userRepository.DoesUsernameExist(registerModel.UserName))
 				return new BadRequestObjectResult("Username already exists!");
 
-			User user = this._userMapper.Map<User>(registerDTO);
+			if (await this._userRepository.DoesEmailExist(registerModel.Email))
+				return new BadRequestObjectResult("Username already exists!");
 
-			user.Role = UserRoles.User;
-			user.PasswordHash = GeneratePasswordHash(registerDTO.Password);
+			User user = this._userMapper.Map<User>(registerModel);
+			user.Role = "User";
+			user.PasswordHash = GeneratePasswordHash(registerModel.Password);
 
 			await this._userRepository.AddAsync(user);
 
 			return new CreatedResult("CreateUser", user);
 		}
 
-		private string GeneratePasswordHash(string password)
+		public async Task<IActionResult> GetUserById(Guid id)
 		{
-			//TODO: Implement
-			return password;
-		}
-
-		public async Task<IActionResult> GetUserById(Guid id) 
-		{
-			User user = await this._userRepository.FindByIdAsync(id);
+			User user = await this._userRepository.GetByIdAsync(id);
 
 			if (user == null)
 				return new NotFoundObjectResult("User does not exist!");
@@ -87,17 +72,17 @@ namespace DevHive.Services.Services
 			return new OkObjectResult(user);
 		}
 
-		public async Task<IActionResult> UpdateUser(Guid id, UserDTO userDTO)
+		public async Task<IActionResult> UpdateUser(Guid id, UpdateUserServiceModel updateModel)
 		{
 			if (!this._userRepository.DoesUserExist(id))
 				return new NotFoundObjectResult("User does not exist!");
 
-			if (!this._userRepository.HasThisUsername(id, userDTO.UserName)
-					&& this._userRepository.DoesUsernameExist(userDTO.UserName))
+			if (!this._userRepository.DoesUserHaveThisUsername(id, updateModel.UserName)
+					&& await this._userRepository.IsUsernameValid(updateModel.UserName))
 				return new BadRequestObjectResult("Username already exists!");
 
-			User user = this._userMapper.Map<User>(userDTO);
-			await this._userRepository.EditAsync(id, user);
+			User user = this._userMapper.Map<User>(updateModel);
+			await this._userRepository.EditAsync(user);
 
 			return new AcceptedResult("UpdateUser", user);
 		}
@@ -107,9 +92,37 @@ namespace DevHive.Services.Services
 			if (!this._userRepository.DoesUserExist(id))
 				return new NotFoundObjectResult("User does not exist!");
 
-			await this._userDbRepository.DeleteAsync(id);
-			
+			User user = await this._userRepository.GetByIdAsync(id);
+			await this._userRepository.DeleteAsync(user);
+
 			return new OkResult();
+		}
+
+		private string GeneratePasswordHash(string password)
+		{
+			return SHA512.HashData(Encoding.ASCII.GetBytes(password)).ToString();
+		}
+
+		private string WriteJWTSecurityToken(string role)
+		{
+			//TODO: Try generating the key
+			byte[] signingKey = Convert.FromBase64String(_jwtOptions.Secret);
+			
+			SecurityTokenDescriptor tokenDescriptor = new()
+			{
+				Subject = new ClaimsIdentity(new Claim[]
+				{
+					new Claim(ClaimTypes.Role, role)
+				}),
+				Expires = DateTime.Today.AddDays(7),
+				SigningCredentials = new SigningCredentials(
+					new SymmetricSecurityKey(signingKey),
+					SecurityAlgorithms.HmacSha512Signature)
+			};
+
+			JwtSecurityTokenHandler tokenHandler = new();
+			SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+			return tokenHandler.WriteToken(token);
 		}
 	}
 }

@@ -17,21 +17,7 @@ namespace DevHive.Data.Repositories
 			this._context = context;
 		}
 
-		public bool DoesUserExist(Guid id)
-		{
-			return this._context
-				.Set<User>()
-				.Any(x => x.Id == id);
-		}
-	
-		public bool HasThisUsername(Guid id, string username)
-		{
-			return this._context
-				.Set<User>()
-				.Any(x => x.Id == id &&
-					x.UserName == username);
-		}
-
+		//Create
 		public async Task AddAsync(User entity)
 		{
 			await this._context
@@ -40,24 +26,31 @@ namespace DevHive.Data.Repositories
 
 			await this._context.SaveChangesAsync();
 		}
-
-		public IEnumerable<User> Query(int count)
+		
+		//Read
+		public IEnumerable<User> QueryAll()
 		{
 			return this._context
 				.Set<User>()
 				.AsNoTracking()
-				.Take(count)
 				.AsEnumerable();
-
 		}
 
-		public async Task<User> FindByIdAsync(Guid id)
+		public async Task<User> GetByIdAsync(Guid id)
 		{
 			return await this._context
 				.Set<User>()
 				.FindAsync(id);
 		}
 
+		public async Task<User> GetByUsername(string username)
+		{
+			return await this._context
+				.Set<User>()
+				.FirstOrDefaultAsync(x => x.UserName == username);
+		}
+
+		//Update
 		public async Task EditAsync(User newEntity)
 		{
 			this._context
@@ -67,6 +60,7 @@ namespace DevHive.Data.Repositories
 			await this._context.SaveChangesAsync();
 		}
 
+		//Delete
 		public async Task DeleteAsync(User entity)
 		{
 			this._context
@@ -74,6 +68,45 @@ namespace DevHive.Data.Repositories
 				.Remove(entity);
 
 			await this._context.SaveChangesAsync();
+		}
+	
+		//Validations
+		public bool DoesUserExist(Guid id)
+		{
+			return this._context
+				.Set<User>()
+				.Any(x => x.Id == id);
+		}
+
+		public Task<bool> IsUsernameValid(string username)
+		{
+			return this._context
+				.Set<User>()
+				.AnyAsync(u => u.UserName == username);
+		}
+
+		public bool DoesUserHaveThisUsername(Guid id, string username)
+		{
+			return this._context
+				.Set<User>()
+				.Any(x => x.Id == id &&
+					x.UserName == username);
+		}
+
+		public async Task<bool> DoesUsernameExist(string username)
+		{
+			return await this._context
+				.Set<User>()
+				.AsNoTracking()
+				.AnyAsync(u => u.UserName == username);
+		}
+
+		public async Task<bool> DoesEmailExist(string email)
+		{
+			return await this._context
+				.Set<User>()
+				.AsNoTracking()
+				.AnyAsync(u => u.Email == email);
 		}
 	}
 }

@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Data.Repositories;
+using DevHive.Services.Models.Identity.User;
 using DevHive.Services.Options;
 using DevHive.Services.Services;
 using DevHive.Web.Models.Identity.User;
@@ -15,44 +16,47 @@ namespace DevHive.Web.Controllers
 	public class UserController: ControllerBase
 	{
 		private readonly UserService _service;
+		private readonly IMapper _userMapper;
 
 		public UserController(DevHiveContext context, IMapper mapper, JWTOptions jwtOptions)
 		{
 			this._service = new UserService(context, mapper, jwtOptions);
+			this._userMapper = mapper;
 		}
 
 		[HttpPost]
 		[Route("Login")]
-		public async Task<IActionResult> Login([FromBody] LoginWebModel loginWebModel)
+		public async Task<IActionResult> Login([FromBody] LoginWebModel loginModel)
 		{
-			var loginDTO = 
-			return await this._service.LoginUser(loginDTO);
-			//throw new NotImplementedException();
+			LoginServiceModel loginServiceModel = this._userMapper.Map<LoginServiceModel>(loginModel);
+
+			return await this._service.LoginUser(loginServiceModel);
 		}
 
 		[HttpPost]
 		[Route("Register")]
-		public async Task<IActionResult> Register([FromBody] RegisterWebModel registerWebModel)
+		public async Task<IActionResult> Register([FromBody] RegisterWebModel registerModel)
 		{
-			//return await this._service.RegisterUser(registerDto);
-			throw new NotImplementedException();
+			RegisterServiceModel registerServiceModel = this._userMapper.Map<RegisterServiceModel>(registerModel);
+
+			return await this._service.RegisterUser(registerServiceModel);
 		}
 
 		//Read
 		[HttpGet]
 		public async Task<IActionResult> GetById(Guid id)
 		{
-			//return await this._service.GetUserById(id);
-			throw new NotImplementedException();
+			return await this._service.GetUserById(id);
 		}
 
 		//Update
 		[HttpPut]
 		[Authorize]
-		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserWebModel updateUserWebModel)
+		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserWebModel updateModel)
 		{
-			//return await this._service.UpdateUser(id, userDTO);
-			throw new NotImplementedException();
+			UpdateUserServiceModel updateUserServiceModel = this._userMapper.Map<UpdateUserServiceModel>(updateModel);
+
+			return await this._service.UpdateUser(id, updateUserServiceModel);
 		}
 
 		//Delete
@@ -60,8 +64,7 @@ namespace DevHive.Web.Controllers
 	   	[Authorize]	
 		public async Task<IActionResult> Delete(Guid id)
 		{
-			//return await this._service.DeleteUser(id);
-			throw new NotImplementedException();
+			return await this._service.DeleteUser(id);
 		}
 	}
 }

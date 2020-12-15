@@ -1,6 +1,7 @@
 using DevHive.Data.Models;
 using AutoMapper;
-using DevHive.Services.Models.Identity;
+using DevHive.Services.Models.Identity.User;
+using DevHive.Web.Models.Identity.User;
 
 namespace DevHive.Web.Configurations.Mapping
 {
@@ -8,9 +9,9 @@ namespace DevHive.Web.Configurations.Mapping
 	{
 		public UserMappings()
 		{
-			CreateMap<UserServiceModel, User>();
-			CreateMap<RegisterServiceModel, User>();
-			CreateMap<UpdateUserServiceModel, User>();
+			CreateMap<LoginWebModel, LoginServiceModel>();
+			CreateMap<LoginWebModel, LoginServiceModel>();
+			CreateMap<UpdateUserWebModel, UpdateUserServiceModel>();
 		}
 	} 
 }
