@@ -5,6 +5,7 @@ using DevHive.Data.Repositories;
 using DevHive.Services.Models.Identity;
 using DevHive.Services.Options;
 using DevHive.Services.Services;
+using DevHive.Web.Models.Identity.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +24,7 @@ namespace DevHive.Web.Controllers
 
 		[HttpPost]
 		[Route("Login")]
-		public async Task<IActionResult> Login([FromBody] LoginServiceModel loginServiceModel)
+		public async Task<IActionResult> Login([FromBody] LoginWebModel loginWebModel)
 		{
 			//return await this._service.LoginUser(loginDTO);
 			throw new NotImplementedException();
@@ -31,7 +32,7 @@ namespace DevHive.Web.Controllers
 
 		[HttpPost]
 		[Route("Register")]
-		public async Task<IActionResult> Register([FromBody] RegisterServiceModel registerServiceModel)
+		public async Task<IActionResult> Register([FromBody] RegisterWebModel registerWebModel)
 		{
 			//return await this._service.RegisterUser(registerDto);
 			throw new NotImplementedException();
@@ -48,7 +49,7 @@ namespace DevHive.Web.Controllers
 		//Update
 		[HttpPut]
 		[Authorize]
-		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserServiceModel updateUserServiceModel)
+		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserWebModel updateUserWebModel)
 		{
 			//return await this._service.UpdateUser(id, userDTO);
 			throw new NotImplementedException();
