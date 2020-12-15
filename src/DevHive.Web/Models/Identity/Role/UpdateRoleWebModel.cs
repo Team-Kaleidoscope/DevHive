@@ -1,8 +1,10 @@
+using System;
+
 namespace DevHive.Web.Models.Identity.Role
 {
 	public class UpdateRoleWebModel
 	{
-		public string OldName { get; set; }
+		public Guid Id { get; set; }
 		public string NewName { get; set; }
 	}
 }

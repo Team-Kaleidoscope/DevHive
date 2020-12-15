@@ -1,34 +1,50 @@
-using System;
 using System.Threading.Tasks;
 using DevHive.Data.Repositories;
 using DevHive.Services.Services;
 using Microsoft.AspNetCore.Mvc;
+using DevHive.Web.Models.Identity.Role;
+using AutoMapper;
+using DevHive.Services.Models.Identity.Role;
+using System;
 
 namespace DevHive.Web.Controllers
 {
-	[ApiController]
+    [ApiController]
 	[Route("/api/[controller]")]
 	public class RoleController
 	{
 		private readonly RoleService _service;
+		private readonly IMapper _roleMapper;
 
 		public RoleController(DevHiveContext context)
 		{
-			//this._service = new RoleService(context);
+			this._service = new RoleService(context);
 		}
 
 		[HttpPost]
-		public Task<IActionResult> Create(string name)
+		public Task<IActionResult> Create(CreateRoleWebModel createRoleWebModel)
 		{
-			//return this._service.CreatePost(name);
-			throw new NotImplementedException();
+			RoleServiceModel roleServiceModel = this._roleMapper.Map<RoleServiceModel>(createRoleWebModel); 
+			return this._service.CreateRole(roleServiceModel);
 		}
 
 		[HttpGet]
-		public Task<IActionResult> ShowPost(uint postId)
+		public Task<IActionResult> Get(Guid id)
 		{
-			//return this._service.GetPostById(postId);
-			throw new NotImplementedException();
+			return this._service.GetRoleById(id);
+		}
+
+		[HttpPut]
+		public Task<IActionResult> Update(UpdateRoleWebModel updateRoleWebModel)
+		{
+			RoleServiceModel roleServiceModel = this._roleMapper.Map<RoleServiceModel>(updateRoleWebModel);
+			return this._service.UpdateRole(roleServiceModel);
+		}
+
+		[HttpDelete]
+		public Task<IActionResult> Delete(Guid id)
+		{
+			return this._service.DeleteRole(id);
 		}
 	}
 }
