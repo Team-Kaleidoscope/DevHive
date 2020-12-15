@@ -11,6 +11,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using System.Text;
+using System.Collections.Immutable;
 
 namespace DevHive.Services.Services
 {
