@@ -15,34 +15,59 @@ namespace DevHive.Data.Repositories
 			this._context = context;
 		}
 
+		//Create
 		public async Task AddAsync(Role entity)
 		{
-			throw new NotImplementedException();
+			await this._context
+				.Set<Role>()
+				.AddAsync(entity);
+
+			await this._context.SaveChangesAsync();
 		}
 
+		//Read
 		public async Task<Role> GetByIdAsync(Guid id)
 		{
-			throw new NotImplementedException();
+			return await this._context
+				.Set<Role>()
+				.FindAsync(id);
+				
 		}
 
+		//Update
 		public async Task EditAsync(Role newEntity)
 		{
-			throw new NotImplementedException();
-		}
+			this._context
+				.Set<Role>()
+				.Update(newEntity);
 
+			await this._context.SaveChangesAsync();
+		}
+		
+		//Delete
 		public async Task DeleteAsync(Role entity)
 		{
-			throw new NotImplementedException();
+			this._context
+				.Set<Role>()
+				.Remove(entity);
+
+			await this._context.SaveChangesAsync();
 		}
 
 		public async Task<bool> DoesNameExist(string name)
 		{
-			throw new NotImplementedException();
+			return await this._context
+				.Set<Role>()
+				.AsNoTracking()
+				.AnyAsync(r => r.Name == name);
 		}
 
 		public async Task<bool> DoesRoleExist(Guid id)
 		{
-			throw new NotImplementedException();
+			return await this._context
+				.Set<Role>()
+				.AsNoTracking()
+				.AnyAsync(r => r.Id == id);
 		}
 	}
 }
