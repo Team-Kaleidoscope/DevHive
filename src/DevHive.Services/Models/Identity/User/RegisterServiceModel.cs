@@ -1,4 +1,4 @@
-namespace DevHive.Services.Models.Identity
+namespace DevHive.Services.Models.Identity.User
 {
 	public class RegisterServiceModel
 	{
