@@ -26,9 +26,7 @@ namespace DevHive.Web
 			services.DatabaseConfiguration(Configuration);
 			services.SwaggerConfiguration();
 			services.JWTConfiguration(Configuration);
-			//services.AutoMapperConfiguration();
-
-			services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+			services.AutoMapperConfiguration();			
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

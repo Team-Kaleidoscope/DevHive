@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using DevHive.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Builder;
+using System;
 
 namespace DevHive.Web.Configurations.Extensions
 {
@@ -20,10 +21,20 @@ namespace DevHive.Web.Configurations.Extensions
 				
 			services.Configure<IdentityOptions>(options =>
 			{
-				//TODO: Add more validations
 				options.User.RequireUniqueEmail = true;
 
+				options.Password.RequireDigit = true;
 				options.Password.RequiredLength = 5;
+				options.Password.RequiredUniqueChars = 0;
+				options.Password.RequireLowercase = false;
+				options.Password.RequireNonAlphanumeric = false;
+				options.Password.RequireUppercase = false;
+
+				options.Lockout.AllowedForNewUsers = true;
+				options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+				options.Lockout.MaxFailedAccessAttempts = 5;
+
+				options.Stores.MaxLengthForKeys = 20;
 			});
 		}
 
