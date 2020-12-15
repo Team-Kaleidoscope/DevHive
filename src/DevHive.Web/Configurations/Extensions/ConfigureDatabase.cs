@@ -16,7 +16,7 @@ namespace DevHive.Web.Configurations.Extensions
 			services.AddDbContext<DevHiveContext>(options =>
 				options.UseNpgsql(configuration.GetConnectionString("DEV")));
 
-			services.AddIdentity<User, IdentityRole>()
+			services.AddIdentity<User, Role>()
 				.AddEntityFrameworkStores<DevHiveContext>();
 				
 			services.Configure<IdentityOptions>(options =>
