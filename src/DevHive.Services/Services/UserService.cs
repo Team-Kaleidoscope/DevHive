@@ -72,12 +72,12 @@ namespace DevHive.Services.Services
 			return new OkObjectResult(user);
 		}
 
-		public async Task<IActionResult> UpdateUser(Guid id, UpdateUserServiceModel updateModel)
+		public async Task<IActionResult> UpdateUser(UpdateUserServiceModel updateModel)
 		{
-			if (!this._userRepository.DoesUserExist(id))
+			if (!this._userRepository.DoesUserExist(updateModel.Id))
 				return new NotFoundObjectResult("User does not exist!");
 
-			if (!this._userRepository.DoesUserHaveThisUsername(id, updateModel.UserName)
+			if (!this._userRepository.DoesUserHaveThisUsername(updateModel.Id, updateModel.UserName)
 					&& await this._userRepository.IsUsernameValid(updateModel.UserName))
 				return new BadRequestObjectResult("Username already exists!");
 
