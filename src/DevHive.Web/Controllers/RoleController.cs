@@ -18,12 +18,8 @@ namespace DevHive.Web.Controllers
 
 		public RoleController(DevHiveContext context, IMapper mapper)
 		{
-<<<<<<< HEAD
-			this._service = new RoleService(context, mapper);
-			this._roleMapper = mapper;
-=======
 			this._roleService = new RoleService(context, mapper);
->>>>>>> 791c559712a161c745a407a87d0f7e8d1f00492c
+			this._roleMapper = mapper;
 		}
 
 		[HttpPost]
