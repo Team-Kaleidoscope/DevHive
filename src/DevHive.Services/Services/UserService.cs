@@ -1,21 +1,33 @@
+using AutoMapper;
+using DevHive.Data.Repositories;
+using DevHive.Services.Options;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using DevHive.Data.Models;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System;
+
 namespace DevHive.Services.Services
 {
 	public class UserService
 	{
-		/* private readonly UserRepository _userDbRepository;
+		private readonly UserRepository _userRepository;
 		private readonly IMapper _userMapper;
 		private readonly JWTOptions _jwtOptions;
 
 		public UserService(DevHiveContext context, IMapper mapper, JWTOptions jwtOptions)
 		{
-			this._userDbRepository = new UserRepository(context);
+			this._userRepository = new UserRepository(context);
 			this._userMapper = mapper;
 			this._jwtOptions = jwtOptions;
 		}
 
 		public async Task<IActionResult> LoginUser(LoginDTO loginDTO)
 		{
-			User user = this._userDbRepository.FindByUsername(loginDTO.UserName);
+			User user = this._userRepository.FindByUsername(loginDTO.UserName);
 
 			if (user == null)
 				return new NotFoundObjectResult("User does not exist!");
@@ -46,7 +58,7 @@ namespace DevHive.Services.Services
 		public async Task<IActionResult> RegisterUser(RegisterDTO registerDTO)
 		{
 
-			if (this._userDbRepository.DoesUsernameExist(registerDTO.UserName))
+			if (this._userRepository.DoesUsernameExist(registerDTO.UserName))
 				return new BadRequestObjectResult("Username already exists!");
 
 			User user = this._userMapper.Map<User>(registerDTO);
@@ -54,7 +66,7 @@ namespace DevHive.Services.Services
 			user.Role = UserRoles.User;
 			user.PasswordHash = GeneratePasswordHash(registerDTO.Password);
 
-			await this._userDbRepository.AddAsync(user);
+			await this._userRepository.AddAsync(user);
 
 			return new CreatedResult("CreateUser", user);
 		}
@@ -67,7 +79,7 @@ namespace DevHive.Services.Services
 
 		public async Task<IActionResult> GetUserById(Guid id) 
 		{
-			User user = await this._userDbRepository.FindByIdAsync(id);
+			User user = await this._userRepository.FindByIdAsync(id);
 
 			if (user == null)
 				return new NotFoundObjectResult("User does not exist!");
@@ -77,27 +89,27 @@ namespace DevHive.Services.Services
 
 		public async Task<IActionResult> UpdateUser(Guid id, UserDTO userDTO)
 		{
-			if (!this._userDbRepository.DoesUserExist(id))
+			if (!this._userRepository.DoesUserExist(id))
 				return new NotFoundObjectResult("User does not exist!");
 
-			if (!this._userDbRepository.HasThisUsername(id, userDTO.UserName)
-					&& this._userDbRepository.DoesUsernameExist(userDTO.UserName))
+			if (!this._userRepository.HasThisUsername(id, userDTO.UserName)
+					&& this._userRepository.DoesUsernameExist(userDTO.UserName))
 				return new BadRequestObjectResult("Username already exists!");
 
 			User user = this._userMapper.Map<User>(userDTO);
-			await this._userDbRepository.EditAsync(id, user);
+			await this._userRepository.EditAsync(id, user);
 
 			return new AcceptedResult("UpdateUser", user);
 		}
 
 		public async Task<IActionResult> DeleteUser(Guid id)
 		{
-			if (!this._userDbRepository.DoesUserExist(id))
+			if (!this._userRepository.DoesUserExist(id))
 				return new NotFoundObjectResult("User does not exist!");
 
 			await this._userDbRepository.DeleteAsync(id);
 			
 			return new OkResult();
-		}*/
+		}
 	}
 }

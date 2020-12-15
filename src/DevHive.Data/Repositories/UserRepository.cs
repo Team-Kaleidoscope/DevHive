@@ -3,19 +3,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using Data.Models.Interfaces.Database;
 using DevHive.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
 	public class UserRepository : IRepository<User>
 	{
-		/* private readonly UserRepository<User> _dbRepository;
+		private readonly UserRepository _dbRepository;
 
 		public UserRepository(DbContext context)
 			: base (context)
 		{
 			this._dbRepository = new DbRepository<User>(context);
 		}
-
+		/*
 		public User FindByUsername(string username)
 		{
 			return this._dbRepository.DbSet

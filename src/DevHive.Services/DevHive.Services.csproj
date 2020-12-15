@@ -4,6 +4,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
     <ProjectReference Include="..\DevHive.Data\DevHive.Data.csproj" />
     
     <PackageReference Include="AutoMapper" Version="10.1.1" />
