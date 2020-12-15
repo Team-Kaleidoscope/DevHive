@@ -53,7 +53,7 @@ namespace DevHive.Services.Services
 				return new BadRequestObjectResult("Email already exists!");
 
 			User user = this._userMapper.Map<User>(registerModel);
-			user.Role = "User";
+			user.Role = Role.DefaultRole;
 			user.PasswordHash = GeneratePasswordHash(registerModel.Password);
 
 			await this._userRepository.AddAsync(user);

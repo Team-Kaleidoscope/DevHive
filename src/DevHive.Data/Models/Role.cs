@@ -6,5 +6,7 @@ namespace DevHive.Data.Models
 {
 	[Table("Roles")]
 	public class Role : IdentityRole<Guid>
-	{ }
+	{
+		public const string DefaultRole = "User";
+	}
 }
