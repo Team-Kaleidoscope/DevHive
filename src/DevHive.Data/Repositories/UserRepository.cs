@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,12 +10,11 @@ namespace DevHive.Data.Repositories
 {
 	public class UserRepository : IRepository<User>
 	{
-		private readonly UserRepository _dbRepository;
+		private readonly DbContext _context;
 
 		public UserRepository(DbContext context)
-			: base (context)
 		{
-			this._dbRepository = new DbRepository<User>(context);
+			this._context = context;
 		}
 		/*
 		public User FindByUsername(string username)
@@ -42,17 +42,26 @@ namespace DevHive.Data.Repositories
 					x.UserName == username);
 		} */
 
-		public Task AddAsync(User entity)
+		public async Task AddAsync(User entity)
 		{
-			throw new System.NotImplementedException();
+			await this._context
+				.Set<User>()
+				.AddAsync(entity);
+
+			await this._context.SaveChangesAsync();
 		}
 
 		public IEnumerable<User> Query(int count)
 		{
-			throw new System.NotImplementedException();
+			return this._context
+				.Set<User>()
+				.AsNoTracking()
+				.Take(count)
+				.AsEnumerable();
+
 		}
 
-		public Task<User> FindByIdAsync(object id)
+		public Task<User> FindByIdAsync(Guid id)
 		{
 			throw new System.NotImplementedException();
 		}

@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Data.Repositories;
-using DevHive.Services.Models.Identity;
 using DevHive.Services.Options;
 using DevHive.Services.Services;
 using DevHive.Web.Models.Identity.User;
@@ -19,15 +18,16 @@ namespace DevHive.Web.Controllers
 
 		public UserController(DevHiveContext context, IMapper mapper, JWTOptions jwtOptions)
 		{
-			//this._service = new UserService(context, mapper, jwtOptions);
+			this._service = new UserService(context, mapper, jwtOptions);
 		}
 
 		[HttpPost]
 		[Route("Login")]
 		public async Task<IActionResult> Login([FromBody] LoginWebModel loginWebModel)
 		{
-			//return await this._service.LoginUser(loginDTO);
-			throw new NotImplementedException();
+			var loginDTO = 
+			return await this._service.LoginUser(loginDTO);
+			//throw new NotImplementedException();
 		}
 
 		[HttpPost]

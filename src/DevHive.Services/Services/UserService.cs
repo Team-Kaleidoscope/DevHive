@@ -25,7 +25,7 @@ namespace DevHive.Services.Services
 			this._jwtOptions = jwtOptions;
 		}
 
-		public async Task<IActionResult> LoginUser(LoginDTO loginDTO)
+		public async Task<IActionResult> LoginUser(LoginWebModel loginDTO)
 		{
 			User user = this._userRepository.FindByUsername(loginDTO.UserName);
 

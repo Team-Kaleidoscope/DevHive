@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,12 +14,12 @@ namespace Data.Models.Interfaces.Database
 		IEnumerable<TEntity> Query(int count);
 
 		//Find entity by id
-		Task<TEntity> FindByIdAsync(object id);
+		Task<TEntity> FindByIdAsync(Guid id);
 
 		//Modify Entity from database
-		Task EditAsync(object id, TEntity newEntity);
+		Task EditAsync(Guid id, TEntity newEntity);
 
 		//Delete Entity from database
-		Task DeleteAsync(object id);
+		Task DeleteAsync(Guid id);
 	}
 }
