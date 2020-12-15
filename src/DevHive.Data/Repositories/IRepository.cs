@@ -17,7 +17,7 @@ namespace Data.Models.Interfaces.Database
 		Task<TEntity> FindByIdAsync(Guid id);
 
 		//Modify Entity from database
-		Task EditAsync(Guid id, TEntity newEntity);
+		Task EditAsync(TEntity newEntity);
 
 		//Delete Entity from database
 		Task DeleteAsync(Guid id);
