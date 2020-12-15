@@ -1,5 +1,3 @@
-using System;
-using System.Net;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +8,10 @@ namespace DevHive.Web.Controllers
 	public class ErrorController
 	{
 		[HttpGet]
-		public HttpStatusCode Error(HttpRequestException exception)
-		{	
-			return BadRequest(exception)
+		public IActionResult Error(HttpRequestException exception)
+		{
+			return new BadRequestObjectResult(exception);
 		}
 	}
 }
+
