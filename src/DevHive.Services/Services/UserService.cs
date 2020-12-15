@@ -46,7 +46,6 @@ namespace DevHive.Services.Services
 
 		public async Task<IActionResult> RegisterUser(RegisterServiceModel registerModel)
 		{
-
 			if (await this._userRepository.DoesUsernameExist(registerModel.UserName))
 				return new BadRequestObjectResult("Username already exists!");
 
@@ -100,7 +99,7 @@ namespace DevHive.Services.Services
 
 		private string GeneratePasswordHash(string password)
 		{
-			return SHA512.HashData(Encoding.ASCII.GetBytes(password)).ToString();
+			return string.Join(string.Empty, SHA512.HashData(Encoding.ASCII.GetBytes(password)));
 		}
 
 		private string WriteJWTSecurityToken(string role)
