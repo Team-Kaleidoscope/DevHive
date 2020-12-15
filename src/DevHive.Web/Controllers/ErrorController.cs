@@ -10,11 +10,9 @@ namespace DevHive.Web.Controllers
 	public class ErrorController
 	{
 		[HttpGet]
-		public HttpStatusCode HttpError(HttpRequestException exception)
-		{
-			Console.WriteLine("WE HERE, BOIIIIIII");
-
-			return HttpStatusCode.OK;
+		public HttpStatusCode Error(HttpRequestException exception)
+		{	
+			return BadRequest(exception)
 		}
 	}
 }

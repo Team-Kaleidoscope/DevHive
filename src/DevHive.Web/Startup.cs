@@ -34,7 +34,8 @@ namespace DevHive.Web
 		{
 			if (env.IsDevelopment())
 			{
-				app.UseDeveloperExceptionPage();
+				//app.UseDeveloperExceptionPage();
+				app.UseExceptionHandler("/api/Error");
 				//app.UseExceptionHandler("/api/HttpError");
 				app.UseSwaggerConfiguration();
 			}
