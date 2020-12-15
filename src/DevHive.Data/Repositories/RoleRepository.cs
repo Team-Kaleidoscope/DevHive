@@ -13,7 +13,7 @@ namespace DevHive.Data.Repositories
 		}
 
 		//Find entity by id
-		public async Task<TEntity> GetByIdAsync(Guid id)
+		public async Task<Role> GetByIdAsync(Guid id)
 		{
 			throw new NotImplementedException();
 		}

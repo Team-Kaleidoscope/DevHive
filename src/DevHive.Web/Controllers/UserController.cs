@@ -55,8 +55,9 @@ namespace DevHive.Web.Controllers
 		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserWebModel updateModel)
 		{
 			UpdateUserServiceModel updateUserServiceModel = this._userMapper.Map<UpdateUserServiceModel>(updateModel);
+			updateUserServiceModel.Id = id;
 
-			return await this._service.UpdateUser(id, updateUserServiceModel);
+			return await this._service.UpdateUser(updateUserServiceModel);
 		}
 
 		//Delete
