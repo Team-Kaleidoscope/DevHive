@@ -1,6 +1,6 @@
 using System;
 
-namespace DevHive.Services.Models.Identity
+namespace DevHive.Services.Models.Identity.User
 {
 	public class UpdateUserServiceModel : UserServiceModel
 	{
