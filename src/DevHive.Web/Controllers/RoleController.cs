@@ -24,7 +24,9 @@ namespace DevHive.Web.Controllers
 		[HttpPost]
 		public Task<IActionResult> Create(CreateRoleWebModel createRoleWebModel)
 		{
-			RoleServiceModel roleServiceModel = this._roleMapper.Map<RoleServiceModel>(createRoleWebModel); 
+			RoleServiceModel roleServiceModel = 
+				this._roleMapper.Map<RoleServiceModel>(createRoleWebModel); 
+			
 			return this._service.CreateRole(roleServiceModel);
 		}
 
@@ -37,7 +39,9 @@ namespace DevHive.Web.Controllers
 		[HttpPut]
 		public Task<IActionResult> Update(UpdateRoleWebModel updateRoleWebModel)
 		{
-			RoleServiceModel roleServiceModel = this._roleMapper.Map<RoleServiceModel>(updateRoleWebModel);
+			RoleServiceModel roleServiceModel = 
+				this._roleMapper.Map<RoleServiceModel>(updateRoleWebModel);
+
 			return this._service.UpdateRole(roleServiceModel);
 		}
 
