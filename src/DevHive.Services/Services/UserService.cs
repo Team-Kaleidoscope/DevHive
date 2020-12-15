@@ -50,7 +50,7 @@ namespace DevHive.Services.Services
 				return new BadRequestObjectResult("Username already exists!");
 
 			if (await this._userRepository.DoesEmailExist(registerModel.Email))
-				return new BadRequestObjectResult("Username already exists!");
+				return new BadRequestObjectResult("Email already exists!");
 
 			User user = this._userMapper.Map<User>(registerModel);
 			user.Role = "User";
