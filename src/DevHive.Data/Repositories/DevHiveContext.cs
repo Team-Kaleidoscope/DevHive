@@ -1,12 +1,11 @@
 using System;
 using DevHive.Data.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class DevHiveContext : IdentityDbContext<User, Role<Guid>, Guid>
+	public class DevHiveContext : IdentityDbContext<User, Role, Guid>
 	{
 		public DevHiveContext(DbContextOptions options)
 			: base(options) { }
