@@ -14,7 +14,8 @@ namespace DevHive.Web.Configurations.Extensions
 		public static void DatabaseConfiguration(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.AddDbContext<DevHiveContext>(options =>
-				options.UseNpgsql(configuration.GetConnectionString("DEV")));
+				options.UseNpgsql(configuration.GetConnectionString("DEV"), 
+				x => x.MigrationsAssembly("DevHive.Web")));
 
 			services.AddIdentity<User, Role>()
 				.AddEntityFrameworkStores<DevHiveContext>();
