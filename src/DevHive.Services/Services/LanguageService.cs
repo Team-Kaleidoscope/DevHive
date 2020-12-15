@@ -31,7 +31,7 @@ namespace DevHive.Services.Services
 			return new CreatedResult("CreateLanguage", language);
 		}
 
-		public async Task<IActionResult> GetLanguageByID(Guid id)
+		public async Task<IActionResult> GetLanguageById(Guid id)
 		{
 			Language language = await this._languageRepository.GetByIdAsync(id);
 
