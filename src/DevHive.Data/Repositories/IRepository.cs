@@ -20,6 +20,6 @@ namespace Data.Models.Interfaces.Database
 		Task EditAsync(TEntity newEntity);
 
 		//Delete Entity from database
-		Task DeleteAsync(Guid id);
+		Task DeleteAsync(TEntity entity);
 	}
 }
