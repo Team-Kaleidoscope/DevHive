@@ -15,12 +15,12 @@ namespace DevHive.Web.Controllers
 	[Route("/api/[controller]")]
 	public class UserController: ControllerBase
 	{
-		private readonly UserService _service;
+		private readonly UserService _userService;
 		private readonly IMapper _userMapper;
 
 		public UserController(DevHiveContext context, IMapper mapper, JWTOptions jwtOptions)
 		{
-			this._service = new UserService(context, mapper, jwtOptions);
+			this._userService = new UserService(context, mapper, jwtOptions);
 			this._userMapper = mapper;
 		}
 
@@ -30,7 +30,7 @@ namespace DevHive.Web.Controllers
 		{
 			LoginServiceModel loginServiceModel = this._userMapper.Map<LoginServiceModel>(loginModel);
 
-			return await this._service.LoginUser(loginServiceModel);
+			return await this._userService.LoginUser(loginServiceModel);
 		}
 
 		[HttpPost]
@@ -39,14 +39,14 @@ namespace DevHive.Web.Controllers
 		{
 			RegisterServiceModel registerServiceModel = this._userMapper.Map<RegisterServiceModel>(registerModel);
 
-			return await this._service.RegisterUser(registerServiceModel);
+			return await this._userService.RegisterUser(registerServiceModel);
 		}
 
 		//Read
 		[HttpGet]
 		public async Task<IActionResult> GetById(Guid id)
 		{
-			return await this._service.GetUserById(id);
+			return await this._userService.GetUserById(id);
 		}
 
 		//Update
@@ -57,7 +57,7 @@ namespace DevHive.Web.Controllers
 			UpdateUserServiceModel updateUserServiceModel = this._userMapper.Map<UpdateUserServiceModel>(updateModel);
 			updateUserServiceModel.Id = id;
 
-			return await this._service.UpdateUser(updateUserServiceModel);
+			return await this._userService.UpdateUser(updateUserServiceModel);
 		}
 
 		//Delete
@@ -65,7 +65,7 @@ namespace DevHive.Web.Controllers
 	   	[Authorize]	
 		public async Task<IActionResult> Delete(Guid id)
 		{
-			return await this._service.DeleteUser(id);
+			return await this._userService.DeleteUser(id);
 		}
 	}
 }

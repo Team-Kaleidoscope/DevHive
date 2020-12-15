@@ -13,13 +13,17 @@ namespace DevHive.Web.Controllers
 	[Route("/api/[controller]")]
 	public class RoleController
 	{
-		private readonly RoleService _service;
+		private readonly RoleService _roleService;
 		private readonly IMapper _roleMapper;
 
 		public RoleController(DevHiveContext context, IMapper mapper)
 		{
+<<<<<<< HEAD
 			this._service = new RoleService(context, mapper);
 			this._roleMapper = mapper;
+=======
+			this._roleService = new RoleService(context, mapper);
+>>>>>>> 791c559712a161c745a407a87d0f7e8d1f00492c
 		}
 
 		[HttpPost]
@@ -28,13 +32,13 @@ namespace DevHive.Web.Controllers
 			RoleServiceModel roleServiceModel = 
 				this._roleMapper.Map<RoleServiceModel>(createRoleWebModel); 
 			
-			return this._service.CreateRole(roleServiceModel);
+			return this._roleService.CreateRole(roleServiceModel);
 		}
 
 		[HttpGet]
-		public Task<IActionResult> Get(Guid id)
+		public Task<IActionResult> GetById(Guid id)
 		{
-			return this._service.GetRoleById(id);
+			return this._roleService.GetRoleById(id);
 		}
 
 		[HttpPut]
@@ -43,13 +47,13 @@ namespace DevHive.Web.Controllers
 			RoleServiceModel roleServiceModel = 
 				this._roleMapper.Map<RoleServiceModel>(updateRoleWebModel);
 
-			return this._service.UpdateRole(roleServiceModel);
+			return this._roleService.UpdateRole(roleServiceModel);
 		}
 
 		[HttpDelete]
 		public Task<IActionResult> Delete(Guid id)
 		{
-			return this._service.DeleteRole(id);
+			return this._roleService.DeleteRole(id);
 		}
 	}
 }
