@@ -16,31 +16,21 @@ namespace DevHive.Data.Repositories
 		{
 			this._context = context;
 		}
-		/*
-		public User FindByUsername(string username)
-		{
-			return this._dbRepository.DbSet
-				.FirstOrDefault(usr => usr.UserName == username);
-		}
-
-		public bool DoesUsernameExist(string username)
-		{
-			return this._dbRepository.DbSet
-				.Any(x => x.UserName == username);
-		}
 
 		public bool DoesUserExist(Guid id)
 		{
-			return this._dbRepository.DbSet
+			return this._context
+				.Set<User>()
 				.Any(x => x.Id == id);
 		}
 	
 		public bool HasThisUsername(Guid id, string username)
 		{
-			return this._dbRepository.DbSet
+			return this._context
+				.Set<User>()
 				.Any(x => x.Id == id &&
 					x.UserName == username);
-		} */
+		}
 
 		public async Task AddAsync(User entity)
 		{
@@ -61,19 +51,29 @@ namespace DevHive.Data.Repositories
 
 		}
 
-		public Task<User> FindByIdAsync(Guid id)
+		public async Task<User> FindByIdAsync(Guid id)
 		{
-			throw new System.NotImplementedException();
+			return await this._context
+				.Set<User>()
+				.FindAsync(id);
 		}
 
-		public Task EditAsync(object id, User newEntity)
+		public async Task EditAsync(User newEntity)
 		{
-			throw new System.NotImplementedException();
+			this._context
+				.Set<User>()
+				.Update(newEntity);
+
+			await this._context.SaveChangesAsync();
 		}
 
-		public Task DeleteAsync(object id)
+		public async Task DeleteAsync(User entity)
 		{
-			throw new System.NotImplementedException();
+			this._context
+				.Set<User>()
+				.Remove(entity);
+
+			await this._context.SaveChangesAsync();
 		}
 	}
 }
