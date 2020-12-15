@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class DevHiveContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
+	public class DevHiveContext : IdentityDbContext<User, Role<Guid>, Guid>
 	{
 		public DevHiveContext(DbContextOptions options)
 			: base(options) { }
