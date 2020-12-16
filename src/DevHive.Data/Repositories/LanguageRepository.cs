@@ -16,13 +16,13 @@ namespace DevHive.Data.Repositories
 		}
 
 		//Create
-		public async Task AddAsync(Language entity)
+		public async Task<bool> AddAsync(Language entity)
 		{
 			await this._context
 				.Set<Language>()
 				.AddAsync(entity);
 
-			await this._context.SaveChangesAsync();
+			return await this.SaveChangesAsync();
 		}
 
 		//Read
@@ -50,23 +50,30 @@ namespace DevHive.Data.Repositories
 		}
 
 		//Update
-		public async Task EditAsync(Language newEntity)
+		public async Task<bool> EditAsync(Language newEntity)
 		{
 				this._context
 				.Set<Language>()
 				.Update(newEntity);
 
-			await this._context.SaveChangesAsync();
+			return await this.SaveChangesAsync();
 		}
 
 		//Delete
-		public async Task DeleteAsync(Language entity)
+		public async Task<bool> DeleteAsync(Language entity)
 		{
 			this._context
 				.Set<Language>()
 				.Remove(entity);
 
-			await this._context.SaveChangesAsync();
+			return await this.SaveChangesAsync();
 		}
+	
+		private async Task<bool> SaveChangesAsync()
+        {
+            int result = await this._context.SaveChangesAsync();
+
+            return result >= 0;
+        }
 	}
 }
