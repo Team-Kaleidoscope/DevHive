@@ -7,15 +7,15 @@ namespace Data.Models.Interfaces.Database
 		where TEntity : class
 	{
 		//Add Entity to database
-		Task AddAsync(TEntity entity);
+		Task<bool> AddAsync(TEntity entity);
 
 		//Find entity by id
 		Task<TEntity> GetByIdAsync(Guid id);
 
 		//Modify Entity from database
-		Task EditAsync(TEntity newEntity);
+		Task<bool> EditAsync(TEntity newEntity);
 
 		//Delete Entity from database
-		Task DeleteAsync(TEntity entity);
+		Task<bool> DeleteAsync(TEntity entity);
 	}
 }
