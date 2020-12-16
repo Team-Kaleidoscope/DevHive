@@ -28,6 +28,7 @@ namespace DevHive.Web.Models.Identity.User
 		public string LastName { get; set; }
 
 		[Required]
+		[GoodPassword]
 		public string Password { get; set; }
 	}
 }
