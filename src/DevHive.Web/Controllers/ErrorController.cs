@@ -8,7 +8,7 @@ namespace DevHive.Web.Controllers
 	public class ErrorController
 	{
 		[HttpGet]
-		public IActionResult Error(HttpRequestException exception)
+		public IActionResult Error(Exception exception)
 		{
 			return new BadRequestObjectResult(exception);
 		}
