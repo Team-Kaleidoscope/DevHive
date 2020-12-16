@@ -23,26 +23,50 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPost]
-		public Task<IActionResult> Create(CreateLanguageWebModel createLanguageWebModel)
+		public async Task<IActionResult> Create([FromBody] LanguageWebModel languageWebModel)
 		{
-			LanguageServiceModel languageServiceModel = this._languageMapper.Map<LanguageServiceModel>(createLanguageWebModel); 
-			
-			return this._languageService.CreateLanguage(languageServiceModel);
+			LanguageServiceModel languageServiceModel = this._languageMapper.Map<LanguageServiceModel>(languageWebModel);
+
+			bool result = await this._languageService.CreateLanguage(languageServiceModel);
+
+			if(!result)
+				return new BadRequestObjectResult("Could not create Language");
+
+			return new OkResult();
 		}
 
 		[HttpGet]
-		public Task<IActionResult> GetById(Guid id)
+		public async Task<IActionResult> GetById(Guid id)
 		{
-			return this._languageService.GetLanguageById(id);
+			LanguageServiceModel languageServiceModel = await this._languageService.GetLanguageById(id);
+			LanguageWebModel languageWebModel = this._languageMapper.Map<LanguageWebModel>(languageServiceModel);
+
+			return new OkObjectResult(languageWebModel);
 		}
 
-
 		[HttpPut]
-		public Task<IActionResult> Update(UpdateLanguageWebModel updateLanguageWebModel)
+		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateLanguageWebModel updateModel)
 		{
-			LanguageServiceModel languageServiceModel = this._languageMapper.Map<LanguageServiceModel>(updateLanguageWebModel);
+			UpdateLanguageServiceModel updatelanguageServiceModel = this._languageMapper.Map<UpdateLanguageServiceModel>(updateModel);
+			updatelanguageServiceModel.Id = id;
 
-			return this._languageService.UpdateLanguage(languageServiceModel);
+			bool result = await this._languageService.UpdateLanguage(updatelanguageServiceModel);
+
+			if(!result)
+				return new BadRequestObjectResult("Could not update Language");
+
+			return new OkResult();
+		}
+	
+		[HttpDelete]
+		public async Task<IActionResult> Delete(Guid id)
+		{
+			bool result = await this._languageService.DeleteLanguage(id);
+			
+			if(!result)
+				return new BadRequestObjectResult("Could not delete Language");
+
+			return new OkResult();
 		}
 	}
 }

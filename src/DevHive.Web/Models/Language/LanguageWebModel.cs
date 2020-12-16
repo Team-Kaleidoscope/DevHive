@@ -1,6 +1,6 @@
 namespace DevHive.Web.Models.Language
 {
-	public class CreateLanguageWebModel
+	public class LanguageWebModel
 	{
 		public string Name { get; set; }
 	}

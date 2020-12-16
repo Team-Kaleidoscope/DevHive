@@ -2,9 +2,8 @@ using System;
 
 namespace DevHive.Web.Models.Language
 {
-	public class UpdateLanguageWebModel
+	public class UpdateLanguageWebModel : LanguageWebModel
 	{
 		public Guid Id { get; set; }
-		public string NewName { get; set; }
 	}
 }
