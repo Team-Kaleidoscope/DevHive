@@ -37,6 +37,12 @@ namespace DevHive.Web.Configurations.Extensions
 
 				options.Stores.MaxLengthForKeys = 20;
 			});
+
+			services.AddAuthorization(options =>
+			{
+				options.AddPolicy($"{Role.DefaultRole}",
+					policy => policy.RequireRole($"{Role.DefaultRole}"));
+			});
 		}
 
 		public static void UseDatabaseConfiguration(this IApplicationBuilder app)

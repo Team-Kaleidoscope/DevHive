@@ -11,7 +11,6 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using System.Text;
-using System.Collections.Immutable;
 
 namespace DevHive.Services.Services
 {
@@ -62,14 +61,12 @@ namespace DevHive.Services.Services
 			return new CreatedResult("CreateUser", user);
 		}
 
-		public async Task<IActionResult> GetUserById(Guid id)
+		public async Task<UserServiceModel> GetUserById(Guid id)
 		{
-			User user = await this._userRepository.GetByIdAsync(id);
+			User user = await this._userRepository.GetByIdAsync(id)
+				?? throw new ArgumentException("User does not exist!");
 
-			if (user == null)
-				return new NotFoundObjectResult("User does not exist!");
-
-			return new OkObjectResult(user);
+			return this._userMapper.Map<UserServiceModel>(user);
 		}
 
 		public async Task<IActionResult> UpdateUser(UpdateUserServiceModel updateModel)

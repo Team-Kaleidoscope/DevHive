@@ -11,7 +11,10 @@ namespace DevHive.Web.Configurations.Mapping
 		{
 			CreateMap<LoginWebModel, LoginServiceModel>();
 			CreateMap<RegisterWebModel, RegisterServiceModel>();
+			CreateMap<UserWebModel, UserServiceModel>();
 			CreateMap<UpdateUserWebModel, UpdateUserServiceModel>();
+
+			CreateMap<UserServiceModel, UserWebModel>();
 		}
 	} 
 }

@@ -11,6 +11,8 @@ namespace DevHive.Services.Configurations.Mapping
 			CreateMap<UserServiceModel, User>();
 			CreateMap<RegisterServiceModel, User>();
 			CreateMap<UpdateUserServiceModel, User>();
+
+			CreateMap<User, UserServiceModel>();
 		}
 	} 
 }

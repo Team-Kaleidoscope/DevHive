@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using DevHive.Data.Models;
 using DevHive.Data.Repositories;
 using DevHive.Services.Models.Identity.User;
 using DevHive.Services.Options;
@@ -46,7 +47,9 @@ namespace DevHive.Web.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetById(Guid id)
 		{
-			return await this._userService.GetUserById(id);
+			UserServiceModel serviceModel = await this._userService.GetUserById(id);
+
+			return new OkObjectResult(this._userMapper.Map<UserWebModel>(serviceModel));
 		}
 
 		//Update
@@ -62,7 +65,7 @@ namespace DevHive.Web.Controllers
 
 		//Delete
 		[HttpDelete]
-	   	[Authorize]	
+		[Authorize(Roles = Role.DefaultRole)]
 		public async Task<IActionResult> Delete(Guid id)
 		{
 			return await this._userService.DeleteUser(id);
