@@ -31,7 +31,10 @@ namespace DevHive.Web.Controllers
 		{
 			LoginServiceModel loginServiceModel = this._userMapper.Map<LoginServiceModel>(loginModel);
 
-			return await this._userService.LoginUser(loginServiceModel);
+			TokenServiceModel tokenServiceModel = await this._userService.LoginUser(loginServiceModel);
+			TokenWebModel tokenWebModel = this._userMapper.Map<TokenWebModel>(tokenServiceModel);
+
+			return new OkObjectResult(tokenWebModel);
 		}
 
 		[HttpPost]
@@ -40,27 +43,35 @@ namespace DevHive.Web.Controllers
 		{
 			RegisterServiceModel registerServiceModel = this._userMapper.Map<RegisterServiceModel>(registerModel);
 
-			return await this._userService.RegisterUser(registerServiceModel);
+			UserServiceModel userServiceModel = await this._userService.RegisterUser(registerServiceModel);
+			UserWebModel userWebModel = this._userMapper.Map<UserWebModel>(userServiceModel);
+
+			return new CreatedResult("Register", userWebModel);
 		}
 
 		//Read
 		[HttpGet]
 		public async Task<IActionResult> GetById(Guid id)
 		{
-			UserServiceModel serviceModel = await this._userService.GetUserById(id);
+			UserServiceModel userServiceModel = await this._userService.GetUserById(id);
+			UserWebModel userWebModel = this._userMapper.Map<UserWebModel>(userServiceModel);
 
-			return new OkObjectResult(this._userMapper.Map<UserWebModel>(serviceModel));
+			return new OkObjectResult(userWebModel);
 		}
 
 		//Update
 		[HttpPut]
-		[Authorize]
+		[Authorize(Roles = Role.DefaultRole)]
 		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserWebModel updateModel)
 		{
 			UpdateUserServiceModel updateUserServiceModel = this._userMapper.Map<UpdateUserServiceModel>(updateModel);
 			updateUserServiceModel.Id = id;
 
-			return await this._userService.UpdateUser(updateUserServiceModel);
+			UserServiceModel userServiceModel = await this._userService.UpdateUser(updateUserServiceModel);
+			UserWebModel userWebModel = this._userMapper.Map<UserWebModel>(userServiceModel);
+
+			return new AcceptedResult("UpdateUser", userWebModel);
+
 		}
 
 		//Delete
@@ -68,7 +79,8 @@ namespace DevHive.Web.Controllers
 		[Authorize(Roles = Role.DefaultRole)]
 		public async Task<IActionResult> Delete(Guid id)
 		{
-			return await this._userService.DeleteUser(id);
+			await this._userService.DeleteUser(id);
+			return new OkResult();
 		}
 	}
 }

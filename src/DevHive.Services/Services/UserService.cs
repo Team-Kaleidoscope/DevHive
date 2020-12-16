@@ -27,30 +27,26 @@ namespace DevHive.Services.Services
 			this._jwtOptions = jwtOptions;
 		}
 
-		public async Task<IActionResult> LoginUser(LoginServiceModel loginModel)
+		public async Task<TokenServiceModel> LoginUser(LoginServiceModel loginModel)
 		{
 			if (!await this._userRepository.IsUsernameValid(loginModel.UserName))
-				return new BadRequestObjectResult("Invalid username!");
+				throw new ArgumentException("Invalid username!");
 
-			User user = await this._userRepository
-				.GetByUsername(loginModel.UserName);
+			User user = await this._userRepository.GetByUsername(loginModel.UserName);
 
 			if (user.PasswordHash != GeneratePasswordHash(loginModel.Password))
-				return new BadRequestObjectResult("Incorrect password!");
+				throw new ArgumentException("Incorrect password!");
 
-			return new OkObjectResult(new 
-			{
-				Token = WriteJWTSecurityToken(user.Role) 
-			});
+			return new TokenServiceModel(WriteJWTSecurityToken(user.Role));
 		}
 
-		public async Task<IActionResult> RegisterUser(RegisterServiceModel registerModel)
+		public async Task<UserServiceModel> RegisterUser(RegisterServiceModel registerModel)
 		{
 			if (await this._userRepository.DoesUsernameExist(registerModel.UserName))
-				return new BadRequestObjectResult("Username already exists!");
+				throw new ArgumentException("Username already exists!");
 
 			if (await this._userRepository.DoesEmailExist(registerModel.Email))
-				return new BadRequestObjectResult("Email already exists!");
+				throw new ArgumentException("Email already exists!");
 
 			User user = this._userMapper.Map<User>(registerModel);
 			user.Role = Role.DefaultRole;
@@ -58,7 +54,7 @@ namespace DevHive.Services.Services
 
 			await this._userRepository.AddAsync(user);
 
-			return new CreatedResult("CreateUser", user);
+			return this._userMapper.Map<UserServiceModel>(user);
 		}
 
 		public async Task<UserServiceModel> GetUserById(Guid id)
@@ -69,30 +65,28 @@ namespace DevHive.Services.Services
 			return this._userMapper.Map<UserServiceModel>(user);
 		}
 
-		public async Task<IActionResult> UpdateUser(UpdateUserServiceModel updateModel)
+		public async Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateModel)
 		{
 			if (!this._userRepository.DoesUserExist(updateModel.Id))
-				return new NotFoundObjectResult("User does not exist!");
+				throw new ArgumentException("User does not exist!");
 
 			if (!this._userRepository.DoesUserHaveThisUsername(updateModel.Id, updateModel.UserName)
 					&& await this._userRepository.IsUsernameValid(updateModel.UserName))
-				return new BadRequestObjectResult("Username already exists!");
+				throw new ArgumentException("Username already exists!");
 
 			User user = this._userMapper.Map<User>(updateModel);
 			await this._userRepository.EditAsync(user);
 
-			return new AcceptedResult("UpdateUser", user);
+			return this._userMapper.Map<UserServiceModel>(user);;
 		}
 
-		public async Task<IActionResult> DeleteUser(Guid id)
+		public async Task DeleteUser(Guid id)
 		{
 			if (!this._userRepository.DoesUserExist(id))
-				return new NotFoundObjectResult("User does not exist!");
+				throw new ArgumentException("User does not exist!");
 
 			User user = await this._userRepository.GetByIdAsync(id);
 			await this._userRepository.DeleteAsync(user);
-
-			return new OkResult();
 		}
 
 		private string GeneratePasswordHash(string password)
