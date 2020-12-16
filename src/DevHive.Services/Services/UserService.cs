@@ -40,7 +40,7 @@ namespace DevHive.Services.Services
 			return new TokenServiceModel(WriteJWTSecurityToken(user.Role));
 		}
 
-		public async Task<UserServiceModel> RegisterUser(RegisterServiceModel registerModel)
+		public async Task<TokenServiceModel> RegisterUser(RegisterServiceModel registerModel)
 		{
 			if (await this._userRepository.DoesUsernameExist(registerModel.UserName))
 				throw new ArgumentException("Username already exists!");
@@ -54,7 +54,7 @@ namespace DevHive.Services.Services
 
 			await this._userRepository.AddAsync(user);
 
-			return this._userMapper.Map<UserServiceModel>(user);
+			return new TokenServiceModel(WriteJWTSecurityToken(user.Role));
 		}
 
 		public async Task<UserServiceModel> GetUserById(Guid id)

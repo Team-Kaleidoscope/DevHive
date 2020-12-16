@@ -43,10 +43,10 @@ namespace DevHive.Web.Controllers
 		{
 			RegisterServiceModel registerServiceModel = this._userMapper.Map<RegisterServiceModel>(registerModel);
 
-			UserServiceModel userServiceModel = await this._userService.RegisterUser(registerServiceModel);
-			UserWebModel userWebModel = this._userMapper.Map<UserWebModel>(userServiceModel);
+			TokenServiceModel tokenServiceModel = await this._userService.RegisterUser(registerServiceModel);
+			TokenWebModel tokenWebModel = this._userMapper.Map<TokenWebModel>(tokenServiceModel);
 
-			return new CreatedResult("Register", userWebModel);
+			return new CreatedResult("Register", tokenWebModel);
 		}
 
 		//Read
