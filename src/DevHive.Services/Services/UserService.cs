@@ -3,7 +3,6 @@ using DevHive.Data.Repositories;
 using DevHive.Services.Options;
 using DevHive.Services.Models.Identity.User;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using DevHive.Data.Models;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using System.Text;
 using System.Collections.Generic;
+using DevHive.Common.Models.Identity;
 
 namespace DevHive.Services.Services
 {
@@ -28,7 +28,7 @@ namespace DevHive.Services.Services
 			this._jwtOptions = jwtOptions;
 		}
 
-		public async Task<TokenServiceModel> LoginUser(LoginServiceModel loginModel)
+		public async Task<TokenModel> LoginUser(LoginServiceModel loginModel)
 		{
 			if (!await this._userRepository.IsUsernameValid(loginModel.UserName))
 				throw new ArgumentException("Invalid username!");
@@ -38,10 +38,10 @@ namespace DevHive.Services.Services
 			if (user.PasswordHash != GeneratePasswordHash(loginModel.Password))
 				throw new ArgumentException("Incorrect password!");
 
-			return new TokenServiceModel(WriteJWTSecurityToken(user.Role));
+			return new TokenModel(WriteJWTSecurityToken(user.Role));
 		}
 
-		public async Task<TokenServiceModel> RegisterUser(RegisterServiceModel registerModel)
+		public async Task<TokenModel> RegisterUser(RegisterServiceModel registerModel)
 		{
 			if (await this._userRepository.DoesUsernameExist(registerModel.UserName))
 				throw new ArgumentException("Username already exists!");
@@ -55,7 +55,7 @@ namespace DevHive.Services.Services
 
 			await this._userRepository.AddAsync(user);
 
-			return new TokenServiceModel(WriteJWTSecurityToken(user.Role));
+			return new TokenModel(WriteJWTSecurityToken(user.Role));
 		}
 
 		public async Task<UserServiceModel> GetUserById(Guid id)
@@ -76,7 +76,10 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("Username already exists!");
 
 			User user = this._userMapper.Map<User>(updateModel);
-			await this._userRepository.EditAsync(user);
+			bool result = await this._userRepository.EditAsync(user);
+
+			if (!result)
+				throw new InvalidOperationException("Unable to edit user!");
 
 			return this._userMapper.Map<UserServiceModel>(user);;
 		}
@@ -87,7 +90,10 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("User does not exist!");
 
 			User user = await this._userRepository.GetByIdAsync(id);
-			await this._userRepository.DeleteAsync(user);
+			bool result = await this._userRepository.DeleteAsync(user);
+
+			if (!result)
+				throw new InvalidOperationException("Unable to delete user!");
 		}
 
 		private string GeneratePasswordHash(string password)

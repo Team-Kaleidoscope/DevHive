@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using DevHive.Data.Models;
 using DevHive.Data.Repositories;
 using DevHive.Services.Models.Identity.User;
 using DevHive.Services.Options;
@@ -9,6 +8,7 @@ using DevHive.Services.Services;
 using DevHive.Web.Models.Identity.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using DevHive.Common.Models.Identity;
 
 namespace DevHive.Web.Controllers
 {
@@ -33,8 +33,8 @@ namespace DevHive.Web.Controllers
 		{
 			LoginServiceModel loginServiceModel = this._userMapper.Map<LoginServiceModel>(loginModel);
 
-			TokenServiceModel tokenServiceModel = await this._userService.LoginUser(loginServiceModel);
-			TokenWebModel tokenWebModel = this._userMapper.Map<TokenWebModel>(tokenServiceModel);
+			TokenModel TokenModel = await this._userService.LoginUser(loginServiceModel);
+			TokenWebModel tokenWebModel = this._userMapper.Map<TokenWebModel>(TokenModel);
 
 			return new OkObjectResult(tokenWebModel);
 		}
@@ -46,8 +46,8 @@ namespace DevHive.Web.Controllers
 		{
 			RegisterServiceModel registerServiceModel = this._userMapper.Map<RegisterServiceModel>(registerModel);
 
-			TokenServiceModel tokenServiceModel = await this._userService.RegisterUser(registerServiceModel);
-			TokenWebModel tokenWebModel = this._userMapper.Map<TokenWebModel>(tokenServiceModel);
+			TokenModel TokenModel = await this._userService.RegisterUser(registerServiceModel);
+			TokenWebModel tokenWebModel = this._userMapper.Map<TokenWebModel>(TokenModel);
 
 			return new CreatedResult("Register", tokenWebModel);
 		}

@@ -12,6 +12,10 @@
 			"name": "DevHive.Data",
 			"path": "./DevHive.Data"
 		},
+		{
+			"name": "DevHive.Common",
+			"path": "./DevHive.Common"
+		},
 	],
 	"settings": {
 		"files.exclude": {

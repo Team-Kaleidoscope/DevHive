@@ -16,4 +16,8 @@
     </PackageReference>
   </ItemGroup>
 
+ <ItemGroup>
+   <ProjectReference Include="..\DevHive.Common\DevHive.Common.csproj" />
+ </ItemGroup>
+
 </Project>

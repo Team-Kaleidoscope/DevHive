@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Data.Models.Interfaces.Database;
+using DevHive.Common.Models.Data;
 using DevHive.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +23,7 @@ namespace DevHive.Data.Repositories
 				.Set<Language>()
 				.AddAsync(entity);
 
-			return await this.SaveChangesAsync();
+			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
 
 		//Read
@@ -56,7 +57,7 @@ namespace DevHive.Data.Repositories
 				.Set<Language>()
 				.Update(newEntity);
 
-			return await this.SaveChangesAsync();
+			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
 
 		//Delete
@@ -66,14 +67,7 @@ namespace DevHive.Data.Repositories
 				.Set<Language>()
 				.Remove(entity);
 
-			return await this.SaveChangesAsync();
+			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
-	
-		private async Task<bool> SaveChangesAsync()
-        {
-            int result = await this._context.SaveChangesAsync();
-
-            return result >= 0;
-        }
 	}
 }

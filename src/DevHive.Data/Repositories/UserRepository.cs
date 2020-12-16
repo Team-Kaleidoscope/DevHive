@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Data.Models.Interfaces.Database;
+using DevHive.Common.Models.Data;
 using DevHive.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,13 +19,13 @@ namespace DevHive.Data.Repositories
 		}
 
 		//Create
-		public async Task AddAsync(User entity)
+		public async Task<bool> AddAsync(User entity)
 		{
 			await this._context
 				.Set<User>()
 				.AddAsync(entity);
 
-			await this._context.SaveChangesAsync();
+			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
 		
 		//Read
@@ -51,7 +52,7 @@ namespace DevHive.Data.Repositories
 		}
 
 		//Update
-		public async Task EditAsync(User newEntity)
+		public async Task<bool> EditAsync(User newEntity)
 		{
 			User user = await this.GetByIdAsync(newEntity.Id);
 
@@ -60,17 +61,17 @@ namespace DevHive.Data.Repositories
 				.CurrentValues
 				.SetValues(newEntity);
 
-			await this._context.SaveChangesAsync();
+			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
 
 		//Delete
-		public async Task DeleteAsync(User entity)
+		public async Task<bool> DeleteAsync(User entity)
 		{
 			this._context
 				.Set<User>()
 				.Remove(entity);
 
-			await this._context.SaveChangesAsync();
+			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
 	
 		//Validations

@@ -16,5 +16,9 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DevHive.Common\DevHive.Common.csproj" />
+  </ItemGroup>
+
 
 </Project>

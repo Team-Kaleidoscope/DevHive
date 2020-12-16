@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Data.Models.Interfaces.Database;
+using DevHive.Common.Models.Data;
 using DevHive.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,13 +17,13 @@ namespace DevHive.Data.Repositories
 		}
 
 		//Create
-		public async Task AddAsync(Role entity)
+		public async Task<bool> AddAsync(Role entity)
 		{
 			await this._context
 				.Set<Role>()
 				.AddAsync(entity);
 
-			await this._context.SaveChangesAsync();
+			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
 
 		//Read
@@ -35,23 +36,26 @@ namespace DevHive.Data.Repositories
 		}
 
 		//Update
-		public async Task EditAsync(Role newEntity)
+		public async Task<bool> EditAsync(Role newEntity)
 		{
-			this._context
-				.Set<Role>()
-				.Update(newEntity);
+			Role role = await this.GetByIdAsync(newEntity.Id);
 
-			await this._context.SaveChangesAsync();
+			this._context
+				.Entry(role)
+				.CurrentValues
+				.SetValues(newEntity);
+
+			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
 		
 		//Delete
-		public async Task DeleteAsync(Role entity)
+		public async Task<bool> DeleteAsync(Role entity)
 		{
 			this._context
 				.Set<Role>()
 				.Remove(entity);
 
-			await this._context.SaveChangesAsync();
+			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
 
 		public async Task<bool> DoesNameExist(string name)

@@ -20,5 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DevHive.Services\DevHive.Services.csproj" />
+    <ProjectReference Include="..\DevHive.Common\DevHive.Common.csproj" />
   </ItemGroup>
 </Project>
