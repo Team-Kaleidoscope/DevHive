@@ -6,11 +6,13 @@ using DevHive.Web.Models.Identity.Role;
 using AutoMapper;
 using DevHive.Services.Models.Identity.Role;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevHive.Web.Controllers
 {
     [ApiController]
 	[Route("/api/[controller]")]
+	//[Authorize(Roles = "Admin")]
 	public class RoleController
 	{
 		private readonly RoleService _roleService;

@@ -46,6 +46,7 @@ namespace DevHive.Web
 			}
 
 			app.UseDatabaseConfiguration();
+
 			
 			app.UseEndpoints(endpoints =>
 			{

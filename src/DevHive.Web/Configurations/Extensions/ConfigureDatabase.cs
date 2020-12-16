@@ -6,6 +6,7 @@ using DevHive.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Builder;
 using System;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace DevHive.Web.Configurations.Extensions
 {
@@ -40,8 +41,12 @@ namespace DevHive.Web.Configurations.Extensions
 
 			services.AddAuthorization(options =>
 			{
-				options.AddPolicy($"{Role.DefaultRole}",
-					policy => policy.RequireRole($"{Role.DefaultRole}"));
+				options.AddPolicy("User", options => 
+				{
+					options.RequireAuthenticatedUser();
+					options.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+					options.RequireRole("User");
+				});
 			});
 		}
 

@@ -11,6 +11,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using System.Text;
+using System.Collections.Generic;
 
 namespace DevHive.Services.Services
 {
@@ -97,14 +98,16 @@ namespace DevHive.Services.Services
 		private string WriteJWTSecurityToken(string role)
 		{
 			//TODO: Try generating the key
-			byte[] signingKey = Convert.FromBase64String(_jwtOptions.Secret);
-			
+			byte[] signingKey = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
+
+			List<Claim> claims = new List<Claim>()
+			{
+				new Claim(ClaimTypes.Role, role)
+			};
+
 			SecurityTokenDescriptor tokenDescriptor = new()
 			{
-				Subject = new ClaimsIdentity(new Claim[]
-				{
-					new Claim(ClaimTypes.Role, role)
-				}),
+				Subject = new ClaimsIdentity(claims),
 				Expires = DateTime.Today.AddDays(7),
 				SigningCredentials = new SigningCredentials(
 					new SymmetricSecurityKey(signingKey),

@@ -43,7 +43,7 @@ namespace DevHive.Web.Configurations.Extensions
 				x.SaveToken = true;
 				x.TokenValidationParameters = new TokenValidationParameters
 				{
-					ValidateIssuerSigningKey = true,
+					//ValidateIssuerSigningKey = false,
 					IssuerSigningKey = new SymmetricSecurityKey(key),
 					ValidateIssuer = false,
 					ValidateAudience = false

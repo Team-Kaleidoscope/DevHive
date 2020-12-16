@@ -14,6 +14,7 @@ namespace DevHive.Web.Controllers
 {
 	[ApiController]
 	[Route("/api/[controller]")]
+	[Authorize(Roles = "User")]
 	public class UserController: ControllerBase
 	{
 		private readonly UserService _userService;
@@ -27,6 +28,7 @@ namespace DevHive.Web.Controllers
 
 		[HttpPost]
 		[Route("Login")]
+		[AllowAnonymous]
 		public async Task<IActionResult> Login([FromBody] LoginWebModel loginModel)
 		{
 			LoginServiceModel loginServiceModel = this._userMapper.Map<LoginServiceModel>(loginModel);
@@ -39,6 +41,7 @@ namespace DevHive.Web.Controllers
 
 		[HttpPost]
 		[Route("Register")]
+		[AllowAnonymous]
 		public async Task<IActionResult> Register([FromBody] RegisterWebModel registerModel)
 		{
 			RegisterServiceModel registerServiceModel = this._userMapper.Map<RegisterServiceModel>(registerModel);
@@ -61,7 +64,6 @@ namespace DevHive.Web.Controllers
 
 		//Update
 		[HttpPut]
-		[Authorize(Roles = Role.DefaultRole)]
 		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserWebModel updateModel)
 		{
 			UpdateUserServiceModel updateUserServiceModel = this._userMapper.Map<UpdateUserServiceModel>(updateModel);
@@ -76,7 +78,6 @@ namespace DevHive.Web.Controllers
 
 		//Delete
 		[HttpDelete]
-		[Authorize(Roles = Role.DefaultRole)]
 		public async Task<IActionResult> Delete(Guid id)
 		{
 			await this._userService.DeleteUser(id);
