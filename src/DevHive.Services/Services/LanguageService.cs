@@ -19,51 +19,51 @@ namespace DevHive.Services.Services
 			this._languageMapper = mapper;
 		}
 
-		public async Task<IActionResult> CreateLanguage(LanguageServiceModel languageServiceModel)
+		public async Task<LanguageServiceModel> CreateLanguage(LanguageServiceModel languageServiceModel)
 		{
 			if (!await this._languageRepository.DoesLanguageNameExist(languageServiceModel.Name))
-				return new BadRequestObjectResult("Language already exists!");
+				throw new ArgumentException("Language already exists!");
 
 			Language language = this._languageMapper.Map<Language>(languageServiceModel);
 
 			await this._languageRepository.AddAsync(language);
 
-			return new CreatedResult("CreateLanguage", language);
+			return this._languageMapper.Map<LanguageServiceModel>(language);
 		}
 
-		public async Task<IActionResult> GetLanguageById(Guid id)
+		public async Task<LanguageServiceModel> GetLanguageById(Guid id)
 		{
 			Language language = await this._languageRepository.GetByIdAsync(id);
 
 			if(language == null)
-				return new NotFoundObjectResult("The language does not exist");
+				throw new ArgumentException("The language does not exist");
 
-			return new ObjectResult(language);
+			return this._languageMapper.Map<LanguageServiceModel>(language);
 		}
 
-		public async Task<IActionResult> UpdateLanguage(LanguageServiceModel languageServiceModel)
+		public async Task<LanguageServiceModel> UpdateLanguage(LanguageServiceModel languageServiceModel)
 		{
 			if (!await this._languageRepository.DoesLanguageExist(languageServiceModel.Id))
-				return new NotFoundObjectResult("Language does not exist!");
+				throw new ArgumentException("Language does not exist!");
 
 			if (!await this._languageRepository.DoesLanguageNameExist(languageServiceModel.Name))
-				return new BadRequestObjectResult("Language name already exists!");
+				throw new ArgumentException("Language name already exists!");
 
 			Language language = this._languageMapper.Map<Language>(languageServiceModel);
 			await this._languageRepository.EditAsync(language);
 
-			return new AcceptedResult("UpdateLanguage", language);
+			return this._languageMapper.Map<LanguageServiceModel>(language);
 		}
 	
-		public async Task<IActionResult> DeleteLanguage(Guid id)
+		public async Task<LanguageServiceModel> DeleteLanguage(Guid id)
 		{
 			if (!await this._languageRepository.DoesLanguageExist(id))
-				return new NotFoundObjectResult("Language does not exist!");
+				throw new ArgumentException("Language does not exist!");
 
 			Language language = await this._languageRepository.GetByIdAsync(id);
 			await this._languageRepository.DeleteAsync(language);
 
-			return new OkResult();
+			return this._languageMapper.Map<LanguageServiceModel>(language);
 		}
 	}
 }
