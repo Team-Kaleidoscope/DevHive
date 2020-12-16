@@ -1,11 +1,7 @@
 namespace DevHive.Services.Models.Identity.User
 {
-	public class RegisterServiceModel
-	{
-		public string UserName { get; set; }
-		public string Email { get; set; }
-		public string FirstName { get; set; }
-		public string LastName { get; set; }
+	public class RegisterServiceModel : BaseUserServiceModel
+	{ 
 		public string Password { get; set; }
 	}
 }
