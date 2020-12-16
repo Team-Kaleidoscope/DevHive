@@ -103,7 +103,6 @@ namespace DevHive.Services.Services
 
 		private string WriteJWTSecurityToken(string role)
 		{
-			//TODO: Try generating the key
 			byte[] signingKey = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
 			List<Claim> claims = new List<Claim>()

@@ -32,7 +32,6 @@ namespace DevHive.Data.Repositories
 			return await this._context
 				.Set<Role>()
 				.FindAsync(id);
-				
 		}
 
 		//Update
