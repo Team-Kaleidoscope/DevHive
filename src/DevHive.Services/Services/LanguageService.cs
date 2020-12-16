@@ -19,16 +19,15 @@ namespace DevHive.Services.Services
 			this._languageMapper = mapper;
 		}
 
-		public async Task<LanguageServiceModel> CreateLanguage(LanguageServiceModel languageServiceModel)
+		public async Task<bool> CreateLanguage(LanguageServiceModel languageServiceModel)
 		{
 			if (!await this._languageRepository.DoesLanguageNameExist(languageServiceModel.Name))
 				throw new ArgumentException("Language already exists!");
 
 			Language language = this._languageMapper.Map<Language>(languageServiceModel);
+			bool result = await this._languageRepository.AddAsync(language);
 
-			await this._languageRepository.AddAsync(language);
-
-			return this._languageMapper.Map<LanguageServiceModel>(language);
+			return result;
 		}
 
 		public async Task<LanguageServiceModel> GetLanguageById(Guid id)
@@ -41,7 +40,7 @@ namespace DevHive.Services.Services
 			return this._languageMapper.Map<LanguageServiceModel>(language);
 		}
 
-		public async Task<LanguageServiceModel> UpdateLanguage(LanguageServiceModel languageServiceModel)
+		public async Task<bool> UpdateLanguage(UpdateLanguageServiceModel languageServiceModel)
 		{
 			if (!await this._languageRepository.DoesLanguageExist(languageServiceModel.Id))
 				throw new ArgumentException("Language does not exist!");
@@ -50,20 +49,20 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("Language name already exists!");
 
 			Language language = this._languageMapper.Map<Language>(languageServiceModel);
-			await this._languageRepository.EditAsync(language);
+			bool result = await this._languageRepository.EditAsync(language);
 
-			return this._languageMapper.Map<LanguageServiceModel>(language);
+			return result;
 		}
 	
-		public async Task<LanguageServiceModel> DeleteLanguage(Guid id)
+		public async Task<bool> DeleteLanguage(Guid id)
 		{
 			if (!await this._languageRepository.DoesLanguageExist(id))
 				throw new ArgumentException("Language does not exist!");
 
 			Language language = await this._languageRepository.GetByIdAsync(id);
-			await this._languageRepository.DeleteAsync(language);
+			bool result = await this._languageRepository.DeleteAsync(language);
 
-			return this._languageMapper.Map<LanguageServiceModel>(language);
+			return result;
 		}
 	}
 }
