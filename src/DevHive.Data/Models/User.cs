@@ -9,7 +9,8 @@ namespace DevHive.Data.Models
 	public class User : IdentityUser<Guid>, IModel
 	{
 		[Required]
-		[Range(3, 50)]
+		[MinLength(3)]
+		[MaxLength(50)]
 		[Display(Name = "Username")]
 		public override string UserName
 		{
@@ -18,11 +19,13 @@ namespace DevHive.Data.Models
 		}
 
 		[Required]
-		[Range(3, 30)]
+		[MinLength(3)]
+		[MaxLength(30)]
 		public string FirstName { get; set; }
 
 		[Required]
-		[Range(3, 30)]
+		[MinLength(3)]
+		[MaxLength(30)]
 		public string LastName { get; set; }
 
 		public string ProfilePicture { get; set; }
