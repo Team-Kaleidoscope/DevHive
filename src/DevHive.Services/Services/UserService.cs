@@ -110,7 +110,7 @@ namespace DevHive.Services.Services
 			return string.Join(string.Empty, SHA512.HashData(Encoding.ASCII.GetBytes(password)));
 		}
 
-		private string WriteJWTSecurityToken(List<Role> roles)
+		private string WriteJWTSecurityToken(IList<Role> roles)
 		{
 			byte[] signingKey = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 

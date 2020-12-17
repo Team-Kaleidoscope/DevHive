@@ -43,8 +43,6 @@ namespace DevHive.Data.Repositories
 			return await this._context
 				.Set<User>()
 				.Include(x => x.Roles)
-				// To also return the roles, you need to include the roles table, 
-				// but then you loose FindAsync, because there is id of role and id of user
 				.FirstOrDefaultAsync(x => x.Id == id);
 		}
 
