@@ -18,6 +18,10 @@ namespace DevHive.Data.Repositories
 			builder.Entity<User>()
 				.HasIndex(x => x.UserName)
 				.IsUnique();
+			
+			builder.Entity<Role>()
+				.HasIndex(x => x.Id)
+				.IsUnique();
 
 			base.OnModelCreating(builder);
 		}

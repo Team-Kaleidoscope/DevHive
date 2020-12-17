@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
@@ -19,7 +20,7 @@ namespace DevHive.Data.Models
 
 		public string ProfilePicture { get; set; }
 
-		public string Role { get; set; }
+		public virtual List<Role> Roles { get; set; }
 
 		//public List<User> Friends { get; set; }
 	}

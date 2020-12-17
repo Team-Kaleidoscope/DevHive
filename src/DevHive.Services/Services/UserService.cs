@@ -18,12 +18,14 @@ namespace DevHive.Services.Services
 	public class UserService
 	{
 		private readonly UserRepository _userRepository;
+		private readonly RoleRepository _roleRepository;
 		private readonly IMapper _userMapper;
 		private readonly JWTOptions _jwtOptions;
 
 		public UserService(DevHiveContext context, IMapper mapper, JWTOptions jwtOptions)
 		{
 			this._userRepository = new UserRepository(context);
+			this._roleRepository = new RoleRepository(context);
 			this._userMapper = mapper;
 			this._jwtOptions = jwtOptions;
 		}
@@ -38,7 +40,7 @@ namespace DevHive.Services.Services
 			if (user.PasswordHash != GeneratePasswordHash(loginModel.Password))
 				throw new ArgumentException("Incorrect password!");
 
-			return new TokenModel(WriteJWTSecurityToken(user.Role));
+			return new TokenModel(WriteJWTSecurityToken(user.Roles));
 		}
 
 		public async Task<TokenModel> RegisterUser(RegisterServiceModel registerModel)
@@ -50,12 +52,19 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("Email already exists!");
 
 			User user = this._userMapper.Map<User>(registerModel);
-			user.Role = Role.DefaultRole;
 			user.PasswordHash = GeneratePasswordHash(registerModel.Password);
+
+			// Make sure the default role exists
+			if (!await this._roleRepository.DoesNameExist(Role.DefaultRole))
+				await this._roleRepository.AddAsync(new Role { Name = Role.DefaultRole });
+
+			// Set the default role to the user
+			Role defaultRole = await this._roleRepository.GetByNameAsync(Role.DefaultRole);
+			user.Roles = new List<Role>() { defaultRole };
 
 			await this._userRepository.AddAsync(user);
 
-			return new TokenModel(WriteJWTSecurityToken(user.Role));
+			return new TokenModel(WriteJWTSecurityToken(user.Roles));
 		}
 
 		public async Task<UserServiceModel> GetUserById(Guid id)
@@ -101,13 +110,13 @@ namespace DevHive.Services.Services
 			return string.Join(string.Empty, SHA512.HashData(Encoding.ASCII.GetBytes(password)));
 		}
 
-		private string WriteJWTSecurityToken(string role)
+		private string WriteJWTSecurityToken(List<Role> roles)
 		{
 			byte[] signingKey = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
 			List<Claim> claims = new List<Claim>()
 			{
-				new Claim(ClaimTypes.Role, role)
+				new Claim(ClaimTypes.Role, roles[0].Name) // TODO: add support for mulitple roles
 			};
 
 			SecurityTokenDescriptor tokenDescriptor = new()

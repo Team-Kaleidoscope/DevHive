@@ -21,8 +21,8 @@ namespace DevHive.Services.Services
 
 		public async Task<IActionResult> CreateRole(RoleServiceModel roleServiceModel)
 		{
-			if (!await this._roleRepository.DoesNameExist(roleServiceModel.Name))
-				return new BadRequestObjectResult("Invalid role name!");
+			if (await this._roleRepository.DoesNameExist(roleServiceModel.Name))
+				return new BadRequestObjectResult("Role already exists!");
 
 			Role role = this._roleMapper.Map<Role>(roleServiceModel);
 

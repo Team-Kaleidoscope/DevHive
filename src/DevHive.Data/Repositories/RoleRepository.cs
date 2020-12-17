@@ -34,6 +34,13 @@ namespace DevHive.Data.Repositories
 				.FindAsync(id);
 		}
 
+		public async Task<Role> GetByNameAsync(string name)
+		{
+			return await this._context
+				.Set<Role>()
+				.FirstOrDefaultAsync(x => x.Name == name);
+		}
+
 		//Update
 		public async Task<bool> EditAsync(Role newEntity)
 		{

@@ -1,6 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
 namespace DevHive.Data.Models
 {
@@ -8,5 +9,7 @@ namespace DevHive.Data.Models
 	public class Role : IdentityRole<Guid>
 	{
 		public const string DefaultRole = "User";
+
+		public virtual List<User> Users { get; set; }
 	}
 }
