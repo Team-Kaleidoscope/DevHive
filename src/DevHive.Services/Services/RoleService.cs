@@ -4,7 +4,6 @@ using AutoMapper;
 using DevHive.Data.Models;
 using DevHive.Data.Repositories;
 using DevHive.Services.Models.Identity.Role;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DevHive.Services.Services
 {
@@ -19,51 +18,43 @@ namespace DevHive.Services.Services
 			this._roleMapper = mapper;
 		}
 
-		public async Task<IActionResult> CreateRole(RoleServiceModel roleServiceModel)
+		public async Task<bool> CreateRole(RoleServiceModel roleServiceModel)
 		{
 			if (await this._roleRepository.DoesNameExist(roleServiceModel.Name))
-				return new BadRequestObjectResult("Role already exists!");
+				throw new ArgumentException("Role already exists!");
 
 			Role role = this._roleMapper.Map<Role>(roleServiceModel);
 
-			await this._roleRepository.AddAsync(role);
-
-			return new CreatedResult("CreateRole", role);
+			return await this._roleRepository.AddAsync(role);
 		}
 
-		public async Task<IActionResult> GetRoleById(Guid id)
+		public async Task<RoleServiceModel> GetRoleById(Guid id)
 		{
-			Role role = await this._roleRepository.GetByIdAsync(id);
+			Role role = await this._roleRepository.GetByIdAsync(id) 
+				?? throw new ArgumentException("Role does not exist!");
 
-			if (role == null)
-				return new NotFoundObjectResult("Role does not exist!");
-
-			return new ObjectResult(role);
+			return this._roleMapper.Map<RoleServiceModel>(role);
 		}
 
-		public async Task<IActionResult> UpdateRole(RoleServiceModel roleServiceModel)
+		public async Task<bool> UpdateRole(RoleServiceModel roleServiceModel)
 		{
 			if (!await this._roleRepository.DoesRoleExist(roleServiceModel.Id))
-				return new NotFoundObjectResult("Role does not exist!");
+				throw new ArgumentException("Role does not exist!");
 
-			if (!await this._roleRepository.DoesNameExist(roleServiceModel.Name))
-				return new BadRequestObjectResult("Role name already exists!");
+			if (await this._roleRepository.DoesNameExist(roleServiceModel.Name))
+				throw new ArgumentException("Role name already exists!");
 
 			Role role = this._roleMapper.Map<Role>(roleServiceModel);
-			await this._roleRepository.EditAsync(role);
-
-			return new AcceptedResult("UpdateRole", role);
+			return await this._roleRepository.EditAsync(role);
 		}
 
-		public async Task<IActionResult> DeleteRole(Guid id)
+		public async Task<bool> DeleteRole(Guid id)
 		{
 			if (!await this._roleRepository.DoesRoleExist(id))
-				return new NotFoundObjectResult("Role does not exist!");
+				throw new ArgumentException("Role does not exist!");
 
 			Role role = await this._roleRepository.GetByIdAsync(id);
-			await this._roleRepository.DeleteAsync(role);
-
-			return new OkResult();
+			return await this._roleRepository.DeleteAsync(role);
 		}
 	}
 }

@@ -25,33 +25,52 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPost]
-		public Task<IActionResult> Create(CreateRoleWebModel createRoleWebModel)
+		public async Task<IActionResult> Create([FromBody] CreateRoleWebModel createRoleWebModel)
 		{
 			RoleServiceModel roleServiceModel = 
 				this._roleMapper.Map<RoleServiceModel>(createRoleWebModel); 
 			
-			return this._roleService.CreateRole(roleServiceModel);
+			bool result = await this._roleService.CreateRole(roleServiceModel);
+
+			if (!result)
+				return new BadRequestObjectResult("Could not create role!");
+
+			return new OkResult();
 		}
 
 		[HttpGet]
-		public Task<IActionResult> GetById(Guid id)
+		public async Task<IActionResult> GetById(Guid id)
 		{
-			return this._roleService.GetRoleById(id);
+			RoleServiceModel roleServiceModel = await this._roleService.GetRoleById(id);
+			RoleWebModel roleWebModel = this._roleMapper.Map<RoleWebModel>(roleServiceModel);
+
+			return new OkObjectResult(roleWebModel);
 		}
 
 		[HttpPut]
-		public Task<IActionResult> Update(UpdateRoleWebModel updateRoleWebModel)
+		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateRoleWebModel updateRoleWebModel)
 		{
 			RoleServiceModel roleServiceModel = 
 				this._roleMapper.Map<RoleServiceModel>(updateRoleWebModel);
+			roleServiceModel.Id = id;
 
-			return this._roleService.UpdateRole(roleServiceModel);
+			bool result = await this._roleService.UpdateRole(roleServiceModel);
+
+			if (!result)
+				return new BadRequestObjectResult("Could not update role!");
+
+			return new OkResult();
 		}
 
 		[HttpDelete]
-		public Task<IActionResult> Delete(Guid id)
+		public async Task<IActionResult> Delete(Guid id)
 		{
-			return this._roleService.DeleteRole(id);
+			bool result = await this._roleService.DeleteRole(id);
+
+			if (!result)
+				return new BadRequestObjectResult("Could nor delete role!");
+
+			return new OkResult();
 		}
 	}
 }
