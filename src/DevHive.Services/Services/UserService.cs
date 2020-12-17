@@ -72,11 +72,7 @@ namespace DevHive.Services.Services
 			User user = await this._userRepository.GetByIdAsync(id)
 				?? throw new ArgumentException("User does not exist!");
 
-			//Here User has 1 role
-
 			UserServiceModel model = this._userMapper.Map<UserServiceModel>(user);
-
-			//here model has 0 roles
 
 			return model;
 		}
@@ -130,10 +126,12 @@ namespace DevHive.Services.Services
 		{
 			byte[] signingKey = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
-			List<Claim> claims = new()
+			List<Claim> claims = new();
+
+			foreach(var role in roles)
 			{
-				new Claim(ClaimTypes.Role, roles[0].Name) // TODO: add support for multiple roles
-			};
+				claims.Add(new Claim(ClaimTypes.Role, role.Name));
+			}
 
 			SecurityTokenDescriptor tokenDescriptor = new()
 			{
