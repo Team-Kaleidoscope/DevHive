@@ -40,7 +40,7 @@ namespace DevHive.Services.Services
 			if (user.PasswordHash != GeneratePasswordHash(loginModel.Password))
 				throw new ArgumentException("Incorrect password!");
 
-			return new TokenModel(WriteJWTSecurityToken(user.Roles));
+			return new TokenModel(WriteJWTSecurityToken(user.UserName, user.PasswordHash, user.Roles));
 		}
 
 		public async Task<TokenModel> RegisterUser(RegisterServiceModel registerModel)
@@ -64,7 +64,7 @@ namespace DevHive.Services.Services
 
 			await this._userRepository.AddAsync(user);
 
-			return new TokenModel(WriteJWTSecurityToken(user.Roles));
+			return new TokenModel(WriteJWTSecurityToken(user.UserName, user.PasswordHash, user.Roles));
 		}
 
 		public async Task<UserServiceModel> GetUserById(Guid id)
@@ -72,7 +72,13 @@ namespace DevHive.Services.Services
 			User user = await this._userRepository.GetByIdAsync(id)
 				?? throw new ArgumentException("User does not exist!");
 
+<<<<<<< HEAD
 			return this._userMapper.Map<UserServiceModel>(user);
+=======
+			UserServiceModel model = this._userMapper.Map<UserServiceModel>(user);
+
+			return model;
+>>>>>>> d104a6810dcca58e7003833e5b7c74a7722df879
 		}
 
 		public async Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateModel)
@@ -110,14 +116,20 @@ namespace DevHive.Services.Services
 			return string.Join(string.Empty, SHA512.HashData(Encoding.ASCII.GetBytes(password)));
 		}
 
-		private string WriteJWTSecurityToken(IList<Role> roles)
+		private string WriteJWTSecurityToken(string userName, string passwordHash, IList<Role> roles)
 		{
 			byte[] signingKey = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
 			List<Claim> claims = new()
 			{
-				new Claim(ClaimTypes.Role, roles[0].Name) // TODO: add support for multiple roles
+				new Claim(ClaimTypes.Name, userName),
+				new Claim(ClaimTypes.Hash, passwordHash)
 			};
+
+			foreach(var role in roles)
+			{
+				claims.Add(new Claim(ClaimTypes.Role, role.Name));
+			}
 
 			SecurityTokenDescriptor tokenDescriptor = new()
 			{
