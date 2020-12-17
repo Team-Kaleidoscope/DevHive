@@ -72,13 +72,7 @@ namespace DevHive.Services.Services
 			User user = await this._userRepository.GetByIdAsync(id)
 				?? throw new ArgumentException("User does not exist!");
 
-<<<<<<< HEAD
 			return this._userMapper.Map<UserServiceModel>(user);
-=======
-			UserServiceModel model = this._userMapper.Map<UserServiceModel>(user);
-
-			return model;
->>>>>>> d104a6810dcca58e7003833e5b7c74a7722df879
 		}
 
 		public async Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateModel)
