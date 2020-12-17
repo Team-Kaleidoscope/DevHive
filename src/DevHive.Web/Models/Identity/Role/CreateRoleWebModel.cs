@@ -1,6 +1,6 @@
 namespace DevHive.Web.Models.Identity.Role
 {
-	public class CreateRoleWebModel
+	public class CreateRoleModel
 	{
 		public string Name { get; set; }
 	}

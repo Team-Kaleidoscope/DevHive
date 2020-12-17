@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using DevHive.Common.Models.Identity;
-using DevHive.Data.Models;
-using DevHive.Services.Models.Identity.Role;
 
 namespace DevHive.Services.Models.Identity.User
 {

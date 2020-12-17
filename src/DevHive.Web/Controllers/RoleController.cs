@@ -4,13 +4,12 @@ using DevHive.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 using DevHive.Web.Models.Identity.Role;
 using AutoMapper;
-using DevHive.Services.Models.Identity.Role;
 using System;
-using Microsoft.AspNetCore.Authorization;
+using DevHive.Common.Models.Identity;
 
 namespace DevHive.Web.Controllers
 {
-    [ApiController]
+	[ApiController]
 	[Route("/api/[controller]")]
 	//[Authorize(Roles = "Admin")]
 	public class RoleController
@@ -25,10 +24,10 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Create([FromBody] CreateRoleWebModel createRoleWebModel)
+		public async Task<IActionResult> Create([FromBody] CreateRoleModel createRoleModel)
 		{
-			RoleServiceModel roleServiceModel = 
-				this._roleMapper.Map<RoleServiceModel>(createRoleWebModel); 
+			RoleModel roleServiceModel = 
+				this._roleMapper.Map<RoleModel>(createRoleModel); 
 			
 			bool result = await this._roleService.CreateRole(roleServiceModel);
 
@@ -41,17 +40,17 @@ namespace DevHive.Web.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetById(Guid id)
 		{
-			RoleServiceModel roleServiceModel = await this._roleService.GetRoleById(id);
-			RoleWebModel roleWebModel = this._roleMapper.Map<RoleWebModel>(roleServiceModel);
+			RoleModel roleServiceModel = await this._roleService.GetRoleById(id);
+			RoleModel roleWebModel = this._roleMapper.Map<RoleModel>(roleServiceModel);
 
 			return new OkObjectResult(roleWebModel);
 		}
 
 		[HttpPut]
-		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateRoleWebModel updateRoleWebModel)
+		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateRoleModel updateRoleModel)
 		{
-			RoleServiceModel roleServiceModel = 
-				this._roleMapper.Map<RoleServiceModel>(updateRoleWebModel);
+			RoleModel roleServiceModel = 
+				this._roleMapper.Map<RoleModel>(updateRoleModel);
 			roleServiceModel.Id = id;
 
 			bool result = await this._roleService.UpdateRole(roleServiceModel);
