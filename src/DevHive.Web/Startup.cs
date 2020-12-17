@@ -50,8 +50,8 @@ namespace DevHive.Web
 			}
 
 			app.UseDatabaseConfiguration();
+			app.UseAutoMapperConfiguration();
 
-			
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllerRoute(

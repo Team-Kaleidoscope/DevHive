@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using DevHive.Common.Models.Identity;
 using DevHive.Web.Models.Identity.Role;
 
 namespace DevHive.Web.Models.Identity.User 
 {
 	public class UserWebModel : BaseUserWebModel
 	{
-		public IList<RoleWebModel> Role { get; set; } = new List<RoleWebModel>();
+		public IList<RoleModel> Role { get; set; } = new List<RoleModel>();
 		public IList<UserWebModel> Friends { get; set; } = new List<UserWebModel>();
 	}
 }
