@@ -116,13 +116,5 @@ namespace DevHive.Data.Repositories
 				.AsNoTracking()
 				.AnyAsync(u => u.Email == email);
 		}
-	
-		public async Task<bool> AddFriend(User user, User friend)
-		{
-			this._context.Update(user);
-			user.Friends.Add(friend);
-
-			return await RepositoryMethods.SaveChangesAsync(this._context);
-		} 
 	}
 }

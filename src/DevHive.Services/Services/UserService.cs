@@ -72,13 +72,7 @@ namespace DevHive.Services.Services
 			User user = await this._userRepository.GetByIdAsync(id)
 				?? throw new ArgumentException("User does not exist!");
 
-			//Here User has 1 role
-
-			UserServiceModel model = this._userMapper.Map<UserServiceModel>(user);
-
-			//here model has 0 roles
-
-			return model;
+			return this._userMapper.Map<UserServiceModel>(user);
 		}
 
 		public async Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateModel)
@@ -109,16 +103,6 @@ namespace DevHive.Services.Services
 
 			if (!result)
 				throw new InvalidOperationException("Unable to delete user!");
-		}
-
-		public async Task<bool> AddFriend(Guid userId, Guid friendId)
-		{
-			User user = await this._userRepository.GetByIdAsync(userId);
-			User friend = await this._userRepository.GetByIdAsync(friendId);
-
-			return user != default(User) && friend != default(User) ? 
-				await this._userRepository.AddFriend(user, friend) : 
-				throw new ArgumentException("Invalid user!");
 		}
 
 		private string GeneratePasswordHash(string password)

@@ -54,15 +54,6 @@ namespace DevHive.Web.Controllers
 			return new CreatedResult("Register", tokenWebModel);
 		}
 
-		[HttpPost]
-		[Route("AddAFriend")]
-		public async Task<IActionResult> AddAFriend(Guid userId, [FromBody] IdModel friendIdModel)
-		{
-			return await this._userService.AddFriend(userId, friendIdModel.Id) ?
-				new OkResult() :
-				new BadRequestResult();
-		}
-
 		//Read
 		[HttpGet]
 		public async Task<IActionResult> GetById(Guid id)
