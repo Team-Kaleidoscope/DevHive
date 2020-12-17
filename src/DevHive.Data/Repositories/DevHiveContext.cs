@@ -18,7 +18,13 @@ namespace DevHive.Data.Repositories
 			builder.Entity<User>()
 				.HasIndex(x => x.UserName)
 				.IsUnique();
-			
+
+			builder.Entity<User>()
+				.HasMany(x => x.Roles);
+				
+			builder.Entity<User>()
+				.HasMany(x => x.Friends);
+
 			builder.Entity<Role>()
 				.HasIndex(x => x.Id)
 				.IsUnique();

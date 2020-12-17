@@ -9,6 +9,7 @@ using DevHive.Web.Models.Identity.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DevHive.Common.Models.Identity;
+using DevHive.Common.Models;
 
 namespace DevHive.Web.Controllers
 {
@@ -39,6 +40,7 @@ namespace DevHive.Web.Controllers
 			return new OkObjectResult(tokenWebModel);
 		}
 
+		//Create
 		[HttpPost]
 		[Route("Register")]
 		[AllowAnonymous]
@@ -50,6 +52,15 @@ namespace DevHive.Web.Controllers
 			TokenWebModel tokenWebModel = this._userMapper.Map<TokenWebModel>(TokenModel);
 
 			return new CreatedResult("Register", tokenWebModel);
+		}
+
+		[HttpPost]
+		[Route("AddAFriend")]
+		public async Task<IActionResult> AddAFriend(Guid userId, [FromBody] IdModel friendIdModel)
+		{
+			return await this._userService.AddFriend(userId, friendIdModel.Id) ?
+				new OkResult() :
+				new BadRequestResult();
 		}
 
 		//Read

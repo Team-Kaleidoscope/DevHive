@@ -43,6 +43,7 @@ namespace DevHive.Data.Repositories
 			return await this._context
 				.Set<User>()
 				.Include(x => x.Roles)
+				.Include(x => x.Friends)
 				.FirstOrDefaultAsync(x => x.Id == id);
 		}
 
@@ -115,5 +116,13 @@ namespace DevHive.Data.Repositories
 				.AsNoTracking()
 				.AnyAsync(u => u.Email == email);
 		}
+	
+		public async Task<bool> AddFriend(User user, User friend)
+		{
+			this._context.Update(user);
+			user.Friends.Add(friend);
+
+			return await RepositoryMethods.SaveChangesAsync(this._context);
+		} 
 	}
 }

@@ -14,8 +14,8 @@ namespace DevHive.Data.Models
 
 		public string ProfilePicture { get; set; }
 
-		public virtual IList<Role> Roles { get; set; }
+		public virtual IList<Role> Roles { get; set; } = new List<Role>();
 
-		//public List<User> Friends { get; set; }
+		public IList<User> Friends { get; set; } = new List<User>();
 	}
 }
