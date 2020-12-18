@@ -9,6 +9,7 @@ namespace DevHive.Services.Configurations.Mapping
 		public LanguageMappings()
 		{
 			CreateMap<LanguageServiceModel, Language>();
+			CreateMap<Language, LanguageServiceModel>();
 		}
 	}
 }
