@@ -1,5 +1,3 @@
-using System;
-
 namespace DevHive.Services.Models.Language
 {
 	public class LanguageServiceModel

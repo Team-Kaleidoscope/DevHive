@@ -40,7 +40,7 @@ namespace DevHive.Services.Services
 			if (user.PasswordHash != GeneratePasswordHash(loginModel.Password))
 				throw new ArgumentException("Incorrect password!");
 
-			return new TokenModel(WriteJWTSecurityToken(user.UserName, user.PasswordHash, user.Roles));
+			return new TokenModel(WriteJWTSecurityToken(user.UserName, user.Roles));
 		}
 
 		public async Task<TokenModel> RegisterUser(RegisterServiceModel registerModel)
@@ -64,7 +64,7 @@ namespace DevHive.Services.Services
 
 			await this._userRepository.AddAsync(user);
 
-			return new TokenModel(WriteJWTSecurityToken(user.UserName, user.PasswordHash, user.Roles));
+			return new TokenModel(WriteJWTSecurityToken(user.UserName, user.Roles));
 		}
 
 		public async Task<UserServiceModel> GetUserById(Guid id)
@@ -110,14 +110,13 @@ namespace DevHive.Services.Services
 			return string.Join(string.Empty, SHA512.HashData(Encoding.ASCII.GetBytes(password)));
 		}
 
-		private string WriteJWTSecurityToken(string userName, string passwordHash, IList<Role> roles)
+		private string WriteJWTSecurityToken(string userName, IList<Role> roles)
 		{
 			byte[] signingKey = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
 			List<Claim> claims = new()
 			{
 				new Claim(ClaimTypes.Name, userName),
-				new Claim(ClaimTypes.Hash, passwordHash)
 			};
 
 			foreach(var role in roles)
