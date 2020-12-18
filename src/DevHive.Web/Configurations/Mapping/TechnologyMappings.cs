@@ -11,6 +11,7 @@ namespace DevHive.Web.Configurations.Mapping
 			CreateMap<TechnologyWebModel, TechnologyServiceModel>();
 			CreateMap<UpdateTechnologyWebModel, TechnologyServiceModel>();
 			CreateMap<TechnologyServiceModel, TechnologyWebModel>();
+			CreateMap<TechnologyWebModel, UpdateTechnologyServiceModel>();
 		}
 	} 
 }

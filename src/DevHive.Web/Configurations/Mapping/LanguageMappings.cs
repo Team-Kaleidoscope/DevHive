@@ -11,6 +11,7 @@ namespace DevHive.Web.Configurations.Mapping
 			CreateMap<LanguageWebModel, LanguageServiceModel>();
 			CreateMap<UpdateLanguageWebModel, LanguageServiceModel>();
 			CreateMap<LanguageServiceModel, LanguageWebModel>();
+			CreateMap<LanguageWebModel, UpdateLanguageServiceModel>();
 		}
 	} 
 }

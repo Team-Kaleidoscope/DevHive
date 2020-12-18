@@ -20,7 +20,7 @@ namespace DevHive.Services.Services
 
 		public async Task<bool> CreateLanguage(LanguageServiceModel languageServiceModel)
 		{
-			if (!await this._languageRepository.DoesLanguageNameExist(languageServiceModel.Name))
+			if (await this._languageRepository.DoesLanguageNameExist(languageServiceModel.Name))
 				throw new ArgumentException("Language already exists!");
 
 			Language language = this._languageMapper.Map<Language>(languageServiceModel);
@@ -44,7 +44,7 @@ namespace DevHive.Services.Services
 			if (!await this._languageRepository.DoesLanguageExist(languageServiceModel.Id))
 				throw new ArgumentException("Language does not exist!");
 
-			if (!await this._languageRepository.DoesLanguageNameExist(languageServiceModel.Name))
+			if (await this._languageRepository.DoesLanguageNameExist(languageServiceModel.Name))
 				throw new ArgumentException("Language name already exists!");
 
 			Language language = this._languageMapper.Map<Language>(languageServiceModel);
