@@ -9,7 +9,6 @@ using DevHive.Web.Models.Identity.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DevHive.Common.Models.Identity;
-using DevHive.Common.Models;
 
 namespace DevHive.Web.Controllers
 {
@@ -56,8 +55,11 @@ namespace DevHive.Web.Controllers
 
 		//Read
 		[HttpGet]
-		public async Task<IActionResult> GetById(Guid id)
+		public async Task<IActionResult> GetById(Guid id, [FromHeader] string authorization)
 		{
+			if (!await this._userService.ValidJWT(id, authorization))
+				return new UnauthorizedResult();
+
 			UserServiceModel userServiceModel = await this._userService.GetUserById(id);
 			UserWebModel userWebModel = this._userMapper.Map<UserWebModel>(userServiceModel);
 
@@ -66,8 +68,11 @@ namespace DevHive.Web.Controllers
 
 		//Update
 		[HttpPut]
-		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserWebModel updateModel)
+		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserWebModel updateModel, [FromHeader] string authorization)
 		{
+			if (!await this._userService.ValidJWT(id, authorization))
+				return new UnauthorizedResult();
+
 			UpdateUserServiceModel updateUserServiceModel = this._userMapper.Map<UpdateUserServiceModel>(updateModel);
 			updateUserServiceModel.Id = id;
 
@@ -80,8 +85,11 @@ namespace DevHive.Web.Controllers
 
 		//Delete
 		[HttpDelete]
-		public async Task<IActionResult> Delete(Guid id)
+		public async Task<IActionResult> Delete(Guid id, [FromHeader] string authorization)
 		{
+			if (!await this._userService.ValidJWT(id, authorization))
+				return new UnauthorizedResult();
+
 			await this._userService.DeleteUser(id);
 			return new OkResult();
 		}
