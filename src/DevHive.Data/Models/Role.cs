@@ -9,6 +9,7 @@ namespace DevHive.Data.Models
 	public class Role : IdentityRole<Guid>
 	{
 		public const string DefaultRole = "User";
+		public const string AdminRole = "Admin";
 
 		public virtual List<User> Users { get; set; }
 	}
