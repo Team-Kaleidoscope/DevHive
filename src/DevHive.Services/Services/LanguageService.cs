@@ -48,6 +48,7 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("Language name already exists!");
 
 			Language language = this._languageMapper.Map<Language>(languageServiceModel);
+			//language.Id = languageServiceModel.Id;
 			bool result = await this._languageRepository.EditAsync(language);
 
 			return result;
