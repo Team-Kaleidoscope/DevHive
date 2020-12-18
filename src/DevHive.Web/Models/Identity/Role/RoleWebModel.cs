@@ -7,4 +7,3 @@ namespace DevHive.Web.Models.Identity.Role
 		public string Name { get; set; }
 	}
 }
-2
