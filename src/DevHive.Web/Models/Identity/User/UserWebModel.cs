@@ -6,7 +6,7 @@ namespace DevHive.Web.Models.Identity.User
 {
 	public class UserWebModel : BaseUserWebModel
 	{
-		public IList<RoleModel> Roles { get; set; } = new List<RoleModel>();
+		public IList<RoleWebModel> Roles { get; set; } = new List<RoleWebModel>();
 		public IList<UserWebModel> Friends { get; set; } = new List<UserWebModel>();
 	}
 }

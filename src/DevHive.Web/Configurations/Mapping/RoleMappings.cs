@@ -11,8 +11,8 @@ namespace DevHive.Web.Configurations.Mapping
 			CreateMap<CreateRoleModel, RoleModel>();
 			CreateMap<UpdateRoleModel, RoleModel>();
 			
-			CreateMap<RoleModel, RoleModel>();
-			CreateMap<RoleModel, RoleModel>();
+			CreateMap<RoleModel, RoleWebModel>();
+			CreateMap<RoleWebModel, RoleModel>();
 		}
 	} 
 }
