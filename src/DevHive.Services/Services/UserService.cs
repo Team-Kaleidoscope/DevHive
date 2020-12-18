@@ -105,6 +105,42 @@ namespace DevHive.Services.Services
 				throw new InvalidOperationException("Unable to delete user!");
 		}
 
+		/// <summary>
+		/// Checks wether the given token's UserName and Roles are the same as these of the user with the given id.
+		/// </summary>
+		public async Task<bool> ValidJWT(Guid id, string rawTokenData)
+		{
+			// There is authorization name in the beginning, i.e. "Bearer eyJh..."
+			var jwt = new JwtSecurityTokenHandler().ReadJwtToken(rawTokenData.Remove(0, 7));
+			
+			User user = await this._userRepository.GetByIdAsync(id)
+				?? throw new ArgumentException("User does not exist!");
+			
+			/* Check username */
+			string jwtUserName = this.GetClaimTypeValues("unique_name", jwt.Claims)[0];
+
+			if (jwtUserName != user.UserName)
+				return false;
+
+			/* Check roles */
+			List<string> jwtRoleNames = this.GetClaimTypeValues("role", jwt.Claims);
+
+			// Check if jwt contains all user roles (if it doesn't, jwt is either old or tampered with)
+			foreach(var role in user.Roles)
+			{
+				if (!jwtRoleNames.Contains(role.Name))
+					return false;
+
+				jwtRoleNames.Remove(role.Name);
+			}
+
+			// Check if jwt contains only roles of user
+			if (jwtRoleNames.Count > 0)
+				return false;
+
+			return true;
+		}
+
 		private string GeneratePasswordHash(string password)
 		{
 			return string.Join(string.Empty, SHA512.HashData(Encoding.ASCII.GetBytes(password)));
@@ -136,6 +172,17 @@ namespace DevHive.Services.Services
 			JwtSecurityTokenHandler tokenHandler = new();
 			SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
 			return tokenHandler.WriteToken(token);
+		}
+
+		private List<string> GetClaimTypeValues(string type, IEnumerable<Claim> claims)
+		{
+			List<string> toReturn = new();
+			
+			foreach(var claim in claims)
+				if (claim.Type == type)
+					toReturn.Add(claim.Value);
+
+			return toReturn;
 		}
 	}
 }
