@@ -32,7 +32,7 @@ namespace DevHive.Services.Services
 
 		public async Task<TokenModel> LoginUser(LoginServiceModel loginModel)
 		{
-			if (!await this._userRepository.IsUsernameValid(loginModel.UserName))
+			if (!await this._userRepository.DoesUsernameExist(loginModel.UserName))
 				throw new ArgumentException("Invalid username!");
 
 			User user = await this._userRepository.GetByUsername(loginModel.UserName);
@@ -81,7 +81,7 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("User does not exist!");
 
 			if (!this._userRepository.DoesUserHaveThisUsername(updateModel.Id, updateModel.UserName)
-					&& await this._userRepository.IsUsernameValid(updateModel.UserName))
+					&& await this._userRepository.DoesUsernameExist(updateModel.UserName))
 				throw new ArgumentException("Username already exists!");
 
 			User user = this._userMapper.Map<User>(updateModel);

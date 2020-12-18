@@ -86,13 +86,6 @@ namespace DevHive.Data.Repositories
 				.Any(x => x.Id == id);
 		}
 
-		public Task<bool> IsUsernameValid(string username)
-		{
-			return this._context
-				.Set<User>()
-				.AnyAsync(u => u.UserName == username);
-		}
-
 		public bool DoesUserHaveThisUsername(Guid id, string username)
 		{
 			return this._context
