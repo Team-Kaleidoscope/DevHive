@@ -53,13 +53,13 @@ namespace DevHive.Services.Services
 			return result;
 		}
 	
-		public async Task<bool> DeleteLanguage(Guid id)
+		public async Task<bool> DeleteTechnology(Guid id)
 		{
 			if (!await this._technologyRepository.DoesTechnologyExist(id))
 				throw new ArgumentException("Technology does not exist!");
 
-			Technology language = await this._technologyRepository.GetByIdAsync(id);
-			bool result = await this._technologyRepository.DeleteAsync(language);
+			Technology technology = await this._technologyRepository.GetByIdAsync(id);
+			bool result = await this._technologyRepository.DeleteAsync(technology);
 
 			return result;
 		}
