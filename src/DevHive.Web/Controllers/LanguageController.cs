@@ -16,9 +16,9 @@ namespace DevHive.Web.Controllers
 		private readonly LanguageService _languageService;
 		private readonly IMapper _languageMapper;
 
-		public LanguageController(DevHiveContext context, IMapper mapper)
+		public LanguageController(LanguageService languageService, IMapper mapper)
 		{
-			this._languageService = new LanguageService(context, mapper);
+			this._languageService = languageService;
 			this._languageMapper = mapper;
 		}
 

@@ -20,9 +20,9 @@ namespace DevHive.Web.Controllers
 		private readonly UserService _userService;
 		private readonly IMapper _userMapper;
 
-		public UserController(DevHiveContext context, IMapper mapper, JWTOptions jwtOptions)
+		public UserController(UserService userService, IMapper mapper)
 		{
-			this._userService = new UserService(context, mapper, jwtOptions);
+			this._userService = userService;
 			this._userMapper = mapper;
 		}
 

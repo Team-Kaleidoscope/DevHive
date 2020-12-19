@@ -3,7 +3,7 @@ using DevHive.Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace DevHive.Data.Repositories
+namespace DevHive.Data
 {
 	public class DevHiveContext : IdentityDbContext<User, Role, Guid>
 	{

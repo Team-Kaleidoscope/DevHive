@@ -12,9 +12,9 @@ namespace DevHive.Services.Services
 		private readonly RoleRepository _roleRepository;
 		private readonly IMapper _roleMapper;
 
-		public RoleService(DevHiveContext context, IMapper mapper)
+		public RoleService(RoleRepository roleRepository, IMapper mapper)
 		{
-			this._roleRepository = new RoleRepository(context);
+			this._roleRepository = roleRepository;
 			this._roleMapper = mapper;
 		}
 

@@ -13,9 +13,9 @@ namespace DevHive.Services.Services
 		private readonly FriendsRepository _friendsRepository;
 		private readonly IMapper _friendsMapper;
 
-		public FriendsService(DevHiveContext context, IMapper mapper, JWTOptions jwtOptions)
+		public FriendsService(FriendsRepository friendsRepository, IMapper mapper)
 		{
-			this._friendsRepository = new FriendsRepository(context);
+			this._friendsRepository = friendsRepository;
 			this._friendsMapper = mapper;
 		}
 

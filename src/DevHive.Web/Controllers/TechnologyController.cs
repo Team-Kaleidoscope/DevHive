@@ -16,9 +16,9 @@ namespace DevHive.Web.Controllers
 		private readonly TechnologyService _technologyService;
 		private readonly IMapper _technologyMapper;
 
-		public TechnologyController(DevHiveContext context, IMapper mapper)
+		public TechnologyController(TechnologyService technologyService, IMapper mapper)
 		{
-			this._technologyService = new TechnologyService(context, mapper);
+			this._technologyService = technologyService;
 			this._technologyMapper = mapper;
 		}
 

@@ -12,9 +12,9 @@ namespace DevHive.Services.Services
 		private readonly TechnologyRepository _technologyRepository;
 		private readonly IMapper _technologyMapper;
 
-		public TechnologyService(DevHiveContext context, IMapper technologyMapper)
+		public TechnologyService(TechnologyRepository technologyRepository, IMapper technologyMapper)
 		{
-			this._technologyRepository = new TechnologyRepository(context);
+			this._technologyRepository = technologyRepository;
 			this._technologyMapper = technologyMapper;
 		}
 	

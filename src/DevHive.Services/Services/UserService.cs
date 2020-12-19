@@ -22,10 +22,10 @@ namespace DevHive.Services.Services
 		private readonly IMapper _userMapper;
 		private readonly JWTOptions _jwtOptions;
 
-		public UserService(DevHiveContext context, IMapper mapper, JWTOptions jwtOptions)
+		public UserService(UserRepository userRepository, RoleRepository roleRepository, IMapper mapper, JWTOptions jwtOptions)
 		{
-			this._userRepository = new UserRepository(context);
-			this._roleRepository = new RoleRepository(context);
+			this._userRepository = userRepository;
+			this._roleRepository = roleRepository;
 			this._userMapper = mapper;
 			this._jwtOptions = jwtOptions;
 		}

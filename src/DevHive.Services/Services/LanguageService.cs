@@ -12,9 +12,9 @@ namespace DevHive.Services.Services
 		private readonly LanguageRepository _languageRepository;
 		private readonly IMapper _languageMapper;
 
-		public LanguageService(DevHiveContext context, IMapper mapper)
+		public LanguageService(LanguageRepository languageRepository, IMapper mapper)
 		{
-			this._languageRepository = new LanguageRepository(context);
+			this._languageRepository = languageRepository;
 			this._languageMapper = mapper;
 		}
 

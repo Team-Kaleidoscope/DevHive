@@ -20,9 +20,9 @@ namespace DevHive.Web.Controllers
 		private readonly FriendsService _friendsService;
 		private readonly IMapper _friendsMapper;
 
-		public FriendsController(DevHiveContext context, IMapper mapper, JWTOptions jwtOptions)
+		public FriendsController(FriendsService friendsService, IMapper mapper)
 		{
-			this._friendsService = new FriendsService(context, mapper, jwtOptions);
+			this._friendsService = friendsService;
 			this._friendsMapper = mapper;
 		}
 

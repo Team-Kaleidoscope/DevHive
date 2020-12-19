@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Builder;
 using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using DevHive.Data;
 
 namespace DevHive.Web.Configurations.Extensions
 {

@@ -17,9 +17,9 @@ namespace DevHive.Web.Controllers
 		private readonly RoleService _roleService;
 		private readonly IMapper _roleMapper;
 
-		public RoleController(DevHiveContext context, IMapper mapper)
+		public RoleController(RoleService roleService, IMapper mapper)
 		{
-			this._roleService = new RoleService(context, mapper);
+			this._roleService = roleService;
 			this._roleMapper = mapper;
 		}
 
