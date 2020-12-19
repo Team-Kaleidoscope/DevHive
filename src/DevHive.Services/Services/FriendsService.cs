@@ -26,6 +26,9 @@ namespace DevHive.Services.Services
 			User user = await this._friendsRepository.GetByIdAsync(userId);
 			User friend = await this._friendsRepository.GetByIdAsync(friendId);
 
+			if (DoesUserHaveThisFriend(user, friend))
+				throw new ArgumentException("Friend already exists in your friends list.");
+
 			return user != default(User) && friend != default(User) ? 
 				await this._friendsRepository.AddFriendAsync(user, friend) : 
 				throw new ArgumentException("Invalid user!");
@@ -49,9 +52,13 @@ namespace DevHive.Services.Services
 					throw new ArgumentException("Invalid user!");
 
 			User user = await this._friendsRepository.GetByIdAsync(userId);
+			User friend = await this._friendsRepository.GetByIdAsync(friendId);
 
 			if(!this.DoesUserHaveFriends(user))
 				throw new ArgumentException("User does not have any friends.");
+
+			if (!DoesUserHaveThisFriend(user, friend))
+				throw new ArgumentException("This ain't your friend, amigo.");
 
 			return await this.RemoveFriend(user.Id, friendId);
 		}

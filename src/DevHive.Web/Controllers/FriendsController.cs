@@ -13,14 +13,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace DevHive.Web.Controllers
 {
 	[ApiController]
+	[Route("/api")]
 	[Authorize(Roles = "User")]
-	public class FriendsController : UserController
+	public class FriendsController
 	{
 		private readonly FriendsService _friendsService;
 		private readonly IMapper _friendsMapper;
 
-		public FriendsController(DevHiveContext context, IMapper mapper, JWTOptions jwtOptions) 
-			: base(context, mapper, jwtOptions)
+		public FriendsController(DevHiveContext context, IMapper mapper, JWTOptions jwtOptions)
 		{
 			this._friendsService = new FriendsService(context, mapper, jwtOptions);
 			this._friendsMapper = mapper;
@@ -49,7 +49,7 @@ namespace DevHive.Web.Controllers
 	
 		//Delete
 		[HttpDelete]
-		[Route("GetAFriend")]
+		[Route("RemoveAFriend")]
 		public async Task<IActionResult> RemoveAFriend(Guid userId, Guid friendId)
 		{
 			await this._friendsService.RemoveFriend(userId, friendId);
