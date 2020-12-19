@@ -9,9 +9,9 @@ namespace DevHive.Data.Repositories
 {
 	public class RoleRepository : IRepository<Role>
 	{
-		private readonly DbContext _context;
+		private readonly DevHiveContext _context;
 
-		public RoleRepository(DbContext context)
+		public RoleRepository(DevHiveContext context)
 		{
 			this._context = context;
 		}

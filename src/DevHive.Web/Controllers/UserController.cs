@@ -9,6 +9,7 @@ using DevHive.Web.Models.Identity.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DevHive.Common.Models.Identity;
+using DevHive.Common.Models;
 
 namespace DevHive.Web.Controllers
 {
@@ -53,6 +54,15 @@ namespace DevHive.Web.Controllers
 			return new CreatedResult("Register", tokenWebModel);
 		}
 
+		[HttpPost]
+		[Route("AddAFriend")]
+		public async Task<IActionResult> AddAFriend(Guid userId, [FromBody] IdModel friendIdModel)
+		{
+			return await this._userService.AddFriend(userId, friendIdModel.Id) ?
+				new OkResult() :
+				new BadRequestResult();
+		}
+
 		//Read
 		[HttpGet]
 		public async Task<IActionResult> GetById(Guid id, [FromHeader] string authorization)
@@ -64,6 +74,16 @@ namespace DevHive.Web.Controllers
 			UserWebModel userWebModel = this._userMapper.Map<UserWebModel>(userServiceModel);
 
 			return new OkObjectResult(userWebModel);
+		}
+
+		[HttpGet]
+		[Route("GetAFriend")]
+		public async Task<IActionResult> GetAFriend(Guid friendId)
+		{
+			UserServiceModel friendServiceModel = await this._userService.GetFriendById(friendId);
+			UserWebModel friend = this._userMapper.Map<UserWebModel>(friendServiceModel);
+
+			return new OkObjectResult(friend);
 		}
 
 		//Update
@@ -91,6 +111,14 @@ namespace DevHive.Web.Controllers
 				return new UnauthorizedResult();
 
 			await this._userService.DeleteUser(id);
+			return new OkResult();
+		}
+
+		[HttpDelete]
+		[Route("RemoveAFriend")]
+		public async Task<IActionResult> RemoveAFriend(Guid userId, Guid friendId)
+		{
+			await this._userService.RemoveFriend(userId, friendId);
 			return new OkResult();
 		}
 	}

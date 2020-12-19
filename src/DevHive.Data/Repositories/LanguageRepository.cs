@@ -9,9 +9,9 @@ namespace DevHive.Data.Repositories
 {
 	public class LanguageRepository : IRepository<Language>
 	{
-		private readonly DbContext _context;
+		private readonly DevHiveContext _context;
 
-		public LanguageRepository(DbContext context)
+		public LanguageRepository(DevHiveContext context)
 		{
 			this._context = context;
 		}

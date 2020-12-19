@@ -9,9 +9,9 @@ namespace DevHive.Data.Repositories
 {
 	public class TechnologyRepository : IRepository<Technology>
 	{
-		private readonly DbContext _context;
+		private readonly DevHiveContext _context;
 
-		public TechnologyRepository(DbContext context)
+		public TechnologyRepository(DevHiveContext context)
 		{
 			this._context = context;
 		}

@@ -45,7 +45,7 @@ namespace DevHive.Web
 			}
 			else
 			{
-				app.UseExceptionHandler("/api/HttpError");
+				app.UseExceptionHandler("/api/Error");
 				app.UseHsts();
 			}
 

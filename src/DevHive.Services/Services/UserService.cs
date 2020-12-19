@@ -67,12 +67,35 @@ namespace DevHive.Services.Services
 			return new TokenModel(WriteJWTSecurityToken(user.UserName, user.Roles));
 		}
 
+		public async Task<bool> AddFriend(Guid userId, Guid friendId)
+		{
+			User user = await this._userRepository.GetByIdAsync(userId);
+			User friend = await this._userRepository.GetByIdAsync(friendId);
+
+			if (DoesUserHaveThisFriend(user, friend))
+				throw new ArgumentException("Friend already exists in your friends list.");
+
+			return user != default(User) && friend != default(User) ? 
+				await this._userRepository.AddFriendAsync(user, friend) : 
+				throw new ArgumentException("Invalid user!");
+		}
+
 		public async Task<UserServiceModel> GetUserById(Guid id)
 		{
 			User user = await this._userRepository.GetByIdAsync(id)
 				?? throw new ArgumentException("User does not exist!");
 
 			return this._userMapper.Map<UserServiceModel>(user);
+		}
+
+		public async Task<UserServiceModel> GetFriendById(Guid friendId)
+		{
+			if(!_userRepository.DoesUserExist(friendId))
+				throw new ArgumentException("User does not exist!");
+
+			User friend = await this._userRepository.GetByIdAsync(friendId);
+
+			return this._userMapper.Map<UserServiceModel>(friend);
 		}
 
 		public async Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateModel)
@@ -103,6 +126,24 @@ namespace DevHive.Services.Services
 
 			if (!result)
 				throw new InvalidOperationException("Unable to delete user!");
+		}
+
+		public async Task<bool> RemoveFriend(Guid userId, Guid friendId)
+		{
+			if(!this._userRepository.DoesUserExist(userId) && 
+				!this._userRepository.DoesUserExist(friendId))
+					throw new ArgumentException("Invalid user!");
+
+			User user = await this._userRepository.GetByIdAsync(userId);
+			User friend = await this._userRepository.GetByIdAsync(friendId);
+
+			if(!this.DoesUserHaveFriends(user))
+				throw new ArgumentException("User does not have any friends.");
+
+			if (!DoesUserHaveThisFriend(user, friend))
+				throw new ArgumentException("This ain't your friend, amigo.");
+
+			return await this.RemoveFriend(user.Id, friendId);
 		}
 
 		public async Task<bool> ValidJWT(Guid id, string rawTokenData)
@@ -143,6 +184,27 @@ namespace DevHive.Services.Services
 			return string.Join(string.Empty, SHA512.HashData(Encoding.ASCII.GetBytes(password)));
 		}
 
+		private bool DoesUserHaveThisFriend(User user, User friend)
+		{
+			return user.Friends.Contains(friend);
+		}
+
+		private bool DoesUserHaveFriends(User user)
+		{
+			return user.Friends.Count >= 1;
+		}
+
+		private List<string> GetClaimTypeValues(string type, IEnumerable<Claim> claims)
+		{
+			List<string> toReturn = new();
+			
+			foreach(var claim in claims)
+				if (claim.Type == type)
+					toReturn.Add(claim.Value);
+
+			return toReturn;
+		}
+
 		private string WriteJWTSecurityToken(string userName, IList<Role> roles)
 		{
 			byte[] signingKey = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
@@ -169,17 +231,6 @@ namespace DevHive.Services.Services
 			JwtSecurityTokenHandler tokenHandler = new();
 			SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
 			return tokenHandler.WriteToken(token);
-		}
-
-		private List<string> GetClaimTypeValues(string type, IEnumerable<Claim> claims)
-		{
-			List<string> toReturn = new();
-			
-			foreach(var claim in claims)
-				if (claim.Type == type)
-					toReturn.Add(claim.Value);
-
-			return toReturn;
 		}
 	}
 }

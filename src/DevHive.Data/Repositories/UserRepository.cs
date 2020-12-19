@@ -11,9 +11,9 @@ namespace DevHive.Data.Repositories
 {
 	public class UserRepository : IRepository<User>
 	{
-		private readonly DbContext _context;
+		private readonly DevHiveContext _context;
 
-		public UserRepository(DbContext context)
+		public UserRepository(DevHiveContext context)
 		{
 			this._context = context;
 		}
@@ -24,6 +24,14 @@ namespace DevHive.Data.Repositories
 			await this._context
 				.Set<User>()
 				.AddAsync(entity);
+
+			return await RepositoryMethods.SaveChangesAsync(this._context);
+		}
+
+		public async Task<bool> AddFriendAsync(User user, User friend)
+		{
+			this._context.Update(user);
+			user.Friends.Add(friend);
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
@@ -74,6 +82,14 @@ namespace DevHive.Data.Repositories
 			this._context
 				.Set<User>()
 				.Remove(entity);
+
+			return await RepositoryMethods.SaveChangesAsync(this._context);
+		}
+
+		public async Task<bool> RemoveFriendAsync(User user, User friend)
+		{
+			this._context.Update(user);
+			user.Friends.Remove(friend);
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}

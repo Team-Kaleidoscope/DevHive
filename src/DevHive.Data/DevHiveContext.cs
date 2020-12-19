@@ -7,7 +7,7 @@ namespace DevHive.Data
 {
 	public class DevHiveContext : IdentityDbContext<User, Role, Guid>
 	{
-		public DevHiveContext(DbContextOptions options)
+		public DevHiveContext(DbContextOptions<DevHiveContext> options)
 			: base(options) { }
 
 		public DbSet<Technology> Technologies { get; set; }
@@ -24,10 +24,6 @@ namespace DevHive.Data
 				
 			builder.Entity<User>()
 				.HasMany(x => x.Friends);
-
-			builder.Entity<Role>()
-				.HasIndex(x => x.Id)
-				.IsUnique();
 
 			base.OnModelCreating(builder);
 		}
