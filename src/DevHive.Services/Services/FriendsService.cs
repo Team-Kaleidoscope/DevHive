@@ -8,13 +8,12 @@ using DevHive.Services.Options;
 
 namespace DevHive.Services.Services
 {
-	public class FriendsService : UserService
+	public class FriendsService
 	{
 		private readonly FriendsRepository _friendsRepository;
 		private readonly IMapper _friendsMapper;
 
-		public FriendsService(DevHiveContext context, IMapper mapper, JWTOptions jwtOptions) 
-			: base(context, mapper, jwtOptions)
+		public FriendsService(DevHiveContext context, IMapper mapper, JWTOptions jwtOptions)
 		{
 			this._friendsRepository = new FriendsRepository(context);
 			this._friendsMapper = mapper;
