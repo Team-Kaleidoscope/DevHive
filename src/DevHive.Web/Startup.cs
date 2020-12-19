@@ -7,6 +7,8 @@ using Microsoft.Extensions.Hosting;
 using DevHive.Web.Configurations.Extensions;
 using AutoMapper;
 using Newtonsoft.Json;
+using DevHive.Data.Repositories;
+using DevHive.Services.Services;
 
 namespace DevHive.Web
 {
@@ -32,6 +34,16 @@ namespace DevHive.Web
 			services.SwaggerConfiguration();
 			services.JWTConfiguration(Configuration);
 			services.AutoMapperConfiguration();
+
+			services.AddTransient<LanguageRepository>();
+			services.AddTransient<RoleRepository>();
+			services.AddTransient<TechnologyRepository>();
+			services.AddTransient<UserRepository>();
+
+			services.AddTransient<LanguageService>();
+			services.AddTransient<RoleService>();
+			services.AddTransient<TechnologyService>();
+			services.AddTransient<UserService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
