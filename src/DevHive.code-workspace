@@ -1,10 +1,6 @@
 {
 	"folders": [
 		{
-			"name": "DevHive.Angular",
-			"path": "./DevHive.Angular"
-		},
-		{
 			"name": "DevHive.Web",
 			"path": "./DevHive.Web"
 		},
@@ -20,6 +16,10 @@
 			"name": "DevHive.Common",
 			"path": "./DevHive.Common"
 		},
+		{
+			"name": "DevHive.Angular",
+			"path": "./DevHive.Angular"
+		},
 	],
 	"settings": {
 		"files.exclude": {
@@ -28,6 +28,7 @@
 
 			"**/obj": true,
 			".gitignore" : true,
-		}
+		},
+		"code-runner.fileDirectoryAsCwd": true
 	}
 }
