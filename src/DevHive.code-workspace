@@ -1,8 +1,8 @@
 {
 	"folders": [
 		{
-			"name": "DevHive.Blazor",
-			"path": "./DevHive.Blazor"
+			"name": "DevHive.Angular",
+			"path": "./DevHive.Angular"
 		},
 		{
 			"name": "DevHive.Web",
