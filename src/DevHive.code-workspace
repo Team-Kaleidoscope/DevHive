@@ -29,6 +29,7 @@
 			"**/obj": true,
 			".gitignore" : true,
 		},
-		"code-runner.fileDirectoryAsCwd": true
+		"code-runner.fileDirectoryAsCwd": true,
+		"compile-hero.disable-compile-files-on-did-save-code": true
 	}
 }
