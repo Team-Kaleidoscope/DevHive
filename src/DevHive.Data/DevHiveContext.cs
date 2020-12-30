@@ -12,6 +12,7 @@ namespace DevHive.Data
 
 		public DbSet<Technology> Technologies { get; set; }
 		public DbSet<Language> Languages { get; set; }
+		public DbSet<Comment> Comments { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
