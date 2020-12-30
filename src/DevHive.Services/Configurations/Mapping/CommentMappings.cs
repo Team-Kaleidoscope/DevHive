@@ -9,9 +9,10 @@ namespace DevHive.Services.Configurations.Mapping
 		public CommentMappings()
 		{
 			CreateMap<CommentServiceModel, Comment>();
-			CreateMap<Language, CommentServiceModel>();
-			CreateMap<UpdateCommentServiceModel, Language>();
-			CreateMap<GetByIdCommentServiceModel, Language>();
+			CreateMap<Comment, CommentServiceModel>();
+			CreateMap<UpdateCommentServiceModel, Comment>();
+			CreateMap<GetByIdCommentServiceModel, Comment>();
+			CreateMap<Comment, GetByIdCommentServiceModel>();
 		}
 	}
 }

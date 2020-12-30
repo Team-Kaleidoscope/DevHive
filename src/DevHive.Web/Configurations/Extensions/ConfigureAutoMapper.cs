@@ -1,6 +1,6 @@
 using System;
 using AutoMapper;
-using AutoMapper.Configuration;
+//using AutoMapper.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
