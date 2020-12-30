@@ -12,13 +12,13 @@ namespace DevHive.Web.Configurations.Extensions
 			services.AddTransient<RoleService>();
 			services.AddTransient<TechnologyService>();
 			services.AddTransient<UserService>();
-			services.AddTransient<CommentService>();
+			services.AddTransient<PostService>();
 
 			services.AddTransient<LanguageRepository>();
 			services.AddTransient<RoleRepository>();
 			services.AddTransient<TechnologyRepository>();
 			services.AddTransient<UserRepository>();
-			services.AddTransient<CommentRepository>();
+			services.AddTransient<PostRepository>();
 		}
 	}
 }

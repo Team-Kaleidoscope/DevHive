@@ -1,6 +1,6 @@
 using System;
 
-namespace DevHive.Common.Models.Data
+namespace DevHive.Common.Models.Misc
 {
 	public class IdModel
 	{

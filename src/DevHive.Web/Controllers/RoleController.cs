@@ -67,7 +67,7 @@ namespace DevHive.Web.Controllers
 			bool result = await this._roleService.DeleteRole(id);
 
 			if (!result)
-				return new BadRequestObjectResult("Could nor delete role!");
+				return new BadRequestObjectResult("Could not delete role!");
 
 			return new OkResult();
 		}

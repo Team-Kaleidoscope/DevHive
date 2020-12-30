@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace DevHive.Common.Models.Data
+namespace DevHive.Common.Models.Misc
 {
 	public static class RepositoryMethods
 	{

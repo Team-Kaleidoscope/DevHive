@@ -1,14 +1,10 @@
-using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using DevHive.Web.Configurations.Extensions;
-using AutoMapper;
 using Newtonsoft.Json;
-using DevHive.Data.Repositories;
-using DevHive.Services.Services;
 
 namespace DevHive.Web
 {

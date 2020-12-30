@@ -1,6 +1,7 @@
 using DevHive.Data.Models;
 using AutoMapper;
-using DevHive.Services.Models.Comment;
+using DevHive.Services.Models.Post.Comment;
+using DevHive.Common.Models.Misc;
 
 namespace DevHive.Services.Configurations.Mapping
 {
@@ -11,8 +12,8 @@ namespace DevHive.Services.Configurations.Mapping
 			CreateMap<CommentServiceModel, Comment>();
 			CreateMap<Comment, CommentServiceModel>();
 			CreateMap<UpdateCommentServiceModel, Comment>();
-			CreateMap<GetByIdCommentServiceModel, Comment>();
-			CreateMap<Comment, GetByIdCommentServiceModel>();
+			CreateMap<IdModel, Comment>();
+			CreateMap<Comment, IdModel>();
 		}
 	}
 }

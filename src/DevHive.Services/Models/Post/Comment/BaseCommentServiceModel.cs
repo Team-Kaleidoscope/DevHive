@@ -1,11 +1,11 @@
 using System;
-namespace DevHive.Data.Models
+
+namespace DevHive.Services.Models.Post.Comment
 {
-	public class Comment : IModel
+	public class BaseCommentServiceModel
 	{
 		public Guid Id { get; set; }
 		public Guid IssuerId { get; set; }
 		public string Message { get; set; }
-		public DateTime TimeCreated { get; set; }
 	}
 }

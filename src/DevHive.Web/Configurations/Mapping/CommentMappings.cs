@@ -1,10 +1,10 @@
 using AutoMapper;
-using DevHive.Web.Models.Comment;
-using DevHive.Services.Models.Comment;
+using DevHive.Services.Models.Post.Comment;
+using DevHive.Web.Models.Post.Comment;
 
 namespace DevHive.Web.Configurations.Mapping
 {
-    public class CommentMappings : Profile
+	public class CommentMappings : Profile
 	{
 		public CommentMappings()
 		{
@@ -12,7 +12,6 @@ namespace DevHive.Web.Configurations.Mapping
 			CreateMap<CommentWebModel, UpdateCommentServiceModel>();
 			CreateMap<CommentServiceModel, CommentWebModel>();
 			CreateMap<CommentWebModel, CommentServiceModel>();
-			CreateMap<GetByIdCommentServiceModel, GetByIdCommentWebModel>();
 		}
 	} 
 }

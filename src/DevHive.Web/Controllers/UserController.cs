@@ -9,7 +9,7 @@ using DevHive.Web.Models.Identity.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DevHive.Common.Models.Identity;
-using DevHive.Common.Models.Data;
+using DevHive.Common.Models.Misc;
 
 namespace DevHive.Web.Controllers
 {
