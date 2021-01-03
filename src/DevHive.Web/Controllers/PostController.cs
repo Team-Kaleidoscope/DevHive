@@ -92,8 +92,11 @@ namespace DevHive.Web.Controllers
 
 		[HttpPut]
 		[Route("Comment")]
-		public async Task<IActionResult> UpdateComment(Guid id, [FromBody] CommentWebModel commentWebModel)
+		public async Task<IActionResult> UpdateComment(Guid id, [FromBody] CommentWebModel commentWebModel, [FromHeader] string authorization)
 		{
+			if (!await this._postService.ValidateJwtForComment(id, authorization))
+				return new UnauthorizedResult();
+
 			UpdateCommentServiceModel updateCommentServiceModel = this._postMapper.Map<UpdateCommentServiceModel>(commentWebModel);
 			updateCommentServiceModel.Id = id;
 
@@ -119,8 +122,11 @@ namespace DevHive.Web.Controllers
 
 		[HttpDelete]
 		[Route("Comment")]
-		public async Task<IActionResult> DeleteComment(Guid id)
+		public async Task<IActionResult> DeleteComment(Guid id, [FromHeader] string authorization)
 		{
+			if (!await this._postService.ValidateJwtForComment(id, authorization))
+				return new UnauthorizedResult();
+			
 			bool result = await this._postService.DeleteComment(id);
 
 			if (!result)

@@ -1,21 +1,26 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Data.Models;
 using DevHive.Data.Repositories;
 using DevHive.Services.Models.Post.Comment;
 using DevHive.Services.Models.Post.Post;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace DevHive.Services.Services
 {
 	public class PostService
 	{
 		private readonly PostRepository _postRepository;
+		private readonly UserRepository _userRepository;
 		private readonly IMapper _postMapper;
 
-		public PostService(PostRepository postRepository, IMapper postMapper)
+		public PostService(PostRepository postRepository, UserRepository userRepository , IMapper postMapper)
 		{
 			this._postRepository = postRepository;
+			this._userRepository = userRepository;
 			this._postMapper = postMapper;
 		}
 
@@ -93,6 +98,42 @@ namespace DevHive.Services.Services
 			bool result = await this._postRepository.DeleteCommentAsync(comment);
 
 			return result;
+		}
+
+		//Validate	
+		public async Task<bool> ValidateJwtForComment(Guid commentId, string rawTokenData)
+		{
+			Comment comment = await this._postRepository.GetCommentByIdAsync(commentId);
+			User user = await this.GetUserForValidation(rawTokenData);
+
+			if (comment.IssuerId != user.Id)
+				return false;
+
+			return true;
+		}
+
+		private async Task<User> GetUserForValidation(string rawTokenData)
+		{
+			var jwt = new JwtSecurityTokenHandler().ReadJwtToken(rawTokenData.Remove(0, 7));
+
+			string jwtUserName = this.GetClaimTypeValues("unique_name", jwt.Claims)[0];
+			//List<string> jwtRoleNames = this.GetClaimTypeValues("role", jwt.Claims);
+			
+			User user = await this._userRepository.GetByUsername(jwtUserName)
+				?? throw new ArgumentException("User does not exist!");
+
+			return user;
+		}
+
+		private List<string> GetClaimTypeValues(string type, IEnumerable<Claim> claims)
+		{
+			List<string> toReturn = new();
+			
+			foreach(var claim in claims)
+				if (claim.Type == type)
+					toReturn.Add(claim.Value);
+
+			return toReturn;
 		}
 	}
 }
