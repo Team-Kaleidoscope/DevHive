@@ -8,12 +8,13 @@ using DevHive.Services.Models.Post.Post;
 using DevHive.Web.Models.Post.Comment;
 using DevHive.Services.Models.Post.Comment;
 using DevHive.Common.Models.Misc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevHive.Web.Controllers
 {
 	[ApiController]
 	[Route("/api/[controller]")]
-	//[Authorize(Posts = "Admin")]
+	[Authorize(Roles = "User")]
 	public class PostController
 	{
 		private readonly PostService _postService;
@@ -44,9 +45,9 @@ namespace DevHive.Web.Controllers
 		[Route("Comment")]
 		public async Task<IActionResult> AddComment([FromBody] CommentWebModel commentWebModel)
 		{
-			CommentServiceModel commentServiceModel = this._postMapper.Map<CommentServiceModel>(commentWebModel);
+			CreateCommentServiceModel createCommentServiceModel = this._postMapper.Map<CreateCommentServiceModel>(commentWebModel);
 
-			bool result = await this._postService.AddComment(commentServiceModel);
+			bool result = await this._postService.AddComment(createCommentServiceModel);
 
 			if(!result)
 				return new BadRequestObjectResult("Could not create the Comment");
@@ -56,6 +57,7 @@ namespace DevHive.Web.Controllers
 
 		//Read
 		[HttpGet]
+		[AllowAnonymous]
 		public async Task<IActionResult> GetById(Guid id)
 		{
 			PostServiceModel postServiceModel = await this._postService.GetPostById(id);
@@ -66,12 +68,13 @@ namespace DevHive.Web.Controllers
 
 		[HttpGet]
 		[Route("Comment")]
+		[AllowAnonymous]
 		public async Task<IActionResult> GetCommentById(Guid id)
 		{
 			CommentServiceModel commentServiceModel = await this._postService.GetCommentById(id);
-			IdModel idModel = this._postMapper.Map<IdModel>(commentServiceModel);
+			CommentWebModel commentWebModel = this._postMapper.Map<CommentWebModel>(commentServiceModel);
 
-			return new OkObjectResult(idModel);
+			return new OkObjectResult(commentWebModel);
 		}
 
 		//Update
