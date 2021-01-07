@@ -28,6 +28,9 @@
 
 			"**/obj": true,
 			".gitignore" : true,
+
+			"**/node_modules" : true,
+			"e2e" : true,
 		},
 		"code-runner.fileDirectoryAsCwd": true,
 		"compile-hero.disable-compile-files-on-did-save-code": true
