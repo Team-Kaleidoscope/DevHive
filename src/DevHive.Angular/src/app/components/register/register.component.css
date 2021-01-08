@@ -1,56 +1,48 @@
 #content {
 	height: 100%;
-  max-width: 20em;
-	margin-left: auto;
-	margin-right: auto;
+	max-width: 25%;
+	margin: auto;
+	margin-top: 10%;
 
 	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
-}
-
-#title {
-	font-size: 2em;
-	font-weight: bold;
-}
-
-#content input[type=text], #content #submit-btn {
-	border: 2px solid black;
-	border-radius: 0.4em;
-	box-sizing: border-box;
-	width: 100%;
-	margin-top: 0.5em;
-  font-size: 0.8em;
-  padding: 0.3em;
-}
-
-#content input[type=text]:nth-last-of-type(1) {
-  margin-bottom: 0.5em;
-}
-
-input[type=text]:focus, button[type=submit]:focus {
-  outline: 0;
+	flex-wrap: nowrap;
+	flex-flow: column;
 }
 
 #content hr {
 	width: 100%;
 	border: 1px solid black;
 	box-sizing: border-box;
+	margin-top: 2%;
+	margin-bottom: 2%;
 }
 
-#submit-btn {
-  background-color: black;
-  color: white;
-  text-align: center;
+#content mat-form-field {
+	width: 100%;
 }
 
-#submit-btn:hover {
-  cursor: pointer;
-  border-color: darkgrey !important;
-  background-color: darkgrey;
+.title {
+	text-align: center;
+	font-size: 250%;
+	font-weight: bold;
 }
 
-#submit-btn:active {
-  transform: scale(0.9);
+.submit-btn {
+	width: 100%;
+	background-color: black;
+	color: white;
+	text-align: center;
+	margin-top: 1%;
+	
+	border-radius: 10px;
+}
+
+.submit-btn:hover {
+	cursor: pointer;
+	border-color: darkgrey;
+	background-color: darkgrey;
+}
+
+.submit-btn:active {
+	transform: scale(0.9);
 }

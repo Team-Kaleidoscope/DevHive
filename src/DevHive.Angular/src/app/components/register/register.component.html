@@ -1,19 +1,52 @@
 <div id="content">
-	<div id="title">Register</div>
+	<h1 class="title">Register</h1>
 
 	<form [formGroup]="registerUserFormGroup" (ngSubmit)="onSubmit()">
 		<hr>
-		Value: {{ registerUserFormGroup.value | json }}
-		<hr>
-		
-		<label for="firstName">First Name</label>
-		<input type="text" placeholder="First Name" formControlName="firstName">
-		<input type="text" placeholder="Last Name" formControlName="lastName">
-		<input type="text" placeholder="Username" formControlName="username">
-		<input type="text" placeholder="Password" formControlName="password">
-		<input type="text" placeholder="Email" formControlName="email">
+		<!-- Value: {{ registerUserFormGroup.value | json }}
+		<hr> -->
 
+		<mat-form-field class="firstNameField">
+			<mat-label>First Name* </mat-label>
+			<input matInput placeholder="Goshko, is that u?" formControlName="firstName">
+
+			<mat-error *ngIf="firstName?.invalid">Min length of 3</mat-error>
+			<!-- <mat-error *ngIf="!firstName.required">* This is required</mat-error> -->
+		</mat-form-field>
+		
+		<mat-form-field class="lastNameField">
+			<mat-label>Last Name* </mat-label>
+			<input matInput placeholder="Trapov? Really??" formControlName="lastName">
+
+			<mat-error *ngIf="lastName?.invalid">Min length of 3</mat-error>
+			<!-- <mat-error *ngIf="!firstName.required">* This is required</mat-error> -->
+		</mat-form-field>
+		
+		<mat-form-field class="usernameField">
+			<mat-label>Username* </mat-label>
+			<input matInput placeholder="Think of something cool to flex on other kids" formControlName="username">
+
+			<mat-error *ngIf="username?.invalid">Min length of 3</mat-error>
+			<!-- <mat-error *ngIf="!firstName.required">* This is required</mat-error> -->
+		</mat-form-field>
+		
+		<mat-form-field class="emailField">
+			<mat-label>Email* </mat-label>
+			<input matInput placeholder="You expect an email joke? I have none, mail me one" formControlName="email">
+
+			<mat-error *ngIf="email?.invalid">You dummy, enter @</mat-error>
+			<!-- <mat-error *ngIf="!firstName.required">* This is required</mat-error> -->
+		</mat-form-field>
+		
+		<mat-form-field class="passwordField">
+			<mat-label>Password* </mat-label>
+			<input matInput type="password" placeholder="Make sure it's long & strong(just like my d***)" formControlName="password">
+
+			<mat-hint align="end">You must have at least one number</mat-hint>
+			<mat-error *ngIf="password?.invalid">Min length of 5</mat-error>
+			<!-- <mat-error *ngIf="!firstName.required">* This is required</mat-error> -->
+		</mat-form-field>
 		<hr>
-		<button type="submit" value="Submit" id="submit-btn">Submit</button>
+		<button mat-button class="submit-btn" type="submit">Submit</button>
 	</form>
 </div>

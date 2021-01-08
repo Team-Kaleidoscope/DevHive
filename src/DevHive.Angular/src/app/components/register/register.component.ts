@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -18,26 +18,26 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.registerUserFormGroup = this.fb.group({
-      firstName: ['', [
+      firstName: new FormControl('', [
         Validators.required,
         Validators.minLength(3)
-      ]],
-      lastName: ['', [
+      ]),
+      lastName: new FormControl('', [
         Validators.required,
         Validators.minLength(3)
-      ]],
-      username: ['', [
+      ]),
+      username: new FormControl('', [
         Validators.required,
         Validators.minLength(3)
-      ]],
-      email: ['', [
+      ]),
+      email: new FormControl('', [
         Validators.required,
         Validators.email,
-      ]],
-      password: ['', [
+      ]),
+      password: new FormControl('', [
         Validators.required,
         // Add password pattern
-      ]],
+      ]),
     });
 
     this.registerUserFormGroup.valueChanges.subscribe(console.log);
