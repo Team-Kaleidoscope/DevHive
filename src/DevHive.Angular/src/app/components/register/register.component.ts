@@ -41,11 +41,27 @@ export class RegisterComponent implements OnInit {
       ]],
       password: ['', [
         Validators.required,
-        //Add password pattern
+        // Add password pattern
       ]],
     });
 
     this.registerUserFormGroup.valueChanges.subscribe(console.log);
+  }
+
+  onSubmit(): void {
+    fetch('http://localhost:5000/api/User/register', {
+      method: 'POST',
+      body: `{
+               "UserName": "${this.registerUserFormGroup.get('username')?.value}",
+               "Email": "${this.registerUserFormGroup.get('email')?.value}",
+               "FirstName": "${this.registerUserFormGroup.get('firstName')?.value}",
+               "LastName": "${this.registerUserFormGroup.get('lastName')?.value}",
+               "Password": "${this.registerUserFormGroup.get('password')?.value}"
+      }`,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(response => response.json()).then(data => { console.log(data); });
   }
 
   get firstName() {

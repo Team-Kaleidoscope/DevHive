@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -8,7 +8,7 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  loginForm: FormGroup;
+  loginUserFormGroup: FormGroup;
 
   private _title = 'Login';
 
@@ -17,20 +17,28 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loginForm = this.fb.group({
-      userName: '',
-      password: ''
+    this.loginUserFormGroup = this.fb.group({
+      username: ['', [
+        Validators.required,
+        Validators.minLength(3)
+      ]],
+      password: ['', [
+        Validators.required,
+        // Add password pattern
+      ]]
     });
   }
 
-  async onSubmit(): Promise<void> {
-    const response = await fetch('http://localhost:5000/api/User/login', {
+  onSubmit(): void {
+    fetch('http://localhost:5000/api/User/login', {
       method: 'POST',
-      body: `{"UserName": "${this.loginForm.get('userName')?.value}", "Password": "${this.loginForm.get('password')?.value}"}`,
+      body: `{
+               "UserName": "${this.loginUserFormGroup.get('username')?.value}",
+               "Password": "${this.loginUserFormGroup.get('password')?.value}"
+      }`,
       headers: {
         'Content-Type': 'application/json'
       }
-    });
-    console.log(response);
+    }).then(response => response.json()).then(data => { console.log(data); });
   }
 }

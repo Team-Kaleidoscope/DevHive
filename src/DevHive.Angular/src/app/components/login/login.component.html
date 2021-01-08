@@ -3,8 +3,8 @@
 		Login
 	</div>
 	<hr>
-	<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-		<input type="text" placeholder="Username" name="username" formControlName="userName">
+	<form [formGroup]="loginUserFormGroup" (ngSubmit)="onSubmit()">
+		<input type="text" placeholder="Username" name="username" formControlName="username">
 		<input type="text" placeholder="Password" name="password" formControlName="password">
     <hr>
     <button type="submit" value="Submit" id="submit-btn">Submit</button>

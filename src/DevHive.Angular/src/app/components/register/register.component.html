@@ -1,11 +1,11 @@
 <div id="content">
 	<div id="title">Register</div>
-	
-	<form [formGroup]="registerUserFormGroup">
+
+	<form [formGroup]="registerUserFormGroup" (ngSubmit)="onSubmit()">
 		<hr>
 		Value: {{ registerUserFormGroup.value | json }}
 		<hr>
-		
+
 		<input type="text" placeholder="First Name" formControlName="firstName">
 		<input type="text" placeholder="Last Name" formControlName="lastName">
 		<input type="text" placeholder="Username" formControlName="username">
