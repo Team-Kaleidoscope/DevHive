@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace API
+namespace Web
 {
     public class Class1
     {
