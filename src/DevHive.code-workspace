@@ -17,6 +17,10 @@
 			"path": "./DevHive.Common"
 		},
 		{
+			"name": "DevHive.Tests",
+			"path": "./DevHive.Tests"
+		},
+		{
 			"name": "DevHive.Angular",
 			"path": "./DevHive.Angular"
 		},
