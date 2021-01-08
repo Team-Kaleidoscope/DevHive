@@ -1,0 +1,18 @@
+<div id="content">
+	<div id="title">Register</div>
+	
+	<form [formGroup]="registerUserFormGroup">
+		<hr>
+		Value: {{ registerUserFormGroup.value | json }}
+		<hr>
+		
+		<input type="text" placeholder="First Name" formControlName="firstName">
+		<input type="text" placeholder="Last Name" formControlName="lastName">
+		<input type="text" placeholder="Username" formControlName="username">
+		<input type="text" placeholder="Password" formControlName="password">
+		<input type="text" placeholder="Email" formControlName="email">
+
+		<hr>
+		<button type="submit" value="Submit" id="submit-btn">Submit</button>
+	</form>
+</div>
