@@ -26,11 +26,6 @@ export class RegisterComponent implements OnInit {
         Validators.required,
         Validators.minLength(3)
       ]],
-      age: [null, [
-        Validators.required,
-        Validators.min(14),
-        Validators.max(120),
-      ]],
       username: ['', [
         Validators.required,
         Validators.minLength(3)
@@ -70,10 +65,6 @@ export class RegisterComponent implements OnInit {
 
   get lastName() {
     return this.registerUserFormGroup.get('lastName');
-  }
-
-  get age() {
-    return this.registerUserFormGroup.get('age');
   }
 
   get username() {
