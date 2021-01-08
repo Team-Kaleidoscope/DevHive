@@ -1,0 +1,56 @@
+#content {
+	height: 100%;
+  max-width: 20em;
+	margin-left: auto;
+	margin-right: auto;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+#title {
+	font-size: 2em;
+	font-weight: bold;
+}
+
+#content input[type=text], #content #submit-btn {
+	border: 2px solid black;
+	border-radius: 0.4em;
+	box-sizing: border-box;
+	width: 100%;
+	margin-top: 0.5em;
+  font-size: 0.8em;
+  padding: 0.3em;
+}
+
+#content input[type=text]:nth-last-of-type(1) {
+  margin-bottom: 0.5em;
+}
+
+input[type=text]:focus, button[type=submit]:focus {
+  outline: 0;
+}
+
+#content hr {
+	width: 100%;
+	border: 1px solid black;
+	box-sizing: border-box;
+}
+
+#submit-btn {
+  background-color: black;
+  color: white;
+  text-align: center;
+}
+
+#submit-btn:hover {
+  cursor: pointer;
+  border-color: darkgrey !important;
+  background-color: darkgrey;
+}
+
+#submit-btn:active {
+  transform: scale(0.9);
+}

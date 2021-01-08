@@ -1,7 +1,7 @@
 <div id="content">
 	<div id="title">Register</div>
-	
-	<form [formGroup]="registerUserFormGroup">
+
+	<form [formGroup]="registerUserFormGroup" (ngSubmit)="onSubmit()">
 		<hr>
 		Value: {{ registerUserFormGroup.value | json }}
 		<hr>

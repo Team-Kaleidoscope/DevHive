@@ -26,11 +26,6 @@ export class RegisterComponent implements OnInit {
         Validators.required,
         Validators.minLength(3)
       ]],
-      age: [null, [
-        Validators.required,
-        Validators.min(14),
-        Validators.max(120),
-      ]],
       username: ['', [
         Validators.required,
         Validators.minLength(3)
@@ -41,11 +36,27 @@ export class RegisterComponent implements OnInit {
       ]],
       password: ['', [
         Validators.required,
-        //Add password pattern
+        // Add password pattern
       ]],
     });
 
     this.registerUserFormGroup.valueChanges.subscribe(console.log);
+  }
+
+  onSubmit(): void {
+    fetch('http://localhost:5000/api/User/register', {
+      method: 'POST',
+      body: `{
+               "UserName": "${this.registerUserFormGroup.get('username')?.value}",
+               "Email": "${this.registerUserFormGroup.get('email')?.value}",
+               "FirstName": "${this.registerUserFormGroup.get('firstName')?.value}",
+               "LastName": "${this.registerUserFormGroup.get('lastName')?.value}",
+               "Password": "${this.registerUserFormGroup.get('password')?.value}"
+      }`,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(response => response.json()).then(data => { console.log(data); });
   }
 
   get firstName() {
@@ -54,10 +65,6 @@ export class RegisterComponent implements OnInit {
 
   get lastName() {
     return this.registerUserFormGroup.get('lastName');
-  }
-
-  get age() {
-    return this.registerUserFormGroup.get('age');
   }
 
   get username() {
