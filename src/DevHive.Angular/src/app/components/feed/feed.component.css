@@ -1,0 +1,109 @@
+#feed {
+	max-width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+}
+	
+.post {
+	margin: 1em 0;
+}
+	
+.post-content {
+	background-color: var(--dark-blue);
+	border: 2px solid var(--orange);
+	border-radius: 0.5em;
+	padding: 0.6em;
+	overflow: hidden;
+	display: flex;
+}
+	
+.author {
+	margin-bottom: 0.5em;
+	display: flex;
+	position: relative;
+}
+	
+.profile-picture {
+	height: 2.1em;
+	width: 2.1em;
+	border-radius: 50%;
+	margin-right: 0.5em;
+	object-fit: cover;
+}
+	
+.author-info > .name {
+	font-weight: bold;
+}
+	
+.author-info > .handle {
+	font-size: 0.9em;
+}
+	
+.post-content > .rating {
+	margin-left: auto;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+	
+.timestamp {
+	font-size: 0.5em;
+	color: var(--gray);
+	padding-top: 0.8em;
+}
+	
+.score {
+	margin-top: auto;
+	margin-bottom: auto;
+}
+	
+.attachments {
+	position: relative;
+	z-index: -1;
+	display: flex;
+}
+	
+.attachment {
+	background-color: var(--dark-blue);
+	border: 1px solid var(--orange);
+	border-bottom-width: 2px;
+	border-radius: 0 0 0.5em 0.5em;
+	padding: 0.5em;
+	margin-top: -0.6em;
+	padding-top: 1em;
+	flex: 1;
+	display: flex;
+	overflow: hidden;
+}
+	
+.attachment:nth-of-type(1) {
+	border-left-width: 2px;
+}
+	
+.attachment:nth-last-of-type(1) {
+	border-right-width: 2px;
+}
+	
+.filename {
+	font-style: italic;
+	text-shadow: 0.1em 0.1em 0.1em black;
+}
+	
+.file-picture {
+	height: 1.9em;
+	width: 1.9em;
+	object-fit: cover;
+	margin-left: auto;
+}
+	
+.info-reminder {
+	font-size: 0.5em;
+	color: var(--gray);
+	padding-top: 0.2em;
+	align-self: flex-end;
+}
+	
+.loading-more {
+	text-align: center;
+}
+	

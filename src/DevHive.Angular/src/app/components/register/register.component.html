@@ -11,7 +11,7 @@
 			<input matInput placeholder="Goshko, is that u?" formControlName="firstName">
 
 			<mat-error *ngIf="firstName?.invalid">Min length of 3</mat-error>
-			<!-- <mat-error *ngIf="!firstName.required">* This is required</mat-error> -->
+			<mat-error *ngIf="registerUserFormGroup.getError('required')">* This is required</mat-error>
 		</mat-form-field>
 		
 		<mat-form-field class="lastNameField">
