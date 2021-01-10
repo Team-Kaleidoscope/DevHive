@@ -27,6 +27,10 @@
 	font-weight: bold;
 }
 
+form :nth-last-child(3) {
+	padding-bottom: 1%;
+}
+
 .submit-btn {
 	width: 100%;
 	background-color: black;
