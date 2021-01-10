@@ -1,9 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using Data.Models.Interfaces.Database;
+using DevHive.Common.Models.Misc;
 using DevHive.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using DevHive.Common.Models.Misc;
+
 
 namespace DevHive.Data.Repositories
 {
