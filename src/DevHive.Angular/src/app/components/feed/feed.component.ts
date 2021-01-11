@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { FeedService } from 'src/app/services/feed.service';
 import { PostComponent } from '../post/post.component';
 
@@ -8,10 +9,19 @@ import { PostComponent } from '../post/post.component';
   styleUrls: ['./feed.component.css']
 })
 export class FeedComponent implements OnInit {
-  public posts: PostComponent[] = [ ];
+  private _title = 'Feed';
+  public posts: PostComponent[];
 
-  constructor(private service: FeedService) { }
+  constructor(private titleService: Title, private service: FeedService) {
+    this.titleService.setTitle(this._title);
+   }
 
   ngOnInit(): void {
+    this.posts = [
+      new PostComponent(),
+      new PostComponent(),
+      new PostComponent(),
+      new PostComponent(),
+    ]
   }
 }

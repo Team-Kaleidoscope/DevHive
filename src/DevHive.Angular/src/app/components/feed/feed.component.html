@@ -1,107 +1,117 @@
-<div id="feed">
+<div id="feed-page">
+	<nav class="top-bar">
+		<div class="nav-bar-profile-pic">
+			<a href=""><img src="assets/images/feed/profile-pic.png" alt="profile-pic"></a>
+		</div>
+		<div class="on-your-mind">
+			<a href=""><input type="text" placeholder="What's on yo' mind?"></a>
+		</div>
+		<div class="nav-bar-chat-pic">
+			<a href=""><img src="assets/images/feed/chat-pic.png" alt="chat-pic"></a>
+		</div>
+	</nav>
 	<ul>
-		<li *ngFor="let post of posts; let c = count;">
-			<h1> {{ c }} post</h1>
-			<!-- <app-post class="post"></app-post> -->
+		<li *ngFor="let post of posts" class="post">
+			<app-post></app-post>
 		</li>
 	</ul>
 	<!-- <div class="post">
-		<div class="post-content">
-			<div class="content">
-				<div class="author">
-					<img src="https://cdn.pixabay.com/photo/2020/03/01/12/36/fire-4892711_960_720.jpg" class="profile-picture">
-					<div class="author-info">
-						<div class="name">
-							Gosho Ivanov
-						</div>
-						<div class="handle">
-							@givanov
-						</div>
-					</div>
-				</div>
-				<div class="message">
-					Here, a cool way to style elements in CSS
-				</div>
-				<div class="timestamp">
-					17:41 - 27 Dec 2020
-				</div>
-			</div>
-			<div class="rating">
-				<div class="upvote">
-					ᐃ
-				</div>
-				<div class="score">
-					11
-				</div>
-				<div class="downvote">
-					ᐁ
-				</div>
-			</div>
-		</div>
-		<div class="attachments">
-			<div class="attachment">
-				<div class="filename">
-					index.html
-					<div class="info-reminder">
-						Click to preview
-					</div>
-				</div>
-				<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.iconscout.com%2Ficon%2Ffree%2Fpng-256%2Ftxt-file-20-504249.png&f=1&nofb=1" class="file-picture">
+									<div class="post-content">
+										<div class="content">
+											<div class="author">
+												<img src="https://cdn.pixabay.com/photo/2020/03/01/12/36/fire-4892711_960_720.jpg" class="profile-picture">
+												<div class="author-info">
+													<div class="name">
+														Gosho Ivanov
+													</div>
+													<div class="handle">
+														@givanov
+													</div>
+												</div>
+											</div>
+											<div class="message">
+												Here, a cool way to style elements in CSS
+											</div>
+											<div class="timestamp">
+												17:41 - 27 Dec 2020
+											</div>
+										</div>
+										<div class="rating">
+											<div class="upvote">
+												ᐃ
+											</div>
+											<div class="score">
+												11
+											</div>
+											<div class="downvote">
+												ᐁ
+											</div>
+										</div>
 									</div>
-			<div class="attachment">
-				<div class="filename">
-					styles.css
-					<div class="info-reminder">
-						Click to preview
-					</div>
-				</div>
-				<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.iconscout.com%2Ficon%2Ffree%2Fpng-256%2Ftxt-file-20-504249.png&f=1&nofb=1" class="file-picture">
-			</div>
-		</div>
-	</div>
-	<div class="post">
-		<div class="post-content">
-			<div class="content">
-				<div class="author">
-					<img src="https://cdn.pixabay.com/photo/2020/09/06/20/21/cat-5550033_960_720.jpg" class="profile-picture">
-					<div class="author-info">
-						<div class="name">
-							Petio Draganov
-						</div>
-						<div class="handle">
-							@pen15
-						</div>
-					</div>
-				</div>
-				<div class="message">
-					Your opinion on my idea?
-				</div>
-				<div class="timestamp">
-					17:41 - 27 Dec 2020
-				</div>
-			</div>
-			<div class="rating">
-				<div class="upvote">
-					ᐃ
-				</div>
-				<div class="score">
-					-2
-				</div>
-				<div class="downvote">
-					ᐁ
-				</div>
-			</div>
-		</div>
-		<div class="attachments">
-			<div class="attachment">
-				<div class="filename">
-					my_new_idea1.txt
-					<div class="info-reminder">
-						Click to preview
-					</div>
-				</div>
-				<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.iconscout.com%2Ficon%2Ffree%2Fpng-256%2Ftxt-file-20-504249.png&f=1&nofb=1" class="file-picture">
-			</div>
-		</div>
-	</div> -->
+									<div class="attachments">
+										<div class="attachment">
+											<div class="filename">
+												index.html
+												<div class="info-reminder">
+													Click to preview
+												</div>
+											</div>
+											<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.iconscout.com%2Ficon%2Ffree%2Fpng-256%2Ftxt-file-20-504249.png&f=1&nofb=1" class="file-picture">
+																</div>
+										<div class="attachment">
+											<div class="filename">
+												styles.css
+												<div class="info-reminder">
+													Click to preview
+												</div>
+											</div>
+											<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.iconscout.com%2Ficon%2Ffree%2Fpng-256%2Ftxt-file-20-504249.png&f=1&nofb=1" class="file-picture">
+										</div>
+									</div>
+								</div>
+								<div class="post">
+									<div class="post-content">
+										<div class="content">
+											<div class="author">
+												<img src="https://cdn.pixabay.com/photo/2020/09/06/20/21/cat-5550033_960_720.jpg" class="profile-picture">
+												<div class="author-info">
+													<div class="name">
+														Petio Draganov
+													</div>
+													<div class="handle">
+														@pen15
+													</div>
+												</div>
+											</div>
+											<div class="message">
+												Your opinion on my idea?
+											</div>
+											<div class="timestamp">
+												17:41 - 27 Dec 2020
+											</div>
+										</div>
+										<div class="rating">
+											<div class="upvote">
+												ᐃ
+											</div>
+											<div class="score">
+												-2
+											</div>
+											<div class="downvote">
+												ᐁ
+											</div>
+										</div>
+									</div>
+									<div class="attachments">
+										<div class="attachment">
+											<div class="filename">
+												my_new_idea1.txt
+												<div class="info-reminder">
+													Click to preview
+												</div>
+											</div>
+											<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.iconscout.com%2Ficon%2Ffree%2Fpng-256%2Ftxt-file-20-504249.png&f=1&nofb=1" class="file-picture">
+										</div>
+									</div>
+								</div> -->
 </div>
