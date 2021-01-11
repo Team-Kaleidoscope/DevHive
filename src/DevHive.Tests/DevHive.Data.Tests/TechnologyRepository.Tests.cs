@@ -132,7 +132,6 @@ namespace DevHive.Data.Tests
         }
         #endregion
 
-        //TO DO
         #region EditAsync
         [Test]
         public void EditAsync_UpdatesEntity()

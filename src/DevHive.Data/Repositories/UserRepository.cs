@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Data.Models.Interfaces.Database;
 using DevHive.Common.Models.Misc;
 using DevHive.Data.Models;
+using DevHive.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class UserRepository : IRepository<User>
+	public class UserRepository : IUserRepository
 	{
 		private readonly DevHiveContext _context;
 

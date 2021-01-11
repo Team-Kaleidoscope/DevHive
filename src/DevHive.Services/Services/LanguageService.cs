@@ -2,17 +2,17 @@ using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Data.Models;
-using DevHive.Data.Repositories;
+using DevHive.Data.Repositories.Contracts;
 using DevHive.Services.Models.Language;
 
 namespace DevHive.Services.Services
 {
 	public class LanguageService
 	{
-		private readonly LanguageRepository _languageRepository;
+		private readonly ILanguageRepository _languageRepository;
 		private readonly IMapper _languageMapper;
 
-		public LanguageService(LanguageRepository languageRepository, IMapper mapper)
+		public LanguageService(ILanguageRepository languageRepository, IMapper mapper)
 		{
 			this._languageRepository = languageRepository;
 			this._languageMapper = mapper;
