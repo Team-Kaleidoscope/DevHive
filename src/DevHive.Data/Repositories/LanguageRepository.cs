@@ -1,13 +1,13 @@
 using System;
 using System.Threading.Tasks;
-using Data.Models.Interfaces.Database;
 using DevHive.Common.Models.Misc;
 using DevHive.Data.Models;
+using DevHive.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class LanguageRepository : IRepository<Language>
+	public class LanguageRepository : ILanguageRepository
 	{
 		private readonly DevHiveContext _context;
 

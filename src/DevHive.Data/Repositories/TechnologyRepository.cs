@@ -1,16 +1,16 @@
 using System;
 using System.Threading.Tasks;
-using Data.Models.Interfaces.Database;
 using DevHive.Common.Models.Misc;
 using DevHive.Data.Models;
+using DevHive.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 
 namespace DevHive.Data.Repositories
 {
-	public class TechnologyRepository : IRepository<Technology>
+	public abstract class TechnologyRepository : ITechnologyRepository
 	{
-		private readonly DevHiveContext _context;
+		private DevHiveContext _context;
 
 		public TechnologyRepository(DevHiveContext context)
 		{

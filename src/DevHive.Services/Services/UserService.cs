@@ -1,5 +1,4 @@
 using AutoMapper;
-using DevHive.Data.Repositories;
 using DevHive.Services.Options;
 using DevHive.Services.Models.Identity.User;
 using System.Threading.Tasks;
@@ -12,17 +11,18 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Collections.Generic;
 using DevHive.Common.Models.Identity;
+using DevHive.Data.Repositories.Contracts;
 
 namespace DevHive.Services.Services
 {
 	public class UserService
 	{
-		private readonly UserRepository _userRepository;
-		private readonly RoleRepository _roleRepository;
+		private readonly IUserRepository _userRepository;
+		private readonly IRoleRepository _roleRepository;
 		private readonly IMapper _userMapper;
 		private readonly JWTOptions _jwtOptions;
 
-		public UserService(UserRepository userRepository, RoleRepository roleRepository, IMapper mapper, JWTOptions jwtOptions)
+		public UserService(IUserRepository userRepository, IRoleRepository roleRepository, IMapper mapper, JWTOptions jwtOptions)
 		{
 			this._userRepository = userRepository;
 			this._roleRepository = roleRepository;

@@ -1,13 +1,13 @@
 using System;
 using System.Threading.Tasks;
-using Data.Models.Interfaces.Database;
 using DevHive.Common.Models.Misc;
 using DevHive.Data.Models;
+using DevHive.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class RoleRepository : IRepository<Role>
+	public class RoleRepository  : IRoleRepository
 	{
 		private readonly DevHiveContext _context;
 

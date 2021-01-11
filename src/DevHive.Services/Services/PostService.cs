@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Data.Models;
-using DevHive.Data.Repositories;
 using DevHive.Services.Models.Post.Comment;
 using DevHive.Services.Models.Post.Post;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using DevHive.Data.Repositories.Contracts;
 
 namespace DevHive.Services.Services
 {
 	public class PostService
 	{
-		private readonly PostRepository _postRepository;
-		private readonly UserRepository _userRepository;
+		private readonly IPostRepository _postRepository;
+		private readonly IUserRepository _userRepository;
 		private readonly IMapper _postMapper;
 
-		public PostService(PostRepository postRepository, UserRepository userRepository , IMapper postMapper)
+		public PostService(IPostRepository postRepository, IUserRepository userRepository , IMapper postMapper)
 		{
 			this._postRepository = postRepository;
 			this._userRepository = userRepository;
