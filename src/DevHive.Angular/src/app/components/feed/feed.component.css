@@ -1,0 +1,40 @@
+#feed-page {
+	width: 75%;
+	margin-left: auto;
+	margin-right: auto;
+
+	margin-top: 10px;
+}
+
+.top-bar {
+	display: inline-grid;
+	width: 100%;
+
+	grid-template-columns: 50px auto 50px;
+	grid-template-rows: 50px;
+	place-items: stretch stretch;
+	place-content: stretch stretch;
+}
+
+.top-bar img {
+	width: 50px;
+	height: 50px;
+}
+
+.on-your-mind {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.on-your-mind input {
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+
+	border: 2px solid black;
+	border-radius: 10px;
+}
+
+.post {
+	padding: 1% 0%;
+}

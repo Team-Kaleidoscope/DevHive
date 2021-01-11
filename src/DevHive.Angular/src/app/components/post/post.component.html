@@ -1,0 +1,30 @@
+<div class="post">
+	<div class="post-info">
+		<nav class="profile">
+			<div class="post-profile-pic">
+				<img
+					src="assets/images/feed/profile-pic.png"
+					alt="profile-pic"
+				/>
+			</div>
+			<div class="user-info">
+				<div class="profile-names">
+					{{ user.firstName }} {{ user.lastName }}
+				</div>
+				<div class="profile-username">@{{ user.userName }}</div>
+			</div>
+		</nav>
+
+		<div class="content">
+			<div class="message">Here, a cool way to style elements in CSS</div>
+			<div class="date-created">12.01.2021</div>
+		</div>
+		<hr class="separator" />
+		<div class="files">idk.html</div>
+	</div>
+	<div class="ranking">
+		<button class="upvote">++</button>
+		<div class="number-votes">{{ votesNumber }}</div>
+		<button class="downvote">&ndash;&ndash;</button>
+	</div>
+</div>
