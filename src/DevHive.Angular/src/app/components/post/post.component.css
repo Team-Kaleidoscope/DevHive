@@ -1,13 +1,6 @@
 .post {
 	width: 100%;
-	display: grid;
-	position: relative;
-
-	grid-template-columns: 25% auto 40px;
-	grid-template-rows: 10% 10% auto 5% 10%;
-
-	/* justify-content: space-between;
-	align-items: center; */
+	display: flex;
 
 	border: 2px solid black;
 	border-radius: 10px;
@@ -15,55 +8,26 @@
 }
 
 .post-info {
-	grid-column-start: 1;
-	grid-column-end: 2;
-
-	grid-row-start: 1;
-	grid-row-end: 4;
+	flex: 1;
 }
 
 /* Start of navigation */
 
 .profile {
 	width: 25%;
-	display: grid;
+	display: flex;
 	box-sizing: border-box;
-
-	grid-column-start: 1;
-	grid-column-end: 2;
-
-	grid-row-start: 1;
-	grid-row-end: 2;
 }
 
 .post-profile-pic img {
 	width: 60px;
 	height: 60px;
-
-	grid-column-start: 1;
-	grid-column-end: 1;
-
-	grid-row-start: 1;
-	grid-row-end: 2;
+	border-radius: 50%;
 }
 
 .user-info {
 	width: 100%;
 	padding-left: 5px;
-
-	grid-column-start: 2;
-	grid-column-end: 2;
-
-	grid-row-start: 1;
-	grid-row-end: 2;
-}
-
-.profile-names {
-	grid-row: 1;
-}
-
-.profile-username {
-	grid-row: 2;
 }
 
 /* End of navigation */
@@ -72,18 +36,15 @@
 /* Start of post */
 
 .content {
-	grid-column-start: 1;
-	grid-column-end: 2;
 }
 
 .message {
-	grid-row-start: 3;
-	grid-row-end: 3;
 }
 
 .date-created {
-	grid-row-start: 4;
-	grid-row-end: 4;
+	font-size: small;
+	color: grey;
+	/* TODO: Do this!!! */
 }
 
 .separator {
@@ -93,28 +54,22 @@
 /* End of post */
 
 
-/* Start of ranking */
+/* Start of rating */
 
-.ranking {
-	width: 40px;
+.rating {
 	height: 100%;
 	text-align: center;
-
-	grid-column-start: 3;
-	grid-column-end: 3;
-
-	grid-row-start: 1;
-	grid-row-end: 4;
+	align-self: center;
 }
 
-.ranking button {
+.rating button {
 	background-color: transparent;
 	background-repeat: no-repeat;
 	border: none;
 }
 
-.ranking button:hover {
+.rating button:hover {
 	cursor: pointer;
 }
 
-/* End of ranking */
+/* End of rating */

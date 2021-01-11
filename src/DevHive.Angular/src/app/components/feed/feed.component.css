@@ -1,24 +1,30 @@
 #feed-page {
-	width: 75%;
-	margin-left: auto;
-	margin-right: auto;
+	width: 45%;
+	display: flex;
 
+	margin-left: auto;
+	margin-right: auto; 
 	margin-top: 10px;
+
+	place-content: center center;
+}
+
+.side-bar {
+
 }
 
 .top-bar {
-	display: inline-grid;
+	display: flex;
 	width: 100%;
-
-	grid-template-columns: 50px auto 50px;
-	grid-template-rows: 50px;
-	place-items: stretch stretch;
-	place-content: stretch stretch;
 }
 
 .top-bar img {
 	width: 50px;
 	height: 50px;
+}
+
+.nav-bar-profile-pic {
+	border-radius: 50%;
 }
 
 .on-your-mind {
@@ -36,5 +42,6 @@
 }
 
 .post {
-	padding: 1% 0%;
+	padding: 1% 0%; 
+	box-sizing: border-box;
 }
