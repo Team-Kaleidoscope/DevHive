@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public abstract class TechnologyRepository : ITechnologyRepository
+	public class TechnologyRepository : ITechnologyRepository
 	{
 		private DevHiveContext _context;
 
