@@ -9,14 +9,16 @@ namespace DevHive.Data.Repositories
 {
 	public abstract class TechnologyRepository : IRepository<Technology>
 	{
-		private DevHiveContext _context;
+		private readonly DevHiveContext _context;
 
 		public TechnologyRepository(DevHiveContext context)
 		{
 			this._context = context;
 		}
 
-		//Create
+		#region Create
+
+
 		public async Task<bool> AddAsync(Technology entity)
 		{
 			await this._context
@@ -25,8 +27,10 @@ namespace DevHive.Data.Repositories
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
+		#endregion
 
-		//Read
+		#region Read
+
 		public async Task<Technology> GetByIdAsync(Guid id)
 		{
 			return await this._context
@@ -49,8 +53,10 @@ namespace DevHive.Data.Repositories
 				.AsNoTracking()
 				.AnyAsync(r => r.Id == id);
 		}
+		#endregion
 
-		//Edit
+		#region Edit
+
 		public async Task<bool> EditAsync(Technology newEntity)
 		{
 				this._context
@@ -59,8 +65,10 @@ namespace DevHive.Data.Repositories
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
+		#endregion
 
-		//Delete
+		#region Delete
+
 		public async Task<bool> DeleteAsync(Technology entity)
 		{
 			this._context
@@ -69,5 +77,6 @@ namespace DevHive.Data.Repositories
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
+		#endregion
 	}
 }

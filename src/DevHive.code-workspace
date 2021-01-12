@@ -38,5 +38,50 @@
 		},
 		"code-runner.fileDirectoryAsCwd": true,
 		"compile-hero.disable-compile-files-on-did-save-code": true
+	},
+	"launch": {
+		"configurations": [
+			{
+				"name": ".NET Core Launch (web)",
+				"type": "coreclr",
+				"request": "launch",
+				"preLaunchTask": "workspace-build",
+				"program": "${workspaceFolder:DevHive.Web}/bin/Debug/net5.0/DevHive.Web.dll",
+				"args": [],
+				"cwd": "${workspaceFolder:DevHive.Web}",
+				"stopAtEntry": false,
+				"serverReadyAction": {
+					"action": "openExternally",
+					"pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+				},
+				"env": {
+					"ASPNETCORE_ENVIRONMENT": "Development"
+				},
+			},
+		],
+		"compounds": []
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "workspace-build",
+				"command": "dotnet",
+				"type": "shell",
+				"args": [
+					"build",
+					"/property:GenerateFullPaths=true",
+					"/consoleloggerparameters:NoSummary"
+				],
+				"group": {
+					"kind": "build",
+					"isDefault": true
+				},
+				"presentation": {
+					"reveal": "silent"
+				},
+				"problemMatcher": "$msCompile"
+			}
+		]
 	}
 }
