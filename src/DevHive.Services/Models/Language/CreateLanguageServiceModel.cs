@@ -2,7 +2,7 @@ using System;
 
 namespace DevHive.Services.Models.Language
 {
-	public class CreateLanguageServiceModel : LanguageServiceModel
+	public class CreateLanguageServiceModel
 	{
 		public string Name { get; set; }
 	}

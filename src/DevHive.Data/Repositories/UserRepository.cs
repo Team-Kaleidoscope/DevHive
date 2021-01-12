@@ -67,8 +67,10 @@ namespace DevHive.Data.Repositories
 		public async Task<User> GetByIdAsync(Guid id)
 		{
 			return await this._context.Users
-				.Include(x => x.Roles)
 				.Include(x => x.Friends)
+				.Include(x => x.Roles)
+				.Include(x => x.Langauges)
+				.Include(x => x.Technologies)
 				.FirstOrDefaultAsync(x => x.Id == id);
 		}
 
@@ -217,6 +219,11 @@ namespace DevHive.Data.Repositories
 		public bool DoesUserHaveFriends(User user)
 		{
 			return user.Friends.Count >= 1;
+		}
+		
+		public bool DoesUserHaveThisLanguage(User user, Language language)
+		{
+			return user.Langauges.Contains(language);
 		}
 		#endregion
 	}

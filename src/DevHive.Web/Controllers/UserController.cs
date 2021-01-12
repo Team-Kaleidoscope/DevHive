@@ -94,6 +94,7 @@ namespace DevHive.Web.Controllers
 		#endregion
 
 		#region Read
+
 		[HttpGet]
 		public async Task<IActionResult> GetById(Guid id, [FromHeader] string authorization)
 		{
@@ -135,6 +136,7 @@ namespace DevHive.Web.Controllers
 		#endregion
 
 		#region Delete
+
 		[HttpDelete]
 		public async Task<IActionResult> Delete(Guid id, [FromHeader] string authorization)
 		{

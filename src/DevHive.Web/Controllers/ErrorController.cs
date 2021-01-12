@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using AutoMapper;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,8 @@ namespace DevHive.Web.Controllers
 			{
 				case ArgumentException _:
 				case InvalidOperationException _:
+				case AutoMapperMappingException _:
+				case AutoMapperConfigurationException _:
 					return MessageToObject(exception.Error.Message);
 				default:
 					return MessageToObject(null);

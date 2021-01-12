@@ -57,6 +57,9 @@
 				"env": {
 					"ASPNETCORE_ENVIRONMENT": "Development"
 				},
+				"launchBrowser": {
+					"enabled": true
+				}
 			},
 		],
 		"compounds": []

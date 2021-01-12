@@ -20,8 +20,6 @@ namespace DevHive.Web.Configurations.Extensions
 			services.AddTransient<TechnologyService>();
 			services.AddTransient<UserService>();
 			services.AddTransient<PostService>();
-
-			System.Console.WriteLine(services.Count);
 		}
 	}
 }
