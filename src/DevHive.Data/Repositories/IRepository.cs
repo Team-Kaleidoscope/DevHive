@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace DevHive.Data.Repositories.Contracts
+namespace DevHive.Data.Repositories
 {
 	public interface IRepository<TEntity>
 		where TEntity : class

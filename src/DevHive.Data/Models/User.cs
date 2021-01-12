@@ -12,7 +12,17 @@ namespace DevHive.Data.Models
 
 		public string LastName { get; set; }
 
-		public string ProfilePicture { get; set; }
+		public string ProfilePictureUrl { get; set; }
+
+		/// <summary>
+		/// Languages that the user uses or is familiar with
+		/// </summary>
+		public IList<Language> Langauges { get; set; }
+
+		/// <summary>
+		/// Technologies that the user uses or is familiar with
+		/// </summary>
+		public IList<Technology> Technologies { get; set; }
 
 		public virtual IList<Role> Roles { get; set; } = new List<Role>();
 

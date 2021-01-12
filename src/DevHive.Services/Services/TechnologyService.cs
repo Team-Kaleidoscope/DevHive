@@ -2,17 +2,17 @@ using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Data.Models;
-using DevHive.Data.Repositories.Contracts;
+using DevHive.Data.Repositories;
 using DevHive.Services.Models.Technology;
 
 namespace DevHive.Services.Services
 {
 	public class TechnologyService
 	{
-		private readonly ITechnologyRepository _technologyRepository;
+		private readonly TechnologyRepository _technologyRepository;
 		private readonly IMapper _technologyMapper;
 
-		public TechnologyService(ITechnologyRepository technologyRepository, IMapper technologyMapper)
+		public TechnologyService(TechnologyRepository technologyRepository, IMapper technologyMapper)
 		{
 			this._technologyRepository = technologyRepository;
 			this._technologyMapper = technologyMapper;

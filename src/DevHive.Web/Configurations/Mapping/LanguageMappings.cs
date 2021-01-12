@@ -9,9 +9,12 @@ namespace DevHive.Web.Configurations.Mapping
 		public LanguageMappings()
 		{
 			CreateMap<LanguageWebModel, LanguageServiceModel>();
-			CreateMap<UpdateLanguageWebModel, LanguageServiceModel>();
+			CreateMap<CreateLanguageWebModel, CreateLanguageServiceModel>();
+			CreateMap<UpdateLanguageWebModel, UpdateLanguageServiceModel>();
+
 			CreateMap<LanguageServiceModel, LanguageWebModel>();
-			CreateMap<LanguageWebModel, UpdateLanguageServiceModel>();
+			CreateMap<CreateLanguageServiceModel, CreateLanguageWebModel>();
+			CreateMap<UpdateLanguageServiceModel, UpdateLanguageWebModel>();
 		}
 	} 
 }

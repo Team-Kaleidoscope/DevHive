@@ -3,15 +3,17 @@ using System;
 using DevHive.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DevHive.Data.Migrations
 {
     [DbContext(typeof(DevHiveContext))]
-    partial class DevHiveContextModelSnapshot : ModelSnapshot
+    [Migration("20210112111416_User_Implements_Languages")]
+    partial class User_Implements_Languages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

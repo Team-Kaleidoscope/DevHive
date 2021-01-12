@@ -34,7 +34,7 @@ namespace DevHive.Data.Tests
             this.Context.Database.EnsureDeleted();
         }
 
-        #region AddAync
+        #region AddAsync
         [Test]
         public void AddAsync_AddsTheGivenTechnologyToTheDatabase()
         {
@@ -127,7 +127,7 @@ namespace DevHive.Data.Tests
             {
                 bool result = await this.TechnologyRepository.DoesTechnologyNameExist(TECHNOLOGY_NAME);
 
-                Assert.False(result, "DoesTechnologyNameExist returns true when tehcnology name does not exist");
+                Assert.False(result, "DoesTechnologyNameExist returns true when technology name does not exist");
             }).GetAwaiter().GetResult();
         }
         #endregion

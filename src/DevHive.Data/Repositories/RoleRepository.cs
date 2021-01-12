@@ -2,12 +2,11 @@ using System;
 using System.Threading.Tasks;
 using DevHive.Common.Models.Misc;
 using DevHive.Data.Models;
-using DevHive.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class RoleRepository  : IRoleRepository
+	public class RoleRepository  : IRepository<Role>
 	{
 		private readonly DevHiveContext _context;
 

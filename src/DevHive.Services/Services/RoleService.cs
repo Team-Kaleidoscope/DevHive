@@ -3,16 +3,16 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Common.Models.Identity;
 using DevHive.Data.Models;
-using DevHive.Data.Repositories.Contracts;
+using DevHive.Data.Repositories;
 
 namespace DevHive.Services.Services
 {
 	public class RoleService
 	{
-		private readonly IRoleRepository _roleRepository;
+		private readonly RoleRepository _roleRepository;
 		private readonly IMapper _roleMapper;
 
-		public RoleService(IRoleRepository roleRepository, IMapper mapper)
+		public RoleService(RoleRepository roleRepository, IMapper mapper)
 		{
 			this._roleRepository = roleRepository;
 			this._roleMapper = mapper;

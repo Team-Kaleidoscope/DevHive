@@ -7,17 +7,17 @@ using DevHive.Services.Models.Post.Comment;
 using DevHive.Services.Models.Post.Post;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using DevHive.Data.Repositories.Contracts;
+using DevHive.Data.Repositories;
 
 namespace DevHive.Services.Services
 {
 	public class PostService
 	{
-		private readonly IPostRepository _postRepository;
-		private readonly IUserRepository _userRepository;
+		private readonly PostRepository _postRepository;
+		private readonly UserRepository _userRepository;
 		private readonly IMapper _postMapper;
 
-		public PostService(IPostRepository postRepository, IUserRepository userRepository , IMapper postMapper)
+		public PostService(PostRepository postRepository, UserRepository userRepository , IMapper postMapper)
 		{
 			this._postRepository = postRepository;
 			this._userRepository = userRepository;

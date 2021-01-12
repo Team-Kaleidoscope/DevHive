@@ -2,12 +2,11 @@ using System;
 using System.Threading.Tasks;
 using DevHive.Common.Models.Misc;
 using DevHive.Data.Models;
-using DevHive.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class PostRepository : IPostRepository
+	public class PostRepository : IRepository<Post>
 	{
 		private readonly DevHiveContext _context;
 
@@ -88,6 +87,8 @@ namespace DevHive.Data.Repositories
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
 	
+		#region Validations
+
 		public async Task<bool> DoesPostExist(Guid postId)
 		{
 			return await this._context
@@ -103,5 +104,6 @@ namespace DevHive.Data.Repositories
 				.AsNoTracking()
 				.AnyAsync(r => r.Id == id);
 		}
+		#endregion
 	}
 }

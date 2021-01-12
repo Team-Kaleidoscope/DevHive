@@ -23,9 +23,9 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Create([FromBody] LanguageWebModel languageWebModel)
+		public async Task<IActionResult> Create([FromBody] CreateLanguageWebModel createLanguageWebModel)
 		{
-			LanguageServiceModel languageServiceModel = this._languageMapper.Map<LanguageServiceModel>(languageWebModel);
+			CreateLanguageServiceModel languageServiceModel = this._languageMapper.Map<CreateLanguageServiceModel>(createLanguageWebModel);
 
 			bool result = await this._languageService.CreateLanguage(languageServiceModel);
 

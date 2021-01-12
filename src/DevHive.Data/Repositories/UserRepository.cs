@@ -4,12 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using DevHive.Common.Models.Misc;
 using DevHive.Data.Models;
-using DevHive.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class UserRepository : IUserRepository
+	public class UserRepository : IRepository<User>
 	{
 		private readonly DevHiveContext _context;
 
@@ -18,11 +17,11 @@ namespace DevHive.Data.Repositories
 			this._context = context;
 		}
 
-		//Create
+		#region Create
+
 		public async Task<bool> AddAsync(User entity)
 		{
-			await this._context
-				.Set<User>()
+			await this._context.Users
 				.AddAsync(entity);
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
@@ -35,12 +34,31 @@ namespace DevHive.Data.Repositories
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
-		
-		//Read
+
+		public async Task<bool> AddLanguageToUserAsync(User user, Language language)
+		{
+			this._context.Update(user);
+
+			user.Langauges.Add(language);
+
+			return await RepositoryMethods.SaveChangesAsync(this._context);
+		}
+
+		public async Task<bool> AddTechnologyToUserAsync(User user, Technology technology)
+		{
+			this._context.Update(user);
+
+			user.Technologies.Add(technology);
+
+			return await RepositoryMethods.SaveChangesAsync(this._context);
+		}
+		#endregion
+
+		#region Read
+
 		public IEnumerable<User> QueryAll()
 		{
-			return this._context
-				.Set<User>()
+			return this._context.Users
 				.Include(x => x.Roles)
 				.AsNoTracking()
 				.AsEnumerable();
@@ -48,8 +66,7 @@ namespace DevHive.Data.Repositories
 
 		public async Task<User> GetByIdAsync(Guid id)
 		{
-			return await this._context
-				.Set<User>()
+			return await this._context.Users
 				.Include(x => x.Roles)
 				.Include(x => x.Friends)
 				.FirstOrDefaultAsync(x => x.Id == id);
@@ -57,13 +74,36 @@ namespace DevHive.Data.Repositories
 
 		public async Task<User> GetByUsername(string username)
 		{
-			return await this._context
-				.Set<User>()
+			return await this._context.Users
 				.Include(u => u.Roles)
 				.FirstOrDefaultAsync(x => x.UserName == username);
 		}
 
-		//Update
+		public IList<Language> GetUserLanguages(User user)
+		{
+			return user.Langauges;
+		}
+
+		public Language GetUserLanguage(User user, Language language)
+		{
+			return user.Langauges
+				.FirstOrDefault(x => x.Id == language.Id);
+		}
+		
+		public IList<Technology> GetUserTechnologies(User user)
+		{
+			return user.Technologies;
+		}
+
+		public Technology GetUserTechnology(User user, Technology technology)
+		{
+			return user.Technologies
+				.FirstOrDefault(x => x.Id == technology.Id);
+		}
+		#endregion
+
+		#region Update
+
 		public async Task<bool> EditAsync(User newEntity)
 		{
 			User user = await this.GetByIdAsync(newEntity.Id);
@@ -76,11 +116,32 @@ namespace DevHive.Data.Repositories
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
 
-		//Delete
+		public async Task<bool> EditUserLanguage(User user, Language oldLang, Language newLang)
+		{
+			this._context.Update(user);
+
+			user.Langauges.Remove(oldLang);
+			user.Langauges.Add(newLang);
+
+			return await RepositoryMethods.SaveChangesAsync(this._context);
+		}
+
+		public async Task<bool> EditUserTechnologies(User user, Technology oldTech, Technology newTech)
+		{
+			this._context.Update(user);
+
+			user.Technologies.Remove(oldTech);
+			user.Technologies.Add(newTech);
+
+			return await RepositoryMethods.SaveChangesAsync(this._context);
+		}
+		#endregion
+
+		#region Delete
+
 		public async Task<bool> DeleteAsync(User entity)
 		{
-			this._context
-				.Set<User>()
+			this._context.Users
 				.Remove(entity);
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
@@ -93,37 +154,70 @@ namespace DevHive.Data.Repositories
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
-	
-		//Validations
-		public bool DoesUserExist(Guid id)
+
+		public async Task<bool> RemoveLanguageFromUserAsync(User user, Language language)
 		{
-			return this._context
-				.Set<User>()
-				.Any(x => x.Id == id);
+			this._context.Update(user);
+
+			user.Langauges.Remove(language);
+
+			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
 
-		public bool DoesUserHaveThisUsername(Guid id, string username)
+		public async Task<bool> RemoveTechnologyFromUserAsync(User user, Technology technology)
 		{
-			return this._context
-				.Set<User>()
-				.Any(x => x.Id == id &&
-					x.UserName == username);
+			this._context.Update(user);
+
+			user.Technologies.Remove(technology);
+
+			return await RepositoryMethods.SaveChangesAsync(this._context);
+		}
+		#endregion
+
+		#region Validations
+
+		public async Task<bool> DoesUserExistAsync(Guid id)
+		{
+			return await this._context.Users
+				.AnyAsync(x => x.Id == id);
 		}
 
-		public async Task<bool> DoesUsernameExist(string username)
+		public async Task<bool> DoesUsernameExistAsync(string username)
 		{
-			return await this._context
-				.Set<User>()
+			return await this._context.Users
 				.AsNoTracking()
 				.AnyAsync(u => u.UserName == username);
 		}
 
-		public async Task<bool> DoesEmailExist(string email)
+		public async Task<bool> DoesEmailExistAsync(string email)
 		{
-			return await this._context
-				.Set<User>()
+			return await this._context.Users
 				.AsNoTracking()
 				.AnyAsync(u => u.Email == email);
 		}
+
+		public async Task<bool> DoesUserHaveThisFriendAsync(Guid userId, Guid friendId)
+		{
+			User user = await this._context.Users
+				.FirstOrDefaultAsync(x => x.Id == userId);
+
+			User friend = await this._context.Users
+				.FirstOrDefaultAsync(x => x.Id == friendId);
+
+			return user.Friends.Contains(friend);
+		}
+
+		public bool DoesUserHaveThisUsername(Guid id, string username)
+		{
+			return this._context.Users
+				.Any(x => x.Id == id &&
+					x.UserName == username);
+		}
+
+		public bool DoesUserHaveFriends(User user)
+		{
+			return user.Friends.Count >= 1;
+		}
+		#endregion
 	}
 }

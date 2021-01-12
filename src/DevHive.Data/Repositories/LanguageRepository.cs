@@ -1,13 +1,13 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DevHive.Common.Models.Misc;
 using DevHive.Data.Models;
-using DevHive.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class LanguageRepository : ILanguageRepository
+	public class LanguageRepository : IRepository<Language>
 	{
 		private readonly DevHiveContext _context;
 
@@ -16,7 +16,8 @@ namespace DevHive.Data.Repositories
 			this._context = context;
 		}
 
-		//Create
+		#region Create
+
 		public async Task<bool> AddAsync(Language entity)
 		{
 			await this._context
@@ -25,42 +26,32 @@ namespace DevHive.Data.Repositories
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
+		#endregion
 
-		//Read
+		#region Read
+
 		public async Task<Language> GetByIdAsync(Guid id)
 		{
 			return await this._context
 				.Set<Language>()
 				.FindAsync(id);
 		}
+		#endregion
 
-		public async Task<bool> DoesLanguageNameExist(string languageName)
-		{
-			return await this._context
-				.Set<Language>()
-				.AsNoTracking()
-				.AnyAsync(r => r.Name == languageName);
-		}
+		#region Update
 
-		public async Task<bool> DoesLanguageExist(Guid id)
-		{
-			return await this._context
-				.Set<Language>()
-				.AsNoTracking()
-				.AnyAsync(r => r.Id == id);
-		}
-
-		//Update
 		public async Task<bool> EditAsync(Language newEntity)
 		{
-				this._context
-				.Set<Language>()
-				.Update(newEntity);
+			this._context
+			.Set<Language>()
+			.Update(newEntity);
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
+		#endregion
 
-		//Delete
+		#region Delete
+
 		public async Task<bool> DeleteAsync(Language entity)
 		{
 			this._context
@@ -69,5 +60,21 @@ namespace DevHive.Data.Repositories
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
+		#endregion
+
+		#region Validations 
+
+		public async Task<bool> DoesLanguageNameExistAsync(string languageName)
+		{
+			return await this._context.Languages
+				.AnyAsync(r => r.Name == languageName);
+		}
+
+		public async Task<bool> DoesLanguageExistAsync(Guid id)
+		{
+			return await this._context.Languages
+				.AnyAsync(r => r.Id == id);
+		}
+		#endregion
 	}
 }
