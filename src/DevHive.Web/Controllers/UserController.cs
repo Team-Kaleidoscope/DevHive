@@ -153,7 +153,7 @@ namespace DevHive.Web.Controllers
 			return new OkResult();
 		}
 		
-		[HttpPost]
+		[HttpDelete]
 		[Route("RemoveLanguageFromUser")]
 		public async Task<IActionResult> RemoveLanguageFromUser(Guid userId, [FromBody] LanguageWebModel languageWebModel)
 		{
@@ -164,7 +164,7 @@ namespace DevHive.Web.Controllers
 				new BadRequestResult();
 		}
 
-		[HttpPost]
+		[HttpDelete]
 		[Route("RemoveTechnologyFromUser")]
 		public async Task<IActionResult> RemoveTechnologyFromUser(Guid userId, [FromBody] TechnologyWebModel technologyWebModel)
 		{
