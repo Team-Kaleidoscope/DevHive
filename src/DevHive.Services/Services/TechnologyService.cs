@@ -17,8 +17,10 @@ namespace DevHive.Services.Services
 			this._technologyRepository = technologyRepository;
 			this._technologyMapper = technologyMapper;
 		}
-	
-		public async Task<bool> Create(TechnologyServiceModel technologyServiceModel)
+
+		#region Create
+
+		public async Task<bool> Create(CreateTechnologyServiceModel technologyServiceModel)
 		{
 			if (await this._technologyRepository.DoesTechnologyNameExist(technologyServiceModel.Name))
 				throw new ArgumentException("Technology already exists!");
@@ -28,7 +30,10 @@ namespace DevHive.Services.Services
 
 			return result;
 		}
-	
+		#endregion
+
+		#region Read
+
 		public async Task<TechnologyServiceModel> GetTechnologyById(Guid id)
 		{
 			Technology technology = await this._technologyRepository.GetByIdAsync(id);
@@ -38,10 +43,13 @@ namespace DevHive.Services.Services
 
 			return this._technologyMapper.Map<TechnologyServiceModel>(technology);
 		}
+		#endregion
+
+		#region Update
 
 		public async Task<bool> UpdateTechnology(UpdateTechnologyServiceModel updateTechnologyServiceModel)
 		{
-			if (!await this._technologyRepository.DoesTechnologyExist(updateTechnologyServiceModel.Id))
+			if (!await this._technologyRepository.DoesTechnologyExistAsync(updateTechnologyServiceModel.Id))
 				throw new ArgumentException("Technology does not exist!");
 
 			if (await this._technologyRepository.DoesTechnologyNameExist(updateTechnologyServiceModel.Name))
@@ -52,10 +60,13 @@ namespace DevHive.Services.Services
 
 			return result;
 		}
-	
+		#endregion
+
+		#region Delete
+
 		public async Task<bool> DeleteTechnology(Guid id)
 		{
-			if (!await this._technologyRepository.DoesTechnologyExist(id))
+			if (!await this._technologyRepository.DoesTechnologyExistAsync(id))
 				throw new ArgumentException("Technology does not exist!");
 
 			Technology technology = await this._technologyRepository.GetByIdAsync(id);
@@ -63,5 +74,6 @@ namespace DevHive.Services.Services
 
 			return result;
 		}
+		#endregion
 	}
 }

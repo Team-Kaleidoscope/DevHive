@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using DevHive.Common.Models.Identity;
 using DevHive.Services.Models.Language;
 using DevHive.Data.Repositories;
+using DevHive.Services.Models.Technology;
 
 namespace DevHive.Services.Services
 {
@@ -108,23 +109,16 @@ namespace DevHive.Services.Services
 
 		public async Task<bool> AddLanguageToUser(Guid userId, LanguageServiceModel languageServiceModel)
 		{
-			Task<bool> userExists = this._userRepository.DoesUserExistAsync(userId);
-			Task<bool> languageExists = this._languageRepository.DoesLanguageExistAsync(languageServiceModel.Id);
+			Tuple<User, Language> tuple = await ValidateUserAndLanguage(userId, languageServiceModel);
 
-			await Task.WhenAll(userExists, languageExists);
+			return await this._userRepository.AddLanguageToUserAsync(tuple.Item1, tuple.Item2);
+		}
 
-			if (!userExists.Result)
-				throw new ArgumentException("User does not exist!");
+		public async Task<bool> AddTechnologyToUser(Guid userId, TechnologyServiceModel technologyServiceModel)
+		{
+			Tuple<User, Technology> tuple = await ValidateUserAndTechnology(userId, technologyServiceModel);
 
-			if (!languageExists.Result)
-				throw new ArgumentException("Language does not exist!");
-
-			Task<User> user = this._userRepository.GetByIdAsync(userId);
-			Task<Language> language = this._languageRepository.GetByIdAsync(languageServiceModel.Id);
-
-			await Task.WhenAll(user, language);
-
-			return await this._userRepository.AddLanguageToUserAsync(user.Result, language.Result);
+			return await this._userRepository.AddTechnologyToUserAsync(tuple.Item1, tuple.Item2);
 		}
 		#endregion
 
@@ -201,6 +195,20 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("This ain't your friend, amigo.");
 
 			return await this.RemoveFriend(userId, friendId);
+		}
+
+		public async Task<bool> RemoveLanguageFromUser(Guid userId, LanguageServiceModel languageServiceModel)
+		{
+			Tuple<User, Language> tuple = await ValidateUserAndLanguage(userId, languageServiceModel);
+
+			return await this._userRepository.RemoveLanguageFromUserAsync(tuple.Item1, tuple.Item2);
+		}
+
+		public async Task<bool> RemoveTechnologyFromUser(Guid userId, TechnologyServiceModel technologyServiceModel)
+		{
+			Tuple<User, Technology> tuple = await ValidateUserAndTechnology(userId, technologyServiceModel);
+
+			return await this._userRepository.RemoveTechnologyFromUserAsync(tuple.Item1, tuple.Item2);
 		}
 		#endregion
 
@@ -283,6 +291,47 @@ namespace DevHive.Services.Services
 			return string.Join(string.Empty, SHA512.HashData(Encoding.ASCII.GetBytes(password)));
 		}
 
+		private async Task<Tuple<User, Language>> ValidateUserAndLanguage(Guid userId, LanguageServiceModel languageServiceModel)
+		{
+			Task<bool> userExists = this._userRepository.DoesUserExistAsync(userId);
+			Task<bool> languageExists = this._languageRepository.DoesLanguageExistAsync(languageServiceModel.Id);
+
+			await Task.WhenAll(userExists, languageExists);
+
+			if (!userExists.Result)
+				throw new ArgumentException("User does not exist!");
+
+			if (!languageExists.Result)
+				throw new ArgumentException("Language does not exist!");
+
+			Task<User> user = this._userRepository.GetByIdAsync(userId);
+			Task<Language> language = this._languageRepository.GetByIdAsync(languageServiceModel.Id);
+
+			await Task.WhenAll(user, language);
+
+			return new Tuple<User, Language>(user.Result, language.Result);
+		}
+
+		private async Task<Tuple<User, Technology>> ValidateUserAndTechnology(Guid userId, TechnologyServiceModel technologyServiceModel)
+		{
+			Task<bool> userExists = this._userRepository.DoesUserExistAsync(userId);
+			Task<bool> technologyExists = this._technologyRepository.DoesTechnologyExistAsync(technologyServiceModel.Id);
+
+			await Task.WhenAll(userExists, technologyExists);
+
+			if (!userExists.Result)
+				throw new ArgumentException("User does not exist!");
+
+			if (!technologyExists.Result)
+				throw new ArgumentException("Language does not exist!");
+
+			Task<User> user = this._userRepository.GetByIdAsync(userId);
+			Task<Technology> technology = this._technologyRepository.GetByIdAsync(technologyServiceModel.Id);
+
+			await Task.WhenAll(user, technology);
+
+			return new Tuple<User, Technology>(user.Result, technology.Result);
+		}
 		#endregion
 	}
 }

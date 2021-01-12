@@ -1,8 +1,6 @@
-using System;
-
 namespace DevHive.Web.Models.Technology
 {
-	public class UpdateTechnologyWebModel
+	public class CreateTechnologyWebModel : TechnologyWebModel
 	{
 		public string Name { get; set; }
 	}

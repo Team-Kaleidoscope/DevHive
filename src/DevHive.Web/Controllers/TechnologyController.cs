@@ -23,9 +23,9 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Create([FromBody] TechnologyWebModel technologyWebModel)
+		public async Task<IActionResult> Create([FromBody] CreateTechnologyWebModel technologyWebModel)
 		{
-			TechnologyServiceModel technologyServiceModel = this._technologyMapper.Map<TechnologyServiceModel>(technologyWebModel);
+			CreateTechnologyServiceModel technologyServiceModel = this._technologyMapper.Map<CreateTechnologyServiceModel>(technologyWebModel);
 
 			bool result = await this._technologyService.Create(technologyServiceModel);
 
@@ -48,7 +48,6 @@ namespace DevHive.Web.Controllers
 		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTechnologyWebModel updateModel)
 		{
 			UpdateTechnologyServiceModel updateTechnologyWebModel = this._technologyMapper.Map<UpdateTechnologyServiceModel>(updateModel);
-			updateTechnologyWebModel.Id = id;
 
 			bool result = await this._technologyService.UpdateTechnology(updateTechnologyWebModel);
 

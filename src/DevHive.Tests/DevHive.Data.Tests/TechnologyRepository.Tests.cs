@@ -76,7 +76,7 @@ namespace DevHive.Data.Tests
         }
         #endregion
 
-        #region DoesTechnologyExist
+        #region DoesTechnologyExistAsync
         [Test]
         public void DoesTechnologyExist_ReturnsTrue_IfIdExists()
         {
@@ -86,9 +86,9 @@ namespace DevHive.Data.Tests
                 Technology technology = this.Context.Technologies.Where(x => x.Name == TECHNOLOGY_NAME).ToList().FirstOrDefault();
                 Guid id = technology.Id;
 
-                bool result = await this.TechnologyRepository.DoesTechnologyExist(id);
+                bool result = await this.TechnologyRepository.DoesTechnologyExistAsync(id);
 
-                Assert.IsTrue(result, "DoesTechnologyExist returns flase hwen technology exists");
+                Assert.IsTrue(result, "DoesTechnologyExistAsync returns flase hwen technology exists");
             }).GetAwaiter().GetResult();
         }
 
@@ -99,9 +99,9 @@ namespace DevHive.Data.Tests
             {
                 Guid id = new Guid();
 
-                bool result = await this.TechnologyRepository.DoesTechnologyExist(id);
+                bool result = await this.TechnologyRepository.DoesTechnologyExistAsync(id);
 
-                Assert.IsFalse(result, "DoesTechnologyExist returns true when technology does not exist");
+                Assert.IsFalse(result, "DoesTechnologyExistAsync returns true when technology does not exist");
             }).GetAwaiter().GetResult();
         }
         #endregion

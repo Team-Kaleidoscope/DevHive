@@ -10,6 +10,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DevHive.Common.Models.Identity;
 using DevHive.Common.Models.Misc;
+using DevHive.Web.Models.Language;
+using DevHive.Services.Models.Language;
+using DevHive.Web.Models.Technology;
+using DevHive.Services.Models.Technology;
 
 namespace DevHive.Web.Controllers
 {
@@ -27,6 +31,7 @@ namespace DevHive.Web.Controllers
 			this._userMapper = mapper;
 		}
 
+		#region Authentication
 		[HttpPost]
 		[Route("Login")]
 		[AllowAnonymous]
@@ -40,7 +45,6 @@ namespace DevHive.Web.Controllers
 			return new OkObjectResult(tokenWebModel);
 		}
 
-		//Create
 		[HttpPost]
 		[Route("Register")]
 		[AllowAnonymous]
@@ -53,6 +57,9 @@ namespace DevHive.Web.Controllers
 
 			return new CreatedResult("Register", tokenWebModel);
 		}
+		#endregion
+
+		#region Create
 
 		[HttpPost]
 		[Route("AddAFriend")]
@@ -63,7 +70,30 @@ namespace DevHive.Web.Controllers
 				new BadRequestResult();
 		}
 
-		//Read
+		[HttpPost]
+		[Route("AddLanguageToUser")]
+		public async Task<IActionResult> AddLanguageToUser(Guid userId, [FromBody] LanguageWebModel languageWebModel)
+		{
+			LanguageServiceModel languageServiceModel = this._userMapper.Map<LanguageServiceModel>(languageWebModel);
+
+			return await this._userService.AddLanguageToUser(userId, languageServiceModel) ?
+				new OkResult() :
+				new BadRequestResult();
+		}
+
+		[HttpPost]
+		[Route("AddTechnologyToUser")]
+		public async Task<IActionResult> AddTechnologyToUser(Guid userId, [FromBody] TechnologyWebModel technologyWebModel)
+		{
+			TechnologyServiceModel technologyServiceModel = this._userMapper.Map<TechnologyServiceModel>(technologyWebModel);
+
+			return await this._userService.AddTechnologyToUser(userId, technologyServiceModel) ?
+				new OkResult() :
+				new BadRequestResult();
+		}
+		#endregion
+
+		#region Read
 		[HttpGet]
 		public async Task<IActionResult> GetById(Guid id, [FromHeader] string authorization)
 		{
@@ -85,8 +115,9 @@ namespace DevHive.Web.Controllers
 
 			return new OkObjectResult(friend);
 		}
+		#endregion
 
-		//Update
+		#region Update
 		[HttpPut]
 		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserWebModel updateModel, [FromHeader] string authorization)
 		{
@@ -100,10 +131,10 @@ namespace DevHive.Web.Controllers
 			UserWebModel userWebModel = this._userMapper.Map<UserWebModel>(userServiceModel);
 
 			return new AcceptedResult("UpdateUser", userWebModel);
-
 		}
+		#endregion
 
-		//Delete
+		#region Delete
 		[HttpDelete]
 		public async Task<IActionResult> Delete(Guid id, [FromHeader] string authorization)
 		{
@@ -121,5 +152,29 @@ namespace DevHive.Web.Controllers
 			await this._userService.RemoveFriend(userId, friendId);
 			return new OkResult();
 		}
+		
+		[HttpPost]
+		[Route("RemoveLanguageFromUser")]
+		public async Task<IActionResult> RemoveLanguageFromUser(Guid userId, [FromBody] LanguageWebModel languageWebModel)
+		{
+			LanguageServiceModel languageServiceModel = this._userMapper.Map<LanguageServiceModel>(languageWebModel);
+
+			return await this._userService.RemoveLanguageFromUser(userId, languageServiceModel) ?
+				new OkResult() :
+				new BadRequestResult();
+		}
+
+		[HttpPost]
+		[Route("RemoveTechnologyFromUser")]
+		public async Task<IActionResult> RemoveTechnologyFromUser(Guid userId, [FromBody] TechnologyWebModel technologyWebModel)
+		{
+			TechnologyServiceModel technologyServiceModel = this._userMapper.Map<TechnologyServiceModel>(technologyWebModel);
+
+			return await this._userService.RemoveTechnologyFromUser(userId, technologyServiceModel) ?
+				new OkResult() :
+				new BadRequestResult();
+		}
+		
+		#endregion
 	}
 }

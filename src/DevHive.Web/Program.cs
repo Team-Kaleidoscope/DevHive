@@ -5,7 +5,7 @@ namespace DevHive.Web
 {
 	public class Program
 	{
-		private const int HTTPS_PORT = 5000;
+		private const int HTTP_PORT = 5000;
 
 		public static void Main(string[] args)
 		{
@@ -16,7 +16,7 @@ namespace DevHive.Web
 			Host.CreateDefaultBuilder(args)
 				.ConfigureWebHostDefaults(webBuilder =>
 				{
-					webBuilder.ConfigureKestrel(opt => opt.ListenLocalhost(HTTPS_PORT));
+					webBuilder.ConfigureKestrel(opt => opt.ListenLocalhost(HTTP_PORT));
 					webBuilder.UseStartup<Startup>();
 				});
 	}

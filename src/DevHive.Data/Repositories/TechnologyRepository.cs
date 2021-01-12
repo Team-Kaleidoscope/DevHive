@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public abstract class TechnologyRepository : IRepository<Technology>
+	public class TechnologyRepository : IRepository<Technology>
 	{
 		private readonly DevHiveContext _context;
 
@@ -17,7 +17,6 @@ namespace DevHive.Data.Repositories
 		}
 
 		#region Create
-
 
 		public async Task<bool> AddAsync(Technology entity)
 		{
@@ -36,22 +35,6 @@ namespace DevHive.Data.Repositories
 			return await this._context
 				.Set<Technology>()
 				.FindAsync(id);
-		}
-
-		public async Task<bool> DoesTechnologyNameExist(string technologyName)
-		{
-			return await this._context
-				.Set<Technology>()
-				.AsNoTracking()
-				.AnyAsync(r => r.Name == technologyName);
-		}
-
-		public async Task<bool> DoesTechnologyExist(Guid id)
-		{
-			return await this._context
-				.Set<Technology>()
-				.AsNoTracking()
-				.AnyAsync(r => r.Id == id);
 		}
 		#endregion
 
@@ -76,6 +59,23 @@ namespace DevHive.Data.Repositories
 				.Remove(entity);
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
+		}
+		#endregion
+
+		#region Validations
+
+		public async Task<bool> DoesTechnologyNameExist(string technologyName)
+		{
+			return await this._context
+				.Set<Technology>()
+				.AsNoTracking()
+				.AnyAsync(r => r.Name == technologyName);
+		}
+
+		public async Task<bool> DoesTechnologyExistAsync(Guid id)
+		{
+			return await this._context.Technologies
+				.AnyAsync(x => x.Id == id);
 		}
 		#endregion
 	}
