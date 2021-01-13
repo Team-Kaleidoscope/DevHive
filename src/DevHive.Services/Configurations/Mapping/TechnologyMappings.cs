@@ -8,9 +8,11 @@ namespace DevHive.Services.Configurations.Mapping
 	{
 		public TechnologyMappings()
 		{
-			CreateMap<TechnologyServiceModel, Technology>();
-			CreateMap<Technology, TechnologyServiceModel>();
+			CreateMap<CreateTechnologyServiceModel, Technology>();
 			CreateMap<UpdateTechnologyServiceModel, Technology>();
+			CreateMap<TechnologyServiceModel, Technology>();
+
+			CreateMap<Technology, TechnologyServiceModel>();
 		}
 	}
 }
