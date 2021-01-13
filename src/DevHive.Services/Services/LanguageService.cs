@@ -1,34 +1,39 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
-using DevHive.Data.Repositories;
+using DevHive.Services.Interfaces;
 using DevHive.Services.Models.Language;
 
 namespace DevHive.Services.Services
 {
-	public class LanguageService
+	public class LanguageService : ILanguageService
 	{
-		private readonly LanguageRepository _languageRepository;
+		private readonly ILanguageRepository _languageRepository;
 		private readonly IMapper _languageMapper;
 
-		public LanguageService(LanguageRepository languageRepository, IMapper mapper)
+		public LanguageService(ILanguageRepository languageRepository, IMapper mapper)
 		{
 			this._languageRepository = languageRepository;
 			this._languageMapper = mapper;
 		}
+
+		#region Create
 
 		public async Task<bool> CreateLanguage(CreateLanguageServiceModel createLanguageServiceModel)
 		{
 			if (await this._languageRepository.DoesLanguageNameExistAsync(createLanguageServiceModel.Name))
 				throw new ArgumentException("Language already exists!");
 
-			//TODO: Fix, cuz it breaks
 			Language language = this._languageMapper.Map<Language>(createLanguageServiceModel);
 			bool result = await this._languageRepository.AddAsync(language);
 
 			return result;
 		}
+		#endregion
+
+		#region Read
 
 		public async Task<LanguageServiceModel> GetLanguageById(Guid id)
 		{
@@ -39,6 +44,9 @@ namespace DevHive.Services.Services
 
 			return this._languageMapper.Map<LanguageServiceModel>(language);
 		}
+		#endregion
+
+		#region Update
 
 		public async Task<bool> UpdateLanguage(UpdateLanguageServiceModel languageServiceModel)
 		{
@@ -56,6 +64,9 @@ namespace DevHive.Services.Services
 			Language lang = this._languageMapper.Map<Language>(languageServiceModel);
 			return await this._languageRepository.EditAsync(lang);
 		}
+		#endregion
+
+		#region Delete
 
 		public async Task<bool> DeleteLanguage(Guid id)
 		{
@@ -65,5 +76,6 @@ namespace DevHive.Services.Services
 			Language language = await this._languageRepository.GetByIdAsync(id);
 			return await this._languageRepository.DeleteAsync(language);
 		}
+		#endregion
 	}
 }

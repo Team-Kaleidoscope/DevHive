@@ -2,17 +2,18 @@ using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Common.Models.Identity;
+using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
-using DevHive.Data.Repositories;
+using DevHive.Services.Interfaces;
 
 namespace DevHive.Services.Services
 {
-	public class RoleService
+	public class RoleService : IRoleService
 	{
-		private readonly RoleRepository _roleRepository;
+		private readonly IRoleRepository _roleRepository;
 		private readonly IMapper _roleMapper;
 
-		public RoleService(RoleRepository roleRepository, IMapper mapper)
+		public RoleService(IRoleRepository roleRepository, IMapper mapper)
 		{
 			this._roleRepository = roleRepository;
 			this._roleMapper = mapper;
@@ -30,7 +31,7 @@ namespace DevHive.Services.Services
 
 		public async Task<RoleModel> GetRoleById(Guid id)
 		{
-			Role role = await this._roleRepository.GetByIdAsync(id) 
+			Role role = await this._roleRepository.GetByIdAsync(id)
 				?? throw new ArgumentException("Role does not exist!");
 
 			return this._roleMapper.Map<RoleModel>(role);

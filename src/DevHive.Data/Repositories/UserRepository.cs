@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DevHive.Common.Models.Misc;
+using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class UserRepository : IRepository<User>
+	public class UserRepository : IUserRepository
 	{
 		private readonly DevHiveContext _context;
 
@@ -91,7 +92,7 @@ namespace DevHive.Data.Repositories
 			return user.Langauges
 				.FirstOrDefault(x => x.Id == language.Id);
 		}
-		
+
 		public IList<Technology> GetUserTechnologies(User user)
 		{
 			return user.Technologies;
@@ -220,7 +221,7 @@ namespace DevHive.Data.Repositories
 		{
 			return user.Friends.Count >= 1;
 		}
-		
+
 		public bool DoesUserHaveThisLanguage(User user, Language language)
 		{
 			return user.Langauges.Contains(language);

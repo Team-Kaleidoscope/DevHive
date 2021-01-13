@@ -1,13 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using DevHive.Common.Models.Misc;
+using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 
 namespace DevHive.Data.Repositories
 {
-	public class TechnologyRepository : IRepository<Technology>
+	public class TechnologyRepository : ITechnologyRepository
 	{
 		private readonly DevHiveContext _context;
 
@@ -42,9 +43,9 @@ namespace DevHive.Data.Repositories
 
 		public async Task<bool> EditAsync(Technology newEntity)
 		{
-				this._context
-				.Set<Technology>()
-				.Update(newEntity);
+			this._context
+			.Set<Technology>()
+			.Update(newEntity);
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}

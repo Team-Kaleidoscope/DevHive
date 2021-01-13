@@ -1,12 +1,13 @@
 using System;
 using System.Threading.Tasks;
 using DevHive.Common.Models.Misc;
+using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class RoleRepository  : IRepository<Role>
+	public class RoleRepository : IRoleRepository
 	{
 		private readonly DevHiveContext _context;
 
@@ -52,7 +53,7 @@ namespace DevHive.Data.Repositories
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
-		
+
 		//Delete
 		public async Task<bool> DeleteAsync(Role entity)
 		{

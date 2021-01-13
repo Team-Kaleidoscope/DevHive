@@ -37,7 +37,8 @@
 			"e2e" : true,
 		},
 		"code-runner.fileDirectoryAsCwd": true,
-		"compile-hero.disable-compile-files-on-did-save-code": true
+		"dotnet-test-explorer.runInParallel": true,
+		"dotnet-test-explorer.testProjectPath": "**/*.Tests.csproj",
 	},
 	"launch": {
 		"configurations": [

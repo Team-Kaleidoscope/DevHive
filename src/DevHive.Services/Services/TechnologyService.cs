@@ -1,18 +1,19 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
-using DevHive.Data.Repositories;
+using DevHive.Services.Interfaces;
 using DevHive.Services.Models.Technology;
 
 namespace DevHive.Services.Services
 {
-	public class TechnologyService
+	public class TechnologyService : ITechnologyService
 	{
-		private readonly TechnologyRepository _technologyRepository;
+		private readonly ITechnologyRepository _technologyRepository;
 		private readonly IMapper _technologyMapper;
 
-		public TechnologyService(TechnologyRepository technologyRepository, IMapper technologyMapper)
+		public TechnologyService(ITechnologyRepository technologyRepository, IMapper technologyMapper)
 		{
 			this._technologyRepository = technologyRepository;
 			this._technologyMapper = technologyMapper;
@@ -38,7 +39,7 @@ namespace DevHive.Services.Services
 		{
 			Technology technology = await this._technologyRepository.GetByIdAsync(id);
 
-			if(technology == null)
+			if (technology == null)
 				throw new ArgumentException("The technology does not exist");
 
 			return this._technologyMapper.Map<TechnologyServiceModel>(technology);

@@ -1,12 +1,13 @@
 using System;
 using System.Threading.Tasks;
 using DevHive.Common.Models.Misc;
+using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class PostRepository : IRepository<Post>
+	public class PostRepository : IPostRepository
 	{
 		private readonly DevHiveContext _context;
 
@@ -52,9 +53,9 @@ namespace DevHive.Data.Repositories
 		//Update
 		public async Task<bool> EditAsync(Post newPost)
 		{
-				this._context
-				.Set<Post>()
-				.Update(newPost);
+			this._context
+			.Set<Post>()
+			.Update(newPost);
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
@@ -77,7 +78,7 @@ namespace DevHive.Data.Repositories
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
-	
+
 		public async Task<bool> DeleteCommentAsync(Comment entity)
 		{
 			this._context
@@ -86,7 +87,7 @@ namespace DevHive.Data.Repositories
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
-	
+
 		#region Validations
 
 		public async Task<bool> DoesPostExist(Guid postId)

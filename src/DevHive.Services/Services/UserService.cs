@@ -12,24 +12,26 @@ using System.Text;
 using System.Collections.Generic;
 using DevHive.Common.Models.Identity;
 using DevHive.Services.Models.Language;
-using DevHive.Data.Repositories;
+using DevHive.Services.Interfaces;
 using DevHive.Services.Models.Technology;
+using DevHive.Data.Repositories;
+using DevHive.Data.Interfaces;
 
 namespace DevHive.Services.Services
 {
-	public class UserService
+	public class UserService : IUserService
 	{
-		private readonly UserRepository _userRepository;
-		private readonly RoleRepository _roleRepository;
-		private readonly LanguageRepository _languageRepository;
-		private readonly TechnologyRepository _technologyRepository;
+		private readonly IUserRepository _userRepository;
+		private readonly IRoleRepository _roleRepository;
+		private readonly ILanguageRepository _languageRepository;
+		private readonly ITechnologyRepository _technologyRepository;
 		private readonly IMapper _userMapper;
 		private readonly JWTOptions _jwtOptions;
 
-		public UserService(UserRepository userRepository,
-			LanguageRepository languageRepository,
-			RoleRepository roleRepository,
-			TechnologyRepository technologyRepository,
+		public UserService(IUserRepository userRepository,
+			ILanguageRepository languageRepository,
+			IRoleRepository roleRepository,
+			ITechnologyRepository technologyRepository,
 			IMapper mapper,
 			JWTOptions jwtOptions)
 		{
