@@ -21,11 +21,12 @@ namespace DevHive.Services.Tests
 		public void Setup()
 		{
 			this.TechnologyRepositoryMock = new Mock<ITechnologyRepository>();
-			this.MapperMock = new Mock<IMapper>(); 
+			this.MapperMock = new Mock<IMapper>();
 			this.TechnologyService = new TechnologyService(this.TechnologyRepositoryMock.Object, this.MapperMock.Object);
 		}
 
 		#region Create
+
 		[Test]
 		[TestCase(true)]
 		[TestCase(false)]
@@ -86,185 +87,188 @@ namespace DevHive.Services.Tests
 		}
 		#endregion
 
-	// 	#region GetById
-	// 	[Test]
-	// 	public void GetTechnologyById_ReturnsTheTechnology_WhenItExists()
-	// 	{
-	// 		Task.Run(async () =>
-	// 		{
-	// 			Guid id = new Guid();
-	// 			string name = "Gosho Trapov";
-	// 			Technology technology = new()
-	// 			{
-	// 				Name = name
-	// 			};
-	// 			TechnologyServiceModel technologyServiceModel = new())
-	// 			{
-	// 				Name = name
-	// 			};
+		#region Read
 
-	// 			this.TechnologyRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(technology));
-	// 			this.MapperMock.Setup(p => p.Map<TechnologyServiceModel>(It.IsAny<Technology>())).Returns(technologyServiceModel);
+		// [Test]
+		// public void GetTechnologyById_ReturnsTheTechnology_WhenItExists()
+		// {
+		// 	Task.Run(async () =>
+		// 	{
+		// 		Guid id = new Guid();
+		// 		string name = "Gosho Trapov";
+		// 		Technology technology = new()
+		// 		{
+		// 			Name = name
+		// 		};
+		// 		TechnologyServiceModel technologyServiceModel = new()
+		// 		{
+		// 			Name = name
+		// 		};
 
-	// 			TechnologyServiceModel result = await this.TechnologyService.GetTechnologyById(id);
+		// 		this.TechnologyRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(technology));
+		// 		this.MapperMock.Setup(p => p.Map<TechnologyServiceModel>(It.IsAny<Technology>())).Returns(technologyServiceModel);
 
-	// 			Assert.AreEqual(name, result.Name);
-	// 		}).GetAwaiter().GetResult();
-	// 	}
+		// 		TechnologyServiceModel result = await this.TechnologyService.GetTechnologyById(id);
 
-	// 	[Test]
-	// 	public void GetTechnologyById_ThrowsException_WhenTechnologyDoesNotExist()
-	// 	{
-	// 		Task.Run(async () =>
-	// 		{
-	// 			string exceptionMessage = "The technology does not exist";
-	// 			Guid id = new Guid();
-	// 			this.TechnologyRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<Technology>(null));
+		// 		Assert.AreEqual(name, result.Name);
+		// 	}).GetAwaiter().GetResult();
+		// }
 
-	// 			try
-	// 			{
-	// 				await this.TechnologyService.GetTechnologyById(id);
-	// 				Assert.Fail("GetTechnologyById does not throw exception when technology does not exist");
-	// 			}
-	// 			catch (ArgumentException ex)
-	// 			{
-	// 				Assert.AreEqual(exceptionMessage, ex.Message, "Exception messege is nto correct");
-	// 			}
-	// 		}).GetAwaiter().GetResult();
-	// 	}
-	// 	#endregion
+		// [Test]
+		// public void GetTechnologyById_ThrowsException_WhenTechnologyDoesNotExist()
+		// {
+		// 	Task.Run(async () =>
+		// 	{
+		// 		string exceptionMessage = "The technology does not exist";
+		// 		Guid id = new Guid();
+		// 		this.TechnologyRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<Technology>(null));
 
-	// 	#region Update
-	// 	[Test]
-	// 	[TestCase(true)]
-	// 	[TestCase(false)]
-	// 	public void UpdateTechnology_ReturnsIfUpdateIsSuccessfull_WhenTechnologyExistsy(bool shouldPass)
-	// 	{
-	// 		Task.Run(async () =>
-	// 		{
-	// 			Guid id = new Guid();
-	// 			string name = "Gosho Trapov";
-	// 			Technology technology = new Technology
-	// 			{
-	// 				Name = name
-	// 			};
-	// 			UpdateTechnologyServiceModel updatetechnologyServiceModel = new UpdateTechnologyServiceModel
-	// 			{
-	// 				Name = name,
-	// 				Id = id
-	// 			};
+		// 		try
+		// 		{
+		// 			await this.TechnologyService.GetTechnologyById(id);
+		// 			Assert.Fail("GetTechnologyById does not throw exception when technology does not exist");
+		// 		}
+		// 		catch (ArgumentException ex)
+		// 		{
+		// 			Assert.AreEqual(exceptionMessage, ex.Message, "Exception messege is nto correct");
+		// 		}
+		// 	}).GetAwaiter().GetResult();
+		// }
+		#endregion
 
-	// 			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-	// 			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExist(It.IsAny<string>())).Returns(Task.FromResult(false));
-	// 			this.TechnologyRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Technology>())).Returns(Task.FromResult(shouldPass));
-	// 			this.MapperMock.Setup(p => p.Map<Technology>(It.IsAny<UpdateTechnologyServiceModel>())).Returns(technology);
+		#region Update
 
-	// 			bool result = await this.TechnologyService.UpdateTechnology(updatetechnologyServiceModel);
+		// [Test]
+		// [TestCase(true)]
+		// [TestCase(false)]
+		// public void UpdateTechnology_ReturnsIfUpdateIsSuccessfull_WhenTechnologyExistsy(bool shouldPass)
+		// {
+		// 	Task.Run(async () =>
+		// 	{
+		// 		Guid id = new Guid();
+		// 		string name = "Gosho Trapov";
+		// 		Technology technology = new Technology
+		// 		{
+		// 			Name = name
+		// 		};
+		// 		UpdateTechnologyServiceModel updatetechnologyServiceModel = new UpdateTechnologyServiceModel
+		// 		{
+		// 			Name = name,
+		// 			Id = id
+		// 		};
 
-	// 			Assert.AreEqual(shouldPass, result);
-	// 		}).GetAwaiter().GetResult();
-	// 	}
+		// 		this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+		// 		this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExist(It.IsAny<string>())).Returns(Task.FromResult(false));
+		// 		this.TechnologyRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Technology>())).Returns(Task.FromResult(shouldPass));
+		// 		this.MapperMock.Setup(p => p.Map<Technology>(It.IsAny<UpdateTechnologyServiceModel>())).Returns(technology);
 
-	// 	[Test]
-	// 	public void UpdateTechnology_ThrowsException_WhenTechnologyDoesNotExist()
-	// 	{
-	// 		Task.Run(async () =>
-	// 		{
-	// 			string exceptionMessage = "Technology does not exist!";
-	// 			Guid id = new Guid();
-	// 			UpdateTechnologyServiceModel updateTechnologyServiceModel = new UpdateTechnologyServiceModel
-	// 			{
-	// 				Id = id
-	// 			};
+		// 		bool result = await this.TechnologyService.UpdateTechnology(updatetechnologyServiceModel);
 
-	// 			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+		// 		Assert.AreEqual(shouldPass, result);
+		// 	}).GetAwaiter().GetResult();
+		// }
 
-	// 			try
-	// 			{
-	// 				await this.TechnologyService.UpdateTechnology(updateTechnologyServiceModel);
-	// 				Assert.Fail("UpdateTechnology does not throw exception when technology does not exist");
-	// 			}
-	// 			catch (ArgumentException ex)
-	// 			{
-	// 				Assert.AreEqual(exceptionMessage, ex.Message, "Exception Message is not correct");
-	// 			}
-	// 		}).GetAwaiter().GetResult();
-	// 	}
+		// [Test]
+		// public void UpdateTechnology_ThrowsException_WhenTechnologyDoesNotExist()
+		// {
+		// 	Task.Run(async () =>
+		// 	{
+		// 		string exceptionMessage = "Technology does not exist!";
+		// 		Guid id = new Guid();
+		// 		UpdateTechnologyServiceModel updateTechnologyServiceModel = new UpdateTechnologyServiceModel
+		// 		{
+		// 			Id = id
+		// 		};
 
-	// 	[Test]
-	// 	public void UpdateTechnology_ThrowsException_WhenTechnologyNameAlreadyExists()
-	// 	{
-	// 		Task.Run(async () =>
-	// 		{
-	// 			string exceptionMessage = "Technology name already exists!";
-	// 			Guid id = new Guid();
-	// 			UpdateTechnologyServiceModel updateTechnologyServiceModel = new UpdateTechnologyServiceModel
-	// 			{
-	// 				Id = id
-	// 			};
+		// 		this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(false));
 
-	// 			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-	// 			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExist(It.IsAny<string>())).Returns(Task.FromResult(true));
+		// 		try
+		// 		{
+		// 			await this.TechnologyService.UpdateTechnology(updateTechnologyServiceModel);
+		// 			Assert.Fail("UpdateTechnology does not throw exception when technology does not exist");
+		// 		}
+		// 		catch (ArgumentException ex)
+		// 		{
+		// 			Assert.AreEqual(exceptionMessage, ex.Message, "Exception Message is not correct");
+		// 		}
+		// 	}).GetAwaiter().GetResult();
+		// }
 
-	// 			try
-	// 			{
-	// 				await this.TechnologyService.UpdateTechnology(updateTechnologyServiceModel);
-	// 				Assert.Fail("UpdateTechnology does not throw exception when technology name already exist");
-	// 			}
-	// 			catch (ArgumentException ex)
-	// 			{
-	// 				Assert.AreEqual(exceptionMessage, ex.Message, "Exception Message is not correct");
-	// 			}
-	// 		}).GetAwaiter().GetResult();
-	// 	}
-	// 	#endregion
+		// [Test]
+		// public void UpdateTechnology_ThrowsException_WhenTechnologyNameAlreadyExists()
+		// {
+		// 	Task.Run(async () =>
+		// 	{
+		// 		string exceptionMessage = "Technology name already exists!";
+		// 		Guid id = new Guid();
+		// 		UpdateTechnologyServiceModel updateTechnologyServiceModel = new UpdateTechnologyServiceModel
+		// 		{
+		// 			Id = id
+		// 		};
 
-	// 	#region Delete
-	// 	[Test]
-	// 	[TestCase(true)]
-	// 	[TestCase(false)]
-	// 	public void DeleteTechnology_ShouldReturnIfDeletionIsSuccessfull_WhenTechnologyExists(bool shouldPass)
-	// 	{
-	// 		Task.Run(async () =>
-	// 		{
-	// 			Guid id = new Guid();
-	// 			Technology technology = new Technology();
+		// 		this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+		// 		this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExist(It.IsAny<string>())).Returns(Task.FromResult(true));
 
-	// 			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-	// 			this.TechnologyRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(technology));
-	// 			this.TechnologyRepositoryMock.Setup(p => p.DeleteAsync(It.IsAny<Technology>())).Returns(Task.FromResult(shouldPass));
+		// 		try
+		// 		{
+		// 			await this.TechnologyService.UpdateTechnology(updateTechnologyServiceModel);
+		// 			Assert.Fail("UpdateTechnology does not throw exception when technology name already exist");
+		// 		}
+		// 		catch (ArgumentException ex)
+		// 		{
+		// 			Assert.AreEqual(exceptionMessage, ex.Message, "Exception Message is not correct");
+		// 		}
+		// 	}).GetAwaiter().GetResult();
+		// }
+		#endregion
 
-	// 			bool result = await this.TechnologyService.DeleteTechnology(id);
+		#region Delete
 
-	// 			Assert.AreEqual(shouldPass, result);
-	// 		}).GetAwaiter().GetResult();
-	// 	}
+		// [Test]
+		// [TestCase(true)]
+		// [TestCase(false)]
+		// public void DeleteTechnology_ShouldReturnIfDeletionIsSuccessfull_WhenTechnologyExists(bool shouldPass)
+		// {
+		// 	Task.Run(async () =>
+		// 	{
+		// 		Guid id = new Guid();
+		// 		Technology technology = new Technology();
 
-	// 	[Test]
-	// 	public void DeleteTechnology_ThrowsException_WhenTechnologyDoesNotExist()
-	// 	{
-	// 		Task.Run(async () =>
-	// 		{
-	// 			string exceptionMessage = "Technology does not exist!";
-	// 			Guid id = new Guid();
+		// 		this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+		// 		this.TechnologyRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(technology));
+		// 		this.TechnologyRepositoryMock.Setup(p => p.DeleteAsync(It.IsAny<Technology>())).Returns(Task.FromResult(shouldPass));
 
-	// 			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+		// 		bool result = await this.TechnologyService.DeleteTechnology(id);
 
-	// 			try
-	// 			{
-	// 				await this.TechnologyService.DeleteTechnology(id);
-	// 				Assert.Fail("DeleteTechnology does not throw exception when technology does not exist");
-	// 			}
-	// 			catch (ArgumentException ex)
-	// 			{
-	// 				Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
-	// 			}
-	// 		}).GetAwaiter().GetResult();
-	// 	}
-	// 	#endregion
-	// 	//Task.Run(async () =>
-	// 	//{
-	// 	//
-	// 	//}).GetAwaiter().GetResult();
+		// 		Assert.AreEqual(shouldPass, result);
+		// 	}).GetAwaiter().GetResult();
+		// }
+
+		// [Test]
+		// public void DeleteTechnology_ThrowsException_WhenTechnologyDoesNotExist()
+		// {
+		// 	Task.Run(async () =>
+		// 	{
+		// 		string exceptionMessage = "Technology does not exist!";
+		// 		Guid id = new Guid();
+
+		// 		this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+
+		// 		try
+		// 		{
+		// 			await this.TechnologyService.DeleteTechnology(id);
+		// 			Assert.Fail("DeleteTechnology does not throw exception when technology does not exist");
+		// 		}
+		// 		catch (ArgumentException ex)
+		// 		{
+		// 			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
+		// 		}
+		// 	}).GetAwaiter().GetResult();
+		// }
+		#endregion
+		//Task.Run(async () =>
+		//{
+		//
+		//}).GetAwaiter().GetResult();
 	}
 }
