@@ -1,11 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 @import "./reset.css";
 
+:root {
+  --bg-color: white;
+}
+
 html, body {
 	height: 100%;
 	margin: 0;
 }
-
 body {
   font: 21px sans-serif !important;
 }
@@ -18,4 +21,9 @@ input:focus, button:focus {
   border: 2px solid black;
   border-radius: .6em;
   padding: .4em;
+}
+
+.round-image {
+  border-radius: 50%;
+  object-fit: cover;
 }

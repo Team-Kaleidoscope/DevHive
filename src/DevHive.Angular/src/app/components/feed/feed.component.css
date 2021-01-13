@@ -1,46 +1,87 @@
 #feed-page {
-	width: 45%;
-	display: flex;
-
-	margin-left: auto;
-	margin-right: auto; 
-	margin-top: 10px;
-
-	place-content: center center;
+  max-width: 40em;
+  margin: 0 auto;
+  border: .5em solid white;
+  border-bottom: 0;
+  box-sizing: border-box;
+  display: flex;
 }
 
-.side-bar {
+@media screen and (max-width: 750px) {
+  #profile-bar {
+    display: none !important;
+  }
+  #top-bar-profile-pic {
+    display: initial;
+  }
+}
+@media screen and (min-width: 750px) {
+  #profile-bar {
+    display: initial;
+  }
+  #top-bar-profile-pic {
+    display: none !important;
+  }
 }
 
-.top-bar {
-	display: flex;
-	width: 100%;
+/* Content */
+
+#content {
+  flex: 1;
 }
 
-.top-bar img {
-	width: 50px;
-	height: 50px;
+#posts {
+  max-height: calc(100vh - 3em);
+  overflow-y: auto;
 }
 
-.nav-bar-profile-pic {
-	border-radius: 50%;
+/* Profile bar */
+
+#profile-bar {
+  width: 20%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  margin-right: .5em;
+  padding-bottom: 1em;
 }
 
-.on-your-mind {
-	margin-left: 10px;
-	margin-right: 10px;
+#profile-bar-profile-pic {
+  width: 100%;
+  box-sizing: border-box;
+  padding: .5em;
 }
 
-.on-your-mind input {
-	box-sizing: border-box;
-	width: 100%;
-	height: 100%;
+/* Top bar */
 
-	border: 2px solid black;
-	border-radius: 10px;
+#top-bar {
+  display: flex;
 }
 
-.post {
-	padding: 1% 0%; 
-	box-sizing: border-box;
+#top-bar img {
+  height: 1.6em;
+  width: 1.6em;
+}
+
+#top-bar-profile-pic {
+  height: 2.5em;
+  width: 2.5em;
+  margin-right: .5em;
+}
+
+#top-bar-profile-pic > img {
+  height: inherit;
+  width: inherit;
+}
+
+#top-bar-create-post {
+  flex: 1;
+  font-size: inherit;
+}
+
+#top-bar-open-chat {
+  /* Until implemented */
+  display: none;
 }

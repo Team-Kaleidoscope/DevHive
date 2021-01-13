@@ -1,6 +1,7 @@
 .post {
   display: flex;
   width: inherit;
+  margin: .5em 0;
 }
 
 /* Author */
@@ -14,8 +15,6 @@
   width: 2.2em;
   height: 2.2em;
   margin-right: .2em;
-  border-radius: 50%;
-  object-fit: cover;
 }
 
 .author-info > .handle {

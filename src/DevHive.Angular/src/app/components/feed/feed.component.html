@@ -1,30 +1,24 @@
 <div id="feed-page">
-	<nav class="side-bar">
-		<div class="side-bar-profile-pic"></div>
-		<div class="side-bar-names"></div>
-		<div class="side-bar-username"></div>
+	<nav id="profile-bar" class="rounded-border">
+		<img id="profile-bar-profile-pic" class="round-image" src="assets/images/feed/profile-pic.png" alt=""/>
+		<div id="profile-bar-name">
+			Static
+		</div>
+		<div id="profile-bar-username">
+			@static
+		</div>
 	</nav>
-	<div class="content">
-		<nav class="top-bar">
-			<div class="nav-bar-profile-pic">
-				<a href=""
-					><img
-						src="assets/images/feed/profile-pic.png"
-						alt="profile-pic"
-				/></a>
-			</div>
-			<div class="on-your-mind">
-				<a href=""
-					><input type="text" placeholder="What's on yo' mind?"
-				/></a>
-			</div>
-			<div class="nav-bar-chat-pic">
-				<a href=""
-					><img src="assets/images/feed/chat-pic.png" alt="chat-pic"
-				/></a>
-			</div>
+	<div id="content">
+		<nav id="top-bar">
+			<a id="top-bar-profile-pic" class="round-image" href="">
+				<img class="round-image" src="assets/images/feed/profile-pic.png" alt=""/>
+			</a>
+			<input id="top-bar-create-post" class="rounded-border" type="text" placeholder="What's on your mind?"/>
+			<a id="top-bar-open-chat" href="">
+				<img src="assets/images/feed/chat-pic.png" alt=""/>
+			</a>
 		</nav>
-		<ul>
+		<ul id="posts">
 			<li *ngFor="let post of posts" class="post">
 				<app-post></app-post>
 			</li>
