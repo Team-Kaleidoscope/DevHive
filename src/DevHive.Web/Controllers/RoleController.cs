@@ -26,9 +26,9 @@ namespace DevHive.Web.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Create([FromBody] CreateRoleModel createRoleModel)
 		{
-			RoleModel roleServiceModel = 
-				this._roleMapper.Map<RoleModel>(createRoleModel); 
-			
+			RoleModel roleServiceModel =
+				this._roleMapper.Map<RoleModel>(createRoleModel);
+
 			bool result = await this._roleService.CreateRole(roleServiceModel);
 
 			if (!result)
@@ -49,7 +49,7 @@ namespace DevHive.Web.Controllers
 		[HttpPut]
 		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateRoleModel updateRoleModel)
 		{
-			RoleModel roleServiceModel = 
+			RoleModel roleServiceModel =
 				this._roleMapper.Map<RoleModel>(updateRoleModel);
 			roleServiceModel.Id = id;
 

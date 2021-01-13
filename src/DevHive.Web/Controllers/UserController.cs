@@ -20,7 +20,7 @@ namespace DevHive.Web.Controllers
 	[ApiController]
 	[Route("/api/[controller]")]
 	[Authorize(Roles = "User")]
-	public class UserController: ControllerBase
+	public class UserController : ControllerBase
 	{
 		private readonly UserService _userService;
 		private readonly IMapper _userMapper;
@@ -154,7 +154,7 @@ namespace DevHive.Web.Controllers
 			await this._userService.RemoveFriend(userId, friendId);
 			return new OkResult();
 		}
-		
+
 		[HttpDelete]
 		[Route("RemoveLanguageFromUser")]
 		public async Task<IActionResult> RemoveLanguageFromUser(Guid userId, [FromBody] LanguageWebModel languageWebModel)
@@ -176,7 +176,7 @@ namespace DevHive.Web.Controllers
 				new OkResult() :
 				new BadRequestResult();
 		}
-		
+
 		#endregion
 	}
 }

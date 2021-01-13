@@ -29,7 +29,7 @@ namespace DevHive.Web.Controllers
 
 			bool result = await this._languageService.CreateLanguage(languageServiceModel);
 
-			if(!result)
+			if (!result)
 				return new BadRequestObjectResult("Could not create Language");
 
 			return new OkResult();
@@ -52,18 +52,18 @@ namespace DevHive.Web.Controllers
 
 			bool result = await this._languageService.UpdateLanguage(updatelanguageServiceModel);
 
-			if(!result)
+			if (!result)
 				return new BadRequestObjectResult("Could not update Language");
 
 			return new OkResult();
 		}
-	
+
 		[HttpDelete]
 		public async Task<IActionResult> Delete(Guid id)
 		{
 			bool result = await this._languageService.DeleteLanguage(id);
-			
-			if(!result)
+
+			if (!result)
 				return new BadRequestObjectResult("Could not delete Language");
 
 			return new OkResult();

@@ -30,9 +30,9 @@ namespace DevHive.Web.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Create([FromBody] CreatePostWebModel createPostModel)
 		{
-			CreatePostServiceModel postServiceModel = 
-				this._postMapper.Map<CreatePostServiceModel>(createPostModel); 
-			
+			CreatePostServiceModel postServiceModel =
+				this._postMapper.Map<CreatePostServiceModel>(createPostModel);
+
 			bool result = await this._postService.CreatePost(postServiceModel);
 
 			if (!result)
@@ -49,7 +49,7 @@ namespace DevHive.Web.Controllers
 
 			bool result = await this._postService.AddComment(createCommentServiceModel);
 
-			if(!result)
+			if (!result)
 				return new BadRequestObjectResult("Could not create the Comment");
 
 			return new OkResult();
@@ -81,7 +81,7 @@ namespace DevHive.Web.Controllers
 		[HttpPut]
 		public async Task<IActionResult> Update(Guid id, [FromBody] UpdatePostWebModel updatePostModel)
 		{
-			UpdatePostServiceModel postServiceModel = 
+			UpdatePostServiceModel postServiceModel =
 				this._postMapper.Map<UpdatePostServiceModel>(updatePostModel);
 			postServiceModel.IssuerId = id;
 
@@ -129,7 +129,7 @@ namespace DevHive.Web.Controllers
 		{
 			if (!await this._postService.ValidateJwtForComment(id, authorization))
 				return new UnauthorizedResult();
-			
+
 			bool result = await this._postService.DeleteComment(id);
 
 			if (!result)

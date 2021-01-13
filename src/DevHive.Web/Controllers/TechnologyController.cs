@@ -29,7 +29,7 @@ namespace DevHive.Web.Controllers
 
 			bool result = await this._technologyService.Create(technologyServiceModel);
 
-			if(!result)
+			if (!result)
 				return new BadRequestObjectResult("Could not create the Technology");
 
 			return new OkResult();
@@ -51,18 +51,18 @@ namespace DevHive.Web.Controllers
 
 			bool result = await this._technologyService.UpdateTechnology(updateTechnologyWebModel);
 
-			if(!result)
+			if (!result)
 				return new BadRequestObjectResult("Could not update Technology");
 
 			return new OkResult();
 		}
-	
+
 		[HttpDelete]
 		public async Task<IActionResult> Delete(Guid id)
 		{
 			bool result = await this._technologyService.DeleteTechnology(id);
-			
-			if(!result)
+
+			if (!result)
 				return new BadRequestObjectResult("Could not delete Technology");
 
 			return new OkResult();

@@ -13,5 +13,5 @@ namespace DevHive.Web.Configurations.Mapping
 			CreateMap<CommentServiceModel, CommentWebModel>();
 			CreateMap<CommentWebModel, CommentServiceModel>();
 		}
-	} 
+	}
 }

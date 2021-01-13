@@ -20,7 +20,7 @@ namespace DevHive.Web.Configurations.Extensions
 
 			services.AddIdentity<User, Role>()
 				.AddEntityFrameworkStores<DevHiveContext>();
-				
+
 			services.Configure<IdentityOptions>(options =>
 			{
 				options.User.RequireUniqueEmail = true;
@@ -41,7 +41,7 @@ namespace DevHive.Web.Configurations.Extensions
 
 			services.AddAuthorization(options =>
 			{
-				options.AddPolicy("User", options => 
+				options.AddPolicy("User", options =>
 				{
 					options.RequireAuthenticatedUser();
 					options.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);

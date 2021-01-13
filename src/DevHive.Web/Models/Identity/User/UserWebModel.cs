@@ -4,7 +4,7 @@ using DevHive.Web.Models.Identity.Role;
 using DevHive.Web.Models.Language;
 using DevHive.Web.Models.Technology;
 
-namespace DevHive.Web.Models.Identity.User 
+namespace DevHive.Web.Models.Identity.User
 {
 	public class UserWebModel : BaseUserWebModel
 	{

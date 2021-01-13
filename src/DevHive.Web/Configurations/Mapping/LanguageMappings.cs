@@ -4,7 +4,7 @@ using DevHive.Services.Models.Language;
 
 namespace DevHive.Web.Configurations.Mapping
 {
-    public class LanguageMappings : Profile
+	public class LanguageMappings : Profile
 	{
 		public LanguageMappings()
 		{
@@ -16,5 +16,5 @@ namespace DevHive.Web.Configurations.Mapping
 			CreateMap<CreateLanguageServiceModel, CreateLanguageWebModel>();
 			CreateMap<UpdateLanguageServiceModel, UpdateLanguageWebModel>();
 		}
-	} 
+	}
 }

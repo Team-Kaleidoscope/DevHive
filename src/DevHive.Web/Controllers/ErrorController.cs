@@ -19,7 +19,7 @@ namespace DevHive.Web.Controllers
 
 			IExceptionHandlerFeature exception =
 			HttpContext.Features.Get<IExceptionHandlerFeature>();
-		
+
 			object result = ProcessException(requestId, exception);
 			return new BadRequestObjectResult(JsonConvert.SerializeObject(result));
 		}

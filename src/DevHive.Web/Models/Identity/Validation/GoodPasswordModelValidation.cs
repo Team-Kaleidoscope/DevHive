@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DevHive.Web.Models.Identity.Validation
 {
-    public class GoodPassword : ValidationAttribute
+	public class GoodPassword : ValidationAttribute
 	{
 		public override bool IsValid(object value)
 		{

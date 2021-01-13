@@ -4,7 +4,7 @@ using DevHive.Services.Models.Technology;
 
 namespace DevHive.Web.Configurations.Mapping
 {
-    public class TechnologyMappings : Profile
+	public class TechnologyMappings : Profile
 	{
 		public TechnologyMappings()
 		{
@@ -13,5 +13,5 @@ namespace DevHive.Web.Configurations.Mapping
 			CreateMap<TechnologyServiceModel, TechnologyWebModel>();
 			CreateMap<TechnologyWebModel, TechnologyServiceModel>();
 		}
-	} 
+	}
 }

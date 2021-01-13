@@ -18,5 +18,5 @@ namespace DevHive.Web.Configurations.Mapping
 
 			CreateMap<TokenModel, TokenWebModel>();
 		}
-	} 
+	}
 }

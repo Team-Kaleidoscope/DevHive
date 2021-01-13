@@ -23,7 +23,7 @@ namespace DevHive.Web
 			services.AddCors();
 
 			services.AddControllers()
-				.AddNewtonsoftJson(x => 
+				.AddNewtonsoftJson(x =>
 				{
 					x.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 				});
@@ -39,10 +39,10 @@ namespace DevHive.Web
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			app.UseCors(x => x
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .SetIsOriginAllowed(origin => true) // allow any origin
-                .AllowCredentials()); // allow credentials
+				.AllowAnyMethod()
+				.AllowAnyHeader()
+				.SetIsOriginAllowed(origin => true) // allow any origin
+				.AllowCredentials()); // allow credentials
 
 			if (env.IsDevelopment())
 			{
