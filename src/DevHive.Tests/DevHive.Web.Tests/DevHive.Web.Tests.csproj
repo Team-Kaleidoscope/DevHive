@@ -16,4 +16,8 @@
     <ProjectReference Include="..\..\DevHive.Web\DevHive.Web.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+  </PropertyGroup>
 </Project>

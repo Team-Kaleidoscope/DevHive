@@ -22,4 +22,9 @@
    <ProjectReference Include="..\DevHive.Common\DevHive.Common.csproj" />
  </ItemGroup>
 
+  <PropertyGroup>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+  </PropertyGroup>
+
 </Project>
