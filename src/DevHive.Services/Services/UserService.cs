@@ -111,19 +111,42 @@ namespace DevHive.Services.Services
 
 		public async Task<bool> AddLanguageToUser(Guid userId, LanguageServiceModel languageServiceModel)
 		{
-			Tuple<User, Language> tuple = await ValidateUserAndLanguage(userId, languageServiceModel);
+			bool userExists = await this._userRepository.DoesUserExistAsync(userId);
+			bool languageExists = await this._languageRepository.DoesLanguageExistAsync(languageServiceModel.Id);
 
-			if (this._userRepository.DoesUserHaveThisLanguage(tuple.Item1, tuple.Item2))
+			if (!userExists)
+				throw new ArgumentException("User does not exist!");
+
+			if (!languageExists)
+				throw new ArgumentException("Language does noy exist!");
+
+			User user = await this._userRepository.GetByIdAsync(userId);
+			Language language = await this._languageRepository.GetByIdAsync(languageServiceModel.Id);
+
+			if (this._userRepository.DoesUserHaveThisLanguage(user, language))
 				throw new ArgumentException("User already has this language!");
 
-			return await this._userRepository.AddLanguageToUserAsync(tuple.Item1, tuple.Item2);
+			return await this._userRepository.AddLanguageToUserAsync(user, language);
 		}
 
 		public async Task<bool> AddTechnologyToUser(Guid userId, TechnologyServiceModel technologyServiceModel)
 		{
-			Tuple<User, Technology> tuple = await ValidateUserAndTechnology(userId, technologyServiceModel);
+			bool userExists = await this._userRepository.DoesUserExistAsync(userId);
+			bool technologyExists = await this._technologyRepository.DoesTechnologyExistAsync(technologyServiceModel.Id);
 
-			return await this._userRepository.AddTechnologyToUserAsync(tuple.Item1, tuple.Item2);
+			if (!userExists)
+				throw new ArgumentException("User does not exist!");
+
+			if (!technologyExists)
+				throw new ArgumentException("Technology does not exist!");
+
+			Technology technology = await this._technologyRepository.GetByIdAsync(technologyServiceModel.Id);
+			User user = await this._userRepository.GetByIdAsync(userId);
+
+			if (this._userRepository.DoesUserHaveThisTechnology(user, technology))
+				throw new ArgumentException("User already has this language!");
+
+			return await this._userRepository.AddTechnologyToUserAsync(user, technology);
 		}
 		#endregion
 
@@ -204,19 +227,42 @@ namespace DevHive.Services.Services
 
 		public async Task<bool> RemoveLanguageFromUser(Guid userId, LanguageServiceModel languageServiceModel)
 		{
-			Tuple<User, Language> tuple = await ValidateUserAndLanguage(userId, languageServiceModel);
+			bool userExists = await this._userRepository.DoesUserExistAsync(userId);
+			bool languageExists = await this._languageRepository.DoesLanguageExistAsync(languageServiceModel.Id);
 
-			if (!this._userRepository.DoesUserHaveThisLanguage(tuple.Item1, tuple.Item2))
+			if (!userExists)
+				throw new ArgumentException("User does not exist!");
+
+			if (!languageExists)
+				throw new ArgumentException("Language does not exist!");
+
+			User user = await this._userRepository.GetByIdAsync(userId);
+			Language language = await this._languageRepository.GetByIdAsync(languageServiceModel.Id);
+
+			if (!this._userRepository.DoesUserHaveThisLanguage(user, language))
 				throw new ArgumentException("User does not have this language!");
 
-			return await this._userRepository.RemoveLanguageFromUserAsync(tuple.Item1, tuple.Item2);
+			return await this._userRepository.RemoveLanguageFromUserAsync(user, language);
 		}
 
 		public async Task<bool> RemoveTechnologyFromUser(Guid userId, TechnologyServiceModel technologyServiceModel)
 		{
-			Tuple<User, Technology> tuple = await ValidateUserAndTechnology(userId, technologyServiceModel);
+			bool userExists = await this._userRepository.DoesUserExistAsync(userId);
+			bool technologyExists = await this._technologyRepository.DoesTechnologyExistAsync(technologyServiceModel.Id);
 
-			return await this._userRepository.RemoveTechnologyFromUserAsync(tuple.Item1, tuple.Item2);
+			if (!userExists)
+				throw new ArgumentException("User does not exist!");
+
+			if (!technologyExists)
+				throw new ArgumentException("Language does not exist!");
+
+			User user = await this._userRepository.GetByIdAsync(userId);
+			Technology technology = await this._technologyRepository.GetByIdAsync(technologyServiceModel.Id);
+
+			if (!this._userRepository.DoesUserHaveThisTechnology(user, technology))
+				throw new ArgumentException("User does not have this technology!");
+
+			return await this._userRepository.RemoveTechnologyFromUserAsync(user, technology);
 		}
 		#endregion
 
@@ -297,40 +343,6 @@ namespace DevHive.Services.Services
 		private string GeneratePasswordHash(string password)
 		{
 			return string.Join(string.Empty, SHA512.HashData(Encoding.ASCII.GetBytes(password)));
-		}
-
-		private async Task<Tuple<User, Language>> ValidateUserAndLanguage(Guid userId, LanguageServiceModel languageServiceModel)
-		{
-			bool userExists = await this._userRepository.DoesUserExistAsync(userId);
-			bool languageExists = await this._languageRepository.DoesLanguageExistAsync(languageServiceModel.Id);
-
-			if (!userExists)
-				throw new ArgumentException("User does not exist!");
-
-			if (!languageExists)
-				throw new ArgumentException("Language does not exist!");
-
-			User user = await this._userRepository.GetByIdAsync(userId);
-			Language language = await this._languageRepository.GetByIdAsync(languageServiceModel.Id);
-
-			return new Tuple<User, Language>(user, language);
-		}
-
-		private async Task<Tuple<User, Technology>> ValidateUserAndTechnology(Guid userId, TechnologyServiceModel technologyServiceModel)
-		{
-			bool userExists = await this._userRepository.DoesUserExistAsync(userId);
-			bool technologyExists = await this._technologyRepository.DoesTechnologyExistAsync(technologyServiceModel.Id);
-
-			if (!userExists)
-				throw new ArgumentException("User does not exist!");
-
-			if (!technologyExists)
-				throw new ArgumentException("Language does not exist!");
-
-			User user = await this._userRepository.GetByIdAsync(userId);
-			Technology technology = await this._technologyRepository.GetByIdAsync(technologyServiceModel.Id);
-
-			return new Tuple<User, Technology>(user, technology);
 		}
 		#endregion
 	}

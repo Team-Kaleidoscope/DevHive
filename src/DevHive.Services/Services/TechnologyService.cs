@@ -23,7 +23,7 @@ namespace DevHive.Services.Services
 
 		public async Task<bool> Create(CreateTechnologyServiceModel technologyServiceModel)
 		{
-			if (await this._technologyRepository.DoesTechnologyNameExist(technologyServiceModel.Name))
+			if (await this._technologyRepository.DoesTechnologyNameExistAsync(technologyServiceModel.Name))
 				throw new ArgumentException("Technology already exists!");
 
 			Technology technology = this._technologyMapper.Map<Technology>(technologyServiceModel);
@@ -53,7 +53,7 @@ namespace DevHive.Services.Services
 			if (!await this._technologyRepository.DoesTechnologyExistAsync(updateTechnologyServiceModel.Id))
 				throw new ArgumentException("Technology does not exist!");
 
-			if (await this._technologyRepository.DoesTechnologyNameExist(updateTechnologyServiceModel.Name))
+			if (await this._technologyRepository.DoesTechnologyNameExistAsync(updateTechnologyServiceModel.Name))
 				throw new ArgumentException("Technology name already exists!");
 
 			Technology technology = this._technologyMapper.Map<Technology>(updateTechnologyServiceModel);

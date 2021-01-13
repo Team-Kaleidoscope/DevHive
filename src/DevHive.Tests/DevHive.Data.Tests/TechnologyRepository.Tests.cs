@@ -106,7 +106,7 @@ namespace DevHive.Data.Tests
         }
         #endregion
 
-        #region DoesTechnologyNameExist
+        #region DoesTechnologyNameExistAsync
         [Test]
         public void DoesTechnologyNameExist_ReturnsTrue_IfTechnologyExists()
         {
@@ -114,20 +114,20 @@ namespace DevHive.Data.Tests
             {
                 AddEntity();
 
-                bool result = await this.TechnologyRepository.DoesTechnologyNameExist(TECHNOLOGY_NAME);
+                bool result = await this.TechnologyRepository.DoesTechnologyNameExistAsync(TECHNOLOGY_NAME);
 
                 Assert.IsTrue(result, "DoesTechnologyNameExists returns true when technology name does not exist");
             }).GetAwaiter().GetResult();
-        }     
+        }
 
         [Test]
         public void DoesTechnologyNameExist_ReturnsFalse_IfTechnologyDoesNotExists()
         {
             Task.Run(async () =>
             {
-                bool result = await this.TechnologyRepository.DoesTechnologyNameExist(TECHNOLOGY_NAME);
+                bool result = await this.TechnologyRepository.DoesTechnologyNameExistAsync(TECHNOLOGY_NAME);
 
-                Assert.False(result, "DoesTechnologyNameExist returns true when technology name does not exist");
+                Assert.False(result, "DoesTechnologyNameExistAsync returns true when technology name does not exist");
             }).GetAwaiter().GetResult();
         }
         #endregion
@@ -162,7 +162,7 @@ namespace DevHive.Data.Tests
         #region DeleteAsync
         [Test]
         public void DeleteAsync_ReturnsTrue_IfDeletionIsSuccesfull()
-        {           
+        {
             Task.Run(async () =>
             {
                 AddEntity();
@@ -173,7 +173,7 @@ namespace DevHive.Data.Tests
                 Assert.IsTrue(result, "DeleteAsync returns false when deletion is successfull");
 
             }).GetAwaiter().GetResult();
-        }       
+        }
         #endregion
 
         #region HelperMethods

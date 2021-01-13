@@ -27,6 +27,12 @@ namespace DevHive.Data.Repositories
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
+
+		public async Task<Technology> GetByNameAsync(string technologyName)
+		{
+			return await this._context.Technologies
+				.FirstOrDefaultAsync(x => x.Name == technologyName);
+		}
 		#endregion
 
 		#region Read
@@ -65,7 +71,7 @@ namespace DevHive.Data.Repositories
 
 		#region Validations
 
-		public async Task<bool> DoesTechnologyNameExist(string technologyName)
+		public async Task<bool> DoesTechnologyNameExistAsync(string technologyName)
 		{
 			return await this._context
 				.Set<Technology>()

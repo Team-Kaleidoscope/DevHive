@@ -9,5 +9,6 @@ namespace DevHive.Data.Interfaces
 	{
 		Task<bool> DoesLanguageExistAsync(Guid id);
 		Task<bool> DoesLanguageNameExistAsync(string languageName);
+		Task<Language> GetByNameAsync(string name);
 	}
 }

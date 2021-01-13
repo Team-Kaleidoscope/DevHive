@@ -45,7 +45,7 @@ namespace DevHive.Services.Tests
 					Name = technologyName
 				};
 
-				this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExist(It.IsAny<string>())).Returns(Task.FromResult(false));
+				this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
 				this.TechnologyRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Technology>())).Returns(Task.FromResult(shouldFail));
 				this.MapperMock.Setup(p => p.Map<Technology>(It.IsAny<CreateTechnologyServiceModel>())).Returns(technology);
 
@@ -72,7 +72,7 @@ namespace DevHive.Services.Tests
 					Name = technologyName
 				};
 
-				this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExist(It.IsAny<string>())).Returns(Task.FromResult(true));
+				this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
 
 				try
 				{
@@ -158,7 +158,7 @@ namespace DevHive.Services.Tests
 		// 		};
 
 		// 		this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-		// 		this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExist(It.IsAny<string>())).Returns(Task.FromResult(false));
+		// 		this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
 		// 		this.TechnologyRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Technology>())).Returns(Task.FromResult(shouldPass));
 		// 		this.MapperMock.Setup(p => p.Map<Technology>(It.IsAny<UpdateTechnologyServiceModel>())).Returns(technology);
 
@@ -207,7 +207,7 @@ namespace DevHive.Services.Tests
 		// 		};
 
 		// 		this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-		// 		this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExist(It.IsAny<string>())).Returns(Task.FromResult(true));
+		// 		this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
 
 		// 		try
 		// 		{

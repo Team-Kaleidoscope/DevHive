@@ -20,12 +20,12 @@ namespace DevHive.Services.Interfaces
 		Task<UserServiceModel> GetUserById(Guid id);
 
 		Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateModel);
-		
+
 		Task DeleteUser(Guid id);
 		Task<bool> RemoveFriend(Guid userId, Guid friendId);
 		Task<bool> RemoveLanguageFromUser(Guid userId, LanguageServiceModel languageServiceModel);
 		Task<bool> RemoveTechnologyFromUser(Guid userId, TechnologyServiceModel technologyServiceModel);
-		
+
 		Task<bool> ValidJWT(Guid id, string rawTokenData);
 	}
 }

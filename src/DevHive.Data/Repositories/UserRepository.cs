@@ -226,6 +226,11 @@ namespace DevHive.Data.Repositories
 		{
 			return user.Langauges.Contains(language);
 		}
+
+		public bool DoesUserHaveThisTechnology(User user, Technology technology)
+		{
+			return user.Technologies.Contains(technology);
+		}
 		#endregion
 	}
 }

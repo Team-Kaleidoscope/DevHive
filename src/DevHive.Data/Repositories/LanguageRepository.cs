@@ -36,6 +36,12 @@ namespace DevHive.Data.Repositories
 				.Set<Language>()
 				.FindAsync(id);
 		}
+
+		public async Task<Language> GetByNameAsync(string languageName)
+		{
+			return await this._context.Languages
+				.FirstOrDefaultAsync(x => x.Name == languageName);
+		}
 		#endregion
 
 		#region Update
@@ -62,7 +68,7 @@ namespace DevHive.Data.Repositories
 		}
 		#endregion
 
-		#region Validations 
+		#region Validations
 
 		public async Task<bool> DoesLanguageNameExistAsync(string languageName)
 		{

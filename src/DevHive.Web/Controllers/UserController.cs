@@ -176,7 +176,6 @@ namespace DevHive.Web.Controllers
 				new OkResult() :
 				new BadRequestResult();
 		}
-
 		#endregion
 	}
 }
