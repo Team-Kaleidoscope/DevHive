@@ -1,75 +1,65 @@
 .post {
-	width: 100%;
-	display: flex;
-
-	border: 2px solid black;
-	border-radius: 10px;
-	padding: 4px;
+  display: flex;
+  width: inherit;
 }
 
-.post-info {
-	flex: 1;
+/* Author */
+
+.author {
+  display: flex;
+  margin-bottom: .2em;
 }
 
-/* Start of navigation */
-
-.profile {
-	width: 25%;
-	display: flex;
-	box-sizing: border-box;
+.author > img {
+  width: 2.2em;
+  height: 2.2em;
+  margin-right: .2em;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.post-profile-pic img {
-	width: 60px;
-	height: 60px;
-	border-radius: 50%;
+.author-info > .handle {
+  font-size: .9em;
+  color: gray;
 }
 
-.user-info {
-	width: 100%;
-	padding-left: 5px;
-}
-
-/* End of navigation */
-
-
-/* Start of post */
+/* Content */
 
 .content {
+  flex: 1;
 }
 
 .message {
+  margin: .3em 0;
 }
 
-.date-created {
-	font-size: small;
-	color: grey;
-	/* TODO: Do this!!! */
+.timestamp {
+  font-size: .5em;
+  color: gray;
 }
 
-.separator {
-	width: 100%;
-}
-
-/* End of post */
-
-
-/* Start of rating */
+/* Rating */
 
 .rating {
-	height: 100%;
-	text-align: center;
-	align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: -.2em;
 }
 
-.rating button {
-	background-color: transparent;
-	background-repeat: no-repeat;
-	border: none;
+.vote {
+  flex: 1;
+  background: white;
+  font-size: 1em;
+  box-sizing: border-box;
+  border: 2px solid white;
+  border-radius: .3em;
 }
 
-.rating button:hover {
-	cursor: pointer;
+.vote:hover {
+  background: lightgray;
 }
 
-/* End of rating */
+.vote:active {
+  border-color: black;
+}

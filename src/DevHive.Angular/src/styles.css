@@ -7,5 +7,15 @@ html, body {
 }
 
 body {
-  font: 21px sans-serif;
+  font: 21px sans-serif !important;
+}
+
+input:focus, button:focus {
+  outline: 0;
+}
+
+.rounded-border {
+  border: 2px solid black;
+  border-radius: .6em;
+  padding: .4em;
 }
