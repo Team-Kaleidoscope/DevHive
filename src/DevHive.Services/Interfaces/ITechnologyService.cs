@@ -10,8 +10,8 @@ namespace DevHive.Services.Interfaces
 
 		Task<TechnologyServiceModel> GetTechnologyById(Guid id);
 
-		Task<bool> UpdateTechnology(UpdateTechnologyServiceModel updateTechnologyServiceModel);
-		
+		Task<bool> UpdateTechnology(Guid technologyId, UpdateTechnologyServiceModel updateTechnologyServiceModel);
+
 		Task<bool> DeleteTechnology(Guid id);
 	}
 }

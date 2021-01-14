@@ -35,9 +35,9 @@ namespace DevHive.Services.Services
 
 		#region Read
 
-		public async Task<LanguageServiceModel> GetLanguageById(Guid id)
+		public async Task<LanguageServiceModel> GetLanguageById(Guid languageId)
 		{
-			Language language = await this._languageRepository.GetByIdAsync(id);
+			Language language = await this._languageRepository.GetByIdAsync(languageId);
 
 			if (language == null)
 				throw new ArgumentException("The language does not exist");
@@ -48,19 +48,18 @@ namespace DevHive.Services.Services
 
 		#region Update
 
-		public async Task<bool> UpdateLanguage(UpdateLanguageServiceModel languageServiceModel)
+		public async Task<bool> UpdateLanguage(Guid languageId, UpdateLanguageServiceModel languageServiceModel)
 		{
-			Task<bool> langExist = this._languageRepository.DoesLanguageExistAsync(languageServiceModel.Id);
-			Task<bool> newLangNameExists = this._languageRepository.DoesLanguageNameExistAsync(languageServiceModel.Name);
+			bool langExists = await this._languageRepository.DoesLanguageExistAsync(languageId);
+			bool newLangNameExists = await this._languageRepository.DoesLanguageNameExistAsync(languageServiceModel.Name);
 
-			await Task.WhenAny(langExist, newLangNameExists);
+			if (!langExists)
+				throw new ArgumentException("Language does not exist!");
 
-			if (!langExist.Result)
-				throw new ArgumentException("Language already exists!");
-
-			if (newLangNameExists.Result)
+			if (newLangNameExists)
 				throw new ArgumentException("This name is already in our datbase!");
 
+			languageServiceModel.Id = languageId;
 			Language lang = this._languageMapper.Map<Language>(languageServiceModel);
 			return await this._languageRepository.EditAsync(lang);
 		}
@@ -68,12 +67,12 @@ namespace DevHive.Services.Services
 
 		#region Delete
 
-		public async Task<bool> DeleteLanguage(Guid id)
+		public async Task<bool> DeleteLanguage(Guid languageId)
 		{
-			if (!await this._languageRepository.DoesLanguageExistAsync(id))
+			if (!await this._languageRepository.DoesLanguageExistAsync(languageId))
 				throw new ArgumentException("Language does not exist!");
 
-			Language language = await this._languageRepository.GetByIdAsync(id);
+			Language language = await this._languageRepository.GetByIdAsync(languageId);
 			return await this._languageRepository.DeleteAsync(language);
 		}
 		#endregion
