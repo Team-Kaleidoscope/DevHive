@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { FeedService } from 'src/app/services/feed.service';
 import { PostComponent } from '../post/post.component';
 
@@ -12,7 +13,7 @@ export class FeedComponent implements OnInit {
   private _title = 'Feed';
   public posts: PostComponent[];
 
-  constructor(private titleService: Title, private service: FeedService) {
+  constructor(private titleService: Title, private service: FeedService, private router: Router) {
     this.titleService.setTitle(this._title);
    }
 
@@ -22,6 +23,12 @@ export class FeedComponent implements OnInit {
       new PostComponent(),
       new PostComponent(),
       new PostComponent(),
-    ]
+    ];
+
+    if (sessionStorage.getItem('UserCred')) { /* TODO: improve token validation */
+      /* Make use of the JWT, will be implemented later */
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 }

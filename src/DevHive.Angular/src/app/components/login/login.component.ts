@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -12,7 +13,7 @@ export class LoginComponent implements OnInit {
 
   private _title = 'Login';
 
-  constructor(private titleService: Title, private fb: FormBuilder) {
+  constructor(private titleService: Title, private fb: FormBuilder, private router: Router) {
     titleService.setTitle(this._title);
   }
 
@@ -29,16 +30,20 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  onSubmit(): void {
-    fetch('http://localhost:5000/api/User/login', {
+  async onSubmit(): Promise<void> {
+    const response = await fetch('http://localhost:5000/api/User/login', {
       method: 'POST',
-      body: `{
-               "UserName": "${this.loginUserFormGroup.get('username')?.value}",
-               "Password": "${this.loginUserFormGroup.get('password')?.value}"
-      }`,
+      body: JSON.stringify({
+        UserName: this.loginUserFormGroup.get('username')?.value,
+        Password: this.loginUserFormGroup.get('password')?.value
+      }),
       headers: {
         'Content-Type': 'application/json'
       }
-    }).then(response => response.json()).then(data => { console.log(data); });
+    });
+    const userCred: string = await response.json();
+
+    sessionStorage.setItem('UserCred', JSON.stringify(userCred));
+    this.router.navigate(['/']);
   }
 }
