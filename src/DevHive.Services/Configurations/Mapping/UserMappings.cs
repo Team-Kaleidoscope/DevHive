@@ -14,5 +14,5 @@ namespace DevHive.Services.Configurations.Mapping
 
 			CreateMap<User, UserServiceModel>();
 		}
-	} 
+	}
 }

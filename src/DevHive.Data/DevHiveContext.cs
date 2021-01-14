@@ -22,7 +22,7 @@ namespace DevHive.Data
 
 			builder.Entity<User>()
 				.HasMany(x => x.Roles);
-				
+
 			builder.Entity<User>()
 				.HasMany(x => x.Friends);
 

@@ -15,10 +15,10 @@ namespace DevHive.Services.Interfaces
 
 		Task<bool> UpdateComment(UpdateCommentServiceModel commentServiceModel);
 		Task<bool> UpdatePost(UpdatePostServiceModel postServiceModel);
-		
+
 		Task<bool> DeleteComment(Guid id);
 		Task<bool> DeletePost(Guid id);
-		
+
 		Task<bool> ValidateJwtForComment(Guid commentId, string rawTokenData);
 	}
 }

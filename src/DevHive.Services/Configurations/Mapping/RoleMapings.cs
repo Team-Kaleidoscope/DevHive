@@ -11,5 +11,5 @@ namespace DevHive.Services.Configurations.Mapping
 			CreateMap<RoleModel, Role>();
 			CreateMap<Role, RoleModel>();
 		}
-	} 
+	}
 }

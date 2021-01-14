@@ -1,6 +1,6 @@
 namespace DevHive.Services.Models.Identity.User
 {
-	public class BaseUserServiceModel 
+	public class BaseUserServiceModel
 	{
 		public string UserName { get; set; }
 		public string Email { get; set; }

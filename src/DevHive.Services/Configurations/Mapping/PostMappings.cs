@@ -12,5 +12,5 @@ namespace DevHive.Services.Configurations.Mapping
 			CreateMap<PostServiceModel, Post>();
 			CreateMap<Post, PostServiceModel>();
 		}
-	} 
+	}
 }

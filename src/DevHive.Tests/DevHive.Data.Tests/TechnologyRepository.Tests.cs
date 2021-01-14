@@ -8,192 +8,194 @@ using System.Threading.Tasks;
 
 namespace DevHive.Data.Tests
 {
-    [TestFixture]
-    public class TechnologyRepositoryTests
-    {
-        private const string TECHNOLOGY_NAME = "Technology test name";
+	[TestFixture]
+	public class TechnologyRepositoryTests
+	{
+		private const string TECHNOLOGY_NAME = "Technology test name";
 
-        protected DevHiveContext Context { get; set; }
+		protected DevHiveContext Context { get; set; }
 
-        protected TechnologyRepository TechnologyRepository { get; set; }
+		protected TechnologyRepository TechnologyRepository { get; set; }
 
-        [SetUp]
-        public void Setup()
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
-                .UseInMemoryDatabase(databaseName: "DevHive_Test_Database");
+		[SetUp]
+		public void Setup()
+		{
+			var optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
+				.UseInMemoryDatabase(databaseName: "DevHive_Test_Database");
 
-            this.Context = new DevHiveContext(optionsBuilder.Options);
+			this.Context = new DevHiveContext(optionsBuilder.Options);
 
-            TechnologyRepository = new TechnologyRepository(Context);
-        }
+			TechnologyRepository = new TechnologyRepository(Context);
+		}
 
-        [TearDown]
-        public void TearDown()
-        {
-            this.Context.Database.EnsureDeleted();
-        }
+		[TearDown]
+		public void TearDown()
+		{
+			this.Context.Database.EnsureDeleted();
+		}
 
-        #region AddAsync
-        [Test]
-        public void AddAsync_AddsTheGivenTechnologyToTheDatabase()
-        {
-            AddEntity();
+		#region AddAsync
 
-            int numberOfTechnologies = Context.Technologies.Count();
+		[Test]
+		public void AddAsync_AddsTheGivenTechnologyToTheDatabase()
+		{
+			AddEntity();
 
-            Assert.True(numberOfTechnologies > 0, "Technologies repo does not store Technologies correctly");
-        }
-        #endregion
+			int numberOfTechnologies = Context.Technologies.Count();
 
-        #region GetByIdAsync
-        [Test]
-        public void GetByIdAsync_ReturnsTheCorrectTechnology_IfIdExists()
-        {
-            Task.Run(async () =>
-            {
-                AddEntity();
-                Technology technology = this.Context.Technologies.Where(x => x.Name == TECHNOLOGY_NAME).ToList().FirstOrDefault();
-                Guid id = technology.Id;
+			Assert.True(numberOfTechnologies > 0, "Technologies repo does not store Technologies correctly");
+		}
+		#endregion
 
-                Technology technologyReturned = await this.TechnologyRepository.GetByIdAsync(id);
+		#region GetByIdAsync
 
-                Assert.AreEqual(TECHNOLOGY_NAME, technologyReturned.Name, "GetByIdAsync does not return the correct Technology when id is valid");
-            }).GetAwaiter().GetResult();
-        }
+		[Test]
+		public void GetByIdAsync_ReturnsTheCorrectTechnology_IfIdExists()
+		{
+			Task.Run(async () =>
+			{
+				AddEntity();
+				Technology technology = this.Context.Technologies.Where(x => x.Name == TECHNOLOGY_NAME).ToList().FirstOrDefault();
+				Guid id = technology.Id;
 
-        [Test]
-        public void GetByIdAsync_ReturnsNull_IfIdDoesNotExists()
-        {
-            Task.Run(async () =>
-            {
-                Guid id = new Guid();
+				Technology technologyReturned = await this.TechnologyRepository.GetByIdAsync(id);
 
-                Technology technologyReturned = await this.TechnologyRepository.GetByIdAsync(id);
+				Assert.AreEqual(TECHNOLOGY_NAME, technologyReturned.Name, "GetByIdAsync does not return the correct Technology when id is valid");
+			}).GetAwaiter().GetResult();
+		}
 
-                Assert.IsNull(technologyReturned, "GetByIdAsync returns Technology when it should be null");
-            }).GetAwaiter().GetResult();
-        }
-        #endregion
+		[Test]
+		public void GetByIdAsync_ReturnsNull_IfIdDoesNotExists()
+		{
+			Task.Run(async () =>
+			{
+				Guid id = new Guid();
 
-        #region DoesTechnologyExistAsync
-        [Test]
-        public void DoesTechnologyExist_ReturnsTrue_IfIdExists()
-        {
-            Task.Run(async () =>
-            {
-                AddEntity();
-                Technology technology = this.Context.Technologies.Where(x => x.Name == TECHNOLOGY_NAME).ToList().FirstOrDefault();
-                Guid id = technology.Id;
+				Technology technologyReturned = await this.TechnologyRepository.GetByIdAsync(id);
 
-                bool result = await this.TechnologyRepository.DoesTechnologyExistAsync(id);
+				Assert.IsNull(technologyReturned, "GetByIdAsync returns Technology when it should be null");
+			}).GetAwaiter().GetResult();
+		}
+		#endregion
 
-                Assert.IsTrue(result, "DoesTechnologyExistAsync returns flase hwen technology exists");
-            }).GetAwaiter().GetResult();
-        }
+		#region DoesTechnologyExistAsync
+		[Test]
+		public void DoesTechnologyExist_ReturnsTrue_IfIdExists()
+		{
+			Task.Run(async () =>
+			{
+				AddEntity();
+				Technology technology = this.Context.Technologies.Where(x => x.Name == TECHNOLOGY_NAME).ToList().FirstOrDefault();
+				Guid id = technology.Id;
 
-        [Test]
-        public void DoesTechnologyExist_ReturnsFalse_IfIdDoesNotExists()
-        {
-            Task.Run(async () =>
-            {
-                Guid id = new Guid();
+				bool result = await this.TechnologyRepository.DoesTechnologyExistAsync(id);
 
-                bool result = await this.TechnologyRepository.DoesTechnologyExistAsync(id);
+				Assert.IsTrue(result, "DoesTechnologyExistAsync returns flase hwen technology exists");
+			}).GetAwaiter().GetResult();
+		}
 
-                Assert.IsFalse(result, "DoesTechnologyExistAsync returns true when technology does not exist");
-            }).GetAwaiter().GetResult();
-        }
-        #endregion
+		[Test]
+		public void DoesTechnologyExist_ReturnsFalse_IfIdDoesNotExists()
+		{
+			Task.Run(async () =>
+			{
+				Guid id = new Guid();
 
-        #region DoesTechnologyNameExistAsync
-        [Test]
-        public void DoesTechnologyNameExist_ReturnsTrue_IfTechnologyExists()
-        {
-            Task.Run(async () =>
-            {
-                AddEntity();
+				bool result = await this.TechnologyRepository.DoesTechnologyExistAsync(id);
 
-                bool result = await this.TechnologyRepository.DoesTechnologyNameExistAsync(TECHNOLOGY_NAME);
+				Assert.IsFalse(result, "DoesTechnologyExistAsync returns true when technology does not exist");
+			}).GetAwaiter().GetResult();
+		}
+		#endregion
 
-                Assert.IsTrue(result, "DoesTechnologyNameExists returns true when technology name does not exist");
-            }).GetAwaiter().GetResult();
-        }
+		#region DoesTechnologyNameExistAsync
+		[Test]
+		public void DoesTechnologyNameExist_ReturnsTrue_IfTechnologyExists()
+		{
+			Task.Run(async () =>
+			{
+				AddEntity();
 
-        [Test]
-        public void DoesTechnologyNameExist_ReturnsFalse_IfTechnologyDoesNotExists()
-        {
-            Task.Run(async () =>
-            {
-                bool result = await this.TechnologyRepository.DoesTechnologyNameExistAsync(TECHNOLOGY_NAME);
+				bool result = await this.TechnologyRepository.DoesTechnologyNameExistAsync(TECHNOLOGY_NAME);
 
-                Assert.False(result, "DoesTechnologyNameExistAsync returns true when technology name does not exist");
-            }).GetAwaiter().GetResult();
-        }
-        #endregion
+				Assert.IsTrue(result, "DoesTechnologyNameExists returns true when technology name does not exist");
+			}).GetAwaiter().GetResult();
+		}
 
-        #region EditAsync
-        [Test]
-        public void EditAsync_UpdatesEntity()
-        {
-            Task.Run(async () =>
-            {
-                string newName = "New name";
-                Guid id = new Guid();
-                Technology technology = new Technology
-                {
-                    Name = TECHNOLOGY_NAME,
-                    Id = id
-                };
-                Technology newTechnology = new Technology
-                {
-                    Name = newName,
-                    Id = id
-                };
-                await this.TechnologyRepository.AddAsync(technology);
+		[Test]
+		public void DoesTechnologyNameExist_ReturnsFalse_IfTechnologyDoesNotExists()
+		{
+			Task.Run(async () =>
+			{
+				bool result = await this.TechnologyRepository.DoesTechnologyNameExistAsync(TECHNOLOGY_NAME);
 
-                bool result = await this.TechnologyRepository.EditAsync(newTechnology);
+				Assert.False(result, "DoesTechnologyNameExistAsync returns true when technology name does not exist");
+			}).GetAwaiter().GetResult();
+		}
+		#endregion
 
-                Assert.IsTrue(result);
-            }).GetAwaiter().GetResult();
-        }
-        #endregion
+		#region EditAsync
+		[Test]
+		public void EditAsync_UpdatesEntity()
+		{
+			Task.Run(async () =>
+			{
+				string newName = "New name";
+				Guid id = new Guid();
+				Technology technology = new Technology
+				{
+					Name = TECHNOLOGY_NAME,
+					Id = id
+				};
+				Technology newTechnology = new Technology
+				{
+					Name = newName,
+					Id = id
+				};
+				await this.TechnologyRepository.AddAsync(technology);
 
-        #region DeleteAsync
-        [Test]
-        public void DeleteAsync_ReturnsTrue_IfDeletionIsSuccesfull()
-        {
-            Task.Run(async () =>
-            {
-                AddEntity();
-                Technology technology = this.Context.Technologies.Where(x => x.Name == TECHNOLOGY_NAME).ToList().FirstOrDefault();
+				bool result = await this.TechnologyRepository.EditAsync(newTechnology);
 
-                bool result = await this.TechnologyRepository.DeleteAsync(technology);
+				Assert.IsTrue(result);
+			}).GetAwaiter().GetResult();
+		}
+		#endregion
 
-                Assert.IsTrue(result, "DeleteAsync returns false when deletion is successfull");
+		#region DeleteAsync
+		[Test]
+		public void DeleteAsync_ReturnsTrue_IfDeletionIsSuccesfull()
+		{
+			Task.Run(async () =>
+			{
+				AddEntity();
+				Technology technology = this.Context.Technologies.Where(x => x.Name == TECHNOLOGY_NAME).ToList().FirstOrDefault();
 
-            }).GetAwaiter().GetResult();
-        }
-        #endregion
+				bool result = await this.TechnologyRepository.DeleteAsync(technology);
 
-        #region HelperMethods
-        private void AddEntity(string name = TECHNOLOGY_NAME)
-        {
-            Task.Run(async () =>
-            {
-                Technology technology = new Technology
-                {
-                    Name = name
-                };
+				Assert.IsTrue(result, "DeleteAsync returns false when deletion is successfull");
 
-                await this.TechnologyRepository.AddAsync(technology);
-            }).GetAwaiter().GetResult();
-        }
-        #endregion
+			}).GetAwaiter().GetResult();
+		}
+		#endregion
 
-        //Task.Run(async () =>
-        //{
-        //
-        //}).GetAwaiter().GetResult();
-    }
+		#region HelperMethods
+		private void AddEntity(string name = TECHNOLOGY_NAME)
+		{
+			Task.Run(async () =>
+			{
+				Technology technology = new Technology
+				{
+					Name = name
+				};
+
+				await this.TechnologyRepository.AddAsync(technology);
+			}).GetAwaiter().GetResult();
+		}
+		#endregion
+
+		//Task.Run(async () =>
+		//{
+		//
+		//}).GetAwaiter().GetResult();
+	}
 }
