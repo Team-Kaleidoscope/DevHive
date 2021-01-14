@@ -1,12 +1,20 @@
 <div id="content">
-	<div class="title">
-		Login
-	</div>
-	<hr>
+	<div class="title">Login</div>
+
 	<form [formGroup]="loginUserFormGroup" (ngSubmit)="onSubmit()">
-		<input type="text" placeholder="Username" name="username" formControlName="username">
-		<input type="text" placeholder="Password" name="password" formControlName="password">
-    <hr>
-    <button type="submit" value="Submit" id="submit-btn">Submit</button>
+		<hr>
+
+		<div class="input-selection">
+			<input type="text" placeholder="Username" class="input-field" formControlName="username" required>
+			<label class="input-field-label">Username</label>
+		</div>
+
+		<div class="input-selection">
+			<input type="password" placeholder="Password" class="input-field" formControlName="password" required>
+			<label class="input-field-label">Password</label>
+		</div>
+
+		<hr>
+		<button class="submit-btn" type="submit">Submit</button>
 	</form>
 </div>

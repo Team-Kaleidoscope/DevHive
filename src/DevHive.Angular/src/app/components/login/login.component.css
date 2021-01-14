@@ -1,21 +1,9 @@
-
-
-#content input[type=text], #content #submit-btn {
-	border: 2px solid black;
-	border-radius: 0.4em;
-	box-sizing: border-box;
-	width: 100%;
-	margin-top: 0.5em;
-  font-size: 0.8em;
-  padding: 0.3em;
+* {
+  transition: .2s;
 }
 
-#content input[type=text]:nth-last-of-type(1) {
-  margin-bottom: 0.5em;
-}
-
-input[type=text]:focus, button[type=submit]:focus {
-  outline: 0;
+form {
+  width: 100%;
 }
 
 #content hr {
@@ -24,18 +12,6 @@ input[type=text]:focus, button[type=submit]:focus {
 	box-sizing: border-box;
 }
 
-#submit-btn {
-  background-color: black;
-  color: white;
-  text-align: center;
-}
-
-#submit-btn:hover {
-  cursor: pointer;
-  border-color: darkgrey !important;
-  background-color: darkgrey;
-}
-
-#submit-btn:active {
-  transform: scale(0.9);
+.input-selection:nth-of-type(1) {
+  margin-top: 1.2em;
 }
