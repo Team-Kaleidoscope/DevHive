@@ -11,17 +11,17 @@ namespace DevHive.Web.Configurations.Extensions
 	{
 		public static void DependencyInjectionConfiguration(this IServiceCollection services)
 		{
-			services.AddScoped<ILanguageRepository, LanguageRepository>();
-			services.AddScoped<IRoleRepository, RoleRepository>();
-			services.AddScoped<ITechnologyRepository, TechnologyRepository>();
-			services.AddScoped<IUserRepository, UserRepository>();
-			services.AddScoped<IPostRepository, PostRepository>();
+			services.AddTransient<ILanguageRepository, LanguageRepository>();
+			services.AddTransient<IRoleRepository, RoleRepository>();
+			services.AddTransient<ITechnologyRepository, TechnologyRepository>();
+			services.AddTransient<IUserRepository, UserRepository>();
+			services.AddTransient<IPostRepository, PostRepository>();
 
-			services.AddScoped<ILanguageService, LanguageService>();
-			services.AddScoped<IRoleService, RoleService>();
-			services.AddScoped<ITechnologyService, TechnologyService>();
-			services.AddScoped<IUserService, UserService>();
-			services.AddScoped<IPostService, PostService>();
+			services.AddTransient<ILanguageService, LanguageService>();
+			services.AddTransient<IRoleService, RoleService>();
+			services.AddTransient<ITechnologyService, TechnologyService>();
+			services.AddTransient<IUserService, UserService>();
+			services.AddTransient<IPostService, PostService>();
 		}
 	}
 }

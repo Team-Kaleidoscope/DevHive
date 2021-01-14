@@ -1,22 +1,21 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using DevHive.Data.Repositories;
+using DevHive.Services.Interfaces;
 using DevHive.Services.Models.Language;
-using DevHive.Services.Services;
 using DevHive.Web.Models.Language;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevHive.Web.Controllers
 {
-	[ApiController]
+    [ApiController]
 	[Route("/api/[controller]")]
 	public class LanguageController
 	{
-		private readonly LanguageService _languageService;
+		private readonly ILanguageService _languageService;
 		private readonly IMapper _languageMapper;
 
-		public LanguageController(LanguageService languageService, IMapper mapper)
+		public LanguageController(ILanguageService languageService, IMapper mapper)
 		{
 			this._languageService = languageService;
 			this._languageMapper = mapper;

@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using DevHive.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using System;
@@ -7,20 +6,20 @@ using DevHive.Web.Models.Post.Post;
 using DevHive.Services.Models.Post.Post;
 using DevHive.Web.Models.Post.Comment;
 using DevHive.Services.Models.Post.Comment;
-using DevHive.Common.Models.Misc;
 using Microsoft.AspNetCore.Authorization;
+using DevHive.Services.Interfaces;
 
 namespace DevHive.Web.Controllers
 {
-	[ApiController]
+    [ApiController]
 	[Route("/api/[controller]")]
 	[Authorize(Roles = "User")]
 	public class PostController
 	{
-		private readonly PostService _postService;
+		private readonly IPostService _postService;
 		private readonly IMapper _postMapper;
 
-		public PostController(PostService postService, IMapper mapper)
+		public PostController(IPostService postService, IMapper mapper)
 		{
 			this._postService = postService;
 			this._postMapper = mapper;

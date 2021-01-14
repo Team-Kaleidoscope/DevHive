@@ -1,22 +1,21 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using DevHive.Data.Repositories;
+using DevHive.Services.Interfaces;
 using DevHive.Services.Models.Technology;
-using DevHive.Services.Services;
 using DevHive.Web.Models.Technology;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevHive.Web.Controllers
 {
-	[ApiController]
+    [ApiController]
 	[Route("/api/[controller]")]
 	public class TechnologyController
 	{
-		private readonly TechnologyService _technologyService;
+		private readonly ITechnologyService _technologyService;
 		private readonly IMapper _technologyMapper;
 
-		public TechnologyController(TechnologyService technologyService, IMapper mapper)
+		public TechnologyController(ITechnologyService technologyService, IMapper mapper)
 		{
 			this._technologyService = technologyService;
 			this._technologyMapper = mapper;

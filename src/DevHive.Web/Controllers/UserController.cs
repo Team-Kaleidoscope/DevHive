@@ -1,10 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using DevHive.Data.Repositories;
 using DevHive.Services.Models.Identity.User;
-using DevHive.Services.Options;
-using DevHive.Services.Services;
 using DevHive.Web.Models.Identity.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,18 +11,19 @@ using DevHive.Web.Models.Language;
 using DevHive.Services.Models.Language;
 using DevHive.Web.Models.Technology;
 using DevHive.Services.Models.Technology;
+using DevHive.Services.Interfaces;
 
 namespace DevHive.Web.Controllers
 {
-	[ApiController]
+    [ApiController]
 	[Route("/api/[controller]")]
 	[Authorize(Roles = "User")]
 	public class UserController : ControllerBase
 	{
-		private readonly UserService _userService;
+		private readonly IUserService _userService;
 		private readonly IMapper _userMapper;
 
-		public UserController(UserService userService, IMapper mapper)
+		public UserController(IUserService userService, IMapper mapper)
 		{
 			this._userService = userService;
 			this._userMapper = mapper;

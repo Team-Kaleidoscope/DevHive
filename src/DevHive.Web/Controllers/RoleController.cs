@@ -1,23 +1,22 @@
 using System.Threading.Tasks;
-using DevHive.Data.Repositories;
-using DevHive.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 using DevHive.Web.Models.Identity.Role;
 using AutoMapper;
 using System;
 using DevHive.Common.Models.Identity;
+using DevHive.Services.Interfaces;
 
 namespace DevHive.Web.Controllers
 {
-	[ApiController]
+    [ApiController]
 	[Route("/api/[controller]")]
 	//[Authorize(Roles = "Admin")]
 	public class RoleController
 	{
-		private readonly RoleService _roleService;
+		private readonly IRoleService _roleService;
 		private readonly IMapper _roleMapper;
 
-		public RoleController(RoleService roleService, IMapper mapper)
+		public RoleController(IRoleService roleService, IMapper mapper)
 		{
 			this._roleService = roleService;
 			this._roleMapper = mapper;
