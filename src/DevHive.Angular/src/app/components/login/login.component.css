@@ -15,3 +15,14 @@ form {
 .input-selection:nth-of-type(1) {
   margin-top: 1.2em;
 }
+
+.redirect-to-register {
+  color: var(--focus-color);
+  background-color: var(--bg-color);
+  border-color: var(--focus-color);
+}
+
+.redirect-to-register:hover {
+  border-color: black !important;
+  color: black;
+}

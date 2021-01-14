@@ -60,4 +60,7 @@
 		<hr>
 		<button class="submit-btn" type="submit">Submit</button>
 	</form>
+	<form [formGroup]="registerUserFormGroup" (ngSubmit)="onRedirectRegister()">
+		<button class="submit-btn redirect-to-register" type="submit">Already have an account? Login here</button>
+	</form>
 </div>

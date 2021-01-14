@@ -17,4 +17,7 @@
 		<hr>
 		<button class="submit-btn" type="submit">Submit</button>
 	</form>
+	<form [formGroup]="loginUserFormGroup" (ngSubmit)="onRedirectRegister()">
+		<button class="submit-btn redirect-to-register" type="submit">New to DevHive? Register instead</button>
+	</form>
 </div>

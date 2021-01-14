@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -12,7 +13,7 @@ export class RegisterComponent implements OnInit {
 
   private _title = 'Register';
 
-  constructor(private titleService: Title, private fb: FormBuilder) {
+  constructor(private titleService: Title, private fb: FormBuilder, private router: Router) {
     titleService.setTitle(this._title);
   }
 
@@ -57,6 +58,10 @@ export class RegisterComponent implements OnInit {
         'Content-Type': 'application/json'
       }
     }).then(response => response.json()).then(data => { console.log(data); });
+  }
+
+  onRedirectRegister(): void {
+    this.router.navigate(["/login"]);
   }
 
   get firstName() {

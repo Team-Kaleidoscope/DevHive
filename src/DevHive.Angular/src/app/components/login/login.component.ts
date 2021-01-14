@@ -46,4 +46,8 @@ export class LoginComponent implements OnInit {
     sessionStorage.setItem('UserCred', JSON.stringify(userCred));
     this.router.navigate(['/']);
   }
+
+  onRedirectRegister(): void {
+    this.router.navigate(['/register']);
+  }
 }
