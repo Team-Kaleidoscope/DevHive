@@ -75,7 +75,7 @@ namespace DevHive.Data.Repositories
 				.FirstOrDefaultAsync(x => x.Id == id);
 		}
 
-		public async Task<User> GetByUsername(string username)
+		public async Task<User> GetByUsernameAsync(string username)
 		{
 			return await this._context.Users
 				.Include(u => u.Roles)
@@ -119,7 +119,7 @@ namespace DevHive.Data.Repositories
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
 
-		public async Task<bool> EditUserLanguage(User user, Language oldLang, Language newLang)
+		public async Task<bool> EditUserLanguageAsync(User user, Language oldLang, Language newLang)
 		{
 			this._context.Update(user);
 
@@ -129,7 +129,7 @@ namespace DevHive.Data.Repositories
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
 
-		public async Task<bool> EditUserTechnologies(User user, Technology oldTech, Technology newTech)
+		public async Task<bool> EditUserTechnologiesAsync(User user, Technology oldTech, Technology newTech)
 		{
 			this._context.Update(user);
 

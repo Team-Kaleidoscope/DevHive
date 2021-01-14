@@ -50,7 +50,7 @@ namespace DevHive.Services.Services
 			if (!await this._userRepository.DoesUsernameExistAsync(loginModel.UserName))
 				throw new ArgumentException("Invalid username!");
 
-			User user = await this._userRepository.GetByUsername(loginModel.UserName);
+			User user = await this._userRepository.GetByUsernameAsync(loginModel.UserName);
 
 			if (user.PasswordHash != GeneratePasswordHash(loginModel.Password))
 				throw new ArgumentException("Incorrect password!");
@@ -276,7 +276,7 @@ namespace DevHive.Services.Services
 			string jwtUserName = this.GetClaimTypeValues("unique_name", jwt.Claims)[0];
 			List<string> jwtRoleNames = this.GetClaimTypeValues("role", jwt.Claims);
 
-			User user = await this._userRepository.GetByUsername(jwtUserName)
+			User user = await this._userRepository.GetByUsernameAsync(jwtUserName)
 				?? throw new ArgumentException("User does not exist!");
 
 			/* Username check, only when user isn't admin */

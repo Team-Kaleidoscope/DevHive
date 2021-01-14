@@ -101,7 +101,7 @@ namespace DevHive.Services.Services
 			return result;
 		}
 
-		//Validate	
+		//Validate
 		public async Task<bool> ValidateJwtForComment(Guid commentId, string rawTokenData)
 		{
 			Comment comment = await this._postRepository.GetCommentByIdAsync(commentId);
@@ -120,7 +120,7 @@ namespace DevHive.Services.Services
 			string jwtUserName = this.GetClaimTypeValues("unique_name", jwt.Claims)[0];
 			//List<string> jwtRoleNames = this.GetClaimTypeValues("role", jwt.Claims);
 
-			User user = await this._userRepository.GetByUsername(jwtUserName)
+			User user = await this._userRepository.GetByUsernameAsync(jwtUserName)
 				?? throw new ArgumentException("User does not exist!");
 
 			return user;

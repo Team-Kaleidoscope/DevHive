@@ -12,15 +12,15 @@ namespace DevHive.Data.Interfaces
 		Task<bool> AddLanguageToUserAsync(User user, Language language);
 		Task<bool> AddTechnologyToUserAsync(User user, Technology technology);
 
-		Task<User> GetByUsername(string username);
+		Task<User> GetByUsernameAsync(string username);
 		Language GetUserLanguage(User user, Language language);
 		IList<Language> GetUserLanguages(User user);
 		IList<Technology> GetUserTechnologies(User user);
 		Technology GetUserTechnology(User user, Technology technology);
 		IEnumerable<User> QueryAll();
 
-		Task<bool> EditUserLanguage(User user, Language oldLang, Language newLang);
-		Task<bool> EditUserTechnologies(User user, Technology oldTech, Technology newTech);
+		Task<bool> EditUserLanguageAsync(User user, Language oldLang, Language newLang);
+		Task<bool> EditUserTechnologiesAsync(User user, Technology oldTech, Technology newTech);
 
 		Task<bool> RemoveFriendAsync(User user, User friend);
 		Task<bool> RemoveLanguageFromUserAsync(User user, Language language);
