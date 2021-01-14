@@ -13,11 +13,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevHive.Common", "DevHive.C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevHive.Tests", "DevHive.Tests", "{8ED705F9-7038-472C-B53F-5B1480A74A37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevHive.Data.Tests", "DevHive.Tests\DevHive.Data.Tests\DevHive.Data.Tests.csproj", "{346876CE-2C9B-4538-BE82-EA2017F7D405}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevHive.Data.Tests", "DevHive.Tests\DevHive.Data.Tests\DevHive.Data.Tests.csproj", "{346876CE-2C9B-4538-BE82-EA2017F7D405}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevHive.Services.Tests", "DevHive.Tests\DevHive.Services.Tests\DevHive.Services.Tests.csproj", "{9BBB8A48-C5AF-4F35-925F-3404A74E47F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevHive.Services.Tests", "DevHive.Tests\DevHive.Services.Tests\DevHive.Services.Tests.csproj", "{9BBB8A48-C5AF-4F35-925F-3404A74E47F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevHive.Web.Tests", "DevHive.Tests\DevHive.Web.Tests\DevHive.Web.Tests.csproj", "{2574CDBE-CC99-4BF8-BF7F-34C131788036}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevHive.Web.Tests", "DevHive.Tests\DevHive.Web.Tests\DevHive.Web.Tests.csproj", "{2574CDBE-CC99-4BF8-BF7F-34C131788036}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2E5E3F99-7936-4F3B-974E-A98000D1564B}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -37,10 +37,10 @@ namespace DevHive.Web.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetById(Guid technologyId)
 		{
-			TechnologyServiceModel technologyServiceModel = await this._technologyService.GetTechnologyById(technologyId);
-			TechnologyWebModel technologyWebModel = this._technologyMapper.Map<TechnologyWebModel>(technologyServiceModel);
+			CreateTechnologyServiceModel createTechnologyServiceModel = await this._technologyService.GetTechnologyById(technologyId);
+			CreateTechnologyWebModel createTechnologyWebModel = this._technologyMapper.Map<CreateTechnologyWebModel>(createTechnologyServiceModel);
 
-			return new OkObjectResult(technologyWebModel);
+			return new OkObjectResult(createTechnologyWebModel);
 		}
 
 		[HttpPut]

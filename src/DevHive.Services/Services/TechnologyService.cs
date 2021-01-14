@@ -65,7 +65,6 @@ namespace DevHive.Services.Services
 		#endregion
 
 		#region Delete
-
 		public async Task<bool> DeleteTechnology(Guid technologyId)
 		{
 			if (!await this._technologyRepository.DoesTechnologyExistAsync(technologyId))

@@ -58,32 +58,23 @@ namespace DevHive.Services.Tests
 		[Test]
 		public void Create_ThrowsArgumentException_WhenEntityAlreadyExists()
 		{
-			Task.Run(async () =>
+			string exceptionMessage = "Technology already exists!";
+			string technologyName = "Gosho Trapov";
+
+			CreateTechnologyServiceModel createTechnologyServiceModel = new()
 			{
-				string expectedExceptionMessage = "Technology already exists!";
-				string technologyName = "Gosho Trapov";
+				Name = technologyName
+			};
+			Technology technology = new()
+			{
+				Name = technologyName
+			};
 
-				CreateTechnologyServiceModel createTechnologyServiceModel = new()
-				{
-					Name = technologyName
-				};
-				Technology technology = new()
-				{
-					Name = technologyName
-				};
+			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
 
-				this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.TechnologyService.Create(createTechnologyServiceModel));
 
-				try
-				{
-					await this.TechnologyService.Create(createTechnologyServiceModel);
-					Assert.Fail("Create does not throw exception when technology already exists");
-				}
-				catch (ArgumentException ex)
-				{
-					Assert.AreEqual(expectedExceptionMessage, ex.Message);
-				}
-			}).GetAwaiter().GetResult();
+			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}
 		#endregion
 
@@ -117,22 +108,13 @@ namespace DevHive.Services.Tests
 		[Test]
 		public void GetTechnologyById_ThrowsException_WhenTechnologyDoesNotExist()
 		{
-			Task.Run(async () =>
-			{
-				string exceptionMessage = "The technology does not exist";
-				Guid id = new Guid();
-				this.TechnologyRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<Technology>(null));
+			string exceptionMessage = "The technology does not exist";
+			Guid id = new Guid();
+			this.TechnologyRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<Technology>(null));
 
-				try
-				{
-					await this.TechnologyService.GetTechnologyById(id);
-					Assert.Fail("GetTechnologyById does not throw exception when technology does not exist");
-				}
-				catch (ArgumentException ex)
-				{
-					Assert.AreEqual(exceptionMessage, ex.Message, "Exception messege is nto correct");
-				}
-			}).GetAwaiter().GetResult();
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.TechnologyService.GetTechnologyById(id));
+
+			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}
 		#endregion
 
@@ -170,52 +152,34 @@ namespace DevHive.Services.Tests
 		[Test]
 		public void UpdateTechnology_ThrowsException_WhenTechnologyDoesNotExist()
 		{
-			Task.Run(async () =>
+			string exceptionMessage = "Technology does not exist!";
+			Guid id = new Guid();
+			UpdateTechnologyServiceModel updateTechnologyServiceModel = new UpdateTechnologyServiceModel
 			{
-				string exceptionMessage = "Technology does not exist!";
-				Guid id = new Guid();
-				UpdateTechnologyServiceModel updateTechnologyServiceModel = new UpdateTechnologyServiceModel
-				{
-				};
+			};
 
-				this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(false));
 
-				try
-				{
-					await this.TechnologyService.UpdateTechnology(id, updateTechnologyServiceModel);
-					Assert.Fail("UpdateTechnology does not throw exception when technology does not exist");
-				}
-				catch (ArgumentException ex)
-				{
-					Assert.AreEqual(exceptionMessage, ex.Message, "Exception Message is not correct");
-				}
-			}).GetAwaiter().GetResult();
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.TechnologyService.UpdateTechnology(id, updateTechnologyServiceModel));
+
+			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}
 
 		[Test]
 		public void UpdateTechnology_ThrowsException_WhenTechnologyNameAlreadyExists()
 		{
-			Task.Run(async () =>
+			string exceptionMessage = "Technology name already exists!";
+			Guid id = new Guid();
+			UpdateTechnologyServiceModel updateTechnologyServiceModel = new UpdateTechnologyServiceModel
 			{
-				string exceptionMessage = "Technology name already exists!";
-				Guid id = new Guid();
-				UpdateTechnologyServiceModel updateTechnologyServiceModel = new UpdateTechnologyServiceModel
-				{
-				};
+			};
 
-				this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-				this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
+			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
 
-				try
-				{
-					await this.TechnologyService.UpdateTechnology(id, updateTechnologyServiceModel);
-					Assert.Fail("UpdateTechnology does not throw exception when technology name already exist");
-				}
-				catch (ArgumentException ex)
-				{
-					Assert.AreEqual(exceptionMessage, ex.Message, "Exception Message is not correct");
-				}
-			}).GetAwaiter().GetResult();
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.TechnologyService.UpdateTechnology(id, updateTechnologyServiceModel));
+
+			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}
 		#endregion
 
@@ -244,23 +208,14 @@ namespace DevHive.Services.Tests
 		[Test]
 		public void DeleteTechnology_ThrowsException_WhenTechnologyDoesNotExist()
 		{
-			Task.Run(async () =>
-			{
-				string exceptionMessage = "Technology does not exist!";
-				Guid id = new Guid();
+			string exceptionMessage = "Technology does not exist!";
+			Guid id = new Guid();
 
-				this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(false));
 
-				try
-				{
-					await this.TechnologyService.DeleteTechnology(id);
-					Assert.Fail("DeleteTechnology does not throw exception when technology does not exist");
-				}
-				catch (ArgumentException ex)
-				{
-					Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
-				}
-			}).GetAwaiter().GetResult();
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.TechnologyService.DeleteTechnology(id));
+
+			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}
 		#endregion
 		//Task.Run(async () =>
