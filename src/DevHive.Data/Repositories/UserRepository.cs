@@ -129,7 +129,7 @@ namespace DevHive.Data.Repositories
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
 
-		public async Task<bool> EditUserTechnologiesAsync(User user, Technology oldTech, Technology newTech)
+		public async Task<bool> EditUserTechnologyAsync(User user, Technology oldTech, Technology newTech)
 		{
 			this._context.Update(user);
 

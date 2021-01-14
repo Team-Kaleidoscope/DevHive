@@ -20,7 +20,7 @@ namespace DevHive.Data.Interfaces
 		IEnumerable<User> QueryAll();
 
 		Task<bool> EditUserLanguageAsync(User user, Language oldLang, Language newLang);
-		Task<bool> EditUserTechnologiesAsync(User user, Technology oldTech, Technology newTech);
+		Task<bool> EditUserTechnologyAsync(User user, Technology oldTech, Technology newTech);
 
 		Task<bool> RemoveFriendAsync(User user, User friend);
 		Task<bool> RemoveLanguageFromUserAsync(User user, Language language);
