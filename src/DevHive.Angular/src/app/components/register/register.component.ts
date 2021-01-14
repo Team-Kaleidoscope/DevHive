@@ -44,20 +44,24 @@ export class RegisterComponent implements OnInit {
     this.registerUserFormGroup.valueChanges.subscribe(console.log);
   }
 
-  onSubmit(): void {
-    fetch('http://localhost:5000/api/User/register', {
+  async onSubmit(): Promise<void> {
+    const response = await fetch('http://localhost:5000/api/User/register', {
       method: 'POST',
-      body: `{
-               "UserName": "${this.registerUserFormGroup.get('username')?.value}",
-               "Email": "${this.registerUserFormGroup.get('email')?.value}",
-               "FirstName": "${this.registerUserFormGroup.get('firstName')?.value}",
-               "LastName": "${this.registerUserFormGroup.get('lastName')?.value}",
-               "Password": "${this.registerUserFormGroup.get('password')?.value}"
-      }`,
+      body: JSON.stringify({
+        UserName: this.registerUserFormGroup.get('username')?.value,
+        Email: this.registerUserFormGroup.get('email')?.value,
+        FirstName: this.registerUserFormGroup.get('firstName')?.value,
+        LastName: this.registerUserFormGroup.get('lastName')?.value,
+        Password: this.registerUserFormGroup.get('password')?.value
+      }),
       headers: {
         'Content-Type': 'application/json'
       }
-    }).then(response => response.json()).then(data => { console.log(data); });
+    });
+    const userCred: string = await response.json();
+
+    sessionStorage.setItem('UserCred', JSON.stringify(userCred));
+    this.router.navigate(['/']);
   }
 
   onRedirectRegister(): void {
