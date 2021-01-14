@@ -1,5 +1,7 @@
+using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
 using DevHive.Data.Repositories;
+using DevHive.Services.Interfaces;
 using DevHive.Services.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,17 +11,17 @@ namespace DevHive.Web.Configurations.Extensions
 	{
 		public static void DependencyInjectionConfiguration(this IServiceCollection services)
 		{
-			services.AddTransient<LanguageRepository>();
-			services.AddTransient<RoleRepository>();
-			services.AddTransient<TechnologyRepository>();
-			services.AddTransient<UserRepository>();
-			services.AddTransient<PostRepository>();
+			services.AddScoped<ILanguageRepository, LanguageRepository>();
+			services.AddScoped<IRoleRepository, RoleRepository>();
+			services.AddScoped<ITechnologyRepository, TechnologyRepository>();
+			services.AddScoped<IUserRepository, UserRepository>();
+			services.AddScoped<IPostRepository, PostRepository>();
 
-			services.AddTransient<LanguageService>();
-			services.AddTransient<RoleService>();
-			services.AddTransient<TechnologyService>();
-			services.AddTransient<UserService>();
-			services.AddTransient<PostService>();
+			services.AddScoped<ILanguageService, LanguageService>();
+			services.AddScoped<IRoleService, RoleService>();
+			services.AddScoped<ITechnologyService, TechnologyService>();
+			services.AddScoped<IUserService, UserService>();
+			services.AddScoped<IPostService, PostService>();
 		}
 	}
 }
