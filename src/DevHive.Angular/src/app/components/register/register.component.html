@@ -1,52 +1,63 @@
 <div id="content">
-	<h1 class="title">Register</h1>
+	<div class="title">Register</div>
 
 	<form [formGroup]="registerUserFormGroup" (ngSubmit)="onSubmit()">
 		<hr>
 		<!-- Value: {{ registerUserFormGroup.value | json }}
 		<hr> -->
 
-		<mat-form-field class="firstNameField">
-			<mat-label>First Name*</mat-label>
-			<input matInput placeholder="Goshko, is that u?" formControlName="firstName">
+		<div class="input-selection">
+			<input type="text" placeholder="Goshko, is that u?" class="input-field" formControlName="firstName" required>
+			<label class="input-field-label">First Name</label>
 
-			<mat-error *ngIf="registerUserFormGroup.get('firstName')?.hasError('required')">* This is required</mat-error>
-			<mat-error *ngIf="firstName?.invalid">* Min length of 3</mat-error>
-		</mat-form-field>
-		
-		<mat-form-field class="lastNameField">
-			<mat-label>Last Name*</mat-label>
-			<input matInput placeholder="Trapov? Really??" formControlName="lastName">
-			
-			<mat-error *ngIf="registerUserFormGroup.get('lastName')?.hasError('required')">* This is required</mat-error>
-			<mat-error *ngIf="lastName?.invalid">* Min length of 3</mat-error>
-		</mat-form-field>
-		
-		<mat-form-field class="usernameField">
-			<mat-label>Username*</mat-label>
-			<input matInput placeholder="Think of something cool to flex on other kids" formControlName="username">
+			<div class="input-errors">
+				<label *ngIf="registerUserFormGroup.get('firstName')?.hasError('required')" class="error">*This is required</label>
+				<label *ngIf="firstName?.invalid" class="error">*Minimum length of 3</label>
+			</div>
+		</div>
 
-			<mat-error *ngIf="username?.invalid">* Min length of 3</mat-error>
-			<mat-error *ngIf="registerUserFormGroup.get('username')?.hasError('required')">* This is required</mat-error>
-		</mat-form-field>
-		
-		<mat-form-field class="emailField">
-			<mat-label>Email*</mat-label>
-			<input matInput placeholder="You expect an email joke? I have none, mail me one" formControlName="email">
+		<div class="input-selection">
+			<input type="text" placeholder="Trapov? Really??" class="input-field" formControlName="lastName" required>
+			<label class="input-field-label">Last Name</label>
 
-			<mat-error *ngIf="email?.invalid">* You dummy, enter @</mat-error>
-			<mat-error *ngIf="registerUserFormGroup.get('email')?.hasError('required')">* This is required</mat-error>
-		</mat-form-field>
-		
-		<mat-form-field class="passwordField">
-			<mat-label>Password*</mat-label>
-			<input matInput type="password" placeholder="Make sure it's long & strong(just like my d***)" formControlName="password">
+			<div class="input-errors">
+				<label *ngIf="registerUserFormGroup.get('lastName')?.hasError('required')" class="error">*This is required</label>
+				<label *ngIf="lastName?.invalid" class="error">*Minimum length of 3</label>
+			</div>
+		</div>
 
-			<mat-hint align="end">You must have at least one number</mat-hint>
-			<mat-error *ngIf="password?.invalid">* Min length of 5</mat-error>
-			<mat-error *ngIf="registerUserFormGroup.get('password')?.hasError('required')">* This is required</mat-error>
-		</mat-form-field>
+		<div class="input-selection">
+			<input type="text" placeholder="Think of something cool to flex on other kids" class="input-field" formControlName="username" required>
+			<label class="input-field-label">Username</label>
+
+			<div class="input-errors">
+				<label *ngIf="registerUserFormGroup.get('username')?.hasError('required')" class="error">*This is required</label>
+				<label *ngIf="username?.invalid" class="error">*Minimum length of 3</label>
+			</div>
+		</div>
+
+		<div class="input-selection">
+			<input type="text" placeholder="You expect an email joke? I have none, mail me one" class="input-field" formControlName="email" required>
+			<label class="input-field-label">Email</label>
+
+			<div class="input-errors">
+				<label *ngIf="registerUserFormGroup.get('email')?.hasError('required')" class="error">*This is required</label>
+				<label *ngIf="email?.invalid" class="error">*Invalid email</label>
+			</div>
+		</div>
+
+		<div class="input-selection">
+			<input type="password" placeholder="Make sure it's long & strong (just like my d***)" class="input-field" formControlName="password" required>
+			<label class="input-field-label">Password</label>
+
+			<div class="input-errors">
+				<label *ngIf="registerUserFormGroup.get('password')?.hasError('required')" class="error">*This is required</label>
+				<label *ngIf="password?.invalid" class="error">*Minimum length of 3</label>
+				<!-- <mat&#45;hint align="end">You must have at least one number</mat&#45;hint> -->
+			</div>
+		</div>
+
 		<hr>
-		<button mat-button class="submit-btn" type="submit">Submit</button>
+		<button class="submit-btn" type="submit">Submit</button>
 	</form>
 </div>

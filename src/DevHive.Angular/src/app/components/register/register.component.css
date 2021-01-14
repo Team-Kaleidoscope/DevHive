@@ -1,52 +1,19 @@
-#content {
-	height: 100%;
-	max-width: 25%;
-	margin: auto;
-	margin-top: 10%;
+/* A lot of stuff are moved to the global styles! */
 
-	display: flex;
-	flex-wrap: nowrap;
-	flex-flow: column;
+* {
+  transition: 0.2s;
+}
+
+form {
+  width: 100%;
 }
 
 #content hr {
-	width: 100%;
-	border: 1px solid black;
-	box-sizing: border-box;
-	margin-top: 2%;
-	margin-bottom: 2%;
+  width: 100%;
+  border: 1px solid black;
+  box-sizing: border-box;
 }
 
-#content mat-form-field {
-	width: 100%;
-}
-
-.title {
-	text-align: center;
-	font-size: 250%;
-	font-weight: bold;
-}
-
-form :nth-last-child(3) {
-	padding-bottom: 1%;
-}
-
-.submit-btn {
-	width: 100%;
-	background-color: black;
-	color: white;
-	text-align: center;
-	margin-top: 1%;
-	
-	border-radius: 10px;
-}
-
-.submit-btn:hover {
-	cursor: pointer;
-	border-color: darkgrey;
-	background-color: darkgrey;
-}
-
-.submit-btn:active {
-	transform: scale(0.9);
+.input-selection:nth-of-type(1) {
+  margin-top: 1.2em;
 }

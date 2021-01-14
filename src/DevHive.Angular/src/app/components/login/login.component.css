@@ -1,19 +1,4 @@
-#content {
-	height: 100%;
-  max-width: 20em;
-	margin-left: auto;
-	margin-right: auto;
 
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
-}
-
-#title {
-	font-size: 2em;
-	font-weight: bold;
-}
 
 #content input[type=text], #content #submit-btn {
 	border: 2px solid black;

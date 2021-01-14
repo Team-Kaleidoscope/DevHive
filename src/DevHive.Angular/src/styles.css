@@ -3,6 +3,7 @@
 
 :root {
   --bg-color: white;
+  --focus-color: forestgreen;
 }
 
 html, body {
@@ -17,6 +18,21 @@ input:focus, button:focus {
   outline: 0;
 }
 
+#content { /* Used for the login and register pages */
+  height: 100%;
+  max-width: 20em;
+  box-sizing: border-box;
+  border: .5em solid var(--bg-color);
+
+  margin-left: auto;
+  margin-right: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
 .rounded-border {
   border: 2px solid black;
   border-radius: .6em;
@@ -26,4 +42,147 @@ input:focus, button:focus {
 .round-image {
   border-radius: 50%;
   object-fit: cover;
+}
+
+.title {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.error {
+  color: red;
+}
+
+/* Inputs, the type found in login and register */
+
+.input-selection {
+  position: relative;
+  margin-top: 0.7em;
+}
+
+  /* Don't show the placeholder when the label is on top
+   */
+.input-selection .input-field::-webkit-input-placeholder {
+  opacity: 0;
+}
+
+.input-field {
+  width: 100%;
+
+  border: 0;
+  border-bottom: 1px solid grey;
+  box-sizing: border-box;
+
+  margin-bottom: 0.5em;
+  padding: 0.4em;
+  padding-left: 0;
+
+  font-size: inherit;
+}
+
+.input-field-label {
+  width: inherit;
+  height: inherit;
+  position: absolute;
+  left: 0;
+
+  margin-top: 0.4em;
+  color: grey;
+}
+
+  /* When hovering, typing or having typed something in an input,
+   * make the label smaller, color it and then move it up
+   */
+.input-selection:hover > .input-field-label ,
+.input-selection > input:not(:placeholder-shown) + .input-field-label ,
+.input-selection > input:focus + .input-field-label {
+  font-size: 0.7em;
+  color: var(--focus-color);
+  transform: translate(0, -1.2em);
+}
+
+  /* Show the placeholder, when you've hovered or
+   * focused (typing in) on the input-field
+   */
+.input-selection:hover > .input-field::-webkit-input-placeholder,
+.input-selection > .input-field:focus::-webkit-input-placeholder {
+  opacity: 1;
+}
+
+  /* Make the underline thicker and change it's and the cursors's
+   * color when hovered or focused (typing in) on the input-field
+   */
+.input-selection:hover > .input-field,
+.input-field:focus {
+  border-color: var(--focus-color) !important;
+  caret-color: var(--focus-color);
+  border-width: 2px !important;
+  margin-top: -1px !important;
+}
+
+
+/* Input errors */
+
+.input-errors {
+  margin-top: -.8em;
+  font-size: 0.7em;
+
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+  /* Move the errors above the input when
+   * using the site on a small screen and
+   * add some space for them above the input
+   */
+@media screen and (max-width: 350px) {
+  .input-errors {
+    margin-top: -1.8em;
+  }
+  .input-selection {
+    margin-top: 1.6em;
+  }
+}
+
+.input-errors > .error {
+  margin-left: .3em;
+}
+
+.input-field:focus ~ .input-errors > .error {
+  opacity: 1 !important;
+}
+
+.input-field:placeholder-shown ~ .input-errors > .error {
+  opacity: 0;
+}
+
+/* Submit button */
+
+.submit-btn {
+  width: 100%;
+  color: white;
+  background-color: black;
+
+  border: 2px solid black;
+  border-radius: 0.4em;
+  box-sizing: border-box;
+
+  font-size: 0.8em;
+  text-align: center;
+
+  margin-top: 0.5em;
+  padding: 0.3em;
+}
+
+.submit-btn:hover {
+  cursor: pointer;
+  color: var(--focus-color);
+  background-color: white;
+  border-color: var(--focus-color) !important;
+}
+
+.submit-btn:active {
+  transition: 0s;
+  transform: scale(0.9);
 }
