@@ -7,11 +7,19 @@
 		<div class="input-selection">
 			<input type="text" placeholder="Username" class="input-field" formControlName="username" required>
 			<label class="input-field-label">Username</label>
+
+			<div class="input-errors">
+				<label *ngIf="loginUserFormGroup.get('username')?.errors?.required" class="error">*Required</label>
+			</div>
 		</div>
 
 		<div class="input-selection">
 			<input type="password" placeholder="Password" class="input-field" formControlName="password" required>
 			<label class="input-field-label">Password</label>
+
+			<div class="input-errors">
+				<label *ngIf="loginUserFormGroup.get('password')?.errors?.required" class="error">*Required</label>
+			</div>
 		</div>
 
 		<hr>

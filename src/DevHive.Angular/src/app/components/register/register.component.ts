@@ -37,7 +37,8 @@ export class RegisterComponent implements OnInit {
       ]),
       password: new FormControl('', [
         Validators.required,
-        // Add password pattern
+        Validators.minLength(3),
+        Validators.pattern('.*[0-9].*') // Check if password contains atleast one number
       ]),
     });
 
@@ -45,6 +46,8 @@ export class RegisterComponent implements OnInit {
   }
 
   async onSubmit(): Promise<void> {
+    // TODO: add a check for form data validity
+
     const response = await fetch('http://localhost:5000/api/User/register', {
       method: 'POST',
       body: JSON.stringify({
@@ -60,12 +63,13 @@ export class RegisterComponent implements OnInit {
     });
     const userCred: string = await response.json();
 
+    // TODO: don't redirect if there is an error response
     sessionStorage.setItem('UserCred', JSON.stringify(userCred));
     this.router.navigate(['/']);
   }
 
   onRedirectRegister(): void {
-    this.router.navigate(["/login"]);
+    this.router.navigate(['/login']);
   }
 
   get firstName() {

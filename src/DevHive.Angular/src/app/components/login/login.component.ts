@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
@@ -19,14 +19,12 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginUserFormGroup = this.fb.group({
-      username: ['', [
-        Validators.required,
-        Validators.minLength(3)
-      ]],
-      password: ['', [
-        Validators.required,
-        // Add password pattern
-      ]]
+      username: new FormControl('', [
+        Validators.required
+      ]),
+      password: new FormControl('', [
+        Validators.required
+      ])
     });
   }
 
@@ -49,5 +47,13 @@ export class LoginComponent implements OnInit {
 
   onRedirectRegister(): void {
     this.router.navigate(['/register']);
+  }
+
+  get username() {
+    return this.loginUserFormGroup.get('username');
+  }
+
+  get password() {
+    return this.loginUserFormGroup.get('password');
   }
 }

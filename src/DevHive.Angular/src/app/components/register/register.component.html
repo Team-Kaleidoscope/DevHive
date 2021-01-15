@@ -11,8 +11,8 @@
 			<label class="input-field-label">First Name</label>
 
 			<div class="input-errors">
-				<label *ngIf="registerUserFormGroup.get('firstName')?.hasError('required')" class="error">*This is required</label>
-				<label *ngIf="firstName?.invalid" class="error">*Minimum length of 3</label>
+				<label *ngIf="registerUserFormGroup.get('firstName')?.errors?.required" class="error">*Required</label>
+				<label *ngIf="registerUserFormGroup.get('firstName')?.errors?.minlength" class="error">*Minimum 3 characters</label>
 			</div>
 		</div>
 
@@ -21,8 +21,8 @@
 			<label class="input-field-label">Last Name</label>
 
 			<div class="input-errors">
-				<label *ngIf="registerUserFormGroup.get('lastName')?.hasError('required')" class="error">*This is required</label>
-				<label *ngIf="lastName?.invalid" class="error">*Minimum length of 3</label>
+				<label *ngIf="registerUserFormGroup.get('lastName')?.errors?.required" class="error">*Required</label>
+				<label *ngIf="registerUserFormGroup.get('lastName')?.errors?.minlength" class="error">*Minimum 3 characters</label>
 			</div>
 		</div>
 
@@ -31,8 +31,8 @@
 			<label class="input-field-label">Username</label>
 
 			<div class="input-errors">
-				<label *ngIf="registerUserFormGroup.get('username')?.hasError('required')" class="error">*This is required</label>
-				<label *ngIf="username?.invalid" class="error">*Minimum length of 3</label>
+				<label *ngIf="registerUserFormGroup.get('username')?.errors?.required" class="error">*Required</label>
+				<label *ngIf="registerUserFormGroup.get('username')?.errors?.minlength" class="error">*Minimum 3 characters</label>
 			</div>
 		</div>
 
@@ -41,8 +41,8 @@
 			<label class="input-field-label">Email</label>
 
 			<div class="input-errors">
-				<label *ngIf="registerUserFormGroup.get('email')?.hasError('required')" class="error">*This is required</label>
-				<label *ngIf="email?.invalid" class="error">*Invalid email</label>
+				<label *ngIf="registerUserFormGroup.get('email')?.errors?.required" class="error">*Required</label>
+				<label *ngIf="registerUserFormGroup.get('email')?.errors?.email" class="error">*Invalid email</label>
 			</div>
 		</div>
 
@@ -51,9 +51,9 @@
 			<label class="input-field-label">Password</label>
 
 			<div class="input-errors">
-				<label *ngIf="registerUserFormGroup.get('password')?.hasError('required')" class="error">*This is required</label>
-				<label *ngIf="password?.invalid" class="error">*Minimum length of 3</label>
-				<!-- <mat&#45;hint align="end">You must have at least one number</mat&#45;hint> -->
+				<label *ngIf="registerUserFormGroup.get('password')?.errors?.required" class="error">*Required</label>
+				<label *ngIf="registerUserFormGroup.get('password')?.errors?.minlength" class="error">*Minimum 3 characters</label>
+				<label *ngIf="registerUserFormGroup.get('password')?.errors?.pattern" class="error">*At least 1 number</label>
 			</div>
 		</div>
 
