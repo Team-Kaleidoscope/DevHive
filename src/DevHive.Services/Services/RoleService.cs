@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Common.Models.Identity;
-using DevHive.Data.Interfaces;
+using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
 using DevHive.Services.Interfaces;
 

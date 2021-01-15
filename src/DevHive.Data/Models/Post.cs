@@ -1,10 +1,11 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using DevHive.Data.Interfaces.Models;
 
 namespace DevHive.Data.Models
 {
 	[Table("Posts")]
-	public class Post
+	public class Post : IPost
 	{
 		public Guid Id { get; set; }
 

@@ -1,7 +1,9 @@
 using System;
+using DevHive.Data.Interfaces.Models;
+
 namespace DevHive.Data.Models
 {
-	public class Language : IModel
+	public class Language : ILanguage
 	{
 		public Guid Id { get; set; }
 		public string Name { get; set; }

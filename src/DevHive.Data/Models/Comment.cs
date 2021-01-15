@@ -1,7 +1,9 @@
 using System;
+using DevHive.Data.Interfaces.Models;
+
 namespace DevHive.Data.Models
 {
-	public class Comment : IModel
+	public class Comment : IComment
 	{
 		public Guid Id { get; set; }
 		public Guid IssuerId { get; set; }

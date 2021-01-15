@@ -8,7 +8,7 @@ using DevHive.Services.Models.Post.Post;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using DevHive.Services.Interfaces;
-using DevHive.Data.Interfaces;
+using DevHive.Data.Interfaces.Repositories;
 
 namespace DevHive.Services.Services
 {

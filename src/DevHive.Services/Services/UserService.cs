@@ -15,7 +15,7 @@ using DevHive.Services.Models.Language;
 using DevHive.Services.Interfaces;
 using DevHive.Services.Models.Technology;
 using DevHive.Data.Repositories;
-using DevHive.Data.Interfaces;
+using DevHive.Data.Interfaces.Repositories;
 
 namespace DevHive.Services.Services
 {
