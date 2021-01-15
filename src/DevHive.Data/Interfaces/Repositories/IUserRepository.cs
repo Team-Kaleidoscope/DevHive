@@ -8,7 +8,7 @@ namespace DevHive.Data.Interfaces.Repositories
 {
 	public interface IUserRepository : IRepository<User>
 	{
-		Task<bool> AddFriendAsync(User user, User friend);
+		Task<bool> AddFriendToUserAsync(User user, User friend);
 		Task<bool> AddLanguageToUserAsync(User user, Language language);
 		Task<bool> AddTechnologyToUserAsync(User user, Technology technology);
 

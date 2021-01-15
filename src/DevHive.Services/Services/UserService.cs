@@ -105,7 +105,7 @@ namespace DevHive.Services.Services
 			User friend = await this._userRepository.GetByIdAsync(friendId);
 
 			return user != default(User) && friend != default(User) ?
-				await this._userRepository.AddFriendAsync(user, friend) :
+				await this._userRepository.AddFriendToUserAsync(user, friend) :
 				throw new ArgumentException("Invalid user!");
 		}
 

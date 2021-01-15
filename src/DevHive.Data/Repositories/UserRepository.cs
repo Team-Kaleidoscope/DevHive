@@ -28,7 +28,7 @@ namespace DevHive.Data.Repositories
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
 
-		public async Task<bool> AddFriendAsync(User user, User friend)
+		public async Task<bool> AddFriendToUserAsync(User user, User friend)
 		{
 			this._context.Update(user);
 			user.Friends.Add(friend);
