@@ -11,7 +11,7 @@ using DevHive.Services.Interfaces;
 
 namespace DevHive.Web.Controllers
 {
-    [ApiController]
+	[ApiController]
 	[Route("/api/[controller]")]
 	[Authorize(Roles = "User")]
 	public class PostController

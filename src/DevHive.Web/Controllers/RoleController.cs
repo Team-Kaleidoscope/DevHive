@@ -8,7 +8,7 @@ using DevHive.Services.Interfaces;
 
 namespace DevHive.Web.Controllers
 {
-    [ApiController]
+	[ApiController]
 	[Route("/api/[controller]")]
 	//[Authorize(Roles = "Admin")]
 	public class RoleController

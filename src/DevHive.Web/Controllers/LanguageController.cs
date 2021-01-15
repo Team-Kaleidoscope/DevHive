@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevHive.Web.Controllers
 {
-    [ApiController]
+	[ApiController]
 	[Route("/api/[controller]")]
 	public class LanguageController
 	{
