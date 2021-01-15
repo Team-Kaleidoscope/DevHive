@@ -54,6 +54,11 @@
   padding: .5em;
 }
 
+#profile-bar-name {
+  text-align: center;
+  margin-bottom: .5em;
+}
+
 /* Top bar */
 
 #top-bar {

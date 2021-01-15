@@ -2,10 +2,10 @@
 	<nav id="profile-bar" class="rounded-border">
 		<img id="profile-bar-profile-pic" class="round-image" src="assets/images/feed/profile-pic.png" alt=""/>
 		<div id="profile-bar-name">
-			Static
+			{{ user.firstName }} {{ user.lastName }}
 		</div>
 		<div id="profile-bar-username">
-			@static
+			@{{ user.userName }}
 		</div>
 	</nav>
 	<div id="feed-content">
