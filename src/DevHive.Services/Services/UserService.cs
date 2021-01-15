@@ -55,7 +55,7 @@ namespace DevHive.Services.Services
 			if (user.PasswordHash != GeneratePasswordHash(loginModel.Password))
 				throw new ArgumentException("Incorrect password!");
 
-			return new TokenModel(WriteJWTSecurityToken(user.UserName, user.Roles));
+			return new TokenModel(WriteJWTSecurityToken(user.Id, user.Roles));
 		}
 
 		public async Task<TokenModel> RegisterUser(RegisterServiceModel registerModel)
@@ -79,7 +79,7 @@ namespace DevHive.Services.Services
 
 			await this._userRepository.AddAsync(user);
 
-			return new TokenModel(WriteJWTSecurityToken(user.UserName, user.Roles));
+			return new TokenModel(WriteJWTSecurityToken(user.Id, user.Roles));
 		}
 		#endregion
 
@@ -273,16 +273,16 @@ namespace DevHive.Services.Services
 			// There is authorization name in the beginning, i.e. "Bearer eyJh..."
 			var jwt = new JwtSecurityTokenHandler().ReadJwtToken(rawTokenData.Remove(0, 7));
 
-			string jwtUserName = this.GetClaimTypeValues("unique_name", jwt.Claims)[0];
+			Guid jwtUserID = new Guid(this.GetClaimTypeValues("ID", jwt.Claims)[0]);
 			List<string> jwtRoleNames = this.GetClaimTypeValues("role", jwt.Claims);
 
-			User user = await this._userRepository.GetByUsernameAsync(jwtUserName)
+			User user = await this._userRepository.GetByIdAsync(jwtUserID)
 				?? throw new ArgumentException("User does not exist!");
 
-			/* Username check, only when user isn't admin */
+			/* Check if user is trying to do something to himself, unless he's an admin */
 
 			if (!jwtRoleNames.Contains(Role.AdminRole))
-				if (!this._userRepository.DoesUserHaveThisUsername(id, jwtUserName))
+				if (user.Id != id)
 					return false;
 
 			/* Check roles */
@@ -312,13 +312,13 @@ namespace DevHive.Services.Services
 			return toReturn;
 		}
 
-		private string WriteJWTSecurityToken(string userName, IList<Role> roles)
+		private string WriteJWTSecurityToken(Guid userId, IList<Role> roles)
 		{
 			byte[] signingKey = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
 			List<Claim> claims = new()
 			{
-				new Claim(ClaimTypes.Name, userName),
+				new Claim("ID", $"{userId}"),
 			};
 
 			foreach (var role in roles)
