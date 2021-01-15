@@ -11,6 +11,6 @@ namespace DevHive.Data.Models
 		public const string DefaultRole = "User";
 		public const string AdminRole = "Admin";
 
-		public virtual List<User> Users { get; set; }
+		public List<User> Users { get; set; }
 	}
 }

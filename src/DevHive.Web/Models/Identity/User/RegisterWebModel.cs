@@ -7,6 +7,6 @@ namespace DevHive.Web.Models.Identity.User
 	{
 		[Required]
 		[GoodPassword]
-		public virtual string Password { get; set; }
+		public string Password { get; set; }
 	}
 }

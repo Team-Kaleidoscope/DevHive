@@ -24,7 +24,7 @@ namespace DevHive.Data.Models
 		/// </summary>
 		public IList<Technology> Technologies { get; set; }
 
-		public virtual IList<Role> Roles { get; set; } = new List<Role>();
+		public IList<Role> Roles { get; set; } = new List<Role>();
 
 		public IList<User> Friends { get; set; } = new List<User>();
 	}
