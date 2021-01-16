@@ -13,6 +13,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { FeedComponent } from './components/feed/feed.component';
 import { PostComponent } from './components/post/post.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { ProfileSettingsComponent } from './components/profile-settings/profile-settings.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { ProfileComponent } from './components/profile/profile.component';
     RegisterComponent,
     FeedComponent,
     PostComponent,
-    ProfileComponent
+    ProfileComponent,
+    ProfileSettingsComponent
   ],
   imports: [
     BrowserModule,
