@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
@@ -10,16 +10,15 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
+  private _title = 'Register';
   public registerUserFormGroup: FormGroup;
 
-  private _title = 'Register';
-
-  constructor(private titleService: Title, private fb: FormBuilder, private router: Router, private userService: UserService) {
-    titleService.setTitle(this._title);
+  constructor(private _titleService: Title, private _fb: FormBuilder, private _router: Router, private _userService: UserService) {
+    this._titleService.setTitle(this._title);
   }
 
   ngOnInit(): void {
-    this.registerUserFormGroup = this.fb.group({
+    this.registerUserFormGroup = this._fb.group({
       firstName: new FormControl('', [
         Validators.required,
         Validators.minLength(3)
@@ -47,31 +46,31 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.userService.registerUser(this.registerUserFormGroup);
-    this.router.navigate(['/']);
+    this._userService.registerUser(this.registerUserFormGroup);
+    this._router.navigate(['/']);
   }
 
   onRedirectRegister(): void {
-    this.router.navigate(['/login']);
+    this._router.navigate(['/login']);
   }
 
-  get firstName() {
+  get firstName(): AbstractControl | null  {
     return this.registerUserFormGroup.get('firstName');
   }
 
-  get lastName() {
+  get lastName(): AbstractControl | null  {
     return this.registerUserFormGroup.get('lastName');
   }
 
-  get username() {
+  get username(): AbstractControl | null  {
     return this.registerUserFormGroup.get('username');
   }
 
-  get email() {
+  get email(): AbstractControl | null {
     return this.registerUserFormGroup.get('email');
   }
 
-  get password() {
+  get password(): AbstractControl | null  {
     return this.registerUserFormGroup.get('password');
   }
 }

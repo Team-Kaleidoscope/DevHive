@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { UserService } from 'src/app/services/user.service';
@@ -10,16 +10,15 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  private _title = 'Login';
   loginUserFormGroup: FormGroup;
 
-  private _title = 'Login';
-
-  constructor(private titleService: Title, private fb: FormBuilder, private router: Router, private userService: UserService) {
-    titleService.setTitle(this._title);
+  constructor(private _titleService: Title, private _fb: FormBuilder, private _router: Router, private _userService: UserService) {
+    this._titleService.setTitle(this._title);
   }
 
   ngOnInit(): void {
-    this.loginUserFormGroup = this.fb.group({
+    this.loginUserFormGroup = this._fb.group({
       username: new FormControl('', [
         Validators.required
       ]),
@@ -30,19 +29,19 @@ export class LoginComponent implements OnInit {
   }
 
   async onSubmit(): Promise<void> {
-    this.userService.loginUser(this.loginUserFormGroup);
-    this.router.navigate(['/']);
+    this._userService.loginUser(this.loginUserFormGroup);
+    this._router.navigate(['/']);
   }
 
   onRedirectRegister(): void {
-    this.router.navigate(['/register']);
+    this._router.navigate(['/register']);
   }
 
-  get username() {
+  get username(): AbstractControl | null  {
     return this.loginUserFormGroup.get('username');
   }
 
-  get password() {
+  get password(): AbstractControl | null  {
     return this.loginUserFormGroup.get('password');
   }
 }

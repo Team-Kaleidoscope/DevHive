@@ -17,8 +17,8 @@ export class FeedComponent implements OnInit {
   public user: User;
   public posts: PostComponent[];
 
-  constructor(private titleService: Title, private router: Router, private userService: UserService) {
-    this.titleService.setTitle(this._title);
+  constructor(private _titleService: Title, private _router: Router, private _userService: UserService) {
+    this._titleService.setTitle(this._title);
   }
 
   ngOnInit(): void {
@@ -34,7 +34,7 @@ export class FeedComponent implements OnInit {
       // TODO: properly wait for it, before loading the page contents
       setTimeout(() =>
                  {
-                   this.user = this.userService.fetchUserFromSessionStorage();
+                   this.user = this._userService.fetchUserFromSessionStorage();
                  },
                  this._timeoutFetchData);
       setTimeout(() =>
@@ -43,7 +43,7 @@ export class FeedComponent implements OnInit {
                  },
                  this._timeoutFetchData + 100);
     } else {
-      this.router.navigate(['/login']);
+      this._router.navigate(['/login']);
     }
   }
 }
