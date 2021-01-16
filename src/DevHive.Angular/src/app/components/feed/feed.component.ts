@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { User } from 'src/models/identity/user';
 import { PostComponent } from '../post/post.component';
 import { UserService } from '../../services/user.service';
+import { AppConstants } from 'src/app/app-constants.module';
 
 @Component({
   selector: 'app-feed',
@@ -12,7 +13,6 @@ import { UserService } from '../../services/user.service';
 })
 export class FeedComponent implements OnInit {
   private _title = 'Feed';
-  private _timeoutFetchData = 500;
   public dataArrived = false;
   public user: User;
   public posts: PostComponent[];
@@ -32,16 +32,8 @@ export class FeedComponent implements OnInit {
     if (sessionStorage.getItem('UserCred')) {
       // Workaround for waiting the fetch response
       // TODO: properly wait for it, before loading the page contents
-      setTimeout(() =>
-                 {
-                   this.user = this._userService.fetchUserFromSessionStorage();
-                 },
-                 this._timeoutFetchData);
-      setTimeout(() =>
-                 {
-                   this.dataArrived = true;
-                 },
-                 this._timeoutFetchData + 100);
+      setTimeout(() => { this.user = this._userService.fetchUserFromSessionStorage(); }, AppConstants.FETCH_TIMEOUT);
+      setTimeout(() => { this.dataArrived = true; }, AppConstants.FETCH_TIMEOUT + 100);
     } else {
       this._router.navigate(['/login']);
     }

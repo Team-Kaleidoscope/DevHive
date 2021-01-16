@@ -5,6 +5,7 @@ import jwt_decode from 'jwt-decode';
 import { IJWTPayload } from '../../interfaces/jwt-payload';
 import { IUserCredentials } from '../../interfaces/user-credentials';
 import { FormGroup } from '@angular/forms';
+import { AppConstants } from 'src/app/app-constants.module';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class UserService {
     const fetchedUser: User = new User(Guid.createEmpty(), '', '', '', '');
 
     // Fetch the data and assign it to fetchedUser
-    fetch(`http://localhost:5000/api/User?Id=${userId}`, {
+    fetch(AppConstants.API_USER_URL + '?Id=' + userId, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -39,7 +40,7 @@ export class UserService {
   // TODO: make return bool when the response is an error
   loginUser(loginUserFormGroup: FormGroup): void {
     // Save the fetch reponse in the sessionStorage
-    fetch('http://localhost:5000/api/User/login', {
+    fetch(AppConstants.API_USER_LOGIN_URL, {
       method: 'POST',
       body: JSON.stringify({
         UserName: loginUserFormGroup.get('username')?.value,
@@ -57,7 +58,7 @@ export class UserService {
     // TODO: add a check for form data validity
 
     // Like in login, save the fetch reponse in the sessionStorage
-    fetch('http://localhost:5000/api/User/register', {
+    fetch(AppConstants.API_USER_REGISTER_URL, {
       method: 'POST',
       body: JSON.stringify({
         UserName: registerUserFormGroup.get('username')?.value,
