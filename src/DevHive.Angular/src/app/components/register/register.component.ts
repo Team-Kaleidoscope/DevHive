@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -9,16 +10,15 @@ import { Router } from '@angular/router';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
+  private _title = 'Register';
   public registerUserFormGroup: FormGroup;
 
-  private _title = 'Register';
-
-  constructor(private titleService: Title, private fb: FormBuilder, private router: Router) {
-    titleService.setTitle(this._title);
+  constructor(private _titleService: Title, private _fb: FormBuilder, private _router: Router, private _userService: UserService) {
+    this._titleService.setTitle(this._title);
   }
 
   ngOnInit(): void {
-    this.registerUserFormGroup = this.fb.group({
+    this.registerUserFormGroup = this._fb.group({
       firstName: new FormControl('', [
         Validators.required,
         Validators.minLength(3)
@@ -45,50 +45,32 @@ export class RegisterComponent implements OnInit {
     this.registerUserFormGroup.valueChanges.subscribe(console.log);
   }
 
-  async onSubmit(): Promise<void> {
-    // TODO: add a check for form data validity
-
-    const response = await fetch('http://localhost:5000/api/User/register', {
-      method: 'POST',
-      body: JSON.stringify({
-        UserName: this.registerUserFormGroup.get('username')?.value,
-        Email: this.registerUserFormGroup.get('email')?.value,
-        FirstName: this.registerUserFormGroup.get('firstName')?.value,
-        LastName: this.registerUserFormGroup.get('lastName')?.value,
-        Password: this.registerUserFormGroup.get('password')?.value
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    const userCred: string = await response.json();
-
-    // TODO: don't redirect if there is an error response
-    sessionStorage.setItem('UserCred', JSON.stringify(userCred));
-    this.router.navigate(['/']);
+  onSubmit(): void {
+    this._userService.registerUser(this.registerUserFormGroup);
+    this._router.navigate(['/']);
   }
 
   onRedirectRegister(): void {
-    this.router.navigate(['/login']);
+    this._router.navigate(['/login']);
   }
 
-  get firstName() {
+  get firstName(): AbstractControl | null  {
     return this.registerUserFormGroup.get('firstName');
   }
 
-  get lastName() {
+  get lastName(): AbstractControl | null  {
     return this.registerUserFormGroup.get('lastName');
   }
 
-  get username() {
+  get username(): AbstractControl | null  {
     return this.registerUserFormGroup.get('username');
   }
 
-  get email() {
+  get email(): AbstractControl | null {
     return this.registerUserFormGroup.get('email');
   }
 
-  get password() {
+  get password(): AbstractControl | null  {
     return this.registerUserFormGroup.get('password');
   }
 }

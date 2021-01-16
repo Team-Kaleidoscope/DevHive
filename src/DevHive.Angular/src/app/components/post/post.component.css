@@ -1,7 +1,26 @@
 .post {
   display: flex;
-  width: inherit;
-  margin: .5em 0;
+  width: 95%;
+
+  margin: .5em auto;
+  box-sizing: border-box;
+  border: 2px solid var(--card-bg);
+  padding: .5em;
+  background-color: var(--card-bg);
+  border-radius: .6em;
+box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+  /* So the bottom shadow of the last element
+   * doesn't get cut off
+   */
+.post:nth-last-child(1) {
+  margin-bottom: 1.1em;
+}
+
+hr {
+  border: 1px solid black;
+  width: 90%;
 }
 
 /* Author */
@@ -43,22 +62,32 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-right: -.2em;
+  margin-right: -.1em;
 }
+
+.score {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
 
 .vote {
+  display: flex;
+  align-items: center;
   flex: 1;
-  background: white;
+
+  background: var(--card-bg);
   font-size: 1em;
+
+  border: 1px solid var(--card-bg);
   box-sizing: border-box;
-  border: 2px solid white;
-  border-radius: .3em;
-}
+  border-radius: .2em;
+
+  }
 
 .vote:hover {
-  background: lightgray;
-}
-
-.vote:active {
-  border-color: black;
+  border: 1px solid var(--focus-color);
+  color: var(--focus-color);
+  cursor: pointer;
 }

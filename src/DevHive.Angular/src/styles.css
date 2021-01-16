@@ -4,6 +4,7 @@
 :root {
   --bg-color: white;
   --focus-color: forestgreen;
+  --card-bg: white;
 }
 
 html, body {
@@ -12,6 +13,7 @@ html, body {
 }
 body {
   font: 21px sans-serif !important;
+  background-color: var(--bg-color);
 }
 
 input:focus, button:focus {
@@ -68,6 +70,7 @@ input:focus, button:focus {
 
 .input-field {
   width: 100%;
+  background-color: var(--bg-color);
 
   border: 0;
   border-bottom: 1px solid grey;

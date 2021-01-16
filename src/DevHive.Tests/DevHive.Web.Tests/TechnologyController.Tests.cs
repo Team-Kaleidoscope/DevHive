@@ -6,6 +6,7 @@ using DevHive.Web.Models.Technology;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using System;
 using System.Threading.Tasks;
 
 namespace DevHive.Web.Tests
@@ -13,6 +14,7 @@ namespace DevHive.Web.Tests
 	[TestFixture]
 	public class TechnologyControllerTests
 	{
+		const string NAME = "Gosho Trapov";
 		private Mock<ITechnologyService> TechnologyServiceMock { get; set; }
 		private Mock<IMapper> MapperMock { get; set; }
 		private TechnologyController TechnologyController { get; set; }
@@ -28,16 +30,14 @@ namespace DevHive.Web.Tests
 		#region Create
 		[Test]
 		public void Create_ReturnsOkObjectResult_WhenTechnologyIsSuccessfullyCreated()
-		{
-			string name = "Gosho Trapov";
-
+		{			
 			CreateTechnologyWebModel createTechnologyWebModel = new CreateTechnologyWebModel
 			{
-				Name = name
+				Name = NAME
 			};
 			CreateTechnologyServiceModel createTechnologyServiceModel = new CreateTechnologyServiceModel
 			{
-				Name = name
+				Name = NAME
 			};
 
 			this.MapperMock.Setup(p => p.Map<CreateTechnologyServiceModel>(It.IsAny<CreateTechnologyWebModel>())).Returns(createTechnologyServiceModel);
@@ -48,8 +48,135 @@ namespace DevHive.Web.Tests
 			Assert.IsInstanceOf<OkResult>(result);
 		}
 
+		[Test]
+		public void Create_ReturnsBadRequestObjectResult_WhenTechnologyIsNotCreatedSuccessfully()
+		{
+			CreateTechnologyWebModel createTechnologyWebModel = new CreateTechnologyWebModel
+			{
+				Name = NAME
+			};
+			CreateTechnologyServiceModel createTechnologyServiceModel = new CreateTechnologyServiceModel
+			{
+				Name = NAME
+			};
 
+			this.MapperMock.Setup(p => p.Map<CreateTechnologyServiceModel>(It.IsAny<CreateTechnologyWebModel>())).Returns(createTechnologyServiceModel);
+			this.TechnologyServiceMock.Setup(p => p.Create(It.IsAny<CreateTechnologyServiceModel>())).Returns(Task.FromResult(false));
+
+			IActionResult result = this.TechnologyController.Create(createTechnologyWebModel).Result;
+
+			Assert.IsInstanceOf<BadRequestObjectResult>(result);
+		}
 		#endregion
 
+		#region Read
+		[Test]
+		public void GetById_ReturnsTheThecnology_WhenItExists()
+		{
+			Guid id = new Guid();
+
+			CreateTechnologyServiceModel createTechnologyServiceModel = new CreateTechnologyServiceModel
+			{
+				Name = NAME
+			};
+			CreateTechnologyWebModel createTechnologyWebModel = new CreateTechnologyWebModel
+			{
+				Name = NAME
+			};
+
+			this.TechnologyServiceMock.Setup(p => p.GetTechnologyById(It.IsAny<Guid>())).Returns(Task.FromResult(createTechnologyServiceModel));
+			this.MapperMock.Setup(p => p.Map<CreateTechnologyWebModel>(It.IsAny<CreateTechnologyServiceModel>())).Returns(createTechnologyWebModel);
+
+			IActionResult result = this.TechnologyController.GetById(id).Result;
+
+			Assert.IsInstanceOf<OkObjectResult>(result);
+
+			OkObjectResult okObjectResult = result as OkObjectResult;
+			CreateTechnologyWebModel resultModel = okObjectResult.Value as Models.Technology.CreateTechnologyWebModel;
+
+			Assert.AreEqual(NAME, resultModel.Name);
+		}
+		#endregion
+
+		#region Update
+		[Test]
+		public void Update_ShouldReturnOkResult_WhenTechnologyIsUpdatedSuccessfully()
+		{
+			Guid id = new Guid();
+			UpdateTechnologyWebModel updateTechnologyWebModel = new UpdateTechnologyWebModel
+			{
+				Name = NAME
+			};
+			UpdateTechnologyServiceModel updateTechnologyServiceModel = new UpdateTechnologyServiceModel
+			{
+				Name = NAME
+			};
+
+			this.TechnologyServiceMock.Setup(p => p.UpdateTechnology(It.IsAny<Guid>(), It.IsAny<UpdateTechnologyServiceModel>())).Returns(Task.FromResult(true));
+			this.MapperMock.Setup(p => p.Map<UpdateTechnologyServiceModel>(It.IsAny<UpdateTechnologyWebModel>())).Returns(updateTechnologyServiceModel);
+
+			IActionResult result = this.TechnologyController.Update(id, updateTechnologyWebModel).Result;
+
+			Assert.IsInstanceOf<OkResult>(result);
+		}
+
+		[Test]
+		public void Update_ShouldReturnOkResult_WhenTechnologyIsNotUpdatedSuccessfully ()
+		{
+			Guid id = new Guid();
+			string message = "Could not update Technology";
+			UpdateTechnologyWebModel updateTechnologyWebModel = new UpdateTechnologyWebModel
+			{
+				Name = NAME
+			};
+			UpdateTechnologyServiceModel updateTechnologyServiceModel = new UpdateTechnologyServiceModel
+			{
+				Name = NAME
+			};
+
+			this.TechnologyServiceMock.Setup(p => p.UpdateTechnology(It.IsAny<Guid>(), It.IsAny<UpdateTechnologyServiceModel>())).Returns(Task.FromResult(false));
+			this.MapperMock.Setup(p => p.Map<UpdateTechnologyServiceModel>(It.IsAny<UpdateTechnologyWebModel>())).Returns(updateTechnologyServiceModel);
+
+			IActionResult result = this.TechnologyController.Update(id, updateTechnologyWebModel).Result;
+			Assert.IsInstanceOf<BadRequestObjectResult>(result);
+
+			BadRequestObjectResult badRequestObjectResult = result as BadRequestObjectResult;
+			string resultModel = badRequestObjectResult.Value.ToString();
+
+			Assert.AreEqual(message, resultModel);
+		}
+		#endregion
+
+		#region Delete
+		[Test]
+		public void Delete_ReturnsOkResult_When_TechnologyIsDeletedSuccessfully()
+		{
+			Guid id = new Guid();
+
+			this.TechnologyServiceMock.Setup(p => p.DeleteTechnology(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+
+			IActionResult result = this.TechnologyController.Delete(id).Result;
+
+			Assert.IsInstanceOf<OkResult>(result);
+		}
+
+		[Test]
+		public void Delet_ReturnsBadRequestObjectResult_WhenTechnologyIsNotDeletedSuccessfully()
+		{
+			string message = "Could not delete Technology";
+			Guid id = new Guid();
+
+			this.TechnologyServiceMock.Setup(p => p.DeleteTechnology(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+
+			IActionResult result = this.TechnologyController.Delete(id).Result;
+
+			Assert.IsInstanceOf<BadRequestObjectResult>(result);
+
+			BadRequestObjectResult badRequestObjectResult = result as BadRequestObjectResult;
+			string resultModel = badRequestObjectResult.Value.ToString();
+
+			Assert.AreEqual(message, resultModel);
+		}
+		#endregion
 	}
 }

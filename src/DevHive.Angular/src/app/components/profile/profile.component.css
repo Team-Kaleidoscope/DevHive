@@ -1,0 +1,88 @@
+* {
+  box-sizing: border-box;
+}
+
+#content {
+  max-width: 22em;
+  justify-content: start;
+}
+
+hr {
+  width: calc(100% - 1em);
+  color: black;
+  border: 1px solid black;
+}
+
+/* Navigation bar (for loggedin user) */
+
+#navigation {
+  display: flex;
+  width: 100%;
+}
+
+.submit-btn {
+  flex: 1;
+  margin-top: 0;
+  margin-left: .5em;
+  font-size: inherit;
+}
+
+#navigation > .submit-btn:nth-of-type(1) {
+  margin-left: 0;
+}
+
+/* Top card */
+
+#main-info {
+  display: flex;
+  width: 100%;
+  margin-bottom: .25em
+}
+
+#main-info > img {
+  width: 5em;
+  height: 5em;
+}
+
+#other-main-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#other-main-info > * {
+  font-size: 1.4em;
+}
+
+#other-main-info *:nth-child(1) {
+  margin-top: auto;
+}
+
+#other-main-info *:nth-last-child(1) {
+  margin-bottom: auto;
+}
+
+/* Languages and technologies */
+
+.secondary-info {
+  margin-top: .25em;
+  margin-bottom: .25em;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.user-language, .user-technology {
+  border-radius: .4em;
+  background-color: lightgrey;
+  padding: .2em;
+  margin: 0 .2em;
+}
+
+/* Posts */
+
+#posts {
+  width: 100%;
+}
+

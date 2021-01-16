@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -9,16 +10,15 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  private _title = 'Login';
   loginUserFormGroup: FormGroup;
 
-  private _title = 'Login';
-
-  constructor(private titleService: Title, private fb: FormBuilder, private router: Router) {
-    titleService.setTitle(this._title);
+  constructor(private _titleService: Title, private _fb: FormBuilder, private _router: Router, private _userService: UserService) {
+    this._titleService.setTitle(this._title);
   }
 
   ngOnInit(): void {
-    this.loginUserFormGroup = this.fb.group({
+    this.loginUserFormGroup = this._fb.group({
       username: new FormControl('', [
         Validators.required
       ]),
@@ -29,31 +29,19 @@ export class LoginComponent implements OnInit {
   }
 
   async onSubmit(): Promise<void> {
-    const response = await fetch('http://localhost:5000/api/User/login', {
-      method: 'POST',
-      body: JSON.stringify({
-        UserName: this.loginUserFormGroup.get('username')?.value,
-        Password: this.loginUserFormGroup.get('password')?.value
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    const userCred: string = await response.json();
-
-    sessionStorage.setItem('UserCred', JSON.stringify(userCred));
-    this.router.navigate(['/']);
+    this._userService.loginUser(this.loginUserFormGroup);
+    this._router.navigate(['/']);
   }
 
   onRedirectRegister(): void {
-    this.router.navigate(['/register']);
+    this._router.navigate(['/register']);
   }
 
-  get username() {
+  get username(): AbstractControl | null  {
     return this.loginUserFormGroup.get('username');
   }
 
-  get password() {
+  get password(): AbstractControl | null  {
     return this.loginUserFormGroup.get('password');
   }
 }
