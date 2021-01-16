@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -13,7 +14,7 @@ export class RegisterComponent implements OnInit {
 
   private _title = 'Register';
 
-  constructor(private titleService: Title, private fb: FormBuilder, private router: Router) {
+  constructor(private titleService: Title, private fb: FormBuilder, private router: Router, private userService: UserService) {
     titleService.setTitle(this._title);
   }
 
@@ -45,26 +46,8 @@ export class RegisterComponent implements OnInit {
     this.registerUserFormGroup.valueChanges.subscribe(console.log);
   }
 
-  async onSubmit(): Promise<void> {
-    // TODO: add a check for form data validity
-
-    const response = await fetch('http://localhost:5000/api/User/register', {
-      method: 'POST',
-      body: JSON.stringify({
-        UserName: this.registerUserFormGroup.get('username')?.value,
-        Email: this.registerUserFormGroup.get('email')?.value,
-        FirstName: this.registerUserFormGroup.get('firstName')?.value,
-        LastName: this.registerUserFormGroup.get('lastName')?.value,
-        Password: this.registerUserFormGroup.get('password')?.value
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    const userCred: string = await response.json();
-
-    // TODO: don't redirect if there is an error response
-    sessionStorage.setItem('UserCred', JSON.stringify(userCred));
+  onSubmit(): void {
+    this.userService.registerUser(this.registerUserFormGroup);
     this.router.navigate(['/']);
   }
 

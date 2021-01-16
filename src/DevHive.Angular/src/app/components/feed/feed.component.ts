@@ -1,13 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { Guid } from 'guid-typescript';
-import jwt_decode from 'jwt-decode';
-import { FeedService } from 'src/app/services/feed.service';
 import { User } from 'src/models/identity/user';
-import { IJWTPayload } from 'src/interfaces/jwt-payload';
-import { IUserCredentials } from 'src/interfaces/user-credentials';
 import { PostComponent } from '../post/post.component';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-feed',
@@ -16,17 +12,16 @@ import { PostComponent } from '../post/post.component';
 })
 export class FeedComponent implements OnInit {
   private _title = 'Feed';
+  private _timeoutFetchData = 500;
+  public dataArrived = false;
   public user: User;
   public posts: PostComponent[];
 
-  constructor(private titleService: Title, private service: FeedService, private router: Router) {
+  constructor(private titleService: Title, private router: Router, private userService: UserService) {
     this.titleService.setTitle(this._title);
   }
 
   ngOnInit(): void {
-    // Default values, so it doesn't give an error while initializing
-    this.user = new User(Guid.createEmpty(), '', '', '', '');
-
     this.posts = [
       new PostComponent(),
       new PostComponent(),
@@ -35,21 +30,20 @@ export class FeedComponent implements OnInit {
     ];
 
     if (sessionStorage.getItem('UserCred')) {
-      const jwt: IJWTPayload = JSON.parse(sessionStorage.getItem('UserCred') ?? '');
-      const userCred = jwt_decode<IUserCredentials>(jwt.token);
-      this.saveUserData(userCred.ID, jwt.token);
+      // Workaround for waiting the fetch response
+      // TODO: properly wait for it, before loading the page contents
+      setTimeout(() =>
+                 {
+                   this.user = this.userService.fetchUserFromSessionStorage();
+                 },
+                 this._timeoutFetchData);
+      setTimeout(() =>
+                 {
+                   this.dataArrived = true;
+                 },
+                 this._timeoutFetchData + 100);
     } else {
       this.router.navigate(['/login']);
     }
-  }
-
-  saveUserData(userId: Guid, authToken: string): void {
-    fetch(`http://localhost:5000/api/User?Id=${userId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + authToken
-      }
-    }).then(response => response.json()).then(data => Object.assign(this.user, data));
   }
 }

@@ -1,4 +1,9 @@
-<div id="feed-page">
+<!-- TODO: replace with loading component -->
+<div id="content" *ngIf="!dataArrived">
+	Loading...
+</div>
+
+<div id="feed-page" *ngIf="dataArrived">
 	<nav id="profile-bar" class="rounded-border">
 		<img id="profile-bar-profile-pic" class="round-image" src="assets/images/feed/profile-pic.png" alt=""/>
 		<div id="profile-bar-name">

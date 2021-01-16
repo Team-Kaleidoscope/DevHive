@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ export class LoginComponent implements OnInit {
 
   private _title = 'Login';
 
-  constructor(private titleService: Title, private fb: FormBuilder, private router: Router) {
+  constructor(private titleService: Title, private fb: FormBuilder, private router: Router, private userService: UserService) {
     titleService.setTitle(this._title);
   }
 
@@ -29,19 +30,7 @@ export class LoginComponent implements OnInit {
   }
 
   async onSubmit(): Promise<void> {
-    const response = await fetch('http://localhost:5000/api/User/login', {
-      method: 'POST',
-      body: JSON.stringify({
-        UserName: this.loginUserFormGroup.get('username')?.value,
-        Password: this.loginUserFormGroup.get('password')?.value
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    const userCred: string = await response.json();
-
-    sessionStorage.setItem('UserCred', JSON.stringify(userCred));
+    this.userService.loginUser(this.loginUserFormGroup);
     this.router.navigate(['/']);
   }
 
