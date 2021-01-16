@@ -4,7 +4,7 @@
 </div>
 
 <div id="feed-page" *ngIf="dataArrived">
-	<nav id="profile-bar" class="rounded-border" (click)="goToProfile()">
+	<nav id="profile-bar" (click)="goToProfile()">
 		<img id="profile-bar-profile-pic" class="round-image" src="assets/images/feed/profile-pic.png" alt=""/>
 		<div id="profile-bar-name">
 			{{ user.firstName }} {{ user.lastName }}
@@ -16,7 +16,7 @@
 	<div id="feed-content">
 		<nav id="top-bar">
 			<img id="top-bar-profile-pic" class="round-image" src="assets/images/feed/profile-pic.png" alt="" (click)="goToProfile()">
-			<input id="top-bar-create-post" class="rounded-border" type="text" placeholder="What's on your mind?"/>
+			<input id="top-bar-create-post" type="text" placeholder="What's on your mind?"/>
 			<a id="top-bar-open-chat" href="">
 				<img src="assets/images/feed/chat-pic.png" alt=""/>
 			</a>
