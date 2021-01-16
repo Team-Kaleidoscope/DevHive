@@ -1,12 +1,22 @@
-<div id="content">
+<!-- TODO: replace with loading component -->
+<div id="content" style="justify-content: center;" *ngIf="!dataArrived">
+	Loading...
+</div>
+
+<div id="content" *ngIf="dataArrived">
+	<nav id="navigation">
+		<button class="submit-btn" type="submit" (click)="goBack()">ᐊ Back</button>
+		<button class="submit-btn" type="submit" (click)="navigateToSettings()" *ngIf="loggedInUser">Settings</button>
+	</nav>
+	<hr>
 	<div id="main-info" class="rounded-border">
 		<img class="round-image" src="assets/images/feed/profile-pic.png" alt=""/>
 		<div id="other-main-info">
 			<div id="name">
-				Gosho Trapov
+				{{ user.firstName }} {{ user.lastName }}
 			</div>
 			<div id="username">
-				@gosho_trapov
+				@{{ user.userName }}
 			</div>
 		</div>
 	</div>

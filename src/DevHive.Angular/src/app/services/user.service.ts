@@ -13,6 +13,10 @@ import { AppConstants } from 'src/app/app-constants.module';
 export class UserService {
   constructor() { }
 
+  getDefaultUser(): User {
+    return new User(Guid.createEmpty(), 'gosho_trapov', 'Gosho', 'Trapov', '');
+  }
+
   fetchUserFromSessionStorage(): User {
     // Get the token and userid from session storage
     const jwt: IJWTPayload = JSON.parse(sessionStorage.getItem('UserCred') ?? '');

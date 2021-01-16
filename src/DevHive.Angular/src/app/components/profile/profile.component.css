@@ -7,6 +7,30 @@
   justify-content: start;
 }
 
+hr {
+  width: calc(100% - 1em);
+  color: black;
+  border: 1px solid black;
+}
+
+/* Navigation bar (for loggedin user) */
+
+#navigation {
+  display: flex;
+  width: 100%;
+}
+
+.submit-btn {
+  flex: 1;
+  margin-top: 0;
+  margin-left: .5em;
+  font-size: inherit;
+}
+
+#navigation > .submit-btn:nth-of-type(1) {
+  margin-left: 0;
+}
+
 /* Top card */
 
 #main-info {
@@ -62,8 +86,3 @@
   width: 100%;
 }
 
-#posts > hr {
-  width: calc(100% - 1em);
-  color: black;
-  border: 1px solid black;
-}
