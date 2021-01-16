@@ -38,4 +38,8 @@ export class FeedComponent implements OnInit {
       this._router.navigate(['/login']);
     }
   }
+
+  goToProfile(): void {
+    this._router.navigate(['/profile/' + this.user.userName]);
+  }
 }
