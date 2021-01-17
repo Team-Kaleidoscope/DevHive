@@ -8,7 +8,7 @@ namespace DevHive.Data.Interfaces.Models
 		string FirstName { get; set; }
 		string LastName { get; set; }
 		string ProfilePictureUrl { get; set; }
-		IList<Language> Langauges { get; set; }
+		IList<Language> Languages { get; set; }
 		IList<Technology> Technologies { get; set; }
 		IList<Role> Roles { get; set; }
 		IList<User> Friends { get; set; }

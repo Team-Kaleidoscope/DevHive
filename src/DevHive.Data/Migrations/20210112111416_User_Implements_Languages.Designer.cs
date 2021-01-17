@@ -307,7 +307,7 @@ namespace DevHive.Data.Migrations
             modelBuilder.Entity("DevHive.Data.Models.Language", b =>
                 {
                     b.HasOne("DevHive.Data.Models.User", null)
-                        .WithMany("Langauges")
+                        .WithMany("Languages")
                         .HasForeignKey("UserId");
                 });
 
@@ -395,7 +395,7 @@ namespace DevHive.Data.Migrations
                 {
                     b.Navigation("Friends");
 
-                    b.Navigation("Langauges");
+                    b.Navigation("Languages");
 
                     b.Navigation("Technologies");
                 });

@@ -18,7 +18,7 @@ namespace DevHive.Data.Models
 		/// <summary>
 		/// Languages that the user uses or is familiar with
 		/// </summary>
-		public IList<Language> Langauges { get; set; }
+		public IList<Language> Languages { get; set; }
 
 		/// <summary>
 		/// Technologies that the user uses or is familiar with
