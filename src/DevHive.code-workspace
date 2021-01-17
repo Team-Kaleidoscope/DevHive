@@ -62,7 +62,7 @@
 					"ASPNETCORE_ENVIRONMENT": "Development"
 				},
 				"launchBrowser": {
-					"enabled": true
+					"enabled": false
 				}
 			},
 		],

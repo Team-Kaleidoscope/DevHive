@@ -21,15 +21,21 @@ namespace DevHive.Services.Services
 
 		#region Create
 
-		public async Task<bool> Create(CreateTechnologyServiceModel technologyServiceModel)
+		public async Task<Guid> Create(CreateTechnologyServiceModel technologyServiceModel)
 		{
 			if (await this._technologyRepository.DoesTechnologyNameExistAsync(technologyServiceModel.Name))
 				throw new ArgumentException("Technology already exists!");
 
 			Technology technology = this._technologyMapper.Map<Technology>(technologyServiceModel);
-			bool result = await this._technologyRepository.AddAsync(technology);
+			bool success = await this._technologyRepository.AddAsync(technology);
 
-			return result;
+			if(success)
+			{
+				Technology newTechnology = await this._technologyRepository.GetByNameAsync(technologyServiceModel.Name);
+				return newTechnology.Id;
+			}
+			else
+				return Guid.Empty;
 		}
 		#endregion
 

@@ -26,12 +26,11 @@ namespace DevHive.Web.Controllers
 		{
 			CreateLanguageServiceModel languageServiceModel = this._languageMapper.Map<CreateLanguageServiceModel>(createLanguageWebModel);
 
-			bool result = await this._languageService.CreateLanguage(languageServiceModel);
+			Guid id = await this._languageService.CreateLanguage(languageServiceModel);
 
-			if (!result)
-				return new BadRequestObjectResult("Could not create Language");
-
-			return new OkResult();
+			return id == Guid.Empty ?
+				new BadRequestObjectResult($"Could not create language {createLanguageWebModel.Name}") :
+				new OkObjectResult(new { Id = id });
 		}
 
 		[HttpGet]

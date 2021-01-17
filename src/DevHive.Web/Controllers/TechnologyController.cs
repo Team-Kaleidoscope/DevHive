@@ -22,16 +22,15 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Create([FromBody] CreateTechnologyWebModel technologyWebModel)
+		public async Task<IActionResult> Create([FromBody] CreateTechnologyWebModel createTechnologyWebModel)
 		{
-			CreateTechnologyServiceModel technologyServiceModel = this._technologyMapper.Map<CreateTechnologyServiceModel>(technologyWebModel);
+			CreateTechnologyServiceModel technologyServiceModel = this._technologyMapper.Map<CreateTechnologyServiceModel>(createTechnologyWebModel);
 
-			bool result = await this._technologyService.Create(technologyServiceModel);
+			Guid id = await this._technologyService.Create(technologyServiceModel);
 
-			if (!result)
-				return new BadRequestObjectResult("Could not create the Technology");
-
-			return new OkResult();
+			return id == Guid.Empty ?
+				new BadRequestObjectResult($"Could not create technology {createTechnologyWebModel.Name}") :
+				new OkObjectResult(new { Id = id });
 		}
 
 		[HttpGet]

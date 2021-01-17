@@ -21,15 +21,21 @@ namespace DevHive.Services.Services
 
 		#region Create
 
-		public async Task<bool> CreateLanguage(CreateLanguageServiceModel createLanguageServiceModel)
+		public async Task<Guid> CreateLanguage(CreateLanguageServiceModel createLanguageServiceModel)
 		{
 			if (await this._languageRepository.DoesLanguageNameExistAsync(createLanguageServiceModel.Name))
 				throw new ArgumentException("Language already exists!");
 
 			Language language = this._languageMapper.Map<Language>(createLanguageServiceModel);
-			bool result = await this._languageRepository.AddAsync(language);
+			bool success = await this._languageRepository.AddAsync(language);
 
-			return result;
+			if(success)
+			{
+				Language newLanguage = await this._languageRepository.GetByNameAsync(createLanguageServiceModel.Name);
+				return newLanguage.Id;
+			}
+			else
+				return Guid.Empty;
 		}
 		#endregion
 

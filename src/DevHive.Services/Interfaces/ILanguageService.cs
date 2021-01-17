@@ -6,7 +6,7 @@ namespace DevHive.Services.Interfaces
 {
 	public interface ILanguageService
 	{
-		Task<bool> CreateLanguage(CreateLanguageServiceModel createLanguageServiceModel);
+		Task<Guid> CreateLanguage(CreateLanguageServiceModel createLanguageServiceModel);
 
 		Task<ReadLanguageServiceModel> GetLanguageById(Guid id);
 

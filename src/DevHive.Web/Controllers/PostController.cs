@@ -32,12 +32,11 @@ namespace DevHive.Web.Controllers
 			CreatePostServiceModel postServiceModel =
 				this._postMapper.Map<CreatePostServiceModel>(createPostModel);
 
-			bool result = await this._postService.CreatePost(postServiceModel);
+			Guid id = await this._postService.CreatePost(postServiceModel);
 
-			if (!result)
-				return new BadRequestObjectResult("Could not create post!");
-
-			return new OkResult();
+			return id == Guid.Empty ?
+				new BadRequestObjectResult("Could not create post") :
+				new OkObjectResult(new { Id = id });
 		}
 
 		[HttpPost]
@@ -46,12 +45,11 @@ namespace DevHive.Web.Controllers
 		{
 			CreateCommentServiceModel createCommentServiceModel = this._postMapper.Map<CreateCommentServiceModel>(commentWebModel);
 
-			bool result = await this._postService.AddComment(createCommentServiceModel);
+			Guid id = await this._postService.AddComment(createCommentServiceModel);
 
-			if (!result)
-				return new BadRequestObjectResult("Could not create the Comment");
-
-			return new OkResult();
+			return id == Guid.Empty ?
+				new BadRequestObjectResult("Could not create language") :
+				new OkObjectResult(new { Id = id });
 		}
 
 		//Read

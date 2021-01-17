@@ -43,11 +43,25 @@ namespace DevHive.Data.Repositories
 				.FindAsync(id);
 		}
 
+		public async Task<Post> GetPostByIssuerAndTimeCreatedAsync(Guid issuerId, DateTime timeCreated)
+		{
+			return await this._context.Posts
+				.FirstOrDefaultAsync(p => p.IssuerId == issuerId &&
+					p.TimeCreated == timeCreated);
+		}
+
 		public async Task<Comment> GetCommentByIdAsync(Guid id)
 		{
 			return await this._context
 				.Set<Comment>()
 				.FindAsync(id);
+		}
+
+		public async Task<Comment> GetCommentByIssuerAndTimeCreatedAsync(Guid issuerId, DateTime timeCreated)
+		{
+			return await this._context.Comments
+				.FirstOrDefaultAsync(p => p.IssuerId == issuerId &&
+					p.TimeCreated == timeCreated);
 		}
 
 		//Update
