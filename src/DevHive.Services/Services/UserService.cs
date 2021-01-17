@@ -11,10 +11,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Collections.Generic;
 using DevHive.Common.Models.Identity;
-using DevHive.Services.Models.Language;
 using DevHive.Services.Interfaces;
-using DevHive.Services.Models.Technology;
-using DevHive.Data.Repositories;
 using DevHive.Data.Interfaces.Repositories;
 
 namespace DevHive.Services.Services

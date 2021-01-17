@@ -72,7 +72,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpGet]
-		[Route("GetAFriend")]
+		[Route("GetFriend")]
 		[AllowAnonymous]
 		public async Task<IActionResult> GetAFriend(string username)
 		{

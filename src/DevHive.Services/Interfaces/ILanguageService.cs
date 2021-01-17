@@ -8,7 +8,7 @@ namespace DevHive.Services.Interfaces
 	{
 		Task<bool> CreateLanguage(CreateLanguageServiceModel createLanguageServiceModel);
 
-		Task<LanguageServiceModel> GetLanguageById(Guid id);
+		Task<ReadLanguageServiceModel> GetLanguageById(Guid id);
 
 		Task<bool> UpdateLanguage(UpdateLanguageServiceModel languageServiceModel);
 

@@ -37,8 +37,8 @@ namespace DevHive.Web.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetById(Guid id)
 		{
-			LanguageServiceModel languageServiceModel = await this._languageService.GetLanguageById(id);
-			LanguageWebModel languageWebModel = this._languageMapper.Map<LanguageWebModel>(languageServiceModel);
+			ReadLanguageServiceModel languageServiceModel = await this._languageService.GetLanguageById(id);
+			ReadLanguageWebModel languageWebModel = this._languageMapper.Map<ReadLanguageWebModel>(languageServiceModel);
 
 			return new OkObjectResult(languageWebModel);
 		}

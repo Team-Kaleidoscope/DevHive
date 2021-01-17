@@ -35,14 +35,14 @@ namespace DevHive.Services.Services
 
 		#region Read
 
-		public async Task<LanguageServiceModel> GetLanguageById(Guid id)
+		public async Task<ReadLanguageServiceModel> GetLanguageById(Guid id)
 		{
 			Language language = await this._languageRepository.GetByIdAsync(id);
 
 			if (language == null)
 				throw new ArgumentException("The language does not exist");
 
-			return this._languageMapper.Map<LanguageServiceModel>(language);
+			return this._languageMapper.Map<ReadLanguageServiceModel>(language);
 		}
 		#endregion
 
