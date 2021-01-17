@@ -40,7 +40,7 @@ namespace DevHive.Data.Repositories
 		{
 			this._context.Update(user);
 
-			user.Langauges.Add(language);
+			user.Languages.Add(language);
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
@@ -70,7 +70,7 @@ namespace DevHive.Data.Repositories
 			return await this._context.Users
 				.Include(x => x.Friends)
 				.Include(x => x.Roles)
-				.Include(x => x.Langauges)
+				.Include(x => x.Languages)
 				.Include(x => x.Technologies)
 				.FirstOrDefaultAsync(x => x.Id == id);
 		}
@@ -84,12 +84,12 @@ namespace DevHive.Data.Repositories
 
 		public IList<Language> GetUserLanguages(User user)
 		{
-			return user.Langauges;
+			return user.Languages;
 		}
 
 		public Language GetUserLanguage(User user, Language language)
 		{
-			return user.Langauges
+			return user.Languages
 				.FirstOrDefault(x => x.Id == language.Id);
 		}
 
@@ -123,8 +123,8 @@ namespace DevHive.Data.Repositories
 		{
 			this._context.Update(user);
 
-			user.Langauges.Remove(oldLang);
-			user.Langauges.Add(newLang);
+			user.Languages.Remove(oldLang);
+			user.Languages.Add(newLang);
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
@@ -162,7 +162,7 @@ namespace DevHive.Data.Repositories
 		{
 			this._context.Update(user);
 
-			user.Langauges.Remove(language);
+			user.Languages.Remove(language);
 
 			return await RepositoryMethods.SaveChangesAsync(this._context);
 		}
@@ -224,7 +224,7 @@ namespace DevHive.Data.Repositories
 
 		public bool DoesUserHaveThisLanguage(User user, Language language)
 		{
-			return user.Langauges.Contains(language);
+			return user.Languages.Contains(language);
 		}
 
 		public bool DoesUserHaveThisTechnology(User user, Technology technology)

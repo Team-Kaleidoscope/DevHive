@@ -11,9 +11,6 @@ namespace DevHive.Services.Configurations.Mapping
 			CreateMap<UserServiceModel, User>();
 			CreateMap<RegisterServiceModel, User>();
 			CreateMap<UpdateUserServiceModel, User>();
-			CreateMap<UpdateUserCollectionServiceModel, User>()
-				.ForMember(up => up.UserName, u => u.MapFrom(src => src.Name));
-
 
 			CreateMap<User, UserServiceModel>();
 		}

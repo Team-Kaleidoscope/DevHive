@@ -131,21 +131,28 @@ namespace DevHive.Services.Services
 
 		#region Update
 
-		public async Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateModel)
+		public async Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateUserServiceModel)
 		{
-			if (!await this._userRepository.DoesUserExistAsync(updateModel.Id))
+			if (!await this._userRepository.DoesUserExistAsync(updateUserServiceModel.Id))
 				throw new ArgumentException("User does not exist!");
 
-			if (!this._userRepository.DoesUserHaveThisUsername(updateModel.Id, updateModel.UserName)
-					&& await this._userRepository.DoesUsernameExistAsync(updateModel.UserName))
+			if (!this._userRepository.DoesUserHaveThisUsername(updateUserServiceModel.Id, updateUserServiceModel.UserName)
+					&& await this._userRepository.DoesUsernameExistAsync(updateUserServiceModel.UserName))
 				throw new ArgumentException("Username already exists!");
 
-			await this.ValidateUserCollections(updateModel);
+			await this.ValidateUserCollections(updateUserServiceModel);
 
-			User user = this._userMapper.Map<User>(updateModel);
-			bool result = await this._userRepository.EditAsync(user);
+			//Query proper lang, tech and role and insert the full class in updateUserServiceModel
+			List<Language> properLanguages = new();
+			foreach (UpdateUserCollectionServiceModel lang in updateUserServiceModel.Languages)
+				properLanguages.Add(await this._languageRepository.GetByNameAsync(lang.Name));
 
-			if (!result)
+			User user = this._userMapper.Map<User>(updateUserServiceModel);
+			user.Languages = properLanguages;
+
+			bool success = await this._userRepository.EditAsync(user);
+
+			if (!success)
 				throw new InvalidOperationException("Unable to edit user!");
 
 			return this._userMapper.Map<UserServiceModel>(user); ;

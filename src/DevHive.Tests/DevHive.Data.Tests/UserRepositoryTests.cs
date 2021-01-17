@@ -86,7 +86,7 @@ namespace DevHive.Data.Tests
 
 			//Assert
 			Assert.True(result, "The language isn't inserted properly to the database");
-			Assert.True(dummyUser.Langauges.Contains(language), "The language doesn't get added properly to the user");
+			Assert.True(dummyUser.Languages.Contains(language), "The language doesn't get added properly to the user");
 		}
 
 		[Test]
@@ -165,7 +165,7 @@ namespace DevHive.Data.Tests
 			//Arrange
 			User dummyUser = CreateDummyUser();
 			await this._userRepository.AddAsync(dummyUser);
-			IList<Language> dummyUserLanguages = dummyUser.Langauges;
+			IList<Language> dummyUserLanguages = dummyUser.Languages;
 
 			//Act
 			IList<Language> languages = this._userRepository.GetUserLanguages(dummyUser);
@@ -229,7 +229,7 @@ namespace DevHive.Data.Tests
 				FirstName = "Spas",
 				LastName = "Spasov",
 				Email = "abv@abv.bg",
-				Langauges = languages,
+				Languages = languages,
 				Technologies = technologies,
 				Roles = roles
 			};
@@ -271,7 +271,7 @@ namespace DevHive.Data.Tests
 				FirstName = "Alex",
 				LastName = "Spiridonov",
 				Email = "a_spiridonov@abv.bg",
-				Langauges = languages,
+				Languages = languages,
 				Technologies = technologies,
 				Roles = roles
 			};
