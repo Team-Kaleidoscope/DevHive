@@ -35,9 +35,9 @@ namespace DevHive.Services.Services
 
 		#region Read
 
-		public async Task<LanguageServiceModel> GetLanguageById(Guid languageId)
+		public async Task<LanguageServiceModel> GetLanguageById(Guid id)
 		{
-			Language language = await this._languageRepository.GetByIdAsync(languageId);
+			Language language = await this._languageRepository.GetByIdAsync(id);
 
 			if (language == null)
 				throw new ArgumentException("The language does not exist");
@@ -66,12 +66,12 @@ namespace DevHive.Services.Services
 
 		#region Delete
 
-		public async Task<bool> DeleteLanguage(Guid languageId)
+		public async Task<bool> DeleteLanguage(Guid id)
 		{
-			if (!await this._languageRepository.DoesLanguageExistAsync(languageId))
+			if (!await this._languageRepository.DoesLanguageExistAsync(id))
 				throw new ArgumentException("Language does not exist!");
 
-			Language language = await this._languageRepository.GetByIdAsync(languageId);
+			Language language = await this._languageRepository.GetByIdAsync(id);
 			return await this._languageRepository.DeleteAsync(language);
 		}
 		#endregion

@@ -108,46 +108,6 @@ namespace DevHive.Services.Services
 				await this._userRepository.AddFriendToUserAsync(user, friend) :
 				throw new ArgumentException("Invalid user!");
 		}
-
-		public async Task<bool> AddLanguageToUser(Guid userId, LanguageServiceModel languageServiceModel)
-		{
-			bool userExists = await this._userRepository.DoesUserExistAsync(userId);
-			bool languageExists = await this._languageRepository.DoesLanguageExistAsync(languageServiceModel.Id);
-
-			if (!userExists)
-				throw new ArgumentException("User does not exist!");
-
-			if (!languageExists)
-				throw new ArgumentException("Language does noy exist!");
-
-			User user = await this._userRepository.GetByIdAsync(userId);
-			Language language = await this._languageRepository.GetByIdAsync(languageServiceModel.Id);
-
-			if (this._userRepository.DoesUserHaveThisLanguage(user, language))
-				throw new ArgumentException("User already has this language!");
-
-			return await this._userRepository.AddLanguageToUserAsync(user, language);
-		}
-
-		public async Task<bool> AddTechnologyToUser(Guid userId, TechnologyServiceModel technologyServiceModel)
-		{
-			bool userExists = await this._userRepository.DoesUserExistAsync(userId);
-			bool technologyExists = await this._technologyRepository.DoesTechnologyExistAsync(technologyServiceModel.Id);
-
-			if (!userExists)
-				throw new ArgumentException("User does not exist!");
-
-			if (!technologyExists)
-				throw new ArgumentException("Technology does not exist!");
-
-			Technology technology = await this._technologyRepository.GetByIdAsync(technologyServiceModel.Id);
-			User user = await this._userRepository.GetByIdAsync(userId);
-
-			if (this._userRepository.DoesUserHaveThisTechnology(user, technology))
-				throw new ArgumentException("User already has this language!");
-
-			return await this._userRepository.AddTechnologyToUserAsync(user, technology);
-		}
 		#endregion
 
 		#region Read
@@ -182,6 +142,8 @@ namespace DevHive.Services.Services
 					&& await this._userRepository.DoesUsernameExistAsync(updateModel.UserName))
 				throw new ArgumentException("Username already exists!");
 
+			//Add validations for everything else
+
 			User user = this._userMapper.Map<User>(updateModel);
 			bool result = await this._userRepository.EditAsync(user);
 
@@ -208,61 +170,22 @@ namespace DevHive.Services.Services
 
 		public async Task<bool> RemoveFriend(Guid userId, Guid friendId)
 		{
-			Task<bool> userExists = this._userRepository.DoesUserExistAsync(userId);
-			Task<bool> friendExists = this._userRepository.DoesUserExistAsync(friendId);
+			bool userExists = await this._userRepository.DoesUserExistAsync(userId);
+			bool friendExists = await this._userRepository.DoesUserExistAsync(friendId);
 
-			await Task.WhenAll(userExists, friendExists);
-
-			if (!userExists.Result)
+			if (!userExists)
 				throw new ArgumentException("User doesn't exist!");
 
-			if (!friendExists.Result)
+			if (!friendExists)
 				throw new ArgumentException("Friend doesn't exist!");
 
 			if (!await this._userRepository.DoesUserHaveThisFriendAsync(userId, friendId))
 				throw new ArgumentException("This ain't your friend, amigo.");
 
-			return await this.RemoveFriend(userId, friendId);
-		}
-
-		public async Task<bool> RemoveLanguageFromUser(Guid userId, LanguageServiceModel languageServiceModel)
-		{
-			bool userExists = await this._userRepository.DoesUserExistAsync(userId);
-			bool languageExists = await this._languageRepository.DoesLanguageExistAsync(languageServiceModel.Id);
-
-			if (!userExists)
-				throw new ArgumentException("User does not exist!");
-
-			if (!languageExists)
-				throw new ArgumentException("Language does not exist!");
-
 			User user = await this._userRepository.GetByIdAsync(userId);
-			Language language = await this._languageRepository.GetByIdAsync(languageServiceModel.Id);
+			User homie = await this._userRepository.GetByIdAsync(friendId);
 
-			if (!this._userRepository.DoesUserHaveThisLanguage(user, language))
-				throw new ArgumentException("User does not have this language!");
-
-			return await this._userRepository.RemoveLanguageFromUserAsync(user, language);
-		}
-
-		public async Task<bool> RemoveTechnologyFromUser(Guid userId, TechnologyServiceModel technologyServiceModel)
-		{
-			bool userExists = await this._userRepository.DoesUserExistAsync(userId);
-			bool technologyExists = await this._technologyRepository.DoesTechnologyExistAsync(technologyServiceModel.Id);
-
-			if (!userExists)
-				throw new ArgumentException("User does not exist!");
-
-			if (!technologyExists)
-				throw new ArgumentException("Language does not exist!");
-
-			User user = await this._userRepository.GetByIdAsync(userId);
-			Technology technology = await this._technologyRepository.GetByIdAsync(technologyServiceModel.Id);
-
-			if (!this._userRepository.DoesUserHaveThisTechnology(user, technology))
-				throw new ArgumentException("User does not have this technology!");
-
-			return await this._userRepository.RemoveTechnologyFromUserAsync(user, technology);
+			return await this._userRepository.RemoveFriendAsync(user, homie);
 		}
 		#endregion
 

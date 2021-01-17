@@ -8,10 +8,10 @@ namespace DevHive.Services.Interfaces
 	{
 		Task<bool> CreateLanguage(CreateLanguageServiceModel createLanguageServiceModel);
 
-		Task<LanguageServiceModel> GetLanguageById(Guid languageId);
+		Task<LanguageServiceModel> GetLanguageById(Guid id);
 
 		Task<bool> UpdateLanguage(UpdateLanguageServiceModel languageServiceModel);
 
-		Task<bool> DeleteLanguage(Guid languageId);
+		Task<bool> DeleteLanguage(Guid id);
 	}
 }

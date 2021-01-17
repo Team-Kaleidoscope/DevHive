@@ -35,9 +35,9 @@ namespace DevHive.Services.Services
 
 		#region Read
 
-		public async Task<CreateTechnologyServiceModel> GetTechnologyById(Guid technologyId)
+		public async Task<CreateTechnologyServiceModel> GetTechnologyById(Guid id)
 		{
-			Technology technology = await this._technologyRepository.GetByIdAsync(technologyId);
+			Technology technology = await this._technologyRepository.GetByIdAsync(id);
 
 			if (technology == null)
 				throw new ArgumentException("The technology does not exist");
@@ -64,12 +64,12 @@ namespace DevHive.Services.Services
 		#endregion
 
 		#region Delete
-		public async Task<bool> DeleteTechnology(Guid technologyId)
+		public async Task<bool> DeleteTechnology(Guid id)
 		{
-			if (!await this._technologyRepository.DoesTechnologyExistAsync(technologyId))
+			if (!await this._technologyRepository.DoesTechnologyExistAsync(id))
 				throw new ArgumentException("Technology does not exist!");
 
-			Technology technology = await this._technologyRepository.GetByIdAsync(technologyId);
+			Technology technology = await this._technologyRepository.GetByIdAsync(id);
 			bool result = await this._technologyRepository.DeleteAsync(technology);
 
 			return result;

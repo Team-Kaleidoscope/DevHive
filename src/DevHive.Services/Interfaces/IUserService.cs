@@ -13,8 +13,6 @@ namespace DevHive.Services.Interfaces
 		Task<TokenModel> RegisterUser(RegisterServiceModel registerModel);
 
 		Task<bool> AddFriend(Guid userId, Guid friendId);
-		Task<bool> AddLanguageToUser(Guid userId, LanguageServiceModel languageServiceModel);
-		Task<bool> AddTechnologyToUser(Guid userId, TechnologyServiceModel technologyServiceModel);
 
 		Task<UserServiceModel> GetFriend(string username);
 		Task<UserServiceModel> GetUserById(Guid id);
@@ -23,8 +21,6 @@ namespace DevHive.Services.Interfaces
 
 		Task DeleteUser(Guid id);
 		Task<bool> RemoveFriend(Guid userId, Guid friendId);
-		Task<bool> RemoveLanguageFromUser(Guid userId, LanguageServiceModel languageServiceModel);
-		Task<bool> RemoveTechnologyFromUser(Guid userId, TechnologyServiceModel technologyServiceModel);
 
 		Task<bool> ValidJWT(Guid id, string rawTokenData);
 	}

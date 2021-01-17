@@ -35,19 +35,19 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> GetById(Guid languageId)
+		public async Task<IActionResult> GetById(Guid id)
 		{
-			LanguageServiceModel languageServiceModel = await this._languageService.GetLanguageById(languageId);
+			LanguageServiceModel languageServiceModel = await this._languageService.GetLanguageById(id);
 			LanguageWebModel languageWebModel = this._languageMapper.Map<LanguageWebModel>(languageServiceModel);
 
 			return new OkObjectResult(languageWebModel);
 		}
 
 		[HttpPut]
-		public async Task<IActionResult> Update(Guid languageId, [FromBody] UpdateLanguageWebModel updateModel)
+		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateLanguageWebModel updateModel)
 		{
 			UpdateLanguageServiceModel updatelanguageServiceModel = this._languageMapper.Map<UpdateLanguageServiceModel>(updateModel);
-			updatelanguageServiceModel.Id = languageId;
+			updatelanguageServiceModel.Id = id;
 
 			bool result = await this._languageService.UpdateLanguage(updatelanguageServiceModel);
 
@@ -58,9 +58,9 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpDelete]
-		public async Task<IActionResult> Delete(Guid languageId)
+		public async Task<IActionResult> Delete(Guid id)
 		{
-			bool result = await this._languageService.DeleteLanguage(languageId);
+			bool result = await this._languageService.DeleteLanguage(id);
 
 			if (!result)
 				return new BadRequestObjectResult("Could not delete Language");
