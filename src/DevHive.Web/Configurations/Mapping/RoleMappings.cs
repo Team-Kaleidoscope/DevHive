@@ -1,18 +1,18 @@
 using AutoMapper;
 using DevHive.Web.Models.Identity.Role;
-using DevHive.Common.Models.Identity;
+using DevHive.Services.Models.Identity.Role;
 
 namespace DevHive.Web.Configurations.Mapping
 {
-	public class RoleMappings : Profile
+    public class RoleMappings : Profile
 	{
 		public RoleMappings()
 		{
-			CreateMap<CreateRoleModel, RoleModel>();
-			CreateMap<UpdateRoleModel, RoleModel>();
+			CreateMap<CreateRoleWebModel, RoleServiceModel>();
+			CreateMap<UpdateRoleWebModel, RoleServiceModel>();
 
-			CreateMap<RoleModel, RoleWebModel>();
-			CreateMap<RoleWebModel, RoleModel>();
+			CreateMap<RoleServiceModel, RoleWebModel>();
+			CreateMap<RoleWebModel, RoleServiceModel>();
 		}
 	}
 }

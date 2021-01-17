@@ -1,13 +1,13 @@
 using System.Collections.Generic;
-using DevHive.Common.Models.Identity;
+using DevHive.Services.Models.Identity.Role;
 using DevHive.Services.Models.Language;
 using DevHive.Services.Models.Technology;
 
 namespace DevHive.Services.Models.Identity.User
 {
-	public class UserServiceModel : BaseUserServiceModel
+    public class UserServiceModel : BaseUserServiceModel
 	{
-		public IList<RoleModel> Roles { get; set; } = new List<RoleModel>();
+		public IList<RoleServiceModel> Roles { get; set; } = new List<RoleServiceModel>();
 
 		public IList<UserServiceModel> Friends { get; set; } = new List<UserServiceModel>();
 

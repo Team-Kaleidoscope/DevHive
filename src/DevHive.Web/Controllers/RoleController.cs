@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using DevHive.Web.Models.Identity.Role;
 using AutoMapper;
 using System;
-using DevHive.Common.Models.Identity;
 using DevHive.Services.Interfaces;
+using DevHive.Services.Models.Identity.Role;
 
 namespace DevHive.Web.Controllers
 {
-	[ApiController]
+    [ApiController]
 	[Route("/api/[controller]")]
 	//[Authorize(Roles = "Admin")]
 	public class RoleController
@@ -23,33 +23,33 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Create([FromBody] CreateRoleModel createRoleModel)
+		public async Task<IActionResult> Create([FromBody] CreateRoleWebModel createRoleWebModel)
 		{
-			RoleModel roleServiceModel =
-				this._roleMapper.Map<RoleModel>(createRoleModel);
+			RoleServiceModel roleServiceModel =
+				this._roleMapper.Map<RoleServiceModel>(createRoleWebModel);
 
-			bool result = await this._roleService.CreateRole(roleServiceModel);
+			Guid id = await this._roleService.CreateRole(roleServiceModel);
 
-			if (!result)
-				return new BadRequestObjectResult("Could not create role!");
+			return id == Guid.Empty ?
+				new BadRequestObjectResult($"Could not create role {createRoleWebModel.Name}") :
+				new OkObjectResult(new { Id = id });
 
-			return new OkResult();
 		}
 
 		[HttpGet]
 		public async Task<IActionResult> GetById(Guid id)
 		{
-			RoleModel roleServiceModel = await this._roleService.GetRoleById(id);
-			RoleModel roleWebModel = this._roleMapper.Map<RoleModel>(roleServiceModel);
+			RoleServiceModel roleServiceModel = await this._roleService.GetRoleById(id);
+			RoleWebModel roleWebModel = this._roleMapper.Map<RoleWebModel>(roleServiceModel);
 
 			return new OkObjectResult(roleWebModel);
 		}
 
 		[HttpPut]
-		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateRoleModel updateRoleModel)
+		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateRoleWebModel updateRoleWebModel)
 		{
-			RoleModel roleServiceModel =
-				this._roleMapper.Map<RoleModel>(updateRoleModel);
+			RoleServiceModel roleServiceModel =
+				this._roleMapper.Map<RoleServiceModel>(updateRoleWebModel);
 			roleServiceModel.Id = id;
 
 			bool result = await this._roleService.UpdateRole(roleServiceModel);
