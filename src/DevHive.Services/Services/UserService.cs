@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using DevHive.Common.Models.Identity;
 using DevHive.Services.Interfaces;
 using DevHive.Data.Interfaces.Repositories;
+using DevHive.Services.Models.Language;
 
 namespace DevHive.Services.Services
 {
@@ -139,7 +140,7 @@ namespace DevHive.Services.Services
 					&& await this._userRepository.DoesUsernameExistAsync(updateModel.UserName))
 				throw new ArgumentException("Username already exists!");
 
-			//Add validations for everything else
+			await this.ValidateUserCollections(updateModel);
 
 			User user = this._userMapper.Map<User>(updateModel);
 			bool result = await this._userRepository.EditAsync(user);
@@ -148,6 +149,36 @@ namespace DevHive.Services.Services
 				throw new InvalidOperationException("Unable to edit user!");
 
 			return this._userMapper.Map<UserServiceModel>(user); ;
+		}
+
+		private async Task ValidateUserCollections(UpdateUserServiceModel updateUserServiceModel)
+		{
+			// Friends
+			foreach (UpdateUserCollectionServiceModel friend in updateUserServiceModel.Friends)
+			{
+				User returnedFriend = await this._userRepository.GetByUsernameAsync(friend.Name);
+
+				if (default(User) == returnedFriend)
+					throw new ArgumentException($"User {friend.Name} does not exist!");
+			}
+
+			// Languages
+			foreach (UpdateUserCollectionServiceModel language in updateUserServiceModel.Languages)
+			{
+				Language returnedLanguage = await this._languageRepository.GetByNameAsync(language.Name);
+
+				if (default(Language) == returnedLanguage)
+					throw new ArgumentException($"Language {language.Name} does not exist!");
+			}
+
+			// Technology
+			foreach (UpdateUserCollectionServiceModel technology in updateUserServiceModel.Technologies)
+			{
+				Technology returnedTechnology = await this._technologyRepository.GetByNameAsync(technology.Name);
+
+				if (default(Technology) == returnedTechnology)
+					throw new ArgumentException($"Technology {technology.Name} does not exist!");
+			}
 		}
 		#endregion
 
