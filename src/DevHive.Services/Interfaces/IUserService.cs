@@ -16,7 +16,7 @@ namespace DevHive.Services.Interfaces
 		Task<bool> AddLanguageToUser(Guid userId, LanguageServiceModel languageServiceModel);
 		Task<bool> AddTechnologyToUser(Guid userId, TechnologyServiceModel technologyServiceModel);
 
-		Task<UserServiceModel> GetFriendById(Guid friendId);
+		Task<UserServiceModel> GetFriend(string username);
 		Task<UserServiceModel> GetUserById(Guid id);
 
 		Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateModel);

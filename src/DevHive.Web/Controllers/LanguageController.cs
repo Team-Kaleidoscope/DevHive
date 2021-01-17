@@ -47,8 +47,9 @@ namespace DevHive.Web.Controllers
 		public async Task<IActionResult> Update(Guid languageId, [FromBody] UpdateLanguageWebModel updateModel)
 		{
 			UpdateLanguageServiceModel updatelanguageServiceModel = this._languageMapper.Map<UpdateLanguageServiceModel>(updateModel);
+			updatelanguageServiceModel.Id = languageId;
 
-			bool result = await this._languageService.UpdateLanguage(languageId, updatelanguageServiceModel);
+			bool result = await this._languageService.UpdateLanguage(updatelanguageServiceModel);
 
 			if (!result)
 				return new BadRequestObjectResult("Could not update Language");

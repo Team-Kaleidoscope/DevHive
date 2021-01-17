@@ -160,12 +160,12 @@ namespace DevHive.Services.Services
 			return this._userMapper.Map<UserServiceModel>(user);
 		}
 
-		public async Task<UserServiceModel> GetFriendById(Guid friendId)
+		public async Task<UserServiceModel> GetFriend(string username)
 		{
-			if (!await _userRepository.DoesUserExistAsync(friendId))
-				throw new ArgumentException("User does not exist!");
+			User friend = await this._userRepository.GetByUsernameAsync(username);
 
-			User friend = await this._userRepository.GetByIdAsync(friendId);
+			if (default(User) == friend)
+				throw new ArgumentException("User does not exist!");
 
 			return this._userMapper.Map<UserServiceModel>(friend);
 		}

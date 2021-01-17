@@ -48,9 +48,9 @@ namespace DevHive.Services.Services
 
 		#region Update
 
-		public async Task<bool> UpdateLanguage(Guid languageId, UpdateLanguageServiceModel languageServiceModel)
+		public async Task<bool> UpdateLanguage(UpdateLanguageServiceModel languageServiceModel)
 		{
-			bool langExists = await this._languageRepository.DoesLanguageExistAsync(languageId);
+			bool langExists = await this._languageRepository.DoesLanguageExistAsync(languageServiceModel.Id);
 			bool newLangNameExists = await this._languageRepository.DoesLanguageNameExistAsync(languageServiceModel.Name);
 
 			if (!langExists)
@@ -59,7 +59,6 @@ namespace DevHive.Services.Services
 			if (newLangNameExists)
 				throw new ArgumentException("This name is already in our datbase!");
 
-			languageServiceModel.Id = languageId;
 			Language lang = this._languageMapper.Map<Language>(languageServiceModel);
 			return await this._languageRepository.EditAsync(lang);
 		}

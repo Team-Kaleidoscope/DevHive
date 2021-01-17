@@ -46,9 +46,10 @@ namespace DevHive.Web.Controllers
 		[HttpPut]
 		public async Task<IActionResult> Update(Guid technologyId, [FromBody] UpdateTechnologyWebModel updateModel)
 		{
-			UpdateTechnologyServiceModel updateTechnologyWebModel = this._technologyMapper.Map<UpdateTechnologyServiceModel>(updateModel);
+			UpdateTechnologyServiceModel updateTechnologyServiceModel = this._technologyMapper.Map<UpdateTechnologyServiceModel>(updateModel);
+			updateTechnologyServiceModel.Id = technologyId;
 
-			bool result = await this._technologyService.UpdateTechnology(technologyId, updateTechnologyWebModel);
+			bool result = await this._technologyService.UpdateTechnology(updateTechnologyServiceModel);
 
 			if (!result)
 				return new BadRequestObjectResult("Could not update Technology");

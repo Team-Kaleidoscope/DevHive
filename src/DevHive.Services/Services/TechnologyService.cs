@@ -48,15 +48,14 @@ namespace DevHive.Services.Services
 
 		#region Update
 
-		public async Task<bool> UpdateTechnology(Guid technologyId, UpdateTechnologyServiceModel updateTechnologyServiceModel)
+		public async Task<bool> UpdateTechnology(UpdateTechnologyServiceModel updateTechnologyServiceModel)
 		{
-			if (!await this._technologyRepository.DoesTechnologyExistAsync(technologyId))
+			if (!await this._technologyRepository.DoesTechnologyExistAsync(updateTechnologyServiceModel.Id))
 				throw new ArgumentException("Technology does not exist!");
 
 			if (await this._technologyRepository.DoesTechnologyNameExistAsync(updateTechnologyServiceModel.Name))
 				throw new ArgumentException("Technology name already exists!");
 
-			updateTechnologyServiceModel.Id = technologyId;
 			Technology technology = this._technologyMapper.Map<Technology>(updateTechnologyServiceModel);
 			bool result = await this._technologyRepository.EditAsync(technology);
 

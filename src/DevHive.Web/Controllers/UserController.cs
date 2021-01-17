@@ -57,40 +57,6 @@ namespace DevHive.Web.Controllers
 		}
 		#endregion
 
-		#region Create
-
-		[HttpPost]
-		[Route("AddAFriend")]
-		public async Task<IActionResult> AddAFriend(Guid userId, [FromBody] IdModel friendIdModel)
-		{
-			return await this._userService.AddFriend(userId, friendIdModel.Id) ?
-				new OkResult() :
-				new BadRequestResult();
-		}
-
-		[HttpPost]
-		[Route("AddLanguageToUser")]
-		public async Task<IActionResult> AddLanguageToUser(Guid userId, [FromBody] LanguageWebModel languageWebModel)
-		{
-			LanguageServiceModel languageServiceModel = this._userMapper.Map<LanguageServiceModel>(languageWebModel);
-
-			return await this._userService.AddLanguageToUser(userId, languageServiceModel) ?
-				new OkResult() :
-				new BadRequestResult();
-		}
-
-		[HttpPost]
-		[Route("AddTechnologyToUser")]
-		public async Task<IActionResult> AddTechnologyToUser(Guid userId, [FromBody] TechnologyWebModel technologyWebModel)
-		{
-			TechnologyServiceModel technologyServiceModel = this._userMapper.Map<TechnologyServiceModel>(technologyWebModel);
-
-			return await this._userService.AddTechnologyToUser(userId, technologyServiceModel) ?
-				new OkResult() :
-				new BadRequestResult();
-		}
-		#endregion
-
 		#region Read
 
 		[HttpGet]
@@ -107,9 +73,10 @@ namespace DevHive.Web.Controllers
 
 		[HttpGet]
 		[Route("GetAFriend")]
-		public async Task<IActionResult> GetAFriend(Guid friendId)
+		[AllowAnonymous]
+		public async Task<IActionResult> GetAFriend(string username)
 		{
-			UserServiceModel friendServiceModel = await this._userService.GetFriendById(friendId);
+			UserServiceModel friendServiceModel = await this._userService.GetFriend(username);
 			UserWebModel friend = this._userMapper.Map<UserWebModel>(friendServiceModel);
 
 			return new OkObjectResult(friend);
@@ -134,7 +101,6 @@ namespace DevHive.Web.Controllers
 		#endregion
 
 		#region Delete
-
 		[HttpDelete]
 		public async Task<IActionResult> Delete(Guid id, [FromHeader] string authorization)
 		{
@@ -143,36 +109,6 @@ namespace DevHive.Web.Controllers
 
 			await this._userService.DeleteUser(id);
 			return new OkResult();
-		}
-
-		[HttpDelete]
-		[Route("RemoveAFriend")]
-		public async Task<IActionResult> RemoveAFriend(Guid userId, Guid friendId)
-		{
-			await this._userService.RemoveFriend(userId, friendId);
-			return new OkResult();
-		}
-
-		[HttpDelete]
-		[Route("RemoveLanguageFromUser")]
-		public async Task<IActionResult> RemoveLanguageFromUser(Guid userId, [FromBody] LanguageWebModel languageWebModel)
-		{
-			LanguageServiceModel languageServiceModel = this._userMapper.Map<LanguageServiceModel>(languageWebModel);
-
-			return await this._userService.RemoveLanguageFromUser(userId, languageServiceModel) ?
-				new OkResult() :
-				new BadRequestResult();
-		}
-
-		[HttpDelete]
-		[Route("RemoveTechnologyFromUser")]
-		public async Task<IActionResult> RemoveTechnologyFromUser(Guid userId, [FromBody] TechnologyWebModel technologyWebModel)
-		{
-			TechnologyServiceModel technologyServiceModel = this._userMapper.Map<TechnologyServiceModel>(technologyWebModel);
-
-			return await this._userService.RemoveTechnologyFromUser(userId, technologyServiceModel) ?
-				new OkResult() :
-				new BadRequestResult();
 		}
 		#endregion
 	}

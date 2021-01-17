@@ -2,7 +2,7 @@ using System;
 
 namespace DevHive.Web.Models.Language
 {
-	public class UpdateLanguageWebModel : LanguageWebModel
+	public class UpdateLanguageWebModel
 	{
 		public string Name { get; set; }
 	}

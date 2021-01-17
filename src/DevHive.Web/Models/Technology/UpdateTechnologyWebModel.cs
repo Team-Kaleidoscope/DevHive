@@ -2,7 +2,7 @@ using System;
 
 namespace DevHive.Web.Models.Technology
 {
-	public class UpdateTechnologyWebModel : TechnologyWebModel
+	public class UpdateTechnologyWebModel
 	{
 		public string Name { get; set; }
 	}

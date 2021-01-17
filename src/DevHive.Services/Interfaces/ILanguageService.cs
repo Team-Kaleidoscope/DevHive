@@ -10,7 +10,7 @@ namespace DevHive.Services.Interfaces
 
 		Task<LanguageServiceModel> GetLanguageById(Guid languageId);
 
-		Task<bool> UpdateLanguage(Guid languageId, UpdateLanguageServiceModel languageServiceModel);
+		Task<bool> UpdateLanguage(UpdateLanguageServiceModel languageServiceModel);
 
 		Task<bool> DeleteLanguage(Guid languageId);
 	}
