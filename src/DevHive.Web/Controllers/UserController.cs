@@ -90,6 +90,9 @@ namespace DevHive.Web.Controllers
 			if (!await this._userService.ValidJWT(id, authorization))
 				return new UnauthorizedResult();
 
+			// if (!ModelState.IsValid)
+			// 	return BadRequest("Not a valid model!");
+
 			UpdateUserServiceModel updateUserServiceModel = this._userMapper.Map<UpdateUserServiceModel>(updateModel);
 			updateUserServiceModel.Id = id;
 

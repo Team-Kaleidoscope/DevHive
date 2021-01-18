@@ -102,7 +102,7 @@ namespace DevHive.Services.Services
 			User user = await this._userRepository.GetByIdAsync(userId);
 			User friend = await this._userRepository.GetByIdAsync(friendId);
 
-			return user != default(User) && friend != default(User) ?
+			return user != null && friend != null ?
 				await this._userRepository.AddFriendToUserAsync(user, friend) :
 				throw new ArgumentException("Invalid user!");
 		}
@@ -122,7 +122,7 @@ namespace DevHive.Services.Services
 		{
 			User friend = await this._userRepository.GetByUsernameAsync(username);
 
-			if (default(User) == friend)
+			if (friend == null)
 				throw new ArgumentException("User does not exist!");
 
 			return this._userMapper.Map<UserServiceModel>(friend);
@@ -142,13 +142,18 @@ namespace DevHive.Services.Services
 
 			await this.ValidateUserCollections(updateUserServiceModel);
 
-			//Query proper lang, tech and role and insert the full class in updateUserServiceModel
 			List<Language> properLanguages = new();
 			foreach (UpdateUserCollectionServiceModel lang in updateUserServiceModel.Languages)
 				properLanguages.Add(await this._languageRepository.GetByNameAsync(lang.Name));
 
+			List<Technology> properTechnologies = new();
+			foreach (UpdateUserCollectionServiceModel tech in updateUserServiceModel.Technologies)
+				properTechnologies.Add(await this._technologyRepository.GetByNameAsync(tech.Name));
+
 			User user = this._userMapper.Map<User>(updateUserServiceModel);
+
 			user.Languages = properLanguages;
+			user.Technologies = properTechnologies;
 
 			bool success = await this._userRepository.EditAsync(user);
 
@@ -165,7 +170,7 @@ namespace DevHive.Services.Services
 			{
 				User returnedFriend = await this._userRepository.GetByUsernameAsync(friend.Name);
 
-				if (default(User) == returnedFriend)
+				if (returnedFriend == null)
 					throw new ArgumentException($"User {friend.Name} does not exist!");
 			}
 
