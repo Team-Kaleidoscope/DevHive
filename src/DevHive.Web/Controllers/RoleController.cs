@@ -48,11 +48,11 @@ namespace DevHive.Web.Controllers
 		[HttpPut]
 		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateRoleWebModel updateRoleWebModel)
 		{
-			RoleServiceModel roleServiceModel =
-				this._roleMapper.Map<RoleServiceModel>(updateRoleWebModel);
-			roleServiceModel.Id = id;
+			UpdateRoleServiceModel updateRoleServiceModel =
+				this._roleMapper.Map<UpdateRoleServiceModel>(updateRoleWebModel);
+			updateRoleServiceModel.Id = id;
 
-			bool result = await this._roleService.UpdateRole(roleServiceModel);
+			bool result = await this._roleService.UpdateRole(updateRoleServiceModel);
 
 			if (!result)
 				return new BadRequestObjectResult("Could not update role!");
