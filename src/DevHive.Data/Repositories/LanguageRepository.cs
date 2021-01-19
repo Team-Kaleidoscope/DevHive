@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class LanguageRepository : ILanguageRepository
+	public class LanguageRepository : BaseRepository, ILanguageRepository
 	{
 		private readonly DevHiveContext _context;
 
@@ -24,7 +24,7 @@ namespace DevHive.Data.Repositories
 				.Set<Language>()
 				.AddAsync(entity);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 		#endregion
 
@@ -52,7 +52,7 @@ namespace DevHive.Data.Repositories
 			.Set<Language>()
 			.Update(newEntity);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 		#endregion
 
@@ -64,7 +64,7 @@ namespace DevHive.Data.Repositories
 				.Set<Language>()
 				.Remove(entity);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 		#endregion
 

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class RoleRepository : IRoleRepository
+	public class RoleRepository : BaseRepository, IRoleRepository
 	{
 		private readonly DevHiveContext _context;
 
@@ -23,7 +23,7 @@ namespace DevHive.Data.Repositories
 				.Set<Role>()
 				.AddAsync(entity);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 
 		//Read
@@ -51,7 +51,7 @@ namespace DevHive.Data.Repositories
 				.CurrentValues
 				.SetValues(newEntity);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 
 		//Delete
@@ -61,7 +61,7 @@ namespace DevHive.Data.Repositories
 				.Set<Role>()
 				.Remove(entity);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 
 		public async Task<bool> DoesNameExist(string name)

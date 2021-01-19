@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace DevHive.Common.Models.Misc
+namespace DevHive.Data.Repositories
 {
-	public static class RepositoryMethods
+	public class BaseRepository
 	{
-		public static async Task<bool> SaveChangesAsync(DbContext context)
+		public async Task<bool> SaveChangesAsync(DbContext context)
 		{
 			int result = await context.SaveChangesAsync();
 

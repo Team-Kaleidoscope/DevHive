@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class PostRepository : IPostRepository
+	public class PostRepository : BaseRepository, IPostRepository
 	{
 		private readonly DevHiveContext _context;
 
@@ -23,7 +23,7 @@ namespace DevHive.Data.Repositories
 				.Set<Post>()
 				.AddAsync(post);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 
 		public async Task<bool> AddCommentAsync(Comment entity)
@@ -32,7 +32,7 @@ namespace DevHive.Data.Repositories
 				.Set<Comment>()
 				.AddAsync(entity);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 
 		//Read
@@ -71,7 +71,7 @@ namespace DevHive.Data.Repositories
 			.Set<Post>()
 			.Update(newPost);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 
 		public async Task<bool> EditCommentAsync(Comment newEntity)
@@ -80,7 +80,7 @@ namespace DevHive.Data.Repositories
 				.Set<Comment>()
 				.Update(newEntity);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 
 		//Delete
@@ -90,7 +90,7 @@ namespace DevHive.Data.Repositories
 				.Set<Post>()
 				.Remove(post);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 
 		public async Task<bool> DeleteCommentAsync(Comment entity)
@@ -99,7 +99,7 @@ namespace DevHive.Data.Repositories
 				.Set<Comment>()
 				.Remove(entity);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 
 		#region Validations

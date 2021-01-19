@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class TechnologyRepository : ITechnologyRepository
+	public class TechnologyRepository : BaseRepository, ITechnologyRepository
 	{
 		private readonly DevHiveContext _context;
 
@@ -25,7 +25,7 @@ namespace DevHive.Data.Repositories
 				.Set<Technology>()
 				.AddAsync(entity);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 		#endregion
 
@@ -52,7 +52,7 @@ namespace DevHive.Data.Repositories
 			.Set<Technology>()
 			.Update(newEntity);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 		#endregion
 
@@ -64,7 +64,7 @@ namespace DevHive.Data.Repositories
 				.Set<Technology>()
 				.Remove(entity);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 		#endregion
 

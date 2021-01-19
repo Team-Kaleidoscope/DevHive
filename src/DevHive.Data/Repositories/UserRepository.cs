@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class UserRepository : IUserRepository
+	public class UserRepository : BaseRepository, IUserRepository
 	{
 		private readonly DevHiveContext _context;
 
@@ -25,7 +25,7 @@ namespace DevHive.Data.Repositories
 			await this._context.Users
 				.AddAsync(entity);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 
 		public async Task<bool> AddFriendToUserAsync(User user, User friend)
@@ -33,7 +33,7 @@ namespace DevHive.Data.Repositories
 			this._context.Update(user);
 			user.Friends.Add(friend);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 
 		public async Task<bool> AddLanguageToUserAsync(User user, Language language)
@@ -42,7 +42,7 @@ namespace DevHive.Data.Repositories
 
 			user.Languages.Add(language);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 
 		public async Task<bool> AddTechnologyToUserAsync(User user, Technology technology)
@@ -51,7 +51,7 @@ namespace DevHive.Data.Repositories
 
 			user.Technologies.Add(technology);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 		#endregion
 
@@ -116,7 +116,7 @@ namespace DevHive.Data.Repositories
 				.CurrentValues
 				.SetValues(newEntity);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 
 		public async Task<bool> EditUserLanguageAsync(User user, Language oldLang, Language newLang)
@@ -126,7 +126,7 @@ namespace DevHive.Data.Repositories
 			user.Languages.Remove(oldLang);
 			user.Languages.Add(newLang);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 
 		public async Task<bool> EditUserTechnologyAsync(User user, Technology oldTech, Technology newTech)
@@ -136,7 +136,7 @@ namespace DevHive.Data.Repositories
 			user.Technologies.Remove(oldTech);
 			user.Technologies.Add(newTech);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 		#endregion
 
@@ -147,7 +147,7 @@ namespace DevHive.Data.Repositories
 			this._context.Users
 				.Remove(entity);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 
 		public async Task<bool> RemoveFriendAsync(User user, User friend)
@@ -155,7 +155,7 @@ namespace DevHive.Data.Repositories
 			this._context.Update(user);
 			user.Friends.Remove(friend);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 
 		public async Task<bool> RemoveLanguageFromUserAsync(User user, Language language)
@@ -164,7 +164,7 @@ namespace DevHive.Data.Repositories
 
 			user.Languages.Remove(language);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 
 		public async Task<bool> RemoveTechnologyFromUserAsync(User user, Technology technology)
@@ -173,7 +173,7 @@ namespace DevHive.Data.Repositories
 
 			user.Technologies.Remove(technology);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
 		#endregion
 
