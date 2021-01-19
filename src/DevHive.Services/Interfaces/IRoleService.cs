@@ -10,7 +10,7 @@ namespace DevHive.Services.Interfaces
 
 		Task<RoleServiceModel> GetRoleById(Guid id);
 
-		Task<bool> UpdateRole(RoleServiceModel roleServiceModel);
+		Task<bool> UpdateRole(UpdateRoleServiceModel roleServiceModel);
 
 		Task<bool> DeleteRole(Guid id);
 	}

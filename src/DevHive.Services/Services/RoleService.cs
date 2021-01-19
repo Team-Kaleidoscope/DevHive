@@ -47,15 +47,15 @@ namespace DevHive.Services.Services
 			return this._roleMapper.Map<RoleServiceModel>(role);
 		}
 
-		public async Task<bool> UpdateRole(RoleServiceModel roleServiceModel)
+		public async Task<bool> UpdateRole(UpdateRoleServiceModel updateRoleServiceModel)
 		{
-			if (!await this._roleRepository.DoesRoleExist(roleServiceModel.Id))
+			if (!await this._roleRepository.DoesRoleExist(updateRoleServiceModel.Id))
 				throw new ArgumentException("Role does not exist!");
 
-			if (await this._roleRepository.DoesNameExist(roleServiceModel.Name))
+			if (await this._roleRepository.DoesNameExist(updateRoleServiceModel.Name))
 				throw new ArgumentException("Role name already exists!");
 
-			Role role = this._roleMapper.Map<Role>(roleServiceModel);
+			Role role = this._roleMapper.Map<Role>(updateRoleServiceModel);
 			return await this._roleRepository.EditAsync(role);
 		}
 
