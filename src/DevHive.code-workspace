@@ -46,7 +46,7 @@
 	"launch": {
 		"configurations": [
 			{
-				"name": ".NET Core Launch (web)",
+				"name": "Launch API",
 				"type": "coreclr",
 				"request": "launch",
 				"preLaunchTask": "workspace-build",
@@ -54,16 +54,20 @@
 				"args": [],
 				"cwd": "${workspaceFolder:DevHive.Web}",
 				"stopAtEntry": false,
-				"serverReadyAction": {
-					"action": "openExternally",
-					"pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-				},
 				"env": {
 					"ASPNETCORE_ENVIRONMENT": "Development"
 				},
-				"launchBrowser": {
-					"enabled": false
-				}
+			},
+			{
+				"name": "Launch Data Tests",
+				"type": "coreclr",
+				"request": "launch",
+				"preLaunchTask": "workspace-build",
+				"program": "${workspaceFolder:DevHive.Tests}/DevHive.Data.Tests/bin/Debug/net5.0/DevHive.Data.Tests.dll",
+				"args": [],
+				"cwd": "${workspaceFolder:DevHive.Tests}/DevHive.Data.Tests",
+				"console": "internalConsole",
+				"stopAtEntry": false
 			},
 		],
 		"compounds": []

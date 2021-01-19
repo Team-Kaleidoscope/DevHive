@@ -2,8 +2,6 @@ using System;
 using System.Threading.Tasks;
 using DevHive.Common.Models.Identity;
 using DevHive.Services.Models.Identity.User;
-using DevHive.Services.Models.Language;
-using DevHive.Services.Models.Technology;
 
 namespace DevHive.Services.Interfaces
 {
@@ -14,7 +12,7 @@ namespace DevHive.Services.Interfaces
 
 		Task<bool> AddFriend(Guid userId, Guid friendId);
 
-		Task<UserServiceModel> GetFriend(string username);
+		Task<UserServiceModel> GetUserByUsername(string username);
 		Task<UserServiceModel> GetUserById(Guid id);
 
 		Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateModel);

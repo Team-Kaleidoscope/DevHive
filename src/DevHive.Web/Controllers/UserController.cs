@@ -72,11 +72,11 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpGet]
-		[Route("GetFriend")]
+		[Route("GetUser")]
 		[AllowAnonymous]
-		public async Task<IActionResult> GetAFriend(string username)
+		public async Task<IActionResult> GetUser(string username)
 		{
-			UserServiceModel friendServiceModel = await this._userService.GetFriend(username);
+			UserServiceModel friendServiceModel = await this._userService.GetUserByUsername(username);
 			UserWebModel friend = this._userMapper.Map<UserWebModel>(friendServiceModel);
 
 			return new OkObjectResult(friend);

@@ -118,7 +118,7 @@ namespace DevHive.Services.Services
 			return this._userMapper.Map<UserServiceModel>(user);
 		}
 
-		public async Task<UserServiceModel> GetFriend(string username)
+		public async Task<UserServiceModel> GetUserByUsername(string username)
 		{
 			User friend = await this._userRepository.GetByUsernameAsync(username);
 
