@@ -47,12 +47,11 @@ namespace DevHive.Web
 
 			if (env.IsDevelopment())
 			{
-				//app.UseDeveloperExceptionPage();
+				app.UseDeveloperExceptionPage();
 				app.UseSwaggerConfiguration();
 			}
 			else
 			{
-				app.UseExceptionHandler("/api/Error");
 				app.UseHsts();
 			}
 
