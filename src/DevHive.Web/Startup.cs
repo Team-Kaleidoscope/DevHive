@@ -33,7 +33,7 @@ namespace DevHive.Web
 			services.JWTConfiguration(Configuration);
 			services.AutoMapperConfiguration();
 			services.DependencyInjectionConfiguration();
-			services.CustomMiddlewareConfiguration();
+			services.ExceptionHandlerMiddlewareConfiguration();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,11 +53,11 @@ namespace DevHive.Web
 			else
 			{
 				app.UseHsts();
+				app.UseExceptionHandlerMiddlewareConfiguration();
 			}
 
 			app.UseDatabaseConfiguration();
 			app.UseAutoMapperConfiguration();
-			app.UseCustomMiddlewareConfiguration();
 
 			app.UseEndpoints(endpoints =>
 			{

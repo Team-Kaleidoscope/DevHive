@@ -9,7 +9,7 @@ namespace DevHive.Services.Models.Identity.User
 	{
 		public IList<RoleServiceModel> Roles { get; set; } = new List<RoleServiceModel>();
 
-		public IList<UserServiceModel> Friends { get; set; } = new List<UserServiceModel>();
+		public IList<FriendServiceModel> Friends { get; set; } = new List<FriendServiceModel>();
 
 		public IList<LanguageServiceModel> Languages { get; set; } = new List<LanguageServiceModel>();
 

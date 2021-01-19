@@ -15,6 +15,7 @@ using DevHive.Services.Interfaces;
 using DevHive.Data.Interfaces.Repositories;
 using Microsoft.AspNetCore.JsonPatch;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace DevHive.Services.Services
 {
@@ -171,18 +172,37 @@ namespace DevHive.Services.Services
 			User user = await this._userRepository.GetByIdAsync(id) ??
 				throw new ArgumentException("User does not exist!");
 
-			var password = jsonPatch.Operations
+			object password = jsonPatch.Operations
 				.Where(x => x.path == "/password")
 				.Select(x => x.value)
 				.FirstOrDefault();
+
+			IEnumerable<object> friends = jsonPatch.Operations
+				.Where(x => x.path == "/friends")
+				.Select(x => x.value);
 
 			if(password != null)
 			{
 				string passwordHash = this.GeneratePasswordHash(password.ToString());
 				user.PasswordHash = passwordHash;
 			}
-			else
-				jsonPatch.ApplyTo(user);
+
+			if (friends != null)
+			{
+				foreach (object friendObj in friends)
+				{
+					FriendServiceModel friendServiceModel =
+						JsonConvert.DeserializeObject<FriendServiceModel>(friendObj.ToString());
+
+					User amigo = await this._userRepository.GetByUsernameAsync(friendServiceModel.UserName)
+						?? throw new ArgumentException($"User {friendServiceModel.UserName} does not exist!");
+
+					user.Friends.Add(amigo);
+				}
+			}
+
+			//Remove password and friends peace from the request patch before applying the rest
+			// jsonPatch.ApplyTo(user);
 
 			bool success = await this._userRepository.EditAsync(user);
 			if (success)

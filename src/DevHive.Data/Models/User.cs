@@ -18,6 +18,7 @@ namespace DevHive.Data.Models
 		/// <summary>
 		/// Languages that the user uses or is familiar with
 		/// </summary>
+		// [Unique]
 		public IList<Language> Languages { get; set; }
 
 		/// <summary>

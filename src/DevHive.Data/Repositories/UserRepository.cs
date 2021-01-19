@@ -109,12 +109,14 @@ namespace DevHive.Data.Repositories
 
 		public async Task<bool> EditAsync(User newEntity)
 		{
-			User user = await this.GetByIdAsync(newEntity.Id);
+			// User user = await this.GetByIdAsync(newEntity.Id);
 
-			this._context
-				.Entry(user)
-				.CurrentValues
-				.SetValues(newEntity);
+			// this._context
+			// 	.Entry(user)
+			// 	.CurrentValues
+			// 	.SetValues(newEntity);
+
+			this._context.Update(newEntity);
 
 			return await this.SaveChangesAsync(this._context);
 		}

@@ -15,7 +15,7 @@ namespace DevHive.Web.Models.Identity.User
 
 		[NotNull]
 		[Required]
-		public IList<UserWebModel> Friends { get; set; } = new List<UserWebModel>();
+		public IList<FriendWebModel> Friends { get; set; } = new List<FriendWebModel>();
 
 		[NotNull]
 		[Required]

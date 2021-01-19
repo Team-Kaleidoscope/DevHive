@@ -20,6 +20,9 @@ namespace DevHive.Web.Configurations.Mapping
 
 			CreateMap<TokenModel, TokenWebModel>();
 
+			CreateMap<FriendWebModel, FriendServiceModel>();
+			CreateMap<FriendServiceModel, FriendWebModel>();
+
 			CreateMap<FriendWebModel, UpdateUserCollectionServiceModel>()
 				.ForMember(f => f.Name, u => u.MapFrom(src => src.UserName));
 			CreateMap<UpdateLanguageWebModel, UpdateUserCollectionServiceModel>();
