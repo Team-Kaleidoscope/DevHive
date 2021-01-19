@@ -13,7 +13,8 @@ using System.Collections.Generic;
 using DevHive.Common.Models.Identity;
 using DevHive.Services.Interfaces;
 using DevHive.Data.Interfaces.Repositories;
-using DevHive.Services.Models.Language;
+using Microsoft.AspNetCore.JsonPatch;
+using System.Linq;
 
 namespace DevHive.Services.Services
 {
@@ -142,18 +143,20 @@ namespace DevHive.Services.Services
 
 			await this.ValidateUserCollections(updateUserServiceModel);
 
-			List<Language> properLanguages = new();
+			List<Language> languages = new();
 			foreach (UpdateUserCollectionServiceModel lang in updateUserServiceModel.Languages)
-				properLanguages.Add(await this._languageRepository.GetByNameAsync(lang.Name));
+				languages.Add(await this._languageRepository.GetByNameAsync(lang.Name) ??
+					throw new ArgumentException("Invalid language name!"));
 
-			List<Technology> properTechnologies = new();
+			List<Technology> technologies = new();
 			foreach (UpdateUserCollectionServiceModel tech in updateUserServiceModel.Technologies)
-				properTechnologies.Add(await this._technologyRepository.GetByNameAsync(tech.Name));
+				technologies.Add(await this._technologyRepository.GetByNameAsync(tech.Name) ??
+					throw new ArgumentException("Invalid technology name!"));
 
 			User user = this._userMapper.Map<User>(updateUserServiceModel);
 
-			user.Languages = properLanguages;
-			user.Technologies = properTechnologies;
+			user.Languages = languages;
+			user.Technologies = technologies;
 
 			bool success = await this._userRepository.EditAsync(user);
 
@@ -163,34 +166,32 @@ namespace DevHive.Services.Services
 			return this._userMapper.Map<UserServiceModel>(user); ;
 		}
 
-		private async Task ValidateUserCollections(UpdateUserServiceModel updateUserServiceModel)
+		public async Task<UserServiceModel> PatchUser(Guid id, JsonPatchDocument<User> jsonPatch)
 		{
-			// Friends
-			foreach (UpdateUserCollectionServiceModel friend in updateUserServiceModel.Friends)
+			User user = await this._userRepository.GetByIdAsync(id) ??
+				throw new ArgumentException("User does not exist!");
+
+			var password = jsonPatch.Operations
+				.Where(x => x.path == "/password")
+				.Select(x => x.value)
+				.FirstOrDefault();
+
+			if(password != null)
 			{
-				User returnedFriend = await this._userRepository.GetByUsernameAsync(friend.Name);
-
-				if (returnedFriend == null)
-					throw new ArgumentException($"User {friend.Name} does not exist!");
+				string passwordHash = this.GeneratePasswordHash(password.ToString());
+				user.PasswordHash = passwordHash;
 			}
+			else
+				jsonPatch.ApplyTo(user);
 
-			// Languages
-			foreach (UpdateUserCollectionServiceModel language in updateUserServiceModel.Languages)
+			bool success = await this._userRepository.EditAsync(user);
+			if (success)
 			{
-				Language returnedLanguage = await this._languageRepository.GetByNameAsync(language.Name);
-
-				if (default(Language) == returnedLanguage)
-					throw new ArgumentException($"Language {language.Name} does not exist!");
+				user = await this._userRepository.GetByIdAsync(id);
+				return this._userMapper.Map<UserServiceModel>(user);
 			}
-
-			// Technology
-			foreach (UpdateUserCollectionServiceModel technology in updateUserServiceModel.Technologies)
-			{
-				Technology returnedTechnology = await this._technologyRepository.GetByNameAsync(technology.Name);
-
-				if (default(Technology) == returnedTechnology)
-					throw new ArgumentException($"Technology {technology.Name} does not exist!");
-			}
+			else
+				return null;
 		}
 		#endregion
 
@@ -273,6 +274,36 @@ namespace DevHive.Services.Services
 					toReturn.Add(claim.Value);
 
 			return toReturn;
+		}
+
+		private async Task ValidateUserCollections(UpdateUserServiceModel updateUserServiceModel)
+		{
+			// Friends
+			foreach (UpdateUserCollectionServiceModel friend in updateUserServiceModel.Friends)
+			{
+				User returnedFriend = await this._userRepository.GetByUsernameAsync(friend.Name);
+
+				if (returnedFriend == null)
+					throw new ArgumentException($"User {friend.Name} does not exist!");
+			}
+
+			// Languages
+			foreach (UpdateUserCollectionServiceModel language in updateUserServiceModel.Languages)
+			{
+				Language returnedLanguage = await this._languageRepository.GetByNameAsync(language.Name);
+
+				if (default(Language) == returnedLanguage)
+					throw new ArgumentException($"Language {language.Name} does not exist!");
+			}
+
+			// Technology
+			foreach (UpdateUserCollectionServiceModel technology in updateUserServiceModel.Technologies)
+			{
+				Technology returnedTechnology = await this._technologyRepository.GetByNameAsync(technology.Name);
+
+				if (default(Technology) == returnedTechnology)
+					throw new ArgumentException($"Technology {technology.Name} does not exist!");
+			}
 		}
 
 		private string WriteJWTSecurityToken(Guid userId, IList<Role> roles)

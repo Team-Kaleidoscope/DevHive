@@ -12,6 +12,8 @@ using DevHive.Services.Models.Language;
 using DevHive.Web.Models.Technology;
 using DevHive.Services.Models.Technology;
 using DevHive.Services.Interfaces;
+using DevHive.Data.Models;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace DevHive.Web.Controllers
 {
@@ -100,6 +102,17 @@ namespace DevHive.Web.Controllers
 			UserWebModel userWebModel = this._userMapper.Map<UserWebModel>(userServiceModel);
 
 			return new AcceptedResult("UpdateUser", userWebModel);
+		}
+
+		[HttpPatch]
+		public async Task<IActionResult> Patch(Guid id, [FromBody] JsonPatchDocument<User> jsonPatch)
+		{
+			UserServiceModel userServiceModel = await this._userService.PatchUser(id, jsonPatch);
+
+			if (userServiceModel == null)
+				return new BadRequestObjectResult("Wrong patch properties");
+			else
+				return new OkObjectResult(this._userMapper.Map<UserWebModel>(userServiceModel));
 		}
 		#endregion
 
