@@ -8,396 +8,465 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DevHive.Data.Migrations
 {
-    [DbContext(typeof(DevHiveContext))]
-    partial class DevHiveContextModelSnapshot : ModelSnapshot
-    {
-        protected override void BuildModel(ModelBuilder modelBuilder)
-        {
+	[DbContext(typeof(DevHiveContext))]
+	partial class DevHiveContextModelSnapshot : ModelSnapshot
+	{
+		protected override void BuildModel(ModelBuilder modelBuilder)
+		{
 #pragma warning disable 612, 618
-            modelBuilder
-                .UseIdentityByDefaultColumns()
-                .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.1");
+			modelBuilder
+				.UseIdentityByDefaultColumns()
+				.HasAnnotation("Relational:MaxIdentifierLength", 63)
+				.HasAnnotation("ProductVersion", "5.0.1");
 
-            modelBuilder.Entity("DevHive.Data.Models.Comment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+			modelBuilder.Entity("DevHive.Data.Models.Comment", b =>
+				{
+					b.Property<Guid>("Id")
+						.ValueGeneratedOnAdd()
+						.HasColumnType("uuid");
 
-                    b.Property<Guid>("IssuerId")
-                        .HasColumnType("uuid");
+					b.Property<Guid>("IssuerId")
+						.HasColumnType("uuid");
 
-                    b.Property<string>("Message")
-                        .HasColumnType("text");
+					b.Property<string>("Message")
+						.HasColumnType("text");
 
-                    b.Property<DateTime>("TimeCreated")
-                        .HasColumnType("timestamp without time zone");
+					b.Property<Guid?>("PostId")
+						.HasColumnType("uuid");
 
-                    b.HasKey("Id");
+					b.Property<DateTime>("TimeCreated")
+						.HasColumnType("timestamp without time zone");
 
-                    b.ToTable("Comments");
-                });
+					b.HasKey("Id");
 
-            modelBuilder.Entity("DevHive.Data.Models.Language", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+					b.HasIndex("PostId");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
+					b.ToTable("Comments");
+				});
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
+			modelBuilder.Entity("DevHive.Data.Models.Language", b =>
+				{
+					b.Property<Guid>("Id")
+						.ValueGeneratedOnAdd()
+						.HasColumnType("uuid");
 
-                    b.HasKey("Id");
+					b.Property<string>("Name")
+						.HasColumnType("text");
 
-                    b.HasIndex("UserId");
+					b.HasKey("Id");
 
-                    b.ToTable("Languages");
-                });
+					b.ToTable("Languages");
+				});
 
-            modelBuilder.Entity("DevHive.Data.Models.Role", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+			modelBuilder.Entity("DevHive.Data.Models.Post", b =>
+				{
+					b.Property<Guid>("Id")
+						.ValueGeneratedOnAdd()
+						.HasColumnType("uuid");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("text");
+					b.Property<Guid>("IssuerId")
+						.HasColumnType("uuid");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+					b.Property<string>("Message")
+						.HasColumnType("text");
 
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+					b.Property<DateTime>("TimeCreated")
+						.HasColumnType("timestamp without time zone");
 
-                    b.HasKey("Id");
+					b.HasKey("Id");
 
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex");
+					b.ToTable("Posts");
+				});
 
-                    b.ToTable("AspNetRoles");
-                });
+			modelBuilder.Entity("DevHive.Data.Models.Role", b =>
+				{
+					b.Property<Guid>("Id")
+						.ValueGeneratedOnAdd()
+						.HasColumnType("uuid");
 
-            modelBuilder.Entity("DevHive.Data.Models.Technology", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+					b.Property<string>("ConcurrencyStamp")
+						.IsConcurrencyToken()
+						.HasColumnType("text");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
+					b.Property<string>("Name")
+						.HasMaxLength(256)
+						.HasColumnType("character varying(256)");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
+					b.Property<string>("NormalizedName")
+						.HasMaxLength(256)
+						.HasColumnType("character varying(256)");
 
-                    b.HasKey("Id");
+					b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+					b.HasIndex("NormalizedName")
+						.IsUnique()
+						.HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("Technologies");
-                });
+					b.ToTable("AspNetRoles");
+				});
 
-            modelBuilder.Entity("DevHive.Data.Models.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+			modelBuilder.Entity("DevHive.Data.Models.Technology", b =>
+				{
+					b.Property<Guid>("Id")
+						.ValueGeneratedOnAdd()
+						.HasColumnType("uuid");
 
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("integer");
+					b.Property<string>("Name")
+						.HasColumnType("text");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("text");
+					b.HasKey("Id");
 
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+					b.ToTable("Technologies");
+				});
 
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("boolean");
+			modelBuilder.Entity("DevHive.Data.Models.User", b =>
+				{
+					b.Property<Guid>("Id")
+						.ValueGeneratedOnAdd()
+						.HasColumnType("uuid");
 
-                    b.Property<string>("FirstName")
-                        .HasColumnType("text");
+					b.Property<int>("AccessFailedCount")
+						.HasColumnType("integer");
 
-                    b.Property<string>("LastName")
-                        .HasColumnType("text");
+					b.Property<string>("ConcurrencyStamp")
+						.IsConcurrencyToken()
+						.HasColumnType("text");
 
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("boolean");
+					b.Property<string>("Email")
+						.HasMaxLength(256)
+						.HasColumnType("character varying(256)");
 
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("timestamp with time zone");
+					b.Property<bool>("EmailConfirmed")
+						.HasColumnType("boolean");
 
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+					b.Property<string>("FirstName")
+						.HasColumnType("text");
 
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+					b.Property<string>("LastName")
+						.HasColumnType("text");
 
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("text");
+					b.Property<bool>("LockoutEnabled")
+						.HasColumnType("boolean");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
+					b.Property<DateTimeOffset?>("LockoutEnd")
+						.HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("boolean");
+					b.Property<string>("NormalizedEmail")
+						.HasMaxLength(256)
+						.HasColumnType("character varying(256)");
 
-                    b.Property<string>("ProfilePictureUrl")
-                        .HasColumnType("text");
+					b.Property<string>("NormalizedUserName")
+						.HasMaxLength(256)
+						.HasColumnType("character varying(256)");
 
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("text");
+					b.Property<string>("PasswordHash")
+						.HasColumnType("text");
 
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("boolean");
+					b.Property<string>("PhoneNumber")
+						.HasColumnType("text");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
+					b.Property<bool>("PhoneNumberConfirmed")
+						.HasColumnType("boolean");
 
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+					b.Property<string>("ProfilePictureUrl")
+						.HasColumnType("text");
 
-                    b.HasKey("Id");
+					b.Property<string>("SecurityStamp")
+						.HasColumnType("text");
 
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
+					b.Property<bool>("TwoFactorEnabled")
+						.HasColumnType("boolean");
 
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex");
+					b.Property<Guid?>("UserId")
+						.HasColumnType("uuid");
 
-                    b.HasIndex("UserId");
+					b.Property<string>("UserName")
+						.HasMaxLength(256)
+						.HasColumnType("character varying(256)");
 
-                    b.HasIndex("UserName")
-                        .IsUnique();
+					b.HasKey("Id");
 
-                    b.ToTable("AspNetUsers");
-                });
+					b.HasIndex("NormalizedEmail")
+						.HasDatabaseName("EmailIndex");
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+					b.HasIndex("NormalizedUserName")
+						.IsUnique()
+						.HasDatabaseName("UserNameIndex");
 
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("text");
+					b.HasIndex("UserId");
 
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("text");
+					b.HasIndex("UserName")
+						.IsUnique();
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uuid");
+					b.ToTable("AspNetUsers");
+				});
 
-                    b.HasKey("Id");
+			modelBuilder.Entity("LanguageUser", b =>
+				{
+					b.Property<Guid>("LanguagesId")
+						.HasColumnType("uuid");
 
-                    b.HasIndex("RoleId");
+					b.Property<Guid>("UsersId")
+						.HasColumnType("uuid");
 
-                    b.ToTable("AspNetRoleClaims");
-                });
+					b.HasKey("LanguagesId", "UsersId");
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+					b.HasIndex("UsersId");
 
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("text");
+					b.ToTable("LanguageUser");
+				});
 
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("text");
+			modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+				{
+					b.Property<int>("Id")
+						.ValueGeneratedOnAdd()
+						.HasColumnType("integer")
+						.UseIdentityByDefaultColumn();
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
+					b.Property<string>("ClaimType")
+						.HasColumnType("text");
 
-                    b.HasKey("Id");
+					b.Property<string>("ClaimValue")
+						.HasColumnType("text");
 
-                    b.HasIndex("UserId");
+					b.Property<Guid>("RoleId")
+						.HasColumnType("uuid");
 
-                    b.ToTable("AspNetUserClaims");
-                });
+					b.HasKey("Id");
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
-                {
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("text");
+					b.HasIndex("RoleId");
 
-                    b.Property<string>("ProviderKey")
-                        .HasColumnType("text");
+					b.ToTable("AspNetRoleClaims");
+				});
 
-                    b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("text");
+			modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+				{
+					b.Property<int>("Id")
+						.ValueGeneratedOnAdd()
+						.HasColumnType("integer")
+						.UseIdentityByDefaultColumn();
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
+					b.Property<string>("ClaimType")
+						.HasColumnType("text");
 
-                    b.HasKey("LoginProvider", "ProviderKey");
+					b.Property<string>("ClaimValue")
+						.HasColumnType("text");
 
-                    b.HasIndex("UserId");
+					b.Property<Guid>("UserId")
+						.HasColumnType("uuid");
 
-                    b.ToTable("AspNetUserLogins");
-                });
+					b.HasKey("Id");
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
+					b.HasIndex("UserId");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uuid");
+					b.ToTable("AspNetUserClaims");
+				});
 
-                    b.HasKey("UserId", "RoleId");
+			modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+				{
+					b.Property<string>("LoginProvider")
+						.HasColumnType("text");
 
-                    b.HasIndex("RoleId");
+					b.Property<string>("ProviderKey")
+						.HasColumnType("text");
 
-                    b.ToTable("AspNetUserRoles");
-                });
+					b.Property<string>("ProviderDisplayName")
+						.HasColumnType("text");
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
+					b.Property<Guid>("UserId")
+						.HasColumnType("uuid");
 
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("text");
+					b.HasKey("LoginProvider", "ProviderKey");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
+					b.HasIndex("UserId");
 
-                    b.Property<string>("Value")
-                        .HasColumnType("text");
+					b.ToTable("AspNetUserLogins");
+				});
 
-                    b.HasKey("UserId", "LoginProvider", "Name");
+			modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+				{
+					b.Property<Guid>("UserId")
+						.HasColumnType("uuid");
 
-                    b.ToTable("AspNetUserTokens");
-                });
+					b.Property<Guid>("RoleId")
+						.HasColumnType("uuid");
 
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.Property<Guid>("RolesId")
-                        .HasColumnType("uuid");
+					b.HasKey("UserId", "RoleId");
 
-                    b.Property<Guid>("UsersId")
-                        .HasColumnType("uuid");
+					b.HasIndex("RoleId");
 
-                    b.HasKey("RolesId", "UsersId");
+					b.ToTable("AspNetUserRoles");
+				});
 
-                    b.HasIndex("UsersId");
+			modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+				{
+					b.Property<Guid>("UserId")
+						.HasColumnType("uuid");
 
-                    b.ToTable("RoleUser");
-                });
+					b.Property<string>("LoginProvider")
+						.HasColumnType("text");
 
-            modelBuilder.Entity("DevHive.Data.Models.Language", b =>
-                {
-                    b.HasOne("DevHive.Data.Models.User", null)
-                        .WithMany("Languages")
-                        .HasForeignKey("UserId");
-                });
+					b.Property<string>("Name")
+						.HasColumnType("text");
 
-            modelBuilder.Entity("DevHive.Data.Models.Technology", b =>
-                {
-                    b.HasOne("DevHive.Data.Models.User", null)
-                        .WithMany("Technologies")
-                        .HasForeignKey("UserId");
-                });
+					b.Property<string>("Value")
+						.HasColumnType("text");
 
-            modelBuilder.Entity("DevHive.Data.Models.User", b =>
-                {
-                    b.HasOne("DevHive.Data.Models.User", null)
-                        .WithMany("Friends")
-                        .HasForeignKey("UserId");
-                });
+					b.HasKey("UserId", "LoginProvider", "Name");
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
-                {
-                    b.HasOne("DevHive.Data.Models.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+					b.ToTable("AspNetUserTokens");
+				});
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
-                {
-                    b.HasOne("DevHive.Data.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+			modelBuilder.Entity("RoleUser", b =>
+				{
+					b.Property<Guid>("RolesId")
+						.HasColumnType("uuid");
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
-                {
-                    b.HasOne("DevHive.Data.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+					b.Property<Guid>("UsersId")
+						.HasColumnType("uuid");
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
-                {
-                    b.HasOne("DevHive.Data.Models.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+					b.HasKey("RolesId", "UsersId");
 
-                    b.HasOne("DevHive.Data.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+					b.HasIndex("UsersId");
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
-                {
-                    b.HasOne("DevHive.Data.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+					b.ToTable("RoleUser");
+				});
 
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.HasOne("DevHive.Data.Models.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RolesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+			modelBuilder.Entity("TechnologyUser", b =>
+				{
+					b.Property<Guid>("TechnologiesId")
+						.HasColumnType("uuid");
 
-                    b.HasOne("DevHive.Data.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+					b.Property<Guid>("UsersId")
+						.HasColumnType("uuid");
 
-            modelBuilder.Entity("DevHive.Data.Models.User", b =>
-                {
-                    b.Navigation("Friends");
+					b.HasKey("TechnologiesId", "UsersId");
 
-                    b.Navigation("Languages");
+					b.HasIndex("UsersId");
 
-                    b.Navigation("Technologies");
-                });
+					b.ToTable("TechnologyUser");
+				});
+
+			modelBuilder.Entity("DevHive.Data.Models.Comment", b =>
+				{
+					b.HasOne("DevHive.Data.Models.Post", null)
+						.WithMany("Comments")
+						.HasForeignKey("PostId");
+				});
+
+			modelBuilder.Entity("DevHive.Data.Models.User", b =>
+				{
+					b.HasOne("DevHive.Data.Models.User", null)
+						.WithMany("Friends")
+						.HasForeignKey("UserId");
+				});
+
+			modelBuilder.Entity("LanguageUser", b =>
+				{
+					b.HasOne("DevHive.Data.Models.Language", null)
+						.WithMany()
+						.HasForeignKey("LanguagesId")
+						.OnDelete(DeleteBehavior.Cascade)
+						.IsRequired();
+
+					b.HasOne("DevHive.Data.Models.User", null)
+						.WithMany()
+						.HasForeignKey("UsersId")
+						.OnDelete(DeleteBehavior.Cascade)
+						.IsRequired();
+				});
+
+			modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+				{
+					b.HasOne("DevHive.Data.Models.Role", null)
+						.WithMany()
+						.HasForeignKey("RoleId")
+						.OnDelete(DeleteBehavior.Cascade)
+						.IsRequired();
+				});
+
+			modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+				{
+					b.HasOne("DevHive.Data.Models.User", null)
+						.WithMany()
+						.HasForeignKey("UserId")
+						.OnDelete(DeleteBehavior.Cascade)
+						.IsRequired();
+				});
+
+			modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+				{
+					b.HasOne("DevHive.Data.Models.User", null)
+						.WithMany()
+						.HasForeignKey("UserId")
+						.OnDelete(DeleteBehavior.Cascade)
+						.IsRequired();
+				});
+
+			modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+				{
+					b.HasOne("DevHive.Data.Models.Role", null)
+						.WithMany()
+						.HasForeignKey("RoleId")
+						.OnDelete(DeleteBehavior.Cascade)
+						.IsRequired();
+
+					b.HasOne("DevHive.Data.Models.User", null)
+						.WithMany()
+						.HasForeignKey("UserId")
+						.OnDelete(DeleteBehavior.Cascade)
+						.IsRequired();
+				});
+
+			modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+				{
+					b.HasOne("DevHive.Data.Models.User", null)
+						.WithMany()
+						.HasForeignKey("UserId")
+						.OnDelete(DeleteBehavior.Cascade)
+						.IsRequired();
+				});
+
+			modelBuilder.Entity("RoleUser", b =>
+				{
+					b.HasOne("DevHive.Data.Models.Role", null)
+						.WithMany()
+						.HasForeignKey("RolesId")
+						.OnDelete(DeleteBehavior.Cascade)
+						.IsRequired();
+
+					b.HasOne("DevHive.Data.Models.User", null)
+						.WithMany()
+						.HasForeignKey("UsersId")
+						.OnDelete(DeleteBehavior.Cascade)
+						.IsRequired();
+				});
+
+			modelBuilder.Entity("TechnologyUser", b =>
+				{
+					b.HasOne("DevHive.Data.Models.Technology", null)
+						.WithMany()
+						.HasForeignKey("TechnologiesId")
+						.OnDelete(DeleteBehavior.Cascade)
+						.IsRequired();
+
+					b.HasOne("DevHive.Data.Models.User", null)
+						.WithMany()
+						.HasForeignKey("UsersId")
+						.OnDelete(DeleteBehavior.Cascade)
+						.IsRequired();
+				});
+
+			modelBuilder.Entity("DevHive.Data.Models.Post", b =>
+				{
+					b.Navigation("Comments");
+				});
+
+			modelBuilder.Entity("DevHive.Data.Models.User", b =>
+				{
+					b.Navigation("Friends");
+				});
 #pragma warning restore 612, 618
-        }
-    }
+		}
+	}
 }
