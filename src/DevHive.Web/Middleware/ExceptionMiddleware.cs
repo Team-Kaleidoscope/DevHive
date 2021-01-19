@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace DevHive.Web.Models.Middleware
+namespace DevHive.Web.Middleware
 {
 	public class ExceptionMiddleware
 	{

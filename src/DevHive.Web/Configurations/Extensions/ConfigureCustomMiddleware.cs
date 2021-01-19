@@ -1,4 +1,4 @@
-using DevHive.Web.Models.Middleware;
+using DevHive.Web.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
