@@ -105,8 +105,11 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPatch]
-		public async Task<IActionResult> Patch(Guid id, [FromBody] JsonPatchDocument<User> jsonPatch)
+		public async Task<IActionResult> Patch(Guid id, [FromBody] JsonPatchDocument<User> jsonPatch, [FromHeader] string authorization)
 		{
+			if (!await this._userService.ValidJWT(id, authorization))
+				return new UnauthorizedResult();
+
 			UserServiceModel userServiceModel = await this._userService.PatchUser(id, jsonPatch);
 
 			if (userServiceModel == null)
