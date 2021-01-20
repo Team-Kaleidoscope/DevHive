@@ -14,8 +14,8 @@ namespace DevHive.Data.Interfaces.Repositories
 
 		Task<User> GetByUsernameAsync(string username);
 		Language GetUserLanguage(User user, Language language);
-		IList<Language> GetUserLanguages(User user);
-		IList<Technology> GetUserTechnologies(User user);
+		HashSet<Language> GetUserLanguages(User user);
+		HashSet<Technology> GetUserTechnologies(User user);
 		Technology GetUserTechnology(User user, Technology technology);
 		IEnumerable<User> QueryAll();
 

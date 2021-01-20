@@ -75,7 +75,7 @@ namespace DevHive.Services.Services
 
 			// Set the default role to the user
 			Role defaultRole = await this._roleRepository.GetByNameAsync(Role.DefaultRole);
-			user.Roles = new List<Role>() { defaultRole };
+			user.Roles = new HashSet<Role>() { defaultRole };
 
 			await this._userRepository.AddAsync(user);
 
@@ -144,12 +144,12 @@ namespace DevHive.Services.Services
 
 			await this.ValidateUserCollections(updateUserServiceModel);
 
-			List<Language> languages = new();
+			HashSet<Language> languages = new();
 			foreach (UpdateUserCollectionServiceModel lang in updateUserServiceModel.Languages)
 				languages.Add(await this._languageRepository.GetByNameAsync(lang.Name) ??
 					throw new ArgumentException("Invalid language name!"));
 
-			List<Technology> technologies = new();
+			HashSet<Technology> technologies = new();
 			foreach (UpdateUserCollectionServiceModel tech in updateUserServiceModel.Technologies)
 				technologies.Add(await this._technologyRepository.GetByNameAsync(tech.Name) ??
 					throw new ArgumentException("Invalid technology name!"));
@@ -257,7 +257,7 @@ namespace DevHive.Services.Services
 			// There is authorization name in the beginning, i.e. "Bearer eyJh..."
 			var jwt = new JwtSecurityTokenHandler().ReadJwtToken(rawTokenData.Remove(0, 7));
 
-			Guid jwtUserID = new Guid(this.GetClaimTypeValues("ID", jwt.Claims)[0]);
+			Guid jwtUserID = new Guid(this.GetClaimTypeValues("ID", jwt.Claims).First());
 			List<string> jwtRoleNames = this.GetClaimTypeValues("role", jwt.Claims);
 
 			User user = await this._userRepository.GetByIdAsync(jwtUserID)
@@ -326,11 +326,11 @@ namespace DevHive.Services.Services
 			}
 		}
 
-		private string WriteJWTSecurityToken(Guid userId, IList<Role> roles)
+		private string WriteJWTSecurityToken(Guid userId, HashSet<Role> roles)
 		{
 			byte[] signingKey = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
-			List<Claim> claims = new()
+			HashSet<Claim> claims = new()
 			{
 				new Claim("ID", $"{userId}"),
 			};

@@ -8,6 +8,6 @@ namespace DevHive.Data.Models
 	{
 		public Guid Id { get; set; }
 		public string Name { get; set; }
-		public List<User> Users { get; set; }
+		public HashSet<User> Users { get; set; }
 	}
 }

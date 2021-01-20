@@ -7,13 +7,13 @@ namespace DevHive.Services.Models.Identity.User
 	{
 		public Guid Id { get; set; }
 
-		public IList<UpdateUserCollectionServiceModel> Roles { get; set; } = new List<UpdateUserCollectionServiceModel>();
+		public HashSet<UpdateUserCollectionServiceModel> Roles { get; set; } = new HashSet<UpdateUserCollectionServiceModel>();
 
-		public IList<UpdateUserCollectionServiceModel> Friends { get; set; } = new List<UpdateUserCollectionServiceModel>();
+		public HashSet<UpdateUserCollectionServiceModel> Friends { get; set; } = new HashSet<UpdateUserCollectionServiceModel>();
 
-		public IList<UpdateUserCollectionServiceModel> Languages { get; set; } = new List<UpdateUserCollectionServiceModel>();
+		public HashSet<UpdateUserCollectionServiceModel> Languages { get; set; } = new HashSet<UpdateUserCollectionServiceModel>();
 
-		public IList<UpdateUserCollectionServiceModel> Technologies { get; set; } = new List<UpdateUserCollectionServiceModel>();
+		public HashSet<UpdateUserCollectionServiceModel> Technologies { get; set; } = new HashSet<UpdateUserCollectionServiceModel>();
 
 	}
 }

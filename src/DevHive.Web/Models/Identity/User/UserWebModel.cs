@@ -11,18 +11,18 @@ namespace DevHive.Web.Models.Identity.User
 	{
 		[NotNull]
 		[Required]
-		public IList<RoleWebModel> Roles { get; set; } = new List<RoleWebModel>();
+		public HashSet<RoleWebModel> Roles { get; set; } = new HashSet<RoleWebModel>();
 
 		[NotNull]
 		[Required]
-		public IList<FriendWebModel> Friends { get; set; } = new List<FriendWebModel>();
+		public HashSet<FriendWebModel> Friends { get; set; } = new HashSet<FriendWebModel>();
 
 		[NotNull]
 		[Required]
-		public IList<LanguageWebModel> Languages { get; set; } = new List<LanguageWebModel>();
+		public HashSet<LanguageWebModel> Languages { get; set; } = new HashSet<LanguageWebModel>();
 
 		[NotNull]
 		[Required]
-		public IList<TechnologyWebModel> Technologies { get; set; } = new List<TechnologyWebModel>();
+		public HashSet<TechnologyWebModel> Technologies { get; set; } = new HashSet<TechnologyWebModel>();
 	}
 }

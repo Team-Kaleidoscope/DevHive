@@ -6,6 +6,6 @@ namespace DevHive.Data.Interfaces.Models
 	public interface ITechnology : IModel
 	{
 		string Name { get; set; }
-		List<User> Users { get; set; }
+		HashSet<User> Users { get; set; }
 	}
 }

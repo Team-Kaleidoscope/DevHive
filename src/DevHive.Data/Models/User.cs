@@ -19,15 +19,15 @@ namespace DevHive.Data.Models
 		/// Languages that the user uses or is familiar with
 		/// </summary>
 		// [Unique]
-		public IList<Language> Languages { get; set; }
+		public HashSet<Language> Languages { get; set; }
 
 		/// <summary>
 		/// Technologies that the user uses or is familiar with
 		/// </summary>
-		public IList<Technology> Technologies { get; set; } = new List<Technology>();
+		public HashSet<Technology> Technologies { get; set; } = new HashSet<Technology>();
 
-		public IList<Role> Roles { get; set; } = new List<Role>();
+		public HashSet<Role> Roles { get; set; } = new HashSet<Role>();
 
-		public IList<User> Friends { get; set; } = new List<User>();
+		public HashSet<User> Friends { get; set; } = new HashSet<User>();
 	}
 }

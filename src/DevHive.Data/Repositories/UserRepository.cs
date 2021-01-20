@@ -82,7 +82,7 @@ namespace DevHive.Data.Repositories
 				.FirstOrDefaultAsync(x => x.UserName == username);
 		}
 
-		public IList<Language> GetUserLanguages(User user)
+		public HashSet<Language> GetUserLanguages(User user)
 		{
 			return user.Languages;
 		}
@@ -93,7 +93,7 @@ namespace DevHive.Data.Repositories
 				.FirstOrDefault(x => x.Id == language.Id);
 		}
 
-		public IList<Technology> GetUserTechnologies(User user)
+		public HashSet<Technology> GetUserTechnologies(User user)
 		{
 			return user.Technologies;
 		}

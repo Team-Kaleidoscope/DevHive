@@ -165,10 +165,10 @@ namespace DevHive.Data.Tests
 			//Arrange
 			User dummyUser = CreateDummyUser();
 			await this._userRepository.AddAsync(dummyUser);
-			IList<Language> dummyUserLanguages = dummyUser.Languages;
+			HashSet<Language> dummyUserLanguages = dummyUser.Languages;
 
 			//Act
-			IList<Language> languages = this._userRepository.GetUserLanguages(dummyUser);
+			HashSet<Language> languages = this._userRepository.GetUserLanguages(dummyUser);
 
 			//Assert
 			Assert.AreEqual(dummyUserLanguages, languages, "Method doesn't query languages properly");
@@ -185,7 +185,7 @@ namespace DevHive.Data.Tests
 			// Language dummyLang = await this._languageRepository.GetByNameAsync("csharp");
 
 			// //Act
-			// IList<Language> languages = this._userRepository.GetUserLanguage(dummyUser, dummyLang);
+			// HashSet<Language> languages = this._userRepository.GetUserLanguage(dummyUser, dummyLang);
 
 			// //Assert
 			// Assert.AreEqual(dummyUserLanguages, languages, "Method doesn't query languages properly");
@@ -195,7 +195,7 @@ namespace DevHive.Data.Tests
 		#region HelperMethods
 		private User CreateDummyUser()
 		{
-			List<Language> languages = new()
+			HashSet<Language> languages = new()
 			{
 				new Language()
 				{
@@ -204,7 +204,7 @@ namespace DevHive.Data.Tests
 				},
 			};
 
-			List<Technology> technologies = new()
+			HashSet<Technology> technologies = new()
 			{
 				new Technology()
 				{
@@ -213,7 +213,7 @@ namespace DevHive.Data.Tests
 				},
 			};
 
-			List<Role> roles = new()
+			HashSet<Role> roles = new()
 			{
 				new Role()
 				{
@@ -237,7 +237,7 @@ namespace DevHive.Data.Tests
 
 		private User CreateAnotherDummyUser()
 		{
-			List<Language> languages = new()
+			HashSet<Language> languages = new()
 			{
 				new Language()
 				{
@@ -246,7 +246,7 @@ namespace DevHive.Data.Tests
 				},
 			};
 
-			List<Technology> technologies = new()
+			HashSet<Technology> technologies = new()
 			{
 				new Technology()
 				{
@@ -255,7 +255,7 @@ namespace DevHive.Data.Tests
 				},
 			};
 
-			List<Role> roles = new()
+			HashSet<Role> roles = new()
 			{
 				new Role()
 				{

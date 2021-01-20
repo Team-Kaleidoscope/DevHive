@@ -16,14 +16,14 @@ namespace DevHive.Web.Models.Identity.User
 
 		[NotNull]
 		[Required]
-		public IList<FriendWebModel> Friends { get; set; }
+		public HashSet<FriendWebModel> Friends { get; set; }
 
 		[NotNull]
 		[Required]
-		public IList<UpdateLanguageWebModel> Languages { get; set; }
+		public HashSet<UpdateLanguageWebModel> Languages { get; set; }
 
 		[NotNull]
 		[Required]
-		public IList<UpdateTechnologyWebModel> Technologies { get; set; }
+		public HashSet<UpdateTechnologyWebModel> Technologies { get; set; }
 	}
 }

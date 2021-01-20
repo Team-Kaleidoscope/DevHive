@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using DevHive.Services.Interfaces;
 using DevHive.Data.Interfaces.Repositories;
+using System.Linq;
 
 namespace DevHive.Services.Services
 {
@@ -131,8 +132,8 @@ namespace DevHive.Services.Services
 		{
 			var jwt = new JwtSecurityTokenHandler().ReadJwtToken(rawTokenData.Remove(0, 7));
 
-			string jwtUserName = this.GetClaimTypeValues("unique_name", jwt.Claims)[0];
-			//List<string> jwtRoleNames = this.GetClaimTypeValues("role", jwt.Claims);
+			string jwtUserName = this.GetClaimTypeValues("unique_name", jwt.Claims).First();
+			//HashSet<string> jwtRoleNames = this.GetClaimTypeValues("role", jwt.Claims);
 
 			User user = await this._userRepository.GetByUsernameAsync(jwtUserName)
 				?? throw new ArgumentException("User does not exist!");

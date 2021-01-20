@@ -7,12 +7,12 @@ namespace DevHive.Services.Models.Identity.User
 {
     public class UserServiceModel : BaseUserServiceModel
 	{
-		public IList<RoleServiceModel> Roles { get; set; } = new List<RoleServiceModel>();
+		public HashSet<RoleServiceModel> Roles { get; set; } = new HashSet<RoleServiceModel>();
 
-		public IList<FriendServiceModel> Friends { get; set; } = new List<FriendServiceModel>();
+		public HashSet<FriendServiceModel> Friends { get; set; } = new HashSet<FriendServiceModel>();
 
-		public IList<LanguageServiceModel> Languages { get; set; } = new List<LanguageServiceModel>();
+		public HashSet<LanguageServiceModel> Languages { get; set; } = new HashSet<LanguageServiceModel>();
 
-		public IList<TechnologyServiceModel> Technologies { get; set; } = new List<TechnologyServiceModel>();
+		public HashSet<TechnologyServiceModel> Technologies { get; set; } = new HashSet<TechnologyServiceModel>();
 	}
 }

@@ -6,7 +6,7 @@ namespace DevHive.Data.Interfaces.Models
 	public interface ILanguage : IModel
 	{
 		string Name { get; set; }
-		List<User> Users { get; set; }
+		HashSet<User> Users { get; set; }
 
 	}
 }
