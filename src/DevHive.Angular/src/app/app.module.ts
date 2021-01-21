@@ -14,6 +14,7 @@ import { FeedComponent } from './components/feed/feed.component';
 import { PostComponent } from './components/post/post.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ProfileSettingsComponent } from './components/profile-settings/profile-settings.component';
+import { ErrorComponent } from './components/error/error.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { ProfileSettingsComponent } from './components/profile-settings/profile-
     FeedComponent,
     PostComponent,
     ProfileComponent,
-    ProfileSettingsComponent
+    ProfileSettingsComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,

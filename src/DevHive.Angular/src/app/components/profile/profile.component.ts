@@ -23,7 +23,6 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     const username = this._router.url.substring(9);
-    console.log(username);
 
     if (sessionStorage.getItem('UserCred')) {
       // Workaround for waiting the fetch response
