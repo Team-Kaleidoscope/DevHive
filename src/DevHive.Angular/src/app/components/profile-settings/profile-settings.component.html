@@ -1,1 +1,10 @@
-<p>profile-settings works!</p>
+<app-loading *ngIf="!dataArrived"></app-loading>
+
+<div id="content" *ngIf="dataArrived">
+	<nav id="navigation">
+		<button class="submit-btn" (click)="goBack()">ᐊ Back</button>
+		<button class="submit-btn" (click)="logout()">Logout</button>
+	</nav>
+	<hr>
+	<button id="delete-account" class="submit-btn" (click)="deleteAccount()">Delete account</button>
+</div>

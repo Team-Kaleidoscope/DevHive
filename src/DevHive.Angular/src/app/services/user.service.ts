@@ -17,6 +17,12 @@ export class UserService {
     return new User(Guid.createEmpty(), 'gosho_trapov', 'Gosho', 'Trapov', AppConstants.FALLBACK_PROFILE_ICON);
   }
 
+  getUserIdFromSessionStroageToken(): Guid {
+    const jwt: IJWTPayload = JSON.parse(sessionStorage.getItem('UserCred') ?? '');
+    const userCred = jwt_decode<IUserCredentials>(jwt.token);
+    return userCred.ID;
+  }
+
   fetchUserFromSessionStorage(): User {
     // Get the token and userid from session storage
     const jwt: IJWTPayload = JSON.parse(sessionStorage.getItem('UserCred') ?? '');
@@ -80,5 +86,16 @@ export class UserService {
 
   logoutUserFromSessionStorage(): void {
     sessionStorage.removeItem('UserCred');
+  }
+
+  deleteUserRequest(id: Guid): void {
+    const jwt = JSON.parse(sessionStorage.getItem('UserCred') ?? '');
+    fetch(AppConstants.API_USER_URL + '?Id=' + id, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + jwt.token
+      }
+    });
   }
 }

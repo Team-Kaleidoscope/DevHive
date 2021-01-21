@@ -59,4 +59,13 @@ export class ProfileComponent implements OnInit {
   navigateToSettings(): void {
     this._router.navigate([this._router.url + '/settings']);
   }
+
+  logout(): void {
+    this._userService.logoutUserFromSessionStorage();
+
+    // Reload the page
+    this._router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this._router.onSameUrlNavigation = 'reload';
+    this._router.navigate([this._router.url]);
+  }
 }
