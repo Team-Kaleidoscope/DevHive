@@ -9,6 +9,9 @@ namespace DevHive.Services.Configurations.Mapping
 		public RoleMappings()
 		{
 			CreateMap<RoleServiceModel, Role>();
+			CreateMap<UpdateRoleServiceModel, Role>();
+
+			CreateMap<Role, RoleServiceModel>();
 			CreateMap<Role, RoleServiceModel>();
 		}
 	}

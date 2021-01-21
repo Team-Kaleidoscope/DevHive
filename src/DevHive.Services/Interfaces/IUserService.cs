@@ -1,9 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DevHive.Common.Models.Identity;
-using DevHive.Data.Models;
+using DevHive.Common.Models.Misc;
 using DevHive.Services.Models.Identity.User;
-using Microsoft.AspNetCore.JsonPatch;
 
 namespace DevHive.Services.Interfaces
 {
@@ -18,7 +18,7 @@ namespace DevHive.Services.Interfaces
 		Task<UserServiceModel> GetUserById(Guid id);
 
 		Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateModel);
-		Task<UserServiceModel> PatchUser(Guid id, JsonPatchDocument<User> jsonPatch);
+		Task<UserServiceModel> PatchUser(Guid id, List<Patch> patch);
 
 		Task DeleteUser(Guid id);
 		Task<bool> RemoveFriend(Guid userId, Guid friendId);

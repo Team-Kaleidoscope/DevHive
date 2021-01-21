@@ -6,14 +6,10 @@ using DevHive.Web.Models.Identity.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DevHive.Common.Models.Identity;
-using DevHive.Common.Models.Misc;
-using DevHive.Web.Models.Language;
-using DevHive.Services.Models.Language;
-using DevHive.Web.Models.Technology;
-using DevHive.Services.Models.Technology;
 using DevHive.Services.Interfaces;
-using DevHive.Data.Models;
 using Microsoft.AspNetCore.JsonPatch;
+using DevHive.Common.Models.Misc;
+using System.Collections.Generic;
 
 namespace DevHive.Web.Controllers
 {
@@ -87,15 +83,12 @@ namespace DevHive.Web.Controllers
 
 		#region Update
 		[HttpPut]
-		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserWebModel updateModel, [FromHeader] string authorization)
+		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserWebModel updateUserWebModel, [FromHeader] string authorization)
 		{
 			if (!await this._userService.ValidJWT(id, authorization))
 				return new UnauthorizedResult();
 
-			// if (!ModelState.IsValid)
-			// 	return BadRequest("Not a valid model!");
-
-			UpdateUserServiceModel updateUserServiceModel = this._userMapper.Map<UpdateUserServiceModel>(updateModel);
+			UpdateUserServiceModel updateUserServiceModel = this._userMapper.Map<UpdateUserServiceModel>(updateUserWebModel);
 			updateUserServiceModel.Id = id;
 
 			UserServiceModel userServiceModel = await this._userService.UpdateUser(updateUserServiceModel);
@@ -105,12 +98,12 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPatch]
-		public async Task<IActionResult> Patch(Guid id, [FromBody] JsonPatchDocument<User> jsonPatch, [FromHeader] string authorization)
+		public async Task<IActionResult> Patch(Guid id, [FromBody] List<Patch> patch, [FromHeader] string authorization)
 		{
 			if (!await this._userService.ValidJWT(id, authorization))
 				return new UnauthorizedResult();
 
-			UserServiceModel userServiceModel = await this._userService.PatchUser(id, jsonPatch);
+			UserServiceModel userServiceModel = await this._userService.PatchUser(id, patch);
 
 			if (userServiceModel == null)
 				return new BadRequestObjectResult("Wrong patch properties");

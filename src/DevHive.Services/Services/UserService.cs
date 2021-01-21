@@ -7,15 +7,14 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Cryptography;
 using System.Text;
 using System.Collections.Generic;
 using DevHive.Common.Models.Identity;
 using DevHive.Services.Interfaces;
 using DevHive.Data.Interfaces.Repositories;
-using Microsoft.AspNetCore.JsonPatch;
 using System.Linq;
-using Newtonsoft.Json;
+using DevHive.Common.Models.Misc;
+using System.Reflection;
 
 namespace DevHive.Services.Services
 {
@@ -52,7 +51,7 @@ namespace DevHive.Services.Services
 
 			User user = await this._userRepository.GetByUsernameAsync(loginModel.UserName);
 
-			if (user.PasswordHash != GeneratePasswordHash(loginModel.Password))
+			if (user.PasswordHash != PasswordModifications.GeneratePasswordHash(loginModel.Password))
 				throw new ArgumentException("Incorrect password!");
 
 			return new TokenModel(WriteJWTSecurityToken(user.Id, user.Roles));
@@ -67,7 +66,7 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("Email already exists!");
 
 			User user = this._userMapper.Map<User>(registerModel);
-			user.PasswordHash = GeneratePasswordHash(registerModel.Password);
+			user.PasswordHash = PasswordModifications.GeneratePasswordHash(registerModel.Password);
 
 			// Make sure the default role exists
 			if (!await this._roleRepository.DoesNameExist(Role.DefaultRole))
@@ -135,6 +134,7 @@ namespace DevHive.Services.Services
 
 		public async Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateUserServiceModel)
 		{
+			//Method: ValidateUserOnUpdate
 			if (!await this._userRepository.DoesUserExistAsync(updateUserServiceModel.Id))
 				throw new ArgumentException("User does not exist!");
 
@@ -144,6 +144,7 @@ namespace DevHive.Services.Services
 
 			await this.ValidateUserCollections(updateUserServiceModel);
 
+			//Method: Insert collections to user
 			HashSet<Language> languages = new();
 			foreach (UpdateUserCollectionServiceModel lang in updateUserServiceModel.Languages)
 				languages.Add(await this._languageRepository.GetByNameAsync(lang.Name) ??
@@ -159,50 +160,34 @@ namespace DevHive.Services.Services
 			user.Languages = languages;
 			user.Technologies = technologies;
 
-			bool success = await this._userRepository.EditAsync(user);
+			bool successful = await this._userRepository.EditAsync(user);
 
-			if (!success)
+			if (!successful)
 				throw new InvalidOperationException("Unable to edit user!");
 
 			return this._userMapper.Map<UserServiceModel>(user); ;
 		}
 
-		public async Task<UserServiceModel> PatchUser(Guid id, JsonPatchDocument<User> jsonPatch)
+		public async Task<UserServiceModel> PatchUser(Guid id, List<Patch> patchList)
 		{
 			User user = await this._userRepository.GetByIdAsync(id) ??
 				throw new ArgumentException("User does not exist!");
 
-			object password = jsonPatch.Operations
-				.Where(x => x.path == "/password")
-				.Select(x => x.value)
-				.FirstOrDefault();
+			UpdateUserServiceModel updateUserServiceModel = this._userMapper.Map<UpdateUserServiceModel>(user);
 
-			IEnumerable<object> friends = jsonPatch.Operations
-				.Where(x => x.path == "/friends")
-				.Select(x => x.value);
-
-			if(password != null)
+			foreach (Patch patch in patchList)
 			{
-				string passwordHash = this.GeneratePasswordHash(password.ToString());
-				user.PasswordHash = passwordHash;
-			}
-
-			if (friends != null)
-			{
-				foreach (object friendObj in friends)
+				bool successful = patch.Action switch
 				{
-					FriendServiceModel friendServiceModel =
-						JsonConvert.DeserializeObject<FriendServiceModel>(friendObj.ToString());
+					"replace" => ReplacePatch(updateUserServiceModel, patch),
+					"add" => AddPatch(updateUserServiceModel, patch),
+					"remove" => RemovePatch(updateUserServiceModel, patch),
+					_ => throw new ArgumentException("Invalid patch operation!"),
+				};
 
-					User amigo = await this._userRepository.GetByUsernameAsync(friendServiceModel.UserName)
-						?? throw new ArgumentException($"User {friendServiceModel.UserName} does not exist!");
-
-					user.Friends.Add(amigo);
-				}
+				if (!successful)
+					throw new ArgumentException("A problem occurred while applying patch");
 			}
-
-			//Remove password and friends peace from the request patch before applying the rest
-			// jsonPatch.ApplyTo(user);
 
 			bool success = await this._userRepository.EditAsync(user);
 			if (success)
@@ -326,6 +311,11 @@ namespace DevHive.Services.Services
 			}
 		}
 
+		private async Task ValidateUserOnUpdate(UpdateUserServiceModel updateUserServiceModel)
+		{
+
+		}
+
 		private string WriteJWTSecurityToken(Guid userId, HashSet<Role> roles)
 		{
 			byte[] signingKey = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
@@ -354,9 +344,23 @@ namespace DevHive.Services.Services
 			return tokenHandler.WriteToken(token);
 		}
 
-		private string GeneratePasswordHash(string password)
+		private bool AddPatch(UpdateUserServiceModel updateUserServiceModel, Patch patch)
 		{
-			return string.Join(string.Empty, SHA512.HashData(Encoding.ASCII.GetBytes(password)));
+			// Type type = typeof(UpdateUserServiceModel);
+			// PropertyInfo property = type.GetProperty(patch.Name);
+
+			// property.SetValue(updateUserServiceModel, patch.Value);
+			throw new NotImplementedException();
+		}
+
+		private bool RemovePatch(UpdateUserServiceModel updateUserServiceModel, Patch patch)
+		{
+			throw new NotImplementedException();
+		}
+
+		private bool ReplacePatch(UpdateUserServiceModel updateUserServiceModel, Patch patch)
+		{
+			throw new NotImplementedException();
 		}
 		#endregion
 	}

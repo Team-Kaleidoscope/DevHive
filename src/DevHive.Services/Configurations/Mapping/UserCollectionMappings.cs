@@ -8,14 +8,15 @@ namespace DevHive.Services.Configurations.Mapping
 	{
 		public UserCollectionMappings()
 		{
-			CreateMap<UpdateUserCollectionServiceModel, User>()
-				.ForMember(up => up.UserName, u => u.MapFrom(src => src.Name));
-			CreateMap<UpdateUserCollectionServiceModel, Role>()
-				.ForMember(r => r.Name, u => u.MapFrom(src => src.Name));
-			CreateMap<UpdateUserCollectionServiceModel, Language>()
-				.ForMember(r => r.Name, u => u.MapFrom(src => src.Name));
-			CreateMap<UpdateUserCollectionServiceModel, Technology>()
-				.ForMember(r => r.Name, u => u.MapFrom(src => src.Name));
+			CreateMap<UpdateUserCollectionServiceModel, User>();
+			CreateMap<UpdateUserCollectionServiceModel, Role>();
+			CreateMap<UpdateUserCollectionServiceModel, Language>();
+			CreateMap<UpdateUserCollectionServiceModel, Technology>();
+
+			CreateMap<User, UpdateUserCollectionServiceModel>();
+			CreateMap<Role, UpdateUserCollectionServiceModel>();
+			CreateMap<Language, UpdateUserCollectionServiceModel>();
+			CreateMap<Technology, UpdateUserCollectionServiceModel>();
 		}
 	}
 }
