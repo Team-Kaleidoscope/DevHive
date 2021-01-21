@@ -20,7 +20,6 @@ namespace DevHive.Services.Services
 		}
 
 		#region Create
-
 		public async Task<Guid> Create(CreateTechnologyServiceModel technologyServiceModel)
 		{
 			if (await this._technologyRepository.DoesTechnologyNameExistAsync(technologyServiceModel.Name))
@@ -29,7 +28,7 @@ namespace DevHive.Services.Services
 			Technology technology = this._technologyMapper.Map<Technology>(technologyServiceModel);
 			bool success = await this._technologyRepository.AddAsync(technology);
 
-			if(success)
+			if (success)
 			{
 				Technology newTechnology = await this._technologyRepository.GetByNameAsync(technologyServiceModel.Name);
 				return newTechnology.Id;
@@ -40,7 +39,6 @@ namespace DevHive.Services.Services
 		#endregion
 
 		#region Read
-
 		public async Task<CreateTechnologyServiceModel> GetTechnologyById(Guid id)
 		{
 			Technology technology = await this._technologyRepository.GetByIdAsync(id);
@@ -53,7 +51,6 @@ namespace DevHive.Services.Services
 		#endregion
 
 		#region Update
-
 		public async Task<bool> UpdateTechnology(UpdateTechnologyServiceModel updateTechnologyServiceModel)
 		{
 			if (!await this._technologyRepository.DoesTechnologyExistAsync(updateTechnologyServiceModel.Id))

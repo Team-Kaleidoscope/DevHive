@@ -44,8 +44,7 @@ namespace DevHive.Data.Repositories
 		#region Edit
 		public async Task<bool> EditAsync(Technology newEntity)
 		{
-			this._context.Technologies
-			.Update(newEntity);
+			this._context.Technologies.Update(newEntity);
 
 			return await this.SaveChangesAsync(this._context);
 		}
