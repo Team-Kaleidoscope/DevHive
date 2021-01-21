@@ -16,11 +16,10 @@ namespace DevHive.Data.Repositories
 			this._context = context;
 		}
 
-		//Create
+		#region Create
 		public async Task<bool> AddAsync(Post post)
 		{
-			await this._context
-				.Set<Post>()
+			await this._context.Posts
 				.AddAsync(post);
 
 			return await this.SaveChangesAsync(this._context);
@@ -28,18 +27,17 @@ namespace DevHive.Data.Repositories
 
 		public async Task<bool> AddCommentAsync(Comment entity)
 		{
-			await this._context
-				.Set<Comment>()
+			await this._context.Comments
 				.AddAsync(entity);
 
 			return await this.SaveChangesAsync(this._context);
 		}
+		#endregion
 
-		//Read
+		#region Read
 		public async Task<Post> GetByIdAsync(Guid id)
 		{
-			return await this._context
-				.Set<Post>()
+			return await this._context.Posts
 				.FindAsync(id);
 		}
 
@@ -52,8 +50,7 @@ namespace DevHive.Data.Repositories
 
 		public async Task<Comment> GetCommentByIdAsync(Guid id)
 		{
-			return await this._context
-				.Set<Comment>()
+			return await this._context.Comments
 				.FindAsync(id);
 		}
 
@@ -63,12 +60,12 @@ namespace DevHive.Data.Repositories
 				.FirstOrDefaultAsync(p => p.IssuerId == issuerId &&
 					p.TimeCreated == timeCreated);
 		}
+		#endregion
 
-		//Update
+		#region Update
 		public async Task<bool> EditAsync(Post newPost)
 		{
-			this._context
-			.Set<Post>()
+			this._context.Posts
 			.Update(newPost);
 
 			return await this.SaveChangesAsync(this._context);
@@ -76,18 +73,17 @@ namespace DevHive.Data.Repositories
 
 		public async Task<bool> EditCommentAsync(Comment newEntity)
 		{
-			this._context
-				.Set<Comment>()
+			this._context.Comments
 				.Update(newEntity);
 
 			return await this.SaveChangesAsync(this._context);
 		}
+		#endregion
 
-		//Delete
+		#region Delete
 		public async Task<bool> DeleteAsync(Post post)
 		{
-			this._context
-				.Set<Post>()
+			this._context.Posts
 				.Remove(post);
 
 			return await this.SaveChangesAsync(this._context);
@@ -95,27 +91,24 @@ namespace DevHive.Data.Repositories
 
 		public async Task<bool> DeleteCommentAsync(Comment entity)
 		{
-			this._context
-				.Set<Comment>()
+			this._context.Comments
 				.Remove(entity);
 
 			return await this.SaveChangesAsync(this._context);
 		}
+		#endregion
 
 		#region Validations
-
 		public async Task<bool> DoesPostExist(Guid postId)
 		{
-			return await this._context
-				.Set<Post>()
+			return await this._context.Posts
 				.AsNoTracking()
 				.AnyAsync(r => r.Id == postId);
 		}
 
 		public async Task<bool> DoesCommentExist(Guid id)
 		{
-			return await this._context
-				.Set<Comment>()
+			return await this._context.Comments
 				.AsNoTracking()
 				.AnyAsync(r => r.Id == id);
 		}

@@ -51,62 +51,6 @@ namespace DevHive.Data.Tests
 			//Assert
 			Assert.True(result, "User int' inserted properly into the database");
 		}
-
-		[Test]
-		public async Task AddFriendToUserAsync_ShouldAddFriendToUsersList()
-		{
-			//Arrange
-			User dummyUserOne = CreateDummyUser();
-			User dummyUserTwo = CreateAnotherDummyUser();
-
-			await this._userRepository.AddAsync(dummyUserOne);
-			await this._userRepository.AddAsync(dummyUserTwo);
-
-			//Act
-			bool result = await this._userRepository.AddFriendToUserAsync(dummyUserOne, dummyUserTwo);
-
-			//Assert
-			Assert.True(result, "Friend didn't save properly in the database");
-			Assert.True(dummyUserOne.Friends.Contains(dummyUserTwo), "Friend doesn't get added to user properly");
-		}
-
-		[Test]
-		public async Task AddLanguageToUserAsync_ShouldAddLanguageToUser()
-		{
-			//Arrange
-			User dummyUser = CreateDummyUser();
-			await this._userRepository.AddAsync(dummyUser);
-			Language language = new()
-			{
-				Name = "typescript"
-			};
-
-			//Act
-			bool result = await this._userRepository.AddLanguageToUserAsync(dummyUser, language);
-
-			//Assert
-			Assert.True(result, "The language isn't inserted properly to the database");
-			Assert.True(dummyUser.Languages.Contains(language), "The language doesn't get added properly to the user");
-		}
-
-		[Test]
-		public async Task AddTechnologyToUserAsync_ShouldAddTechnologyToUser()
-		{
-			//Arrange
-			User dummyUser = CreateDummyUser();
-			await this._userRepository.AddAsync(dummyUser);
-			Technology technology = new()
-			{
-				Name = "Angular"
-			};
-
-			//Act
-			bool result = await this._userRepository.AddTechnologyToUserAsync(dummyUser, technology);
-
-			//Assert
-			Assert.True(result, "The technology isn't inserted properly to the database");
-			Assert.True(dummyUser.Technologies.Contains(technology), "The technology doesn't get added properly to the user");
-		}
 		#endregion
 
 		#region Read

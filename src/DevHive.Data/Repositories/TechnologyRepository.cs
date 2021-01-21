@@ -18,11 +18,9 @@ namespace DevHive.Data.Repositories
 		}
 
 		#region Create
-
 		public async Task<bool> AddAsync(Technology entity)
 		{
-			await this._context
-				.Set<Technology>()
+			await this._context.Technologies
 				.AddAsync(entity);
 
 			return await this.SaveChangesAsync(this._context);
@@ -30,11 +28,9 @@ namespace DevHive.Data.Repositories
 		#endregion
 
 		#region Read
-
 		public async Task<Technology> GetByIdAsync(Guid id)
 		{
-			return await this._context
-				.Set<Technology>()
+			return await this._context.Technologies
 				.FindAsync(id);
 		}
 		public async Task<Technology> GetByNameAsync(string technologyName)
@@ -46,24 +42,18 @@ namespace DevHive.Data.Repositories
 		#endregion
 
 		#region Edit
-		public async Task<bool> EditAsync(Technology entity)
+		public async Task<bool> EditAsync(Technology newEntity)
 		{
-			Technology technology = await this._context.Technologies
-				.FirstOrDefaultAsync(x => x.Id == entity.Id);
-
-			this._context.Update(technology);
-			this._context.Entry(entity).CurrentValues.SetValues(entity);
+			this._context.Technologies.Update(newEntity);
 
 			return await this.SaveChangesAsync(this._context);
 		}
 		#endregion
 
 		#region Delete
-
 		public async Task<bool> DeleteAsync(Technology entity)
 		{
-			this._context
-				.Set<Technology>()
+			this._context.Technologies
 				.Remove(entity);
 
 			return await this.SaveChangesAsync(this._context);
@@ -71,11 +61,9 @@ namespace DevHive.Data.Repositories
 		#endregion
 
 		#region Validations
-
 		public async Task<bool> DoesTechnologyNameExistAsync(string technologyName)
 		{
-			return await this._context
-				.Set<Technology>()
+			return await this._context.Technologies
 				.AsNoTracking()
 				.AnyAsync(r => r.Name == technologyName);
 		}
