@@ -1,7 +1,4 @@
-<!-- TODO: replace with loading component -->
-<div id="content" style="justify-content: center;" *ngIf="!dataArrived">
-	Loading...
-</div>
+<app-loading *ngIf="!dataArrived"></app-loading>
 
 <div id="content" *ngIf="dataArrived">
 	<nav id="navigation">
