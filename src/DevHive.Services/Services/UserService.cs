@@ -84,35 +84,7 @@ namespace DevHive.Services.Services
 		}
 		#endregion
 
-		#region Create
-
-		public async Task<bool> AddFriend(Guid userId, Guid friendId)
-		{
-			Task<bool> userExists = this._userRepository.DoesUserExistAsync(userId);
-			Task<bool> friendExists = this._userRepository.DoesUserExistAsync(friendId);
-
-			await Task.WhenAll(userExists, friendExists);
-
-			if (!userExists.Result)
-				throw new ArgumentException("User doesn't exist!");
-
-			if (!friendExists.Result)
-				throw new ArgumentException("Friend doesn't exist!");
-
-			if (await this._userRepository.DoesUserHaveThisFriendAsync(userId, friendId))
-				throw new ArgumentException("Friend already exists in your friends list.");
-
-			User user = await this._userRepository.GetByIdAsync(userId);
-			User friend = await this._userRepository.GetByIdAsync(friendId);
-
-			return user != null && friend != null ?
-				await this._userRepository.AddFriendToUserAsync(user, friend) :
-				throw new ArgumentException("Invalid user!");
-		}
-		#endregion
-
 		#region Read
-
 		public async Task<UserServiceModel> GetUserById(Guid id)
 		{
 			User user = await this._userRepository.GetByIdAsync(id)
@@ -133,7 +105,6 @@ namespace DevHive.Services.Services
 		#endregion
 
 		#region Update
-
 		public async Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateUserServiceModel)
 		{
 			await this.ValidateUserOnUpdate(updateUserServiceModel);
@@ -191,7 +162,6 @@ namespace DevHive.Services.Services
 		#endregion
 
 		#region Delete
-
 		public async Task DeleteUser(Guid id)
 		{
 			if (!await this._userRepository.DoesUserExistAsync(id))
@@ -203,30 +173,9 @@ namespace DevHive.Services.Services
 			if (!result)
 				throw new InvalidOperationException("Unable to delete user!");
 		}
-
-		public async Task<bool> RemoveFriend(Guid userId, Guid friendId)
-		{
-			bool userExists = await this._userRepository.DoesUserExistAsync(userId);
-			bool friendExists = await this._userRepository.DoesUserExistAsync(friendId);
-
-			if (!userExists)
-				throw new ArgumentException("User doesn't exist!");
-
-			if (!friendExists)
-				throw new ArgumentException("Friend doesn't exist!");
-
-			if (!await this._userRepository.DoesUserHaveThisFriendAsync(userId, friendId))
-				throw new ArgumentException("This ain't your friend, amigo.");
-
-			User user = await this._userRepository.GetByIdAsync(userId);
-			User homie = await this._userRepository.GetByIdAsync(friendId);
-
-			return await this._userRepository.RemoveFriendAsync(user, homie);
-		}
 		#endregion
 
 		#region Validations
-
 		public async Task<bool> ValidJWT(Guid id, string rawTokenData)
 		{
 			// There is authorization name in the beginning, i.e. "Bearer eyJh..."
