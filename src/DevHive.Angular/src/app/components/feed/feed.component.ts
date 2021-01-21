@@ -42,4 +42,13 @@ export class FeedComponent implements OnInit {
   goToProfile(): void {
     this._router.navigate(['/profile/' + this.user.userName]);
   }
+
+  goToSettings(): void {
+    this._router.navigate(['/profile/' + this.user.userName + '/settings']);
+  }
+
+  logout(): void {
+    this._userService.logoutUserFromSessionStorage();
+    this._router.navigate(['/login']);
+  }
 }

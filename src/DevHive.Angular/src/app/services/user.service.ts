@@ -77,4 +77,8 @@ export class UserService {
     }).then(response => response.json())
       .then(data => sessionStorage.setItem('UserCred', JSON.stringify(data)));
   }
+
+  logoutUserFromSessionStorage(): void {
+    sessionStorage.removeItem('UserCred');
+  }
 }

@@ -4,16 +4,20 @@
 </div>
 
 <div id="feed-page" *ngIf="dataArrived">
-	<nav id="profile-bar" (click)="goToProfile()">
-		<img id="profile-bar-profile-pic" class="round-image" src="assets/images/feed/profile-pic.png" alt=""/>
-		<div id="profile-bar-name">
-			{{ user.firstName }} {{ user.lastName }}
+	<nav id="profile-bar">
+		<div id="profile-info" (click)="goToProfile()">
+			<img id="profile-bar-profile-pic" class="round-image" src="assets/images/feed/profile-pic.png" alt=""/>
+			<div id="profile-bar-name">
+				{{ user.firstName }} {{ user.lastName }}
+			</div>
+			<div id="profile-bar-username">
+				@{{ user.userName }}
+			</div>
 		</div>
-		<div id="profile-bar-username">
-			@{{ user.userName }}
-		</div>
+		<button class="submit-btn" (click)="goToSettings()">Settings</button>
+		<button class="submit-btn" (click)="logout()">Logout</button>
 	</nav>
-	<div id="feed-content">
+		<div id="feed-content">
 		<nav id="top-bar">
 			<img id="top-bar-profile-pic" class="round-image" src="assets/images/feed/profile-pic.png" alt="" (click)="goToProfile()">
 			<input id="top-bar-create-post" type="text" placeholder="What's on your mind?"/>
