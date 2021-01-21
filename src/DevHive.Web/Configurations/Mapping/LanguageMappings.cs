@@ -8,10 +8,11 @@ namespace DevHive.Web.Configurations.Mapping
 	{
 		public LanguageMappings()
 		{
-			CreateMap<LanguageWebModel, LanguageServiceModel>();
-			CreateMap<ReadLanguageWebModel, ReadLanguageServiceModel>();
 			CreateMap<CreateLanguageWebModel, CreateLanguageServiceModel>();
-			CreateMap<UpdateLanguageWebModel, UpdateLanguageServiceModel>();
+			CreateMap<ReadLanguageWebModel, ReadLanguageServiceModel>();
+			CreateMap<UpdateLanguageWebModel, UpdateLanguageServiceModel>()
+				.ForMember(src => src.Id, dest => dest.Ignore());
+			CreateMap<LanguageWebModel, LanguageServiceModel>();
 
 			CreateMap<LanguageServiceModel, LanguageWebModel>();
 			CreateMap<ReadLanguageServiceModel, ReadLanguageWebModel>();

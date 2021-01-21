@@ -40,6 +40,7 @@ namespace DevHive.Data.Repositories
 		public async Task<Technology> GetByNameAsync(string technologyName)
 		{
 			return await this._context.Technologies
+				.AsNoTracking()
 				.FirstOrDefaultAsync(x => x.Name == technologyName);
 		}
 		#endregion

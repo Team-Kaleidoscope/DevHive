@@ -14,8 +14,9 @@ using DevHive.Services.Interfaces;
 using DevHive.Data.Interfaces.Repositories;
 using System.Linq;
 using DevHive.Common.Models.Misc;
-using System.Reflection;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using DevHive.Services.Models.Language;
+using DevHive.Services.Models.Technology;
+using DevHive.Services.Models.Identity.Role;
 
 namespace DevHive.Services.Services
 {
@@ -135,69 +136,57 @@ namespace DevHive.Services.Services
 
 		public async Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateUserServiceModel)
 		{
-			//Method: ValidateUserOnUpdate
-			if (!await this._userRepository.DoesUserExistAsync(updateUserServiceModel.Id))
-				throw new ArgumentException("User does not exist!");
-
-			if (!this._userRepository.DoesUserHaveThisUsername(updateUserServiceModel.Id, updateUserServiceModel.UserName)
-					&& await this._userRepository.DoesUsernameExistAsync(updateUserServiceModel.UserName))
-				throw new ArgumentException("Username already exists!");
+			await this.ValidateUserOnUpdate(updateUserServiceModel);
 
 			await this.ValidateUserCollections(updateUserServiceModel);
 
-			//Method: Insert collections to user
-			HashSet<Language> languages = new();
-			foreach (UpdateUserCollectionServiceModel lang in updateUserServiceModel.Languages)
-				languages.Add(await this._languageRepository.GetByNameAsync(lang.Name) ??
-					throw new ArgumentException("Invalid language name!"));
+			//Preserve roles
+			int roleCount = updateUserServiceModel.Roles.Count;
+			for (int i = 0; i < roleCount; i++)
+			{
+				Role role = await this._roleRepository.GetByNameAsync(updateUserServiceModel.Roles.ElementAt(i).Name) ??
+					throw new ArgumentException("Invalid role name!");
 
-			HashSet<Technology> technologies = new();
-			foreach (UpdateUserCollectionServiceModel tech in updateUserServiceModel.Technologies)
-				technologies.Add(await this._technologyRepository.GetByNameAsync(tech.Name) ??
-					throw new ArgumentException("Invalid technology name!"));
+				UpdateRoleServiceModel updateRoleServiceModel = this._userMapper.Map<UpdateRoleServiceModel>(role);
+
+				updateUserServiceModel.Roles.Add(updateRoleServiceModel);
+			}
+
+			int langCount = updateUserServiceModel.Languages.Count;
+			for (int i = 0; i < langCount; i++)
+			{
+				Language language = await this._languageRepository.GetByNameAsync(updateUserServiceModel.Languages.ElementAt(i).Name) ??
+					throw new ArgumentException("Invalid language name!");
+
+				UpdateLanguageServiceModel updateLanguageServiceModel = this._userMapper.Map<UpdateLanguageServiceModel>(language);
+
+				updateUserServiceModel.Languages.Add(updateLanguageServiceModel);
+			}
+
+			//Clean the already replaced languages
+			updateUserServiceModel.Languages.RemoveWhere(x => x.Id == Guid.Empty);
+
+			int techCount = updateUserServiceModel.Technologies.Count;
+			for (int i = 0; i < techCount; i++)
+			{
+				Technology technology = await this._technologyRepository.GetByNameAsync(updateUserServiceModel.Technologies.ElementAt(i).Name) ??
+					throw new ArgumentException("Invalid technology name!");
+
+				UpdateTechnologyServiceModel updateTechnologyServiceModel = this._userMapper.Map<UpdateTechnologyServiceModel>(technology);
+
+				updateUserServiceModel.Technologies.Add(updateTechnologyServiceModel);
+			}
+
+			//Clean the already replaced technologies
+			updateUserServiceModel.Technologies.RemoveWhere(x => x.Id == Guid.Empty);
 
 			User user = this._userMapper.Map<User>(updateUserServiceModel);
-
-			user.Languages = languages;
-			user.Technologies = technologies;
-
 			bool successful = await this._userRepository.EditAsync(user);
 
 			if (!successful)
 				throw new InvalidOperationException("Unable to edit user!");
 
-			return this._userMapper.Map<UserServiceModel>(user); ;
-		}
-
-		public async Task<UserServiceModel> PatchUser(Guid id, List<Patch> patchList)
-		{
-			User user = await this._userRepository.GetByIdAsync(id) ??
-				throw new ArgumentException("User does not exist!");
-
-			UpdateUserServiceModel updateUserServiceModel = this._userMapper.Map<UpdateUserServiceModel>(user);
-
-			foreach (Patch patch in patchList)
-			{
-				bool successful = patch.Action switch
-				{
-					"replace" => ReplacePatch(updateUserServiceModel, patch),
-					"add" => AddPatch(updateUserServiceModel, patch),
-					"remove" => RemovePatch(updateUserServiceModel, patch),
-					_ => throw new ArgumentException("Invalid patch operation!"),
-				};
-
-				if (!successful)
-					throw new ArgumentException("A problem occurred while applying patch");
-			}
-
-			bool success = await this._userRepository.EditAsync(user);
-			if (success)
-			{
-				user = await this._userRepository.GetByIdAsync(id);
-				return this._userMapper.Map<UserServiceModel>(user);
-			}
-			else
-				return null;
+			return this._userMapper.Map<UserServiceModel>(user);
 		}
 		#endregion
 
@@ -282,10 +271,20 @@ namespace DevHive.Services.Services
 			return toReturn;
 		}
 
+		private async Task ValidateUserOnUpdate(UpdateUserServiceModel updateUserServiceModel)
+		{
+			if (!await this._userRepository.DoesUserExistAsync(updateUserServiceModel.Id))
+				throw new ArgumentException("User does not exist!");
+
+			if (!this._userRepository.DoesUserHaveThisUsername(updateUserServiceModel.Id, updateUserServiceModel.UserName)
+					&& await this._userRepository.DoesUsernameExistAsync(updateUserServiceModel.UserName))
+				throw new ArgumentException("Username already exists!");
+		}
+
 		private async Task ValidateUserCollections(UpdateUserServiceModel updateUserServiceModel)
 		{
 			// Friends
-			foreach (UpdateUserCollectionServiceModel friend in updateUserServiceModel.Friends)
+			foreach (var friend in updateUserServiceModel.Friends)
 			{
 				User returnedFriend = await this._userRepository.GetByUsernameAsync(friend.Name);
 
@@ -294,27 +293,22 @@ namespace DevHive.Services.Services
 			}
 
 			// Languages
-			foreach (UpdateUserCollectionServiceModel language in updateUserServiceModel.Languages)
+			foreach (var language in updateUserServiceModel.Languages)
 			{
 				Language returnedLanguage = await this._languageRepository.GetByNameAsync(language.Name);
 
-				if (default(Language) == returnedLanguage)
+				if (returnedLanguage == null)
 					throw new ArgumentException($"Language {language.Name} does not exist!");
 			}
 
 			// Technology
-			foreach (UpdateUserCollectionServiceModel technology in updateUserServiceModel.Technologies)
+			foreach (var technology in updateUserServiceModel.Technologies)
 			{
 				Technology returnedTechnology = await this._technologyRepository.GetByNameAsync(technology.Name);
 
-				if (default(Technology) == returnedTechnology)
+				if (returnedTechnology == null)
 					throw new ArgumentException($"Technology {technology.Name} does not exist!");
 			}
-		}
-
-		private async Task ValidateUserOnUpdate(UpdateUserServiceModel updateUserServiceModel)
-		{
-			throw new NotImplementedException();
 		}
 
 		private string WriteJWTSecurityToken(Guid userId, HashSet<Role> roles)
@@ -343,25 +337,6 @@ namespace DevHive.Services.Services
 			JwtSecurityTokenHandler tokenHandler = new();
 			SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
 			return tokenHandler.WriteToken(token);
-		}
-
-		private bool AddPatch(UpdateUserServiceModel updateUserServiceModel, Patch patch)
-		{
-			// Type type = typeof(UpdateUserServiceModel);
-			// PropertyInfo property = type.GetProperty(patch.Name);
-
-			// property.SetValue(updateUserServiceModel, patch.Value);
-			throw new NotImplementedException();
-		}
-
-		private bool RemovePatch(UpdateUserServiceModel updateUserServiceModel, Patch patch)
-		{
-			throw new NotImplementedException();
-		}
-
-		private bool ReplacePatch(UpdateUserServiceModel updateUserServiceModel, Patch patch)
-		{
-			throw new NotImplementedException();
 		}
 		#endregion
 	}

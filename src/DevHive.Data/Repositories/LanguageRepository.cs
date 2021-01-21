@@ -20,8 +20,7 @@ namespace DevHive.Data.Repositories
 
 		public async Task<bool> AddAsync(Language entity)
 		{
-			await this._context
-				.Set<Language>()
+			await this._context.Languages
 				.AddAsync(entity);
 
 			return await this.SaveChangesAsync(this._context);
@@ -32,14 +31,14 @@ namespace DevHive.Data.Repositories
 
 		public async Task<Language> GetByIdAsync(Guid id)
 		{
-			return await this._context
-				.Set<Language>()
+			return await this._context.Languages
 				.FindAsync(id);
 		}
 
 		public async Task<Language> GetByNameAsync(string languageName)
 		{
 			return await this._context.Languages
+				.AsNoTracking()
 				.FirstOrDefaultAsync(x => x.Name == languageName);
 		}
 		#endregion

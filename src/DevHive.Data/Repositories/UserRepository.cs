@@ -6,6 +6,7 @@ using DevHive.Common.Models.Misc;
 using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DevHive.Data.Repositories
 {
@@ -78,7 +79,9 @@ namespace DevHive.Data.Repositories
 		public async Task<User> GetByUsernameAsync(string username)
 		{
 			return await this._context.Users
-				.Include(u => u.Roles)
+				.AsNoTracking()
+				.Include(x => x.Languages)
+				.Include(x => x.Technologies)
 				.FirstOrDefaultAsync(x => x.UserName == username);
 		}
 
@@ -107,9 +110,13 @@ namespace DevHive.Data.Repositories
 
 		#region Update
 
-		public async Task<bool> EditAsync(User newEntity)
+		public async Task<bool> EditAsync(User entity)
 		{
-			this._context.Update(newEntity);
+			User user = await this._context.Users
+				.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+			this._context.Update(user);
+			this._context.Entry(entity).CurrentValues.SetValues(entity);
 
 			return await this.SaveChangesAsync(this._context);
 		}
@@ -177,6 +184,7 @@ namespace DevHive.Data.Repositories
 		public async Task<bool> DoesUserExistAsync(Guid id)
 		{
 			return await this._context.Users
+				.AsNoTracking()
 				.AnyAsync(x => x.Id == id);
 		}
 
@@ -208,6 +216,7 @@ namespace DevHive.Data.Repositories
 		public bool DoesUserHaveThisUsername(Guid id, string username)
 		{
 			return this._context.Users
+				.AsNoTracking()
 				.Any(x => x.Id == id &&
 					x.UserName == username);
 		}

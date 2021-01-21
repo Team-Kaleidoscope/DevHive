@@ -10,7 +10,8 @@ namespace DevHive.Web.Configurations.Mapping
 		{
 			CreateMap<CreateTechnologyWebModel, CreateTechnologyServiceModel>();
 			CreateMap<ReadTechnologyWebModel, ReadTechnologyServiceModel>();
-			CreateMap<UpdateTechnologyWebModel, UpdateTechnologyServiceModel>();
+			CreateMap<UpdateTechnologyWebModel, UpdateTechnologyServiceModel>()
+				.ForMember(src => src.Id, dest => dest.Ignore());
 			CreateMap<TechnologyWebModel, TechnologyServiceModel>();
 
 			CreateMap<CreateTechnologyServiceModel, CreateTechnologyWebModel>();

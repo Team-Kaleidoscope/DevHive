@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using DevHive.Services.Models.Identity.Role;
+using DevHive.Services.Models.Language;
+using DevHive.Services.Models.Technology;
 
 namespace DevHive.Services.Models.Identity.User
 {
@@ -9,13 +12,13 @@ namespace DevHive.Services.Models.Identity.User
 
 		public string Password { get; set; }
 
-		public HashSet<UpdateUserCollectionServiceModel> Roles { get; set; } = new HashSet<UpdateUserCollectionServiceModel>();
+		public HashSet<UpdateRoleServiceModel> Roles { get; set; } = new HashSet<UpdateRoleServiceModel>();
 
-		public HashSet<UpdateUserCollectionServiceModel> Friends { get; set; } = new HashSet<UpdateUserCollectionServiceModel>();
+		public HashSet<UpdateFriendServiceModel> Friends { get; set; } = new HashSet<UpdateFriendServiceModel>();
 
-		public HashSet<UpdateUserCollectionServiceModel> Languages { get; set; } = new HashSet<UpdateUserCollectionServiceModel>();
+		public HashSet<UpdateLanguageServiceModel> Languages { get; set; } = new HashSet<UpdateLanguageServiceModel>();
 
-		public HashSet<UpdateUserCollectionServiceModel> Technologies { get; set; } = new HashSet<UpdateUserCollectionServiceModel>();
+		public HashSet<UpdateTechnologyServiceModel> Technologies { get; set; } = new HashSet<UpdateTechnologyServiceModel>();
 
 	}
 }
