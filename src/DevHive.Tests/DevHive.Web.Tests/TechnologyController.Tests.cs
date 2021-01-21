@@ -6,7 +6,6 @@ using DevHive.Web.Controllers;
 using DevHive.Web.Models.Technology;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
 using System.Linq;
