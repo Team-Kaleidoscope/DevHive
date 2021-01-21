@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DevHive.Common.Models.Misc;
 using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DevHive.Data.Repositories
 {
@@ -25,32 +23,6 @@ namespace DevHive.Data.Repositories
 		{
 			await this._context.Users
 				.AddAsync(entity);
-
-			return await this.SaveChangesAsync(this._context);
-		}
-
-		public async Task<bool> AddFriendToUserAsync(User user, User friend)
-		{
-			this._context.Update(user);
-			user.Friends.Add(friend);
-
-			return await this.SaveChangesAsync(this._context);
-		}
-
-		public async Task<bool> AddLanguageToUserAsync(User user, Language language)
-		{
-			this._context.Update(user);
-
-			user.Languages.Add(language);
-
-			return await this.SaveChangesAsync(this._context);
-		}
-
-		public async Task<bool> AddTechnologyToUserAsync(User user, Technology technology)
-		{
-			this._context.Update(user);
-
-			user.Technologies.Add(technology);
 
 			return await this.SaveChangesAsync(this._context);
 		}
@@ -120,26 +92,6 @@ namespace DevHive.Data.Repositories
 
 			return await this.SaveChangesAsync(this._context);
 		}
-
-		public async Task<bool> EditUserLanguageAsync(User user, Language oldLang, Language newLang)
-		{
-			this._context.Update(user);
-
-			user.Languages.Remove(oldLang);
-			user.Languages.Add(newLang);
-
-			return await this.SaveChangesAsync(this._context);
-		}
-
-		public async Task<bool> EditUserTechnologyAsync(User user, Technology oldTech, Technology newTech)
-		{
-			this._context.Update(user);
-
-			user.Technologies.Remove(oldTech);
-			user.Technologies.Add(newTech);
-
-			return await this.SaveChangesAsync(this._context);
-		}
 		#endregion
 
 		#region Delete
@@ -148,32 +100,6 @@ namespace DevHive.Data.Repositories
 		{
 			this._context.Users
 				.Remove(entity);
-
-			return await this.SaveChangesAsync(this._context);
-		}
-
-		public async Task<bool> RemoveFriendAsync(User user, User friend)
-		{
-			this._context.Update(user);
-			user.Friends.Remove(friend);
-
-			return await this.SaveChangesAsync(this._context);
-		}
-
-		public async Task<bool> RemoveLanguageFromUserAsync(User user, Language language)
-		{
-			this._context.Update(user);
-
-			user.Languages.Remove(language);
-
-			return await this.SaveChangesAsync(this._context);
-		}
-
-		public async Task<bool> RemoveTechnologyFromUserAsync(User user, Technology technology)
-		{
-			this._context.Update(user);
-
-			user.Technologies.Remove(technology);
 
 			return await this.SaveChangesAsync(this._context);
 		}
