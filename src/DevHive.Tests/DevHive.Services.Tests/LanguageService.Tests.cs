@@ -27,7 +27,7 @@ namespace DevHive.Services.Tests
 
 		#region Create
 		[Test]
-		public async void Create_ReturnsNonEmptyGuid_WhenEntityIsAddedSuccessfully()
+		public async Task Create_ReturnsNonEmptyGuid_WhenEntityIsAddedSuccessfully()
 		{
 			string technologyName = "Gosho Trapov";
 			Guid id = Guid.NewGuid();
@@ -52,7 +52,7 @@ namespace DevHive.Services.Tests
 		}
 
 		[Test]
-		public async void Create_ReturnsEmptyGuid_WhenEntityIsNotAddedSuccessfully()
+		public async Task Create_ReturnsEmptyGuid_WhenEntityIsNotAddedSuccessfully()
 		{
 			string languageName = "Gosho Trapov";
 
@@ -72,12 +72,13 @@ namespace DevHive.Services.Tests
 			Guid result = await this.LanguageService.CreateLanguage(createLanguageServiceModel);
 
 			Assert.IsTrue(result == Guid.Empty);
+
 		}
 
 		[Test]
 		public void Create_ThrowsArgumentException_WhenEntityAlreadyExists()
 		{
-			string exceptionMessage = "Technology already exists!";
+			string exceptionMessage = "Language already exists!";
 			string languageName = "Gosho Trapov";
 
 			CreateLanguageServiceModel createLanguageServiceModel = new()
@@ -96,5 +97,11 @@ namespace DevHive.Services.Tests
 			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}
 		#endregion
+
+
+		//Task.Run(async () =>
+		//{
+
+		//}).GetAwaiter().GetResult();
 	}
 }
