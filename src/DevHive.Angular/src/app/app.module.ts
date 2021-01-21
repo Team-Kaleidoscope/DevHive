@@ -15,6 +15,7 @@ import { PostComponent } from './components/post/post.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ProfileSettingsComponent } from './components/profile-settings/profile-settings.component';
 import { ErrorComponent } from './components/error/error.component';
+import { LoadingComponent } from './components/loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { ErrorComponent } from './components/error/error.component';
     PostComponent,
     ProfileComponent,
     ProfileSettingsComponent,
-    ErrorComponent
+    ErrorComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,

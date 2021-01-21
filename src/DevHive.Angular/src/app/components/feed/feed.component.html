@@ -1,7 +1,4 @@
-<!-- TODO: replace with loading component -->
-<div id="content" *ngIf="!dataArrived">
-	Loading...
-</div>
+<app-loading *ngIf="!dataArrived"></app-loading>
 
 <div id="feed-page" *ngIf="dataArrived">
 	<nav id="profile-bar">
