@@ -17,7 +17,6 @@ namespace DevHive.Data.Repositories
 		}
 
 		#region Create
-
 		public async Task<bool> AddAsync(Language entity)
 		{
 			await this._context.Languages
@@ -28,7 +27,6 @@ namespace DevHive.Data.Repositories
 		#endregion
 
 		#region Read
-
 		public async Task<Language> GetByIdAsync(Guid id)
 		{
 			return await this._context.Languages
@@ -47,28 +45,22 @@ namespace DevHive.Data.Repositories
 
 		public async Task<bool> EditAsync(Language newEntity)
 		{
-			this._context
-			.Set<Language>()
-			.Update(newEntity);
+			this._context.Languages.Update(newEntity);
 
 			return await this.SaveChangesAsync(this._context);
 		}
 		#endregion
 
 		#region Delete
-
 		public async Task<bool> DeleteAsync(Language entity)
 		{
-			this._context
-				.Set<Language>()
-				.Remove(entity);
+			this._context.Languages.Remove(entity);
 
 			return await this.SaveChangesAsync(this._context);
 		}
 		#endregion
 
 		#region Validations
-
 		public async Task<bool> DoesLanguageNameExistAsync(string languageName)
 		{
 			return await this._context.Languages

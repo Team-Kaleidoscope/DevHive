@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using DevHive.Common.Models.Misc;
 using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -16,32 +15,31 @@ namespace DevHive.Data.Repositories
 			this._context = context;
 		}
 
-		//Create
+		#region Create
 		public async Task<bool> AddAsync(Role entity)
 		{
-			await this._context
-				.Set<Role>()
+			await this._context.Roles
 				.AddAsync(entity);
 
 			return await this.SaveChangesAsync(this._context);
 		}
+		#endregion
 
-		//Read
+		#region Read
 		public async Task<Role> GetByIdAsync(Guid id)
 		{
-			return await this._context
-				.Set<Role>()
+			return await this._context.Roles
 				.FindAsync(id);
 		}
 
 		public async Task<Role> GetByNameAsync(string name)
 		{
-			return await this._context
-				.Set<Role>()
+			return await this._context.Roles
 				.FirstOrDefaultAsync(x => x.Name == name);
 		}
+		#endregion
 
-		//Update
+		#region Update
 		public async Task<bool> EditAsync(Role newEntity)
 		{
 			Role role = await this.GetByIdAsync(newEntity.Id);
@@ -53,31 +51,32 @@ namespace DevHive.Data.Repositories
 
 			return await this.SaveChangesAsync(this._context);
 		}
+		#endregion
 
-		//Delete
+		#region Delete
 		public async Task<bool> DeleteAsync(Role entity)
 		{
-			this._context
-				.Set<Role>()
+			this._context.Roles
 				.Remove(entity);
 
 			return await this.SaveChangesAsync(this._context);
 		}
+		#endregion
 
+		#region Validations
 		public async Task<bool> DoesNameExist(string name)
 		{
-			return await this._context
-				.Set<Role>()
+			return await this._context.Roles
 				.AsNoTracking()
 				.AnyAsync(r => r.Name == name);
 		}
 
 		public async Task<bool> DoesRoleExist(Guid id)
 		{
-			return await this._context
-				.Set<Role>()
+			return await this._context.Roles
 				.AsNoTracking()
 				.AnyAsync(r => r.Id == id);
 		}
+		#endregion
 	}
 }
