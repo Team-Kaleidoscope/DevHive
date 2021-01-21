@@ -73,7 +73,7 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void GetById_ReturnsTheThecnology_WhenItExists()
 		{
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 
 			CreateTechnologyServiceModel createTechnologyServiceModel = new CreateTechnologyServiceModel
 			{
@@ -102,7 +102,7 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void Update_ShouldReturnOkResult_WhenTechnologyIsUpdatedSuccessfully()
 		{
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 			UpdateTechnologyWebModel updateTechnologyWebModel = new UpdateTechnologyWebModel
 			{
 				Name = NAME
@@ -123,7 +123,7 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void Update_ShouldReturnOkResult_WhenTechnologyIsNotUpdatedSuccessfully ()
 		{
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 			string message = "Could not update Technology";
 			UpdateTechnologyWebModel updateTechnologyWebModel = new UpdateTechnologyWebModel
 			{
@@ -151,7 +151,7 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void Delete_ReturnsOkResult_When_TechnologyIsDeletedSuccessfully()
 		{
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 
 			this.TechnologyServiceMock.Setup(p => p.DeleteTechnology(It.IsAny<Guid>())).Returns(Task.FromResult(true));
 
@@ -164,7 +164,7 @@ namespace DevHive.Web.Tests
 		public void Delet_ReturnsBadRequestObjectResult_WhenTechnologyIsNotDeletedSuccessfully()
 		{
 			string message = "Could not delete Technology";
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 
 			this.TechnologyServiceMock.Setup(p => p.DeleteTechnology(It.IsAny<Guid>())).Returns(Task.FromResult(false));
 

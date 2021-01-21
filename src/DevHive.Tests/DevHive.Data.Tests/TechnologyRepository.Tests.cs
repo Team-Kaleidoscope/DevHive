@@ -1,4 +1,4 @@
-﻿using DevHive.Data.Models;
+using DevHive.Data.Models;
 using DevHive.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
@@ -69,7 +69,7 @@ namespace DevHive.Data.Tests
 		{
 			Task.Run(async () =>
 			{
-				Guid id = new Guid();
+				Guid id = Guid.NewGuid();
 
 				Technology technologyReturned = await this.TechnologyRepository.GetByIdAsync(id);
 
@@ -99,7 +99,7 @@ namespace DevHive.Data.Tests
 		{
 			Task.Run(async () =>
 			{
-				Guid id = new Guid();
+				Guid id = Guid.NewGuid();
 
 				bool result = await this.TechnologyRepository.DoesTechnologyExistAsync(id);
 
@@ -135,23 +135,24 @@ namespace DevHive.Data.Tests
 		#endregion
 
 		#region EditAsync
+		//TO DO fix
 		[Test]
 		public void EditAsync_UpdatesEntity()
 		{
 			Task.Run(async () =>
 			{
 				string newName = "New name";
-				Guid id = new Guid();
+				Guid id = Guid.NewGuid();
 				Technology technology = new Technology
 				{
 					Name = TECHNOLOGY_NAME,
 					Id = id
-				};
-				Technology newTechnology = new Technology
+				}; Technology newTechnology = new Technology
 				{
 					Name = newName,
 					Id = id
 				};
+
 				await this.TechnologyRepository.AddAsync(technology);
 
 				bool result = await this.TechnologyRepository.EditAsync(newTechnology);
