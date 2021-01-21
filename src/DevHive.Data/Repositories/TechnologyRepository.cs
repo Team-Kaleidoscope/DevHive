@@ -46,12 +46,13 @@ namespace DevHive.Data.Repositories
 		#endregion
 
 		#region Edit
-
-		public async Task<bool> EditAsync(Technology newEntity)
+		public async Task<bool> EditAsync(Technology entity)
 		{
-			this._context
-			.Set<Technology>()
-			.Update(newEntity);
+			Technology technology = await this._context.Technologies
+				.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+			this._context.Update(technology);
+			this._context.Entry(entity).CurrentValues.SetValues(entity);
 
 			return await this.SaveChangesAsync(this._context);
 		}
