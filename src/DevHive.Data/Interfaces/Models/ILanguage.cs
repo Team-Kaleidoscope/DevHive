@@ -7,6 +7,5 @@ namespace DevHive.Data.Interfaces.Models
 	{
 		string Name { get; set; }
 		HashSet<User> Users { get; set; }
-
 	}
 }
