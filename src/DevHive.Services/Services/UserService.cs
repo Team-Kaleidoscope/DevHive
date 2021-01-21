@@ -15,6 +15,7 @@ using DevHive.Data.Interfaces.Repositories;
 using System.Linq;
 using DevHive.Common.Models.Misc;
 using System.Reflection;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace DevHive.Services.Services
 {
@@ -313,7 +314,7 @@ namespace DevHive.Services.Services
 
 		private async Task ValidateUserOnUpdate(UpdateUserServiceModel updateUserServiceModel)
 		{
-
+			throw new NotImplementedException();
 		}
 
 		private string WriteJWTSecurityToken(Guid userId, HashSet<Role> roles)

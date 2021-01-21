@@ -7,6 +7,8 @@ namespace DevHive.Services.Models.Identity.User
 	{
 		public Guid Id { get; set; }
 
+		public string Password { get; set; }
+
 		public HashSet<UpdateUserCollectionServiceModel> Roles { get; set; } = new HashSet<UpdateUserCollectionServiceModel>();
 
 		public HashSet<UpdateUserCollectionServiceModel> Friends { get; set; } = new HashSet<UpdateUserCollectionServiceModel>();
