@@ -104,7 +104,7 @@ namespace DevHive.Services.Tests
 		{
 			Guid id = new Guid();
 			string name = "Gosho Trapov";
-			Language language = new Language()
+			Language language = new Language
 			{
 				Name = name
 			};
@@ -161,7 +161,7 @@ namespace DevHive.Services.Tests
 		}
 
 		[Test]
-		public void UpdateLanguage_ReturnsIfUpdateIsSuccessfull_WhenLanguageExistsy()
+		public void UpdateLanguage_ThrowsArgumentException_WhenLanguageDoesNotExist()
 		{
 			string exceptionMessage = "Language does not exist!";
 			UpdateLanguageServiceModel updateTechnologyServiceModel = new UpdateLanguageServiceModel
