@@ -1,30 +1,22 @@
 using System;
 using System.Threading.Tasks;
-using DevHive.Common.Models.Misc;
 using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class PostRepository : BaseRepository, IPostRepository
+	public class PostRepository : BaseRepository<Post>, IPostRepository
 	{
 		private readonly DevHiveContext _context;
 
 		public PostRepository(DevHiveContext context)
+			: base(context)
 		{
 			this._context = context;
 		}
 
 		#region Create
-		public async Task<bool> AddAsync(Post post)
-		{
-			await this._context.Posts
-				.AddAsync(post);
-
-			return await this.SaveChangesAsync(this._context);
-		}
-
 		public async Task<bool> AddCommentAsync(Comment entity)
 		{
 			await this._context.Comments
@@ -35,12 +27,6 @@ namespace DevHive.Data.Repositories
 		#endregion
 
 		#region Read
-		public async Task<Post> GetByIdAsync(Guid id)
-		{
-			return await this._context.Posts
-				.FindAsync(id);
-		}
-
 		public async Task<Post> GetPostByIssuerAndTimeCreatedAsync(Guid issuerId, DateTime timeCreated)
 		{
 			return await this._context.Posts
@@ -63,14 +49,6 @@ namespace DevHive.Data.Repositories
 		#endregion
 
 		#region Update
-		public async Task<bool> EditAsync(Post newPost)
-		{
-			this._context.Posts
-			.Update(newPost);
-
-			return await this.SaveChangesAsync(this._context);
-		}
-
 		public async Task<bool> EditCommentAsync(Comment newEntity)
 		{
 			this._context.Comments
@@ -81,14 +59,6 @@ namespace DevHive.Data.Repositories
 		#endregion
 
 		#region Delete
-		public async Task<bool> DeleteAsync(Post post)
-		{
-			this._context.Posts
-				.Remove(post);
-
-			return await this.SaveChangesAsync(this._context);
-		}
-
 		public async Task<bool> DeleteCommentAsync(Comment entity)
 		{
 			this._context.Comments

@@ -8,25 +8,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class UserRepository : BaseRepository, IUserRepository
+	public class UserRepository : BaseRepository<User>, IUserRepository
 	{
 		private readonly DevHiveContext _context;
 
 		public UserRepository(DevHiveContext context)
+			:base(context)
 		{
 			this._context = context;
 		}
-
-		#region Create
-
-		public async Task<bool> AddAsync(User entity)
-		{
-			await this._context.Users
-				.AddAsync(entity);
-
-			return await this.SaveChangesAsync(this._context);
-		}
-		#endregion
 
 		#region Read
 
@@ -38,7 +28,7 @@ namespace DevHive.Data.Repositories
 				.AsEnumerable();
 		}
 
-		public async Task<User> GetByIdAsync(Guid id)
+		public override async Task<User> GetByIdAsync(Guid id)
 		{
 			return await this._context.Users
 				.Include(x => x.Friends)
@@ -77,31 +67,6 @@ namespace DevHive.Data.Repositories
 		{
 			return user.Technologies
 				.FirstOrDefault(x => x.Id == technology.Id);
-		}
-		#endregion
-
-		#region Update
-
-		public async Task<bool> EditAsync(User entity)
-		{
-			User user = await this._context.Users
-				.FirstOrDefaultAsync(x => x.Id == entity.Id);
-
-			this._context.Update(user);
-			this._context.Entry(entity).CurrentValues.SetValues(entity);
-
-			return await this.SaveChangesAsync(this._context);
-		}
-		#endregion
-
-		#region Delete
-
-		public async Task<bool> DeleteAsync(User entity)
-		{
-			this._context.Users
-				.Remove(entity);
-
-			return await this.SaveChangesAsync(this._context);
 		}
 		#endregion
 
