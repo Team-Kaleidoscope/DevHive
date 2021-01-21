@@ -45,11 +45,13 @@ namespace DevHive.Data.Repositories
 
 		#region Update
 
-		public async Task<bool> EditAsync(Language newEntity)
+		public async Task<bool> EditAsync(Language entity)
 		{
-			this._context
-			.Set<Language>()
-			.Update(newEntity);
+			Language language = await this._context.Languages
+				.FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+			this._context.Update(language);
+			this._context.Entry(entity).CurrentValues.SetValues(entity);
 
 			return await this.SaveChangesAsync(this._context);
 		}
