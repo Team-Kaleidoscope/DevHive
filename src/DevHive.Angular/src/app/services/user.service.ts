@@ -14,7 +14,7 @@ export class UserService {
   constructor() { }
 
   getDefaultUser(): User {
-    return new User(Guid.createEmpty(), 'gosho_trapov', 'Gosho', 'Trapov', '');
+    return new User(Guid.createEmpty(), 'gosho_trapov', 'Gosho', 'Trapov', AppConstants.FALLBACK_PROFILE_ICON);
   }
 
   fetchUserFromSessionStorage(): User {

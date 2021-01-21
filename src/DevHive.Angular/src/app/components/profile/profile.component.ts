@@ -36,6 +36,9 @@ export class ProfileComponent implements OnInit {
                           if (this.user.userName !== username) {
                             this.setDefaultUser();
                           } else {
+                            if (this.user.imageUrl === '') {
+                              this.user.imageUrl = AppConstants.FALLBACK_PROFILE_ICON;
+                            }
                             this.loggedInUser = true;
                           }
       }, AppConstants.FETCH_TIMEOUT + 50);

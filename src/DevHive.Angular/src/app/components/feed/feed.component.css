@@ -65,7 +65,8 @@
 }
 
 #profile-bar-profile-pic {
-  width: 100%;
+  width: 7em;
+  height: 7em;
   box-sizing: border-box;
   padding: .5em;
 }

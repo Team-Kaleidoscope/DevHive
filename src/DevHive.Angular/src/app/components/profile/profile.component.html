@@ -10,7 +10,7 @@
 	</nav>
 	<hr>
 	<div id="main-info" class="rounded-border">
-		<img class="round-image" src="assets/images/feed/profile-pic.png" alt=""/>
+		<img class="round-image" [src]="user.imageUrl" alt=""/>
 		<div id="other-main-info">
 			<div id="name">
 				{{ user.firstName }} {{ user.lastName }}

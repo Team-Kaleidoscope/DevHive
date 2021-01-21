@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Guid } from 'guid-typescript';
+import {AppConstants} from 'src/app/app-constants.module';
 import { User } from 'src/models/identity/user';
 
 @Component({
@@ -20,7 +21,7 @@ export class PostComponent implements OnInit {
         'gosho_trapov',
         'Gosho',
         'Trapov',
-        'assets/images/feed/profile-pic.png'
+        AppConstants.FALLBACK_PROFILE_ICON
     );
 
     this.votesNumber = 23;
