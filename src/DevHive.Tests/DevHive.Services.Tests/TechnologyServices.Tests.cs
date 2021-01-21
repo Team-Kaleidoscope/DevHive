@@ -26,61 +26,53 @@ namespace DevHive.Services.Tests
 		}
 
 		#region Create
-
 		[Test]
-		public void Create_ReturnsNonEmptyGuid_WhenEntityIsAddedSuccessfully()
+		public async void Create_ReturnsNonEmptyGuid_WhenEntityIsAddedSuccessfully()
 		{
-			Task.Run(async () =>
+			string technologyName = "Gosho Trapov";
+			Guid id = Guid.NewGuid();
+			CreateTechnologyServiceModel createTechnologyServiceModel = new()
 			{
-				string technologyName = "Gosho Trapov";
-				Guid id = Guid.NewGuid();
-				CreateTechnologyServiceModel createTechnologyServiceModel = new()
-				{
-					Name = technologyName
-				};
-				Technology technology = new()
-				{
-					Name = technologyName,
-					Id = id
-				};
+				Name = technologyName
+			};
+			Technology technology = new()
+			{
+				Name = technologyName,
+				Id = id
+			};
 
-				this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
-				this.TechnologyRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Technology>())).Returns(Task.FromResult(true));
-				this.TechnologyRepositoryMock.Setup(p => p.GetByNameAsync(It.IsAny<string>())).Returns(Task.FromResult(technology));
-				this.MapperMock.Setup(p => p.Map<Technology>(It.IsAny<CreateTechnologyServiceModel>())).Returns(technology);
+			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
+			this.TechnologyRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Technology>())).Returns(Task.FromResult(true));
+			this.TechnologyRepositoryMock.Setup(p => p.GetByNameAsync(It.IsAny<string>())).Returns(Task.FromResult(technology));
+			this.MapperMock.Setup(p => p.Map<Technology>(It.IsAny<CreateTechnologyServiceModel>())).Returns(technology);
 
-				Guid result = await this.TechnologyService.Create(createTechnologyServiceModel);
+			Guid result = await this.TechnologyService.Create(createTechnologyServiceModel);
 
-				Assert.AreEqual(id, result);
-			}).GetAwaiter().GetResult();
+			Assert.AreEqual(id, result);
 		}
 
 		[Test]
-		public void Create_ReturnsEmptyGuid_WhenEntityIsNotAddedSuccessfully()
+		public async void Create_ReturnsEmptyGuid_WhenEntityIsNotAddedSuccessfully()
 		{
-			Task.Run(async () =>
+			string technologyName = "Gosho Trapov";
+
+			CreateTechnologyServiceModel createTechnologyServiceModel = new()
 			{
-				string technologyName = "Gosho Trapov";
+				Name = technologyName
+			};
+			Technology technology = new()
+			{
+				Name = technologyName
+			};
 
-				CreateTechnologyServiceModel createTechnologyServiceModel = new()
-				{
-					Name = technologyName
-				};
-				Technology technology = new()
-				{
-					Name = technologyName
-				};
+			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
+			this.TechnologyRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Technology>())).Returns(Task.FromResult(false));
+			this.MapperMock.Setup(p => p.Map<Technology>(It.IsAny<CreateTechnologyServiceModel>())).Returns(technology);
 
-				this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
-				this.TechnologyRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Technology>())).Returns(Task.FromResult(false));
-				this.MapperMock.Setup(p => p.Map<Technology>(It.IsAny<CreateTechnologyServiceModel>())).Returns(technology);
+			Guid result = await this.TechnologyService.Create(createTechnologyServiceModel);
 
-				Guid result = await this.TechnologyService.Create(createTechnologyServiceModel);
-
-				Assert.IsTrue(result == Guid.Empty);
-			}).GetAwaiter().GetResult();
+			Assert.IsTrue(result == Guid.Empty);
 		}
-
 
 		[Test]
 		public void Create_ThrowsArgumentException_WhenEntityAlreadyExists()
@@ -106,30 +98,26 @@ namespace DevHive.Services.Tests
 		#endregion
 
 		#region Read
-
 		[Test]
-		public void GetTechnologyById_ReturnsTheTechnology_WhenItExists()
+		public async void GetTechnologyById_ReturnsTheTechnology_WhenItExists()
 		{
-			Task.Run(async () =>
+			Guid id = new Guid();
+			string name = "Gosho Trapov";
+			Technology technology = new()
 			{
-				Guid id = new Guid();
-				string name = "Gosho Trapov";
-				Technology technology = new()
-				{
-					Name = name
-				};
-				CreateTechnologyServiceModel createTechnologyServiceModel = new()
-				{
-					Name = name
-				};
+				Name = name
+			};
+			CreateTechnologyServiceModel createTechnologyServiceModel = new()
+			{
+				Name = name
+			};
 
-				this.TechnologyRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(technology));
-				this.MapperMock.Setup(p => p.Map<CreateTechnologyServiceModel>(It.IsAny<Technology>())).Returns(createTechnologyServiceModel);
+			this.TechnologyRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(technology));
+			this.MapperMock.Setup(p => p.Map<CreateTechnologyServiceModel>(It.IsAny<Technology>())).Returns(createTechnologyServiceModel);
 
-				CreateTechnologyServiceModel result = await this.TechnologyService.GetTechnologyById(id);
+			CreateTechnologyServiceModel result = await this.TechnologyService.GetTechnologyById(id);
 
-				Assert.AreEqual(name, result.Name);
-			}).GetAwaiter().GetResult();
+			Assert.AreEqual(name, result.Name);
 		}
 
 		[Test]
@@ -146,33 +134,29 @@ namespace DevHive.Services.Tests
 		#endregion
 
 		#region Update
-
 		[Test]
 		[TestCase(true)]
 		[TestCase(false)]
-		public void UpdateTechnology_ReturnsIfUpdateIsSuccessfull_WhenTechnologyExistsy(bool shouldPass)
+		public async void UpdateTechnology_ReturnsIfUpdateIsSuccessfull_WhenTechnologyExistsy(bool shouldPass)
 		{
-			Task.Run(async () =>
+			string name = "Gosho Trapov";
+			Technology technology = new Technology
 			{
-				string name = "Gosho Trapov";
-				Technology technology = new Technology
-				{
-					Name = name
-				};
-				UpdateTechnologyServiceModel updatetechnologyServiceModel = new UpdateTechnologyServiceModel
-				{
-					Name = name,
-				};
+				Name = name
+			};
+			UpdateTechnologyServiceModel updatetechnologyServiceModel = new UpdateTechnologyServiceModel
+			{
+				Name = name,
+			};
 
-				this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-				this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
-				this.TechnologyRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Technology>())).Returns(Task.FromResult(shouldPass));
-				this.MapperMock.Setup(p => p.Map<Technology>(It.IsAny<UpdateTechnologyServiceModel>())).Returns(technology);
+			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
+			this.TechnologyRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Technology>())).Returns(Task.FromResult(shouldPass));
+			this.MapperMock.Setup(p => p.Map<Technology>(It.IsAny<UpdateTechnologyServiceModel>())).Returns(technology);
 
-				bool result = await this.TechnologyService.UpdateTechnology(updatetechnologyServiceModel);
+			bool result = await this.TechnologyService.UpdateTechnology(updatetechnologyServiceModel);
 
-				Assert.AreEqual(shouldPass, result);
-			}).GetAwaiter().GetResult();
+			Assert.AreEqual(shouldPass, result);
 		}
 
 		[Test]
@@ -212,21 +196,18 @@ namespace DevHive.Services.Tests
 		[Test]
 		[TestCase(true)]
 		[TestCase(false)]
-		public void DeleteTechnology_ShouldReturnIfDeletionIsSuccessfull_WhenTechnologyExists(bool shouldPass)
+		public async void DeleteTechnology_ShouldReturnIfDeletionIsSuccessfull_WhenTechnologyExists(bool shouldPass)
 		{
-			Task.Run(async () =>
-			{
-				Guid id = new Guid();
-				Technology technology = new Technology();
+			Guid id = new Guid();
+			Technology technology = new Technology();
 
-				this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-				this.TechnologyRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(technology));
-				this.TechnologyRepositoryMock.Setup(p => p.DeleteAsync(It.IsAny<Technology>())).Returns(Task.FromResult(shouldPass));
+			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this.TechnologyRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(technology));
+			this.TechnologyRepositoryMock.Setup(p => p.DeleteAsync(It.IsAny<Technology>())).Returns(Task.FromResult(shouldPass));
 
-				bool result = await this.TechnologyService.DeleteTechnology(id);
+			bool result = await this.TechnologyService.DeleteTechnology(id);
 
-				Assert.AreEqual(shouldPass, result);
-			}).GetAwaiter().GetResult();
+			Assert.AreEqual(shouldPass, result);
 		}
 
 		[Test]
@@ -242,9 +223,5 @@ namespace DevHive.Services.Tests
 			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}
 		#endregion
-		//Task.Run(async () =>
-		//{
-		//
-		//}).GetAwaiter().GetResult();
 	}
 }

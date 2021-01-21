@@ -1,12 +1,15 @@
 using AutoMapper;
+using DevHive.Common.Models.Misc;
 using DevHive.Services.Interfaces;
 using DevHive.Services.Models.Technology;
 using DevHive.Web.Controllers;
 using DevHive.Web.Models.Technology;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DevHive.Web.Tests
@@ -30,7 +33,7 @@ namespace DevHive.Web.Tests
 		#region Create
 		[Test]
 		public void Create_ReturnsOkObjectResult_WhenTechnologyIsSuccessfullyCreated()
-		{			
+		{
 			CreateTechnologyWebModel createTechnologyWebModel = new CreateTechnologyWebModel
 			{
 				Name = NAME
@@ -39,13 +42,24 @@ namespace DevHive.Web.Tests
 			{
 				Name = NAME
 			};
+			Guid id = Guid.NewGuid();
 
 			this.MapperMock.Setup(p => p.Map<CreateTechnologyServiceModel>(It.IsAny<CreateTechnologyWebModel>())).Returns(createTechnologyServiceModel);
-			this.TechnologyServiceMock.Setup(p => p.Create(It.IsAny<CreateTechnologyServiceModel>())).Returns(Task.FromResult(true));
+			this.TechnologyServiceMock.Setup(p => p.Create(It.IsAny<CreateTechnologyServiceModel>())).Returns(Task.FromResult(id));
 
 			IActionResult result = this.TechnologyController.Create(createTechnologyWebModel).Result;
 
-			Assert.IsInstanceOf<OkResult>(result);
+			Assert.IsInstanceOf<OkObjectResult>(result);
+
+			var splitted = (result as OkObjectResult).Value
+				.ToString()
+				.Split('{', '}', '=', ' ')
+				.Where(x => !string.IsNullOrEmpty(x))
+				.ToArray();
+
+			Guid resultId = Guid.Parse(splitted[1]);
+
+			Assert.AreEqual(id, resultId);
 		}
 
 		[Test]
@@ -59,13 +73,20 @@ namespace DevHive.Web.Tests
 			{
 				Name = NAME
 			};
+			Guid id = Guid.Empty;
+			string errorMessage = $"Could not create technology {NAME}";
 
 			this.MapperMock.Setup(p => p.Map<CreateTechnologyServiceModel>(It.IsAny<CreateTechnologyWebModel>())).Returns(createTechnologyServiceModel);
-			this.TechnologyServiceMock.Setup(p => p.Create(It.IsAny<CreateTechnologyServiceModel>())).Returns(Task.FromResult(false));
+			this.TechnologyServiceMock.Setup(p => p.Create(It.IsAny<CreateTechnologyServiceModel>())).Returns(Task.FromResult(id));
 
 			IActionResult result = this.TechnologyController.Create(createTechnologyWebModel).Result;
 
 			Assert.IsInstanceOf<BadRequestObjectResult>(result);
+
+			BadRequestObjectResult badRequsetObjectResult = result as BadRequestObjectResult;
+			string resultMessage = badRequsetObjectResult.Value.ToString();
+
+			Assert.AreEqual(errorMessage, resultMessage);
 		}
 		#endregion
 
@@ -112,7 +133,7 @@ namespace DevHive.Web.Tests
 				Name = NAME
 			};
 
-			this.TechnologyServiceMock.Setup(p => p.UpdateTechnology(It.IsAny<Guid>(), It.IsAny<UpdateTechnologyServiceModel>())).Returns(Task.FromResult(true));
+			this.TechnologyServiceMock.Setup(p => p.UpdateTechnology(It.IsAny<UpdateTechnologyServiceModel>())).Returns(Task.FromResult(true));
 			this.MapperMock.Setup(p => p.Map<UpdateTechnologyServiceModel>(It.IsAny<UpdateTechnologyWebModel>())).Returns(updateTechnologyServiceModel);
 
 			IActionResult result = this.TechnologyController.Update(id, updateTechnologyWebModel).Result;
@@ -121,7 +142,7 @@ namespace DevHive.Web.Tests
 		}
 
 		[Test]
-		public void Update_ShouldReturnOkResult_WhenTechnologyIsNotUpdatedSuccessfully ()
+		public void Update_ShouldReturnOkResult_WhenTechnologyIsNotUpdatedSuccessfully()
 		{
 			Guid id = Guid.NewGuid();
 			string message = "Could not update Technology";
@@ -134,7 +155,7 @@ namespace DevHive.Web.Tests
 				Name = NAME
 			};
 
-			this.TechnologyServiceMock.Setup(p => p.UpdateTechnology(It.IsAny<Guid>(), It.IsAny<UpdateTechnologyServiceModel>())).Returns(Task.FromResult(false));
+			this.TechnologyServiceMock.Setup(p => p.UpdateTechnology(It.IsAny<UpdateTechnologyServiceModel>())).Returns(Task.FromResult(false));
 			this.MapperMock.Setup(p => p.Map<UpdateTechnologyServiceModel>(It.IsAny<UpdateTechnologyWebModel>())).Returns(updateTechnologyServiceModel);
 
 			IActionResult result = this.TechnologyController.Update(id, updateTechnologyWebModel).Result;
