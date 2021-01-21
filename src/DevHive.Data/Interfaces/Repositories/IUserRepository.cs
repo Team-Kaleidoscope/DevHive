@@ -8,24 +8,15 @@ namespace DevHive.Data.Interfaces.Repositories
 {
 	public interface IUserRepository : IRepository<User>
 	{
-		Task<bool> AddFriendToUserAsync(User user, User friend);
-		Task<bool> AddLanguageToUserAsync(User user, Language language);
-		Task<bool> AddTechnologyToUserAsync(User user, Technology technology);
-
+		//Read
 		Task<User> GetByUsernameAsync(string username);
 		Language GetUserLanguage(User user, Language language);
-		IList<Language> GetUserLanguages(User user);
-		IList<Technology> GetUserTechnologies(User user);
+		HashSet<Language> GetUserLanguages(User user);
+		HashSet<Technology> GetUserTechnologies(User user);
 		Technology GetUserTechnology(User user, Technology technology);
 		IEnumerable<User> QueryAll();
 
-		Task<bool> EditUserLanguageAsync(User user, Language oldLang, Language newLang);
-		Task<bool> EditUserTechnologyAsync(User user, Technology oldTech, Technology newTech);
-
-		Task<bool> RemoveFriendAsync(User user, User friend);
-		Task<bool> RemoveLanguageFromUserAsync(User user, Language language);
-		Task<bool> RemoveTechnologyFromUserAsync(User user, Technology technology);
-
+		//Validations
 		Task<bool> DoesEmailExistAsync(string email);
 		Task<bool> DoesUserExistAsync(Guid id);
 		Task<bool> DoesUserHaveThisFriendAsync(Guid userId, Guid friendId);

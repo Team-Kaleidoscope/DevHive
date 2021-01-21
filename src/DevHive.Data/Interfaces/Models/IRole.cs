@@ -5,6 +5,6 @@ namespace DevHive.Data.Interfaces.Models
 {
 	public interface IRole
 	{
-		List<User> Users { get; set; }
+		HashSet<User> Users { get; set; }
 	}
 }

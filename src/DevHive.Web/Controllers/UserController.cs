@@ -6,12 +6,10 @@ using DevHive.Web.Models.Identity.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DevHive.Common.Models.Identity;
-using DevHive.Common.Models.Misc;
-using DevHive.Web.Models.Language;
-using DevHive.Services.Models.Language;
-using DevHive.Web.Models.Technology;
-using DevHive.Services.Models.Technology;
 using DevHive.Services.Interfaces;
+using Microsoft.AspNetCore.JsonPatch;
+using DevHive.Common.Models.Misc;
+using System.Collections.Generic;
 
 namespace DevHive.Web.Controllers
 {
@@ -57,40 +55,6 @@ namespace DevHive.Web.Controllers
 		}
 		#endregion
 
-		#region Create
-
-		[HttpPost]
-		[Route("AddAFriend")]
-		public async Task<IActionResult> AddAFriend(Guid userId, [FromBody] IdModel friendIdModel)
-		{
-			return await this._userService.AddFriend(userId, friendIdModel.Id) ?
-				new OkResult() :
-				new BadRequestResult();
-		}
-
-		[HttpPost]
-		[Route("AddLanguageToUser")]
-		public async Task<IActionResult> AddLanguageToUser(Guid userId, [FromBody] LanguageWebModel languageWebModel)
-		{
-			LanguageServiceModel languageServiceModel = this._userMapper.Map<LanguageServiceModel>(languageWebModel);
-
-			return await this._userService.AddLanguageToUser(userId, languageServiceModel) ?
-				new OkResult() :
-				new BadRequestResult();
-		}
-
-		[HttpPost]
-		[Route("AddTechnologyToUser")]
-		public async Task<IActionResult> AddTechnologyToUser(Guid userId, [FromBody] TechnologyWebModel technologyWebModel)
-		{
-			TechnologyServiceModel technologyServiceModel = this._userMapper.Map<TechnologyServiceModel>(technologyWebModel);
-
-			return await this._userService.AddTechnologyToUser(userId, technologyServiceModel) ?
-				new OkResult() :
-				new BadRequestResult();
-		}
-		#endregion
-
 		#region Read
 
 		[HttpGet]
@@ -106,10 +70,11 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpGet]
-		[Route("GetAFriend")]
-		public async Task<IActionResult> GetAFriend(Guid friendId)
+		[Route("GetUser")]
+		[AllowAnonymous]
+		public async Task<IActionResult> GetUser(string username)
 		{
-			UserServiceModel friendServiceModel = await this._userService.GetFriendById(friendId);
+			UserServiceModel friendServiceModel = await this._userService.GetUserByUsername(username);
 			UserWebModel friend = this._userMapper.Map<UserWebModel>(friendServiceModel);
 
 			return new OkObjectResult(friend);
@@ -118,12 +83,12 @@ namespace DevHive.Web.Controllers
 
 		#region Update
 		[HttpPut]
-		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserWebModel updateModel, [FromHeader] string authorization)
+		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserWebModel updateUserWebModel, [FromHeader] string authorization)
 		{
 			if (!await this._userService.ValidJWT(id, authorization))
 				return new UnauthorizedResult();
 
-			UpdateUserServiceModel updateUserServiceModel = this._userMapper.Map<UpdateUserServiceModel>(updateModel);
+			UpdateUserServiceModel updateUserServiceModel = this._userMapper.Map<UpdateUserServiceModel>(updateUserWebModel);
 			updateUserServiceModel.Id = id;
 
 			UserServiceModel userServiceModel = await this._userService.UpdateUser(updateUserServiceModel);
@@ -134,7 +99,6 @@ namespace DevHive.Web.Controllers
 		#endregion
 
 		#region Delete
-
 		[HttpDelete]
 		public async Task<IActionResult> Delete(Guid id, [FromHeader] string authorization)
 		{
@@ -143,36 +107,6 @@ namespace DevHive.Web.Controllers
 
 			await this._userService.DeleteUser(id);
 			return new OkResult();
-		}
-
-		[HttpDelete]
-		[Route("RemoveAFriend")]
-		public async Task<IActionResult> RemoveAFriend(Guid userId, Guid friendId)
-		{
-			await this._userService.RemoveFriend(userId, friendId);
-			return new OkResult();
-		}
-
-		[HttpDelete]
-		[Route("RemoveLanguageFromUser")]
-		public async Task<IActionResult> RemoveLanguageFromUser(Guid userId, [FromBody] LanguageWebModel languageWebModel)
-		{
-			LanguageServiceModel languageServiceModel = this._userMapper.Map<LanguageServiceModel>(languageWebModel);
-
-			return await this._userService.RemoveLanguageFromUser(userId, languageServiceModel) ?
-				new OkResult() :
-				new BadRequestResult();
-		}
-
-		[HttpDelete]
-		[Route("RemoveTechnologyFromUser")]
-		public async Task<IActionResult> RemoveTechnologyFromUser(Guid userId, [FromBody] TechnologyWebModel technologyWebModel)
-		{
-			TechnologyServiceModel technologyServiceModel = this._userMapper.Map<TechnologyServiceModel>(technologyWebModel);
-
-			return await this._userService.RemoveTechnologyFromUser(userId, technologyServiceModel) ?
-				new OkResult() :
-				new BadRequestResult();
 		}
 		#endregion
 	}

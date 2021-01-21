@@ -7,8 +7,8 @@ namespace DevHive.Services.Interfaces
 {
 	public interface IPostService
 	{
-		Task<bool> CreatePost(CreatePostServiceModel postServiceModel);
-		Task<bool> AddComment(CreateCommentServiceModel commentServiceModel);
+		Task<Guid> CreatePost(CreatePostServiceModel postServiceModel);
+		Task<Guid> AddComment(CreateCommentServiceModel commentServiceModel);
 
 		Task<CommentServiceModel> GetCommentById(Guid id);
 		Task<PostServiceModel> GetPostById(Guid id);

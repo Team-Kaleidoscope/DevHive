@@ -1,107 +1,84 @@
 using System;
 using System.Threading.Tasks;
-using DevHive.Common.Models.Misc;
 using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class PostRepository : IPostRepository
+	public class PostRepository : BaseRepository<Post>, IPostRepository
 	{
 		private readonly DevHiveContext _context;
 
 		public PostRepository(DevHiveContext context)
+			: base(context)
 		{
 			this._context = context;
 		}
 
-		//Create
-		public async Task<bool> AddAsync(Post post)
-		{
-			await this._context
-				.Set<Post>()
-				.AddAsync(post);
-
-			return await RepositoryMethods.SaveChangesAsync(this._context);
-		}
-
+		#region Create
 		public async Task<bool> AddCommentAsync(Comment entity)
 		{
-			await this._context
-				.Set<Comment>()
+			await this._context.Comments
 				.AddAsync(entity);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
+		#endregion
 
-		//Read
-		public async Task<Post> GetByIdAsync(Guid id)
+		#region Read
+		public async Task<Post> GetPostByIssuerAndTimeCreatedAsync(Guid issuerId, DateTime timeCreated)
 		{
-			return await this._context
-				.Set<Post>()
-				.FindAsync(id);
+			return await this._context.Posts
+				.FirstOrDefaultAsync(p => p.IssuerId == issuerId &&
+					p.TimeCreated == timeCreated);
 		}
 
 		public async Task<Comment> GetCommentByIdAsync(Guid id)
 		{
-			return await this._context
-				.Set<Comment>()
+			return await this._context.Comments
 				.FindAsync(id);
 		}
 
-		//Update
-		public async Task<bool> EditAsync(Post newPost)
+		public async Task<Comment> GetCommentByIssuerAndTimeCreatedAsync(Guid issuerId, DateTime timeCreated)
 		{
-			this._context
-			.Set<Post>()
-			.Update(newPost);
-
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this._context.Comments
+				.FirstOrDefaultAsync(p => p.IssuerId == issuerId &&
+					p.TimeCreated == timeCreated);
 		}
+		#endregion
 
+		#region Update
 		public async Task<bool> EditCommentAsync(Comment newEntity)
 		{
-			this._context
-				.Set<Comment>()
+			this._context.Comments
 				.Update(newEntity);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
+		#endregion
 
-		//Delete
-		public async Task<bool> DeleteAsync(Post post)
-		{
-			this._context
-				.Set<Post>()
-				.Remove(post);
-
-			return await RepositoryMethods.SaveChangesAsync(this._context);
-		}
-
+		#region Delete
 		public async Task<bool> DeleteCommentAsync(Comment entity)
 		{
-			this._context
-				.Set<Comment>()
+			this._context.Comments
 				.Remove(entity);
 
-			return await RepositoryMethods.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync(this._context);
 		}
+		#endregion
 
 		#region Validations
-
 		public async Task<bool> DoesPostExist(Guid postId)
 		{
-			return await this._context
-				.Set<Post>()
+			return await this._context.Posts
 				.AsNoTracking()
 				.AnyAsync(r => r.Id == postId);
 		}
 
 		public async Task<bool> DoesCommentExist(Guid id)
 		{
-			return await this._context
-				.Set<Comment>()
+			return await this._context.Comments
 				.AsNoTracking()
 				.AnyAsync(r => r.Id == id);
 		}

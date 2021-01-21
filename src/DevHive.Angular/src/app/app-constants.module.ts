@@ -5,4 +5,6 @@ export class AppConstants {
   public static API_USER_REGISTER_URL = AppConstants.API_USER_URL + '/register';
 
   public static FETCH_TIMEOUT = 500;
+
+  public static FALLBACK_PROFILE_ICON = 'assets/images/feed/profile-pic.png';
 }

@@ -1,8 +1,8 @@
 using System;
 
-namespace DevHive.Common.Models.Identity
+namespace DevHive.Services.Models.Identity.User
 {
-	public class RoleModel
+	public class UpdateFriendServiceModel
 	{
 		public Guid Id { get; set; }
 		public string Name { get; set; }

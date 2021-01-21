@@ -1,0 +1,39 @@
+* {
+  box-sizing: border-box;
+}
+
+#content {
+  max-width: 22em;
+  justify-content: start;
+}
+
+hr {
+  width: calc(100% - 1em);
+  color: black;
+  border: 1px solid black;
+}
+
+/* Navigation bar (for loggedin user) */
+
+#navigation {
+  display: flex;
+  width: 100%;
+}
+
+#navigation > .submit-btn {
+  flex: 1;
+  margin-top: 0;
+  margin-left: .5em;
+  font-size: inherit;
+}
+
+#navigation > .submit-btn:nth-of-type(1) {
+  margin-left: 0;
+}
+
+/* Buttons */
+
+#delete-account:hover {
+  color: indianred;
+  border-color: indianred !important;
+}

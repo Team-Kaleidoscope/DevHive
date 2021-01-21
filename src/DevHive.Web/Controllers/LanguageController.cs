@@ -26,29 +26,29 @@ namespace DevHive.Web.Controllers
 		{
 			CreateLanguageServiceModel languageServiceModel = this._languageMapper.Map<CreateLanguageServiceModel>(createLanguageWebModel);
 
-			bool result = await this._languageService.CreateLanguage(languageServiceModel);
+			Guid id = await this._languageService.CreateLanguage(languageServiceModel);
 
-			if (!result)
-				return new BadRequestObjectResult("Could not create Language");
-
-			return new OkResult();
+			return id == Guid.Empty ?
+				new BadRequestObjectResult($"Could not create language {createLanguageWebModel.Name}") :
+				new OkObjectResult(new { Id = id });
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> GetById(Guid languageId)
+		public async Task<IActionResult> GetById(Guid id)
 		{
-			LanguageServiceModel languageServiceModel = await this._languageService.GetLanguageById(languageId);
-			LanguageWebModel languageWebModel = this._languageMapper.Map<LanguageWebModel>(languageServiceModel);
+			ReadLanguageServiceModel languageServiceModel = await this._languageService.GetLanguageById(id);
+			ReadLanguageWebModel languageWebModel = this._languageMapper.Map<ReadLanguageWebModel>(languageServiceModel);
 
 			return new OkObjectResult(languageWebModel);
 		}
 
 		[HttpPut]
-		public async Task<IActionResult> Update(Guid languageId, [FromBody] UpdateLanguageWebModel updateModel)
+		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateLanguageWebModel updateModel)
 		{
 			UpdateLanguageServiceModel updatelanguageServiceModel = this._languageMapper.Map<UpdateLanguageServiceModel>(updateModel);
+			updatelanguageServiceModel.Id = id;
 
-			bool result = await this._languageService.UpdateLanguage(languageId, updatelanguageServiceModel);
+			bool result = await this._languageService.UpdateLanguage(updatelanguageServiceModel);
 
 			if (!result)
 				return new BadRequestObjectResult("Could not update Language");
@@ -57,9 +57,9 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpDelete]
-		public async Task<IActionResult> Delete(Guid languageId)
+		public async Task<IActionResult> Delete(Guid id)
 		{
-			bool result = await this._languageService.DeleteLanguage(languageId);
+			bool result = await this._languageService.DeleteLanguage(id);
 
 			if (!result)
 				return new BadRequestObjectResult("Could not delete Language");

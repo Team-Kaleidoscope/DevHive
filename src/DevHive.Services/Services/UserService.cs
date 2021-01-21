@@ -7,15 +7,16 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Cryptography;
 using System.Text;
 using System.Collections.Generic;
 using DevHive.Common.Models.Identity;
-using DevHive.Services.Models.Language;
 using DevHive.Services.Interfaces;
-using DevHive.Services.Models.Technology;
-using DevHive.Data.Repositories;
 using DevHive.Data.Interfaces.Repositories;
+using System.Linq;
+using DevHive.Common.Models.Misc;
+using DevHive.Services.Models.Language;
+using DevHive.Services.Models.Technology;
+using DevHive.Services.Models.Identity.Role;
 
 namespace DevHive.Services.Services
 {
@@ -52,7 +53,7 @@ namespace DevHive.Services.Services
 
 			User user = await this._userRepository.GetByUsernameAsync(loginModel.UserName);
 
-			if (user.PasswordHash != GeneratePasswordHash(loginModel.Password))
+			if (user.PasswordHash != PasswordModifications.GeneratePasswordHash(loginModel.Password))
 				throw new ArgumentException("Incorrect password!");
 
 			return new TokenModel(WriteJWTSecurityToken(user.Id, user.Roles));
@@ -67,7 +68,7 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("Email already exists!");
 
 			User user = this._userMapper.Map<User>(registerModel);
-			user.PasswordHash = GeneratePasswordHash(registerModel.Password);
+			user.PasswordHash = PasswordModifications.GeneratePasswordHash(registerModel.Password);
 
 			// Make sure the default role exists
 			if (!await this._roleRepository.DoesNameExist(Role.DefaultRole))
@@ -75,7 +76,7 @@ namespace DevHive.Services.Services
 
 			// Set the default role to the user
 			Role defaultRole = await this._roleRepository.GetByNameAsync(Role.DefaultRole);
-			user.Roles = new List<Role>() { defaultRole };
+			user.Roles = new HashSet<Role>() { defaultRole };
 
 			await this._userRepository.AddAsync(user);
 
@@ -83,75 +84,7 @@ namespace DevHive.Services.Services
 		}
 		#endregion
 
-		#region Create
-
-		public async Task<bool> AddFriend(Guid userId, Guid friendId)
-		{
-			Task<bool> userExists = this._userRepository.DoesUserExistAsync(userId);
-			Task<bool> friendExists = this._userRepository.DoesUserExistAsync(friendId);
-
-			await Task.WhenAll(userExists, friendExists);
-
-			if (!userExists.Result)
-				throw new ArgumentException("User doesn't exist!");
-
-			if (!friendExists.Result)
-				throw new ArgumentException("Friend doesn't exist!");
-
-			if (await this._userRepository.DoesUserHaveThisFriendAsync(userId, friendId))
-				throw new ArgumentException("Friend already exists in your friends list.");
-
-			User user = await this._userRepository.GetByIdAsync(userId);
-			User friend = await this._userRepository.GetByIdAsync(friendId);
-
-			return user != default(User) && friend != default(User) ?
-				await this._userRepository.AddFriendToUserAsync(user, friend) :
-				throw new ArgumentException("Invalid user!");
-		}
-
-		public async Task<bool> AddLanguageToUser(Guid userId, LanguageServiceModel languageServiceModel)
-		{
-			bool userExists = await this._userRepository.DoesUserExistAsync(userId);
-			bool languageExists = await this._languageRepository.DoesLanguageExistAsync(languageServiceModel.Id);
-
-			if (!userExists)
-				throw new ArgumentException("User does not exist!");
-
-			if (!languageExists)
-				throw new ArgumentException("Language does noy exist!");
-
-			User user = await this._userRepository.GetByIdAsync(userId);
-			Language language = await this._languageRepository.GetByIdAsync(languageServiceModel.Id);
-
-			if (this._userRepository.DoesUserHaveThisLanguage(user, language))
-				throw new ArgumentException("User already has this language!");
-
-			return await this._userRepository.AddLanguageToUserAsync(user, language);
-		}
-
-		public async Task<bool> AddTechnologyToUser(Guid userId, TechnologyServiceModel technologyServiceModel)
-		{
-			bool userExists = await this._userRepository.DoesUserExistAsync(userId);
-			bool technologyExists = await this._technologyRepository.DoesTechnologyExistAsync(technologyServiceModel.Id);
-
-			if (!userExists)
-				throw new ArgumentException("User does not exist!");
-
-			if (!technologyExists)
-				throw new ArgumentException("Technology does not exist!");
-
-			Technology technology = await this._technologyRepository.GetByIdAsync(technologyServiceModel.Id);
-			User user = await this._userRepository.GetByIdAsync(userId);
-
-			if (this._userRepository.DoesUserHaveThisTechnology(user, technology))
-				throw new ArgumentException("User already has this language!");
-
-			return await this._userRepository.AddTechnologyToUserAsync(user, technology);
-		}
-		#endregion
-
 		#region Read
-
 		public async Task<UserServiceModel> GetUserById(Guid id)
 		{
 			User user = await this._userRepository.GetByIdAsync(id)
@@ -160,40 +93,75 @@ namespace DevHive.Services.Services
 			return this._userMapper.Map<UserServiceModel>(user);
 		}
 
-		public async Task<UserServiceModel> GetFriendById(Guid friendId)
+		public async Task<UserServiceModel> GetUserByUsername(string username)
 		{
-			if (!await _userRepository.DoesUserExistAsync(friendId))
-				throw new ArgumentException("User does not exist!");
+			User friend = await this._userRepository.GetByUsernameAsync(username);
 
-			User friend = await this._userRepository.GetByIdAsync(friendId);
+			if (friend == null)
+				throw new ArgumentException("User does not exist!");
 
 			return this._userMapper.Map<UserServiceModel>(friend);
 		}
 		#endregion
 
 		#region Update
-
-		public async Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateModel)
+		public async Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateUserServiceModel)
 		{
-			if (!await this._userRepository.DoesUserExistAsync(updateModel.Id))
-				throw new ArgumentException("User does not exist!");
+			await this.ValidateUserOnUpdate(updateUserServiceModel);
 
-			if (!this._userRepository.DoesUserHaveThisUsername(updateModel.Id, updateModel.UserName)
-					&& await this._userRepository.DoesUsernameExistAsync(updateModel.UserName))
-				throw new ArgumentException("Username already exists!");
+			await this.ValidateUserCollections(updateUserServiceModel);
 
-			User user = this._userMapper.Map<User>(updateModel);
-			bool result = await this._userRepository.EditAsync(user);
+			//Preserve roles
+			int roleCount = updateUserServiceModel.Roles.Count;
+			for (int i = 0; i < roleCount; i++)
+			{
+				Role role = await this._roleRepository.GetByNameAsync(updateUserServiceModel.Roles.ElementAt(i).Name) ??
+					throw new ArgumentException("Invalid role name!");
 
-			if (!result)
+				UpdateRoleServiceModel updateRoleServiceModel = this._userMapper.Map<UpdateRoleServiceModel>(role);
+
+				updateUserServiceModel.Roles.Add(updateRoleServiceModel);
+			}
+
+			int langCount = updateUserServiceModel.Languages.Count;
+			for (int i = 0; i < langCount; i++)
+			{
+				Language language = await this._languageRepository.GetByNameAsync(updateUserServiceModel.Languages.ElementAt(i).Name) ??
+					throw new ArgumentException("Invalid language name!");
+
+				UpdateLanguageServiceModel updateLanguageServiceModel = this._userMapper.Map<UpdateLanguageServiceModel>(language);
+
+				updateUserServiceModel.Languages.Add(updateLanguageServiceModel);
+			}
+
+			//Clean the already replaced languages
+			updateUserServiceModel.Languages.RemoveWhere(x => x.Id == Guid.Empty);
+
+			int techCount = updateUserServiceModel.Technologies.Count;
+			for (int i = 0; i < techCount; i++)
+			{
+				Technology technology = await this._technologyRepository.GetByNameAsync(updateUserServiceModel.Technologies.ElementAt(i).Name) ??
+					throw new ArgumentException("Invalid technology name!");
+
+				UpdateTechnologyServiceModel updateTechnologyServiceModel = this._userMapper.Map<UpdateTechnologyServiceModel>(technology);
+
+				updateUserServiceModel.Technologies.Add(updateTechnologyServiceModel);
+			}
+
+			//Clean the already replaced technologies
+			updateUserServiceModel.Technologies.RemoveWhere(x => x.Id == Guid.Empty);
+
+			User user = this._userMapper.Map<User>(updateUserServiceModel);
+			bool successful = await this._userRepository.EditAsync(user);
+
+			if (!successful)
 				throw new InvalidOperationException("Unable to edit user!");
 
-			return this._userMapper.Map<UserServiceModel>(user); ;
+			return this._userMapper.Map<UserServiceModel>(user);
 		}
 		#endregion
 
 		#region Delete
-
 		public async Task DeleteUser(Guid id)
 		{
 			if (!await this._userRepository.DoesUserExistAsync(id))
@@ -205,75 +173,15 @@ namespace DevHive.Services.Services
 			if (!result)
 				throw new InvalidOperationException("Unable to delete user!");
 		}
-
-		public async Task<bool> RemoveFriend(Guid userId, Guid friendId)
-		{
-			Task<bool> userExists = this._userRepository.DoesUserExistAsync(userId);
-			Task<bool> friendExists = this._userRepository.DoesUserExistAsync(friendId);
-
-			await Task.WhenAll(userExists, friendExists);
-
-			if (!userExists.Result)
-				throw new ArgumentException("User doesn't exist!");
-
-			if (!friendExists.Result)
-				throw new ArgumentException("Friend doesn't exist!");
-
-			if (!await this._userRepository.DoesUserHaveThisFriendAsync(userId, friendId))
-				throw new ArgumentException("This ain't your friend, amigo.");
-
-			return await this.RemoveFriend(userId, friendId);
-		}
-
-		public async Task<bool> RemoveLanguageFromUser(Guid userId, LanguageServiceModel languageServiceModel)
-		{
-			bool userExists = await this._userRepository.DoesUserExistAsync(userId);
-			bool languageExists = await this._languageRepository.DoesLanguageExistAsync(languageServiceModel.Id);
-
-			if (!userExists)
-				throw new ArgumentException("User does not exist!");
-
-			if (!languageExists)
-				throw new ArgumentException("Language does not exist!");
-
-			User user = await this._userRepository.GetByIdAsync(userId);
-			Language language = await this._languageRepository.GetByIdAsync(languageServiceModel.Id);
-
-			if (!this._userRepository.DoesUserHaveThisLanguage(user, language))
-				throw new ArgumentException("User does not have this language!");
-
-			return await this._userRepository.RemoveLanguageFromUserAsync(user, language);
-		}
-
-		public async Task<bool> RemoveTechnologyFromUser(Guid userId, TechnologyServiceModel technologyServiceModel)
-		{
-			bool userExists = await this._userRepository.DoesUserExistAsync(userId);
-			bool technologyExists = await this._technologyRepository.DoesTechnologyExistAsync(technologyServiceModel.Id);
-
-			if (!userExists)
-				throw new ArgumentException("User does not exist!");
-
-			if (!technologyExists)
-				throw new ArgumentException("Language does not exist!");
-
-			User user = await this._userRepository.GetByIdAsync(userId);
-			Technology technology = await this._technologyRepository.GetByIdAsync(technologyServiceModel.Id);
-
-			if (!this._userRepository.DoesUserHaveThisTechnology(user, technology))
-				throw new ArgumentException("User does not have this technology!");
-
-			return await this._userRepository.RemoveTechnologyFromUserAsync(user, technology);
-		}
 		#endregion
 
 		#region Validations
-
 		public async Task<bool> ValidJWT(Guid id, string rawTokenData)
 		{
 			// There is authorization name in the beginning, i.e. "Bearer eyJh..."
 			var jwt = new JwtSecurityTokenHandler().ReadJwtToken(rawTokenData.Remove(0, 7));
 
-			Guid jwtUserID = new Guid(this.GetClaimTypeValues("ID", jwt.Claims)[0]);
+			Guid jwtUserID = new Guid(this.GetClaimTypeValues("ID", jwt.Claims).First());
 			List<string> jwtRoleNames = this.GetClaimTypeValues("role", jwt.Claims);
 
 			User user = await this._userRepository.GetByIdAsync(jwtUserID)
@@ -312,11 +220,51 @@ namespace DevHive.Services.Services
 			return toReturn;
 		}
 
-		private string WriteJWTSecurityToken(Guid userId, IList<Role> roles)
+		private async Task ValidateUserOnUpdate(UpdateUserServiceModel updateUserServiceModel)
+		{
+			if (!await this._userRepository.DoesUserExistAsync(updateUserServiceModel.Id))
+				throw new ArgumentException("User does not exist!");
+
+			if (!this._userRepository.DoesUserHaveThisUsername(updateUserServiceModel.Id, updateUserServiceModel.UserName)
+					&& await this._userRepository.DoesUsernameExistAsync(updateUserServiceModel.UserName))
+				throw new ArgumentException("Username already exists!");
+		}
+
+		private async Task ValidateUserCollections(UpdateUserServiceModel updateUserServiceModel)
+		{
+			// Friends
+			foreach (var friend in updateUserServiceModel.Friends)
+			{
+				User returnedFriend = await this._userRepository.GetByUsernameAsync(friend.Name);
+
+				if (returnedFriend == null)
+					throw new ArgumentException($"User {friend.Name} does not exist!");
+			}
+
+			// Languages
+			foreach (var language in updateUserServiceModel.Languages)
+			{
+				Language returnedLanguage = await this._languageRepository.GetByNameAsync(language.Name);
+
+				if (returnedLanguage == null)
+					throw new ArgumentException($"Language {language.Name} does not exist!");
+			}
+
+			// Technology
+			foreach (var technology in updateUserServiceModel.Technologies)
+			{
+				Technology returnedTechnology = await this._technologyRepository.GetByNameAsync(technology.Name);
+
+				if (returnedTechnology == null)
+					throw new ArgumentException($"Technology {technology.Name} does not exist!");
+			}
+		}
+
+		private string WriteJWTSecurityToken(Guid userId, HashSet<Role> roles)
 		{
 			byte[] signingKey = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
-			List<Claim> claims = new()
+			HashSet<Claim> claims = new()
 			{
 				new Claim("ID", $"{userId}"),
 			};
@@ -338,11 +286,6 @@ namespace DevHive.Services.Services
 			JwtSecurityTokenHandler tokenHandler = new();
 			SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
 			return tokenHandler.WriteToken(token);
-		}
-
-		private string GeneratePasswordHash(string password)
-		{
-			return string.Join(string.Empty, SHA512.HashData(Encoding.ASCII.GetBytes(password)));
 		}
 		#endregion
 	}

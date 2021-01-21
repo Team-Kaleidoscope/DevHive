@@ -1,6 +1,6 @@
 using AutoMapper;
 using DevHive.Web.Models.Identity.Role;
-using DevHive.Common.Models.Identity;
+using DevHive.Services.Models.Identity.Role;
 
 namespace DevHive.Web.Configurations.Mapping
 {
@@ -8,11 +8,14 @@ namespace DevHive.Web.Configurations.Mapping
 	{
 		public RoleMappings()
 		{
-			CreateMap<CreateRoleModel, RoleModel>();
-			CreateMap<UpdateRoleModel, RoleModel>();
+			CreateMap<CreateRoleWebModel, CreateRoleServiceModel>();
+			CreateMap<UpdateRoleWebModel, UpdateRoleServiceModel>()
+				.ForMember(src => src.Id, dest => dest.Ignore());
+			CreateMap<RoleWebModel, RoleServiceModel>();
 
-			CreateMap<RoleModel, RoleWebModel>();
-			CreateMap<RoleWebModel, RoleModel>();
+			CreateMap<CreateRoleServiceModel, CreateRoleWebModel>();
+			CreateMap<UpdateRoleServiceModel, UpdateRoleWebModel>();
+			CreateMap<RoleServiceModel, RoleWebModel>();
 		}
 	}
 }

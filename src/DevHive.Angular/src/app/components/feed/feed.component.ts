@@ -33,7 +33,12 @@ export class FeedComponent implements OnInit {
       // Workaround for waiting the fetch response
       // TODO: properly wait for it, before loading the page contents
       setTimeout(() => { this.user = this._userService.fetchUserFromSessionStorage(); }, AppConstants.FETCH_TIMEOUT);
-      setTimeout(() => { this.dataArrived = true; }, AppConstants.FETCH_TIMEOUT + 100);
+      setTimeout(() => {
+        this.dataArrived = true;
+        if (this.user.imageUrl === '') {
+          this.user.imageUrl = AppConstants.FALLBACK_PROFILE_ICON;
+        }
+      }, AppConstants.FETCH_TIMEOUT + 100);
     } else {
       this._router.navigate(['/login']);
     }
@@ -41,5 +46,14 @@ export class FeedComponent implements OnInit {
 
   goToProfile(): void {
     this._router.navigate(['/profile/' + this.user.userName]);
+  }
+
+  goToSettings(): void {
+    this._router.navigate(['/profile/' + this.user.userName + '/settings']);
+  }
+
+  logout(): void {
+    this._userService.logoutUserFromSessionStorage();
+    this._router.navigate(['/login']);
   }
 }

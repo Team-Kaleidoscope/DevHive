@@ -23,7 +23,6 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     const username = this._router.url.substring(9);
-    console.log(username);
 
     if (sessionStorage.getItem('UserCred')) {
       // Workaround for waiting the fetch response
@@ -37,6 +36,9 @@ export class ProfileComponent implements OnInit {
                           if (this.user.userName !== username) {
                             this.setDefaultUser();
                           } else {
+                            if (this.user.imageUrl === '') {
+                              this.user.imageUrl = AppConstants.FALLBACK_PROFILE_ICON;
+                            }
                             this.loggedInUser = true;
                           }
       }, AppConstants.FETCH_TIMEOUT + 50);
@@ -56,5 +58,14 @@ export class ProfileComponent implements OnInit {
 
   navigateToSettings(): void {
     this._router.navigate([this._router.url + '/settings']);
+  }
+
+  logout(): void {
+    this._userService.logoutUserFromSessionStorage();
+
+    // Reload the page
+    this._router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this._router.onSameUrlNavigation = 'reload';
+    this._router.navigate([this._router.url]);
   }
 }

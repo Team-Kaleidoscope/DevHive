@@ -22,33 +22,33 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Create([FromBody] CreateTechnologyWebModel technologyWebModel)
+		public async Task<IActionResult> Create([FromBody] CreateTechnologyWebModel createTechnologyWebModel)
 		{
-			CreateTechnologyServiceModel technologyServiceModel = this._technologyMapper.Map<CreateTechnologyServiceModel>(technologyWebModel);
+			CreateTechnologyServiceModel technologyServiceModel = this._technologyMapper.Map<CreateTechnologyServiceModel>(createTechnologyWebModel);
 
-			bool result = await this._technologyService.Create(technologyServiceModel);
+			Guid id = await this._technologyService.Create(technologyServiceModel);
 
-			if (!result)
-				return new BadRequestObjectResult("Could not create the Technology");
-
-			return new OkResult();
+			return id == Guid.Empty ?
+				new BadRequestObjectResult($"Could not create technology {createTechnologyWebModel.Name}") :
+				new OkObjectResult(new { Id = id });
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> GetById(Guid technologyId)
+		public async Task<IActionResult> GetById(Guid id)
 		{
-			CreateTechnologyServiceModel createTechnologyServiceModel = await this._technologyService.GetTechnologyById(technologyId);
+			CreateTechnologyServiceModel createTechnologyServiceModel = await this._technologyService.GetTechnologyById(id);
 			CreateTechnologyWebModel createTechnologyWebModel = this._technologyMapper.Map<CreateTechnologyWebModel>(createTechnologyServiceModel);
 
 			return new OkObjectResult(createTechnologyWebModel);
 		}
 
 		[HttpPut]
-		public async Task<IActionResult> Update(Guid technologyId, [FromBody] UpdateTechnologyWebModel updateModel)
+		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTechnologyWebModel updateModel)
 		{
-			UpdateTechnologyServiceModel updateTechnologyWebModel = this._technologyMapper.Map<UpdateTechnologyServiceModel>(updateModel);
+			UpdateTechnologyServiceModel updateTechnologyServiceModel = this._technologyMapper.Map<UpdateTechnologyServiceModel>(updateModel);
+			updateTechnologyServiceModel.Id = id;
 
-			bool result = await this._technologyService.UpdateTechnology(technologyId, updateTechnologyWebModel);
+			bool result = await this._technologyService.UpdateTechnology(updateTechnologyServiceModel);
 
 			if (!result)
 				return new BadRequestObjectResult("Could not update Technology");
@@ -57,9 +57,9 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpDelete]
-		public async Task<IActionResult> Delete(Guid technologyId)
+		public async Task<IActionResult> Delete(Guid id)
 		{
-			bool result = await this._technologyService.DeleteTechnology(technologyId);
+			bool result = await this._technologyService.DeleteTechnology(id);
 
 			if (!result)
 				return new BadRequestObjectResult("Could not delete Technology");

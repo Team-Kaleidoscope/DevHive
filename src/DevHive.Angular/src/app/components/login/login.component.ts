@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl } from
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { UserService } from 'src/app/services/user.service';
+import {AppConstants} from 'src/app/app-constants.module';
 
 @Component({
   selector: 'app-login',
@@ -28,9 +29,9 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  async onSubmit(): Promise<void> {
-    this._userService.loginUser(this.loginUserFormGroup);
-    this._router.navigate(['/']);
+  onSubmit(): void {
+    setTimeout(() => { this._userService.loginUser(this.loginUserFormGroup); }, AppConstants.FETCH_TIMEOUT);
+    setTimeout(() => { this._router.navigate(['/']); }, AppConstants.FETCH_TIMEOUT + 100);
   }
 
   onRedirectRegister(): void {

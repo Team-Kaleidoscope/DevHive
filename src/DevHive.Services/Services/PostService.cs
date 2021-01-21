@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using DevHive.Services.Interfaces;
 using DevHive.Data.Interfaces.Repositories;
+using System.Linq;
 
 namespace DevHive.Services.Services
 {
@@ -26,21 +27,35 @@ namespace DevHive.Services.Services
 		}
 
 		//Create
-		public async Task<bool> CreatePost(CreatePostServiceModel postServiceModel)
+		public async Task<Guid> CreatePost(CreatePostServiceModel postServiceModel)
 		{
 			Post post = this._postMapper.Map<Post>(postServiceModel);
 
-			return await this._postRepository.AddAsync(post);
+			bool success = await this._postRepository.AddAsync(post);
+
+			if(success)
+			{
+				Post newPost = await this._postRepository.GetPostByIssuerAndTimeCreatedAsync(postServiceModel.IssuerId, postServiceModel.TimeCreated);
+				return newPost.Id;
+			}
+			else
+				return Guid.Empty;
 		}
 
-		public async Task<bool> AddComment(CreateCommentServiceModel commentServiceModel)
+		public async Task<Guid> AddComment(CreateCommentServiceModel commentServiceModel)
 		{
 			commentServiceModel.TimeCreated = DateTime.Now;
 			Comment comment = this._postMapper.Map<Comment>(commentServiceModel);
 
-			bool result = await this._postRepository.AddCommentAsync(comment);
+			bool success = await this._postRepository.AddCommentAsync(comment);
 
-			return result;
+			if(success)
+			{
+				Comment newComment = await this._postRepository.GetCommentByIssuerAndTimeCreatedAsync(commentServiceModel.IssuerId, commentServiceModel.TimeCreated);
+				return newComment.Id;
+			}
+			else
+				return Guid.Empty;
 		}
 
 		//Read
@@ -117,8 +132,8 @@ namespace DevHive.Services.Services
 		{
 			var jwt = new JwtSecurityTokenHandler().ReadJwtToken(rawTokenData.Remove(0, 7));
 
-			string jwtUserName = this.GetClaimTypeValues("unique_name", jwt.Claims)[0];
-			//List<string> jwtRoleNames = this.GetClaimTypeValues("role", jwt.Claims);
+			string jwtUserName = this.GetClaimTypeValues("unique_name", jwt.Claims).First();
+			//HashSet<string> jwtRoleNames = this.GetClaimTypeValues("role", jwt.Claims);
 
 			User user = await this._userRepository.GetByUsernameAsync(jwtUserName)
 				?? throw new ArgumentException("User does not exist!");
