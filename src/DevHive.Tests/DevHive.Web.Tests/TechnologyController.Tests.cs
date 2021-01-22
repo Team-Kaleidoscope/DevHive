@@ -141,7 +141,7 @@ namespace DevHive.Web.Tests
 		}
 
 		[Test]
-		public void Update_ShouldReturnOkResult_WhenTechnologyIsNotUpdatedSuccessfully()
+		public void Update_ShouldReturnBadObjectResult_WhenTechnologyIsNotUpdatedSuccessfully()
 		{
 			Guid id = Guid.NewGuid();
 			string message = "Could not update Technology";
@@ -169,7 +169,7 @@ namespace DevHive.Web.Tests
 
 		#region Delete
 		[Test]
-		public void Delete_ReturnsOkResult_When_TechnologyIsDeletedSuccessfully()
+		public void Delete_ReturnsOkResult_WhenTechnologyIsDeletedSuccessfully()
 		{
 			Guid id = Guid.NewGuid();
 

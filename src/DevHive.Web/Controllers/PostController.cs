@@ -48,7 +48,7 @@ namespace DevHive.Web.Controllers
 			Guid id = await this._postService.AddComment(createCommentServiceModel);
 
 			return id == Guid.Empty ?
-				new BadRequestObjectResult("Could not create language") :
+				new BadRequestObjectResult("Could not create comment") :
 				new OkObjectResult(new { Id = id });
 		}
 

@@ -140,7 +140,7 @@ namespace DevHive.Web.Tests
 		}
 
 		[Test]
-		public void Update_ShouldReturnOkResult_WhenLanguageIsNotUpdatedSuccessfully()
+		public void Update_ShouldReturnBadObjectResult_WhenLanguageIsNotUpdatedSuccessfully()
 		{
 			Guid id = Guid.NewGuid();
 			string message = "Could not update Language";
@@ -168,7 +168,7 @@ namespace DevHive.Web.Tests
 
 		#region Delete
 		[Test]
-		public void Delete_ReturnsOkResult_When_LanguageIsDeletedSuccessfully()
+		public void Delete_ReturnsOkResult_WhenLanguageIsDeletedSuccessfully()
 		{
 			Guid id = Guid.NewGuid();
 
