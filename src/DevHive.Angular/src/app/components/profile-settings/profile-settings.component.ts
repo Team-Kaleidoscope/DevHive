@@ -1,3 +1,4 @@
+import {Location} from '@angular/common';
 import {HttpErrorResponse} from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -18,7 +19,7 @@ export class ProfileSettingsComponent implements OnInit {
   public user: User;
   public successfulUpdate = false;
 
-  constructor(private _router: Router, private _userService: UserService, private _fb: FormBuilder)
+  constructor(private _router: Router, private _userService: UserService, private _fb: FormBuilder, private _location: Location)
   { }
 
   ngOnInit(): void {
@@ -107,7 +108,11 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   goBack(): void {
-    this._router.navigate(['/']);
+    const currURL = this._location.path();
+    this._location.back();
+    if (this._location.path() === currURL) {
+      this.goToProfile();
+    }
   }
 
   logout(): void {

@@ -4,6 +4,7 @@ import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/models/identity/user';
 import { AppConstants } from 'src/app/app-constants.module';
 import {HttpErrorResponse} from '@angular/common/http';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-profile',
@@ -16,7 +17,7 @@ export class ProfileComponent implements OnInit {
   public dataArrived = false;
   public user: User;
 
-  constructor(private _router: Router, private _userService: UserService)
+  constructor(private _router: Router, private _userService: UserService, private _location: Location)
   { }
 
   private setDefaultUser(): void {
@@ -65,7 +66,11 @@ export class ProfileComponent implements OnInit {
   }
 
   goBack(): void {
-    this._router.navigate(['/']);
+    const currURL = this._location.path();
+    this._location.back();
+    if (this._location.path() === currURL) {
+      this._router.navigate(['/']);
+    }
   }
 
   navigateToSettings(): void {
