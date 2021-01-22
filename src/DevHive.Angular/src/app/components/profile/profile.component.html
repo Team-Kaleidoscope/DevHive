@@ -7,37 +7,39 @@
 		<button class="submit-btn" (click)="logout()" *ngIf="loggedInUser">Logout</button>
 	</nav>
 	<hr>
-	<div id="main-info" class="rounded-border">
-		<img class="round-image" [src]="user.imageUrl" alt=""/>
-		<div id="other-main-info">
-			<div id="name">
-				{{ user.firstName }} {{ user.lastName }}
+	<div class="scroll-standalone">
+		<div id="main-info" class="rounded-border">
+			<img class="round-image" [src]="user.imageUrl" alt=""/>
+			<div id="other-main-info">
+				<div id="name">
+					{{ user.firstName }} {{ user.lastName }}
+				</div>
+				<div id="username">
+					@{{ user.userName }}
+				</div>
 			</div>
-			<div id="username">
-				@{{ user.userName }}
+		</div>
+		<div class="secondary-info rounded-border">
+			Languages:
+			<div class="user-language">
+				C#
+			</div>
+			<div class="user-language">
+				TypeScript
 			</div>
 		</div>
-	</div>
-	<div class="secondary-info rounded-border">
-		Languages:
-		<div class="user-language">
-			C#
+		<div class="secondary-info rounded-border">
+			Technologies:
+			<div class="user-technology">
+				.NET 5
+			</div>
+			<div class="user-technology">
+				Angular
+			</div>
 		</div>
-		<div class="user-language">
-			TypeScript
+		<div id="posts">
+			<hr>
+			Posts go here
 		</div>
-	</div>
-	<div class="secondary-info rounded-border">
-		Technologies:
-		<div class="user-technology">
-			.NET 5
-		</div>
-		<div class="user-technology">
-			Angular
-		</div>
-	</div>
-	<div id="posts">
-		<hr>
-		Posts go here
 	</div>
 </div>

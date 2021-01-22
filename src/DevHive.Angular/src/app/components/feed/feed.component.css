@@ -1,9 +1,11 @@
 #feed-page {
+  height: 100%;
   max-width: 40em;
-  margin: 0 auto;
-  border: .5em solid var(--bg-color);
-  border-bottom: 0;
   box-sizing: border-box;
+  border: .5em solid var(--bg-color);
+
+  margin: 0 auto;
+
   display: flex;
 }
 
@@ -28,22 +30,8 @@
 
 #feed-content {
   flex: 1;
-}
-
-#posts {
-  max-height: calc(100vh - 3.5em);
-  overflow-y: auto;
-}
-
-  /* Hide scrollbar for Chrome, Safari and Opera */
-#posts::-webkit-scrollbar {
-  display: none;
-}
-
-  /* Hide scrollbar for IE, Edge and Firefox */
-#posts {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  display: flex;
+  flex-direction: column;
 }
 
 /* Profile bar */
@@ -93,7 +81,6 @@
   margin: 0 auto;
   margin-bottom: .5em;
 }
-
 
 #top-bar-profile-pic {
   height: 2.5em;

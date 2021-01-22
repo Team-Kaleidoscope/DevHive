@@ -14,7 +14,7 @@
 		<button class="submit-btn" (click)="goToSettings()">Settings</button>
 		<button class="submit-btn" (click)="logout()">Logout</button>
 	</nav>
-		<div id="feed-content">
+	<div id="feed-content">
 		<nav id="top-bar">
 			<img id="top-bar-profile-pic" class="round-image" [src]="user.imageUrl" alt="" (click)="goToProfile()">
 			<input id="top-bar-create-post" type="text" placeholder="What's on your mind?"/>
@@ -22,10 +22,10 @@
 				<img src="assets/images/feed/chat-pic.png" alt=""/>
 			</a>
 		</nav>
-		<ul id="posts">
-			<li *ngFor="let post of posts" class="post">
+		<div id="posts" class="scroll-standalone">
+			<div *ngFor="let post of posts" class="post">
 				<app-post></app-post>
-			</li>
-		</ul>
+			</div>
+		</div>
 	</div>
 </div>

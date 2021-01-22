@@ -8,7 +8,7 @@
   padding: .5em;
   background-color: var(--card-bg);
   border-radius: .6em;
-box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
   /* So the bottom shadow of the last element

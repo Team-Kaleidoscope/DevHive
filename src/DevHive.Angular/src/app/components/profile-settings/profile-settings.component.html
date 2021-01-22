@@ -6,62 +6,64 @@
 		<button class="submit-btn" (click)="logout()">Logout</button>
 	</nav>
 	<hr>
-	<form [formGroup]="updateUserFormGroup" (ngSubmit)="onSubmit()">
-		<div class="input-selection">
-			<input type="text" class="input-field" formControlName="firstName" required>
-			<label class="input-field-label">First Name</label>
+	<div class="scroll-standalone">
+		<form [formGroup]="updateUserFormGroup" (ngSubmit)="onSubmit()">
+			<div class="input-selection">
+				<input type="text" class="input-field" formControlName="firstName" required>
+				<label class="input-field-label">First Name</label>
 
-			<div class="input-errors">
-				<label *ngIf="updateUserFormGroup.get('firstName')?.errors?.required" class="error">*Required</label>
-				<label *ngIf="updateUserFormGroup.get('firstName')?.errors?.minlength" class="error">*Minimum 3 characters</label>
+				<div class="input-errors">
+					<label *ngIf="updateUserFormGroup.get('firstName')?.errors?.required" class="error">*Required</label>
+					<label *ngIf="updateUserFormGroup.get('firstName')?.errors?.minlength" class="error">*Minimum 3 characters</label>
+				</div>
 			</div>
-		</div>
 
-		<div class="input-selection">
-			<input type="text" class="input-field" formControlName="lastName" required>
-			<label class="input-field-label">Last Name</label>
+			<div class="input-selection">
+				<input type="text" class="input-field" formControlName="lastName" required>
+				<label class="input-field-label">Last Name</label>
 
-			<div class="input-errors">
-				<label *ngIf="updateUserFormGroup.get('lastName')?.errors?.required" class="error">*Required</label>
-				<label *ngIf="updateUserFormGroup.get('lastName')?.errors?.minlength" class="error">*Minimum 3 characters</label>
+				<div class="input-errors">
+					<label *ngIf="updateUserFormGroup.get('lastName')?.errors?.required" class="error">*Required</label>
+					<label *ngIf="updateUserFormGroup.get('lastName')?.errors?.minlength" class="error">*Minimum 3 characters</label>
+				</div>
 			</div>
-		</div>
 
-		<div class="input-selection">
-			<input type="text" class="input-field" formControlName="username" required>
-			<label class="input-field-label">Username</label>
+			<div class="input-selection">
+				<input type="text" class="input-field" formControlName="username" required>
+				<label class="input-field-label">Username</label>
 
-			<div class="input-errors">
-				<label *ngIf="updateUserFormGroup.get('username')?.errors?.required" class="error">*Required</label>
-				<label *ngIf="updateUserFormGroup.get('username')?.errors?.minlength" class="error">*Minimum 3 characters</label>
+				<div class="input-errors">
+					<label *ngIf="updateUserFormGroup.get('username')?.errors?.required" class="error">*Required</label>
+					<label *ngIf="updateUserFormGroup.get('username')?.errors?.minlength" class="error">*Minimum 3 characters</label>
+				</div>
 			</div>
-		</div>
 
-		<div class="input-selection">
-			<input type="text" class="input-field" formControlName="email" required>
-			<label class="input-field-label">Email</label>
+			<div class="input-selection">
+				<input type="text" class="input-field" formControlName="email" required>
+				<label class="input-field-label">Email</label>
 
-			<div class="input-errors">
-				<label *ngIf="updateUserFormGroup.get('email')?.errors?.required" class="error">*Required</label>
-				<label *ngIf="updateUserFormGroup.get('email')?.errors?.email" class="error">*Invalid email</label>
+				<div class="input-errors">
+					<label *ngIf="updateUserFormGroup.get('email')?.errors?.required" class="error">*Required</label>
+					<label *ngIf="updateUserFormGroup.get('email')?.errors?.email" class="error">*Invalid email</label>
+				</div>
 			</div>
-		</div>
 
-		<div class="input-selection">
-			<input type="password" class="input-field" formControlName="password" required>
-			<label class="input-field-label">Password</label>
+			<div class="input-selection">
+				<input type="password" class="input-field" formControlName="password" required>
+				<label class="input-field-label">Password</label>
 
-			<div class="input-errors">
-				<label *ngIf="updateUserFormGroup.get('password')?.errors?.required" class="error">*Required</label>
-				<label *ngIf="updateUserFormGroup.get('password')?.errors?.minlength" class="error">*Minimum 3 characters</label>
-				<label *ngIf="updateUserFormGroup.get('password')?.errors?.pattern" class="error">*At least 1 number</label>
+				<div class="input-errors">
+					<label *ngIf="updateUserFormGroup.get('password')?.errors?.required" class="error">*Required</label>
+					<label *ngIf="updateUserFormGroup.get('password')?.errors?.minlength" class="error">*Minimum 3 characters</label>
+					<label *ngIf="updateUserFormGroup.get('password')?.errors?.pattern" class="error">*At least 1 number</label>
+				</div>
 			</div>
-		</div>
-		<button class="submit-btn" type="submit">Update profile</button>
-		<div id="successful-update-msg" *ngIf="successfulUpdate">
-			Profile updated successfully!
-		</div>
-	</form>
-	<hr>
-	<button id="delete-account" class="submit-btn" (click)="deleteAccount()">Delete account</button>
+			<button class="submit-btn" type="submit">Update profile</button>
+			<div id="successful-update-msg" *ngIf="successfulUpdate">
+				Profile updated successfully!
+			</div>
+		</form>
+		<hr>
+		<button id="delete-account" class="submit-btn" (click)="deleteAccount()">Delete account</button>
+	</div>
 </div>

@@ -7,6 +7,10 @@
   justify-content: start;
 }
 
+form {
+  width: 100%;
+}
+
 hr {
   width: calc(100% - 1em);
   color: black;
@@ -31,7 +35,31 @@ hr {
   margin-left: 0;
 }
 
+/* Form */
+
+.input-field {
+  border-color: var(--focus-color) !important;
+  caret-color: var(--focus-color);
+  border-width: 2px !important;
+  margin-top: -1px !important;
+}
+
+.input-field-label {
+  font-size: .7em;
+  color: var(--focus-color);
+  transform: translate(0, -1.2em);
+}
+
 /* Buttons */
+
+#successful-update-msg {
+  background-color: var(--success);
+  color: white;
+  width: 100%;
+  padding: .2em;
+  margin-top: .5em;
+  text-align: center;
+}
 
 #delete-account:hover {
   color: indianred;

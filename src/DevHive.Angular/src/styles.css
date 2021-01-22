@@ -5,6 +5,8 @@
   --bg-color: white;
   --focus-color: forestgreen;
   --card-bg: white;
+  --success: forestgreen;
+  --failure: indianred;
 }
 
 html, body {
@@ -26,27 +28,12 @@ input:focus, button:focus {
   box-sizing: border-box;
   border: .5em solid var(--bg-color);
 
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
 
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-}
-
-#error-bar {
-  text-align: center;
-  width: 100%;
-  position: absolute;
-  top: 0;
-  background-color: indianred;
-  color: white;
-  padding: .2em;
-}
-
-#error-bar:empty {
-  display: none;
 }
 
 .rounded-border {
@@ -67,6 +54,23 @@ input:focus, button:focus {
 
 .error {
   color: red;
+}
+
+.scroll-standalone {
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+.scroll-standalone::-webkit-scrollbar {
+  display: none;
+}
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+.scroll-standalone {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 /* Inputs, the type found in login and register */
