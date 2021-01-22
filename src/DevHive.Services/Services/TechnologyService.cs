@@ -60,7 +60,7 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("Technology name already exists!");
 
 			Technology technology = this._technologyMapper.Map<Technology>(updateTechnologyServiceModel);
-			bool result = await this._technologyRepository.EditAsync(technology);
+			bool result = await this._technologyRepository.EditAsync(updateTechnologyServiceModel.Id, technology);
 
 			return result;
 		}

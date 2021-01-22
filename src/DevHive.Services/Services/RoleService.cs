@@ -56,7 +56,7 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("Role name already exists!");
 
 			Role role = this._roleMapper.Map<Role>(updateRoleServiceModel);
-			return await this._roleRepository.EditAsync(role);
+			return await this._roleRepository.EditAsync(updateRoleServiceModel.Id, role);
 		}
 
 		public async Task<bool> DeleteRole(Guid id)

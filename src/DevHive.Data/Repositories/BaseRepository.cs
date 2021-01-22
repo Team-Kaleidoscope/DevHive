@@ -32,18 +32,13 @@ namespace DevHive.Data.Repositories
 				.FindAsync(id);
 		}
 
-		public virtual async Task<bool> EditAsync(TEntity newEntity)
+		public virtual async Task<bool> EditAsync(Guid id, TEntity newEntity)
 		{
-			// Old way(backup)
-			// User user = await this._context.Users
-			// 	.FirstOrDefaultAsync(x => x.Id == entity.Id);
-
-			// this._context.Update(user);
-			// this._context.Entry(entity).CurrentValues.SetValues(entity);
-
+			TEntity currEnt = await this.GetByIdAsync(id);
 			this._context
-				.Set<TEntity>()
-				.Update(newEntity);
+				.Entry(currEnt)
+				.CurrentValues
+				.SetValues(newEntity);
 
 			return await this.SaveChangesAsync(_context);
 		}

@@ -152,7 +152,7 @@ namespace DevHive.Services.Services
 			updateUserServiceModel.Technologies.RemoveWhere(x => x.Id == Guid.Empty);
 
 			User user = this._userMapper.Map<User>(updateUserServiceModel);
-			bool successful = await this._userRepository.EditAsync(user);
+			bool successful = await this._userRepository.EditAsync(updateUserServiceModel.Id, user);
 
 			if (!successful)
 				throw new InvalidOperationException("Unable to edit user!");

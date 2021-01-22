@@ -84,7 +84,7 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("Comment does not exist!");
 
 			Post post = this._postMapper.Map<Post>(postServiceModel);
-			return await this._postRepository.EditAsync(post);
+			return await this._postRepository.EditAsync(postServiceModel.Id, post);
 		}
 
 		public async Task<bool> UpdateComment(UpdateCommentServiceModel commentServiceModel)
