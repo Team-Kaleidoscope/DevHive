@@ -16,6 +16,7 @@ export class ProfileSettingsComponent implements OnInit {
   public updateUserFormGroup: FormGroup;
   public dataArrived = false;
   public user: User;
+  public successfulUpdate = false;
 
   constructor(private _router: Router, private _userService: UserService, private _fb: FormBuilder)
   { }
@@ -85,6 +86,7 @@ export class ProfileSettingsComponent implements OnInit {
       ]),
     });
 
+    this.updateUserFormGroup.valueChanges.subscribe(() => this.successfulUpdate = false);
   }
 
   private bailOnBadToken(): void {
@@ -93,8 +95,9 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.successfulUpdate = false;
     this._userService.putUserFromSessionStorageRequest(this.updateUserFormGroup).subscribe(
-        res => console.log(res),
+        res => this.successfulUpdate = true,
         (err: HttpErrorResponse) => console.log(err.message)
     );
   }
