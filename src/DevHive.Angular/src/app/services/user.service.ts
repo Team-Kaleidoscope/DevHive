@@ -16,7 +16,7 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   getDefaultUser(): User {
-    return new User(Guid.createEmpty(), 'gosho_trapov', 'Gosho', 'Trapov', AppConstants.FALLBACK_PROFILE_ICON);
+    return new User(Guid.createEmpty(), 'gosho_trapov', 'Gosho', 'Trapov', 'gotra@bg.com', AppConstants.FALLBACK_PROFILE_ICON);
   }
 
   getUserIdFromSessionStorageToken(): Guid {
@@ -36,6 +36,14 @@ export class UserService {
     const userCred = jwt_decode<IUserCredentials>(jwt.token);
 
     return this.getUserRequest(userCred.ID, jwt.token);
+  }
+
+  putUserFromSessionStorageRequest(updateUserFormGroup: FormGroup): Observable<object> {
+    // Get the token and userid from session storage
+    const jwt: IJWTPayload = { token: sessionStorage.getItem('UserCred') ?? '' };
+    const userCred = jwt_decode<IUserCredentials>(jwt.token);
+
+    return this.putUserRequest(userCred.ID, jwt.token, updateUserFormGroup);
   }
 
   deleteUserFromSessionStorageRequest(): Observable<object> {
@@ -83,6 +91,27 @@ export class UserService {
       params: new HttpParams().set('UserName', username),
     };
     return this.http.get(AppConstants.API_USER_URL + '/GetUser', options);
+  }
+
+  putUserRequest(userId: Guid, authToken: string, updateUserFormGroup: FormGroup): Observable<object> {
+    // TODO?: add a check for form data validity
+    const body = {
+      UserName: updateUserFormGroup.get('username')?.value,
+      Email: updateUserFormGroup.get('email')?.value,
+      FirstName: updateUserFormGroup.get('firstName')?.value,
+      LastName: updateUserFormGroup.get('lastName')?.value,
+      Password: updateUserFormGroup.get('password')?.value,
+      // TODO: make the following fields dynamically selectable
+      Roles: [ { Name: 'User' } ],
+      Friends: [],
+      Languages: [],
+      Technologies: []
+    };
+    const options = {
+      params: new HttpParams().set('Id', userId.toString()),
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
+    };
+    return this.http.put(AppConstants.API_USER_URL, body, options);
   }
 
   deleteUserRequest(userId: Guid, authToken: string): Observable<object> {

@@ -1,5 +1,6 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AppConstants} from 'src/app/app-constants.module';
 import {UserService} from 'src/app/services/user.service';
@@ -12,10 +13,11 @@ import {User} from 'src/models/identity/user';
 })
 export class ProfileSettingsComponent implements OnInit {
   private _urlUsername: string;
+  public updateUserFormGroup: FormGroup;
   public dataArrived = false;
   public user: User;
 
-  constructor(private _router: Router, private _userService: UserService)
+  constructor(private _router: Router, private _userService: UserService, private _fb: FormBuilder)
   { }
 
   ngOnInit(): void {
@@ -43,6 +45,7 @@ export class ProfileSettingsComponent implements OnInit {
           Object.assign(userFromToken, tokenRes);
 
           if (userFromToken.userName === this._urlUsername) {
+            this.initForm();
             this.dataArrived = true;
           }
           else {
@@ -57,9 +60,43 @@ export class ProfileSettingsComponent implements OnInit {
     }
   }
 
+  private initForm(): void {
+    this.updateUserFormGroup = this._fb.group({
+      firstName: new FormControl(this.user.firstName, [
+        Validators.required,
+        Validators.minLength(3)
+      ]),
+      lastName: new FormControl(this.user.lastName, [
+        Validators.required,
+        Validators.minLength(3)
+      ]),
+      username: new FormControl(this.user.userName, [
+        Validators.required,
+        Validators.minLength(3)
+      ]),
+      email: new FormControl(this.user.email, [
+        Validators.required,
+        Validators.email,
+      ]),
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.pattern('.*[0-9].*') // Check if password contains atleast one number
+      ]),
+    });
+
+  }
+
   private bailOnBadToken(): void {
     this._userService.logoutUserFromSessionStorage();
     this._router.navigate(['/login']);
+  }
+
+  onSubmit(): void {
+    this._userService.putUserFromSessionStorageRequest(this.updateUserFormGroup).subscribe(
+        res => console.log(res),
+        (err: HttpErrorResponse) => console.log(err.message)
+    );
   }
 
   goToProfile(): void {

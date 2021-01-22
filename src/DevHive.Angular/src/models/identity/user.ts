@@ -5,13 +5,15 @@ export class User {
   private _lastName : string;
   private _firstName : string;
   private _userName : string;
+  private _email: string;
   private _imageUrl : string;
 
-  constructor(id: Guid, userName: string, firstName: string, lastName: string, imageUrl: string) {
+  constructor(id: Guid, userName: string, firstName: string, lastName: string, email: string, imageUrl: string) {
     this.id = id;
     this.userName = userName;
     this.firstName = firstName;
     this.lastName = lastName;
+    this.email = email;
     this.imageUrl = imageUrl;
   }
 
@@ -41,6 +43,13 @@ export class User {
   }
   public set lastName(v: string) {
     this._lastName = v;
+  }
+
+  public get email(): string {
+    return this._email;
+  }
+  public set email(v: string) {
+    this._email = v;
   }
 
   public get imageUrl(): string {

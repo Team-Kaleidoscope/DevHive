@@ -21,6 +21,7 @@ export class PostComponent implements OnInit {
         'gosho_trapov',
         'Gosho',
         'Trapov',
+        'gotra@bg.com',
         AppConstants.FALLBACK_PROFILE_ICON
     );
 
