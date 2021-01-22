@@ -35,6 +35,20 @@ input:focus, button:focus {
   flex-direction: column;
 }
 
+#error-bar {
+  text-align: center;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  background-color: indianred;
+  color: white;
+  padding: .2em;
+}
+
+#error-bar:empty {
+  display: none;
+}
+
 .rounded-border {
   border: 2px solid black;
   border-radius: .6em;

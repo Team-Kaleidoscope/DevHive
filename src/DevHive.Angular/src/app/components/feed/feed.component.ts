@@ -5,6 +5,7 @@ import { User } from 'src/models/identity/user';
 import { PostComponent } from '../post/post.component';
 import { UserService } from '../../services/user.service';
 import { AppConstants } from 'src/app/app-constants.module';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-feed',
@@ -22,6 +23,7 @@ export class FeedComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.user = this._userService.getDefaultUser();
     this.posts = [
       new PostComponent(),
       new PostComponent(),
@@ -30,18 +32,26 @@ export class FeedComponent implements OnInit {
     ];
 
     if (sessionStorage.getItem('UserCred')) {
-      // Workaround for waiting the fetch response
-      // TODO: properly wait for it, before loading the page contents
-      setTimeout(() => { this.user = this._userService.fetchUserFromSessionStorage(); }, AppConstants.FETCH_TIMEOUT);
-      setTimeout(() => {
-        this.dataArrived = true;
-        if (this.user.imageUrl === '') {
-          this.user.imageUrl = AppConstants.FALLBACK_PROFILE_ICON;
-        }
-      }, AppConstants.FETCH_TIMEOUT + 100);
+      this._userService.getUserFromSessionStorageRequest().subscribe(
+        (res: object) => this.finishUserLoading(res),
+        (err: HttpErrorResponse) => this.bailOnBadToken()
+      );
     } else {
       this._router.navigate(['/login']);
     }
+  }
+
+  private finishUserLoading(res: object): void {
+    Object.assign(this.user, res);
+    if (this.user.imageUrl === '') {
+      this.user.imageUrl = AppConstants.FALLBACK_PROFILE_ICON;
+    }
+    this.dataArrived = true;
+  }
+
+  private bailOnBadToken(): void {
+    this._userService.logoutUserFromSessionStorage();
+    this._router.navigate(['/login']);
   }
 
   goToProfile(): void {

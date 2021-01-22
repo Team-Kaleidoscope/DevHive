@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ErrorHandler, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { UserService } from 'src/app/services/user.service';
 import {AppConstants} from 'src/app/app-constants.module';
+import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +13,7 @@ import {AppConstants} from 'src/app/app-constants.module';
 })
 export class LoginComponent implements OnInit {
   private _title = 'Login';
+  errorMsg = ''
   loginUserFormGroup: FormGroup;
 
   constructor(private _titleService: Title, private _fb: FormBuilder, private _router: Router, private _userService: UserService) {
@@ -30,8 +32,19 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    setTimeout(() => { this._userService.loginUser(this.loginUserFormGroup); }, AppConstants.FETCH_TIMEOUT);
-    setTimeout(() => { this._router.navigate(['/']); }, AppConstants.FETCH_TIMEOUT + 100);
+    this._userService.loginUserRequest(this.loginUserFormGroup).subscribe(
+        res => this.finishLogin(res),
+        (err: HttpErrorResponse) => this.showError(err)
+    );
+  }
+
+  private finishLogin(res: object): void {
+    this._userService.setUserTokenToSessionStorage(res);
+    this._router.navigate(['/']);
+  }
+
+  private showError(error: HttpErrorResponse): void {
+    this.errorMsg = error.message;
   }
 
   onRedirectRegister(): void {

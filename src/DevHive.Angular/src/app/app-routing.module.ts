@@ -13,6 +13,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'profile/:username', component: ProfileComponent },
   { path: 'profile/:username/settings', component: ProfileSettingsComponent },
+  { path: 'error', component: ErrorComponent },
   { path: '**', component: ErrorComponent }
 ];
 

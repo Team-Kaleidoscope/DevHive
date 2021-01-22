@@ -1,3 +1,4 @@
+import {HttpErrorResponse} from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import {AppConstants} from 'src/app/app-constants.module';
@@ -10,6 +11,7 @@ import {User} from 'src/models/identity/user';
   styleUrls: ['./profile-settings.component.css']
 })
 export class ProfileSettingsComponent implements OnInit {
+  private _urlUsername: string;
   public dataArrived = false;
   public user: User;
 
@@ -17,32 +19,47 @@ export class ProfileSettingsComponent implements OnInit {
   { }
 
   ngOnInit(): void {
-    let username = this._router.url.substring(9);
-    username = username.substring(0, username.length - 9);
+    this._urlUsername = this._router.url.substring(9)
+    this._urlUsername = this._urlUsername.substring(0, this._urlUsername.length - 9);
+    this.user = this._userService.getDefaultUser();
+
+    this._userService.getUserByUsernameRequest(this._urlUsername).subscribe(
+      (res: object) => this.finishUserLoading(res),
+      (err: HttpErrorResponse) => { this._router.navigate(['/error']); }
+    );
+  }
+
+  private finishUserLoading(res: object): void {
+    Object.assign(this.user, res);
+    if (this.user.imageUrl === '') {
+      this.user.imageUrl = AppConstants.FALLBACK_PROFILE_ICON;
+    }
 
     if (sessionStorage.getItem('UserCred')) {
-      // Workaround for waiting the fetch response
-      // TODO: properly wait for it, before loading the page contents
-      setTimeout(() => {
-                          this.user = this._userService.fetchUserFromSessionStorage();
-      }, AppConstants.FETCH_TIMEOUT);
+      const userFromToken: User = this._userService.getDefaultUser();
 
-      // After getting the user, check if we're on the profile page of the logged in user
-      setTimeout(() => {
-                          if (this.user.userName !== username) {
-                            this.goToProfile();
-                          } else if (this.user.imageUrl === '') {
-                            this.user.imageUrl = AppConstants.FALLBACK_PROFILE_ICON;
-                          }
-      }, AppConstants.FETCH_TIMEOUT + 50);
+      this._userService.getUserFromSessionStorageRequest().subscribe(
+        (tokenRes: object) => {
+          Object.assign(userFromToken, tokenRes);
 
-      setTimeout(() => {
-        this.dataArrived = true;
-      }, AppConstants.FETCH_TIMEOUT + 100);
+          if (userFromToken.userName === this._urlUsername) {
+            this.dataArrived = true;
+          }
+          else {
+            this.goToProfile();
+          }
+        },
+        (err: HttpErrorResponse) => this.bailOnBadToken()
+      );
     }
     else {
       this.goToProfile();
     }
+  }
+
+  private bailOnBadToken(): void {
+    this._userService.logoutUserFromSessionStorage();
+    this._router.navigate(['/login']);
   }
 
   goToProfile(): void {
@@ -59,10 +76,12 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   deleteAccount(): void {
-    setTimeout(() => { this._userService.deleteUserRequest(this._userService.getUserIdFromSessionStroageToken()); }, AppConstants.FETCH_TIMEOUT);
-    setTimeout(() => {
-                       this._userService.logoutUserFromSessionStorage();
-                       this._router.navigate(['/login']);
-    }, AppConstants.FETCH_TIMEOUT + 100);
+    this._userService.deleteUserFromSessionStorageRequest().subscribe(
+      (res: object) => {
+        this._userService.logoutUserFromSessionStorage();
+        this._router.navigate(['/login']);
+      },
+      (err: HttpErrorResponse) => console.log(err)
+    );
   }
 }

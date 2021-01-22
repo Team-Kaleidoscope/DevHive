@@ -1,3 +1,4 @@
+import {HttpErrorResponse} from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
@@ -46,8 +47,19 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this._userService.registerUser(this.registerUserFormGroup);
+    this._userService.registerUserRequest(this.registerUserFormGroup).subscribe(
+        res => this.finishRegister(res),
+        (err: HttpErrorResponse) => this.showError(err)
+    );
+  }
+
+  private finishRegister(res: object): void {
+    this._userService.setUserTokenToSessionStorage(res);
     this._router.navigate(['/']);
+  }
+
+  private showError(error: HttpErrorResponse): void {
+    // TODO: implement, holding out until tab-bar component is implemented
   }
 
   onRedirectRegister(): void {

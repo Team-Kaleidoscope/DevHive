@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/models/identity/user';
 import { AppConstants } from 'src/app/app-constants.module';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-profile',
@@ -10,6 +11,7 @@ import { AppConstants } from 'src/app/app-constants.module';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+  private _urlUsername: string;
   public loggedInUser = false;
   public dataArrived = false;
   public user: User;
@@ -22,34 +24,44 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const username = this._router.url.substring(9);
+    this._urlUsername = this._router.url.substring(9);
+    this.user = this._userService.getDefaultUser();
+
+    this._userService.getUserByUsernameRequest(this._urlUsername).subscribe(
+      (res: object) => this.finishUserLoading(res),
+      (err: HttpErrorResponse) => { this._router.navigate(['/error']); }
+    );
+  }
+
+  private finishUserLoading(res: object): void {
+    Object.assign(this.user, res);
+    if (this.user.imageUrl === '') {
+      this.user.imageUrl = AppConstants.FALLBACK_PROFILE_ICON;
+    }
 
     if (sessionStorage.getItem('UserCred')) {
-      // Workaround for waiting the fetch response
-      // TODO: properly wait for it, before loading the page contents
-      setTimeout(() => {
-                          this.user = this._userService.fetchUserFromSessionStorage();
-      }, AppConstants.FETCH_TIMEOUT);
+      const userFromToken: User = this._userService.getDefaultUser();
 
-      // After getting the user, check if we're on the profile page of the logged in user
-      setTimeout(() => {
-                          if (this.user.userName !== username) {
-                            this.setDefaultUser();
-                          } else {
-                            if (this.user.imageUrl === '') {
-                              this.user.imageUrl = AppConstants.FALLBACK_PROFILE_ICON;
-                            }
-                            this.loggedInUser = true;
-                          }
-      }, AppConstants.FETCH_TIMEOUT + 50);
+      this._userService.getUserFromSessionStorageRequest().subscribe(
+        (tokenRes: object) => {
+          Object.assign(userFromToken, tokenRes);
+
+          if (userFromToken.userName === this._urlUsername) {
+            this.loggedInUser = true;
+          }
+          this.dataArrived = true;
+        },
+        (err: HttpErrorResponse) => this.bailOnBadToken()
+      );
     }
     else {
-      this.setDefaultUser();
-    }
-
-    setTimeout(() => {
       this.dataArrived = true;
-    }, AppConstants.FETCH_TIMEOUT + 100);
+    }
+  }
+
+  private bailOnBadToken(): void {
+    this._userService.logoutUserFromSessionStorage();
+    this._router.navigate(['/login']);
   }
 
   goBack(): void {
