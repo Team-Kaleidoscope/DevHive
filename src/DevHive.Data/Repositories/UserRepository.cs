@@ -42,6 +42,8 @@ namespace DevHive.Data.Repositories
 		{
 			return await this._context.Users
 				.AsNoTracking()
+				.Include(x => x.Friends)
+				.Include(x => x.Roles)
 				.Include(x => x.Languages)
 				.Include(x => x.Technologies)
 				.FirstOrDefaultAsync(x => x.UserName == username);
