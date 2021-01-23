@@ -8,10 +8,16 @@ namespace DevHive.Web.Configurations.Mapping
 	{
 		public CommentMappings()
 		{
-			CreateMap<CommentWebModel, CommentServiceModel>();
-			CreateMap<CommentWebModel, UpdateCommentServiceModel>();
-			CreateMap<CommentServiceModel, CommentWebModel>();
-			CreateMap<CommentWebModel, CommentServiceModel>();
+			CreateMap<CreateCommentWebModel, CreateCommentServiceModel>();
+			CreateMap<UpdateCommentWebModel, UpdateCommentServiceModel>();
+
+			CreateMap<ReadCommentServiceModel, ReadCommentWebModel>()
+				.ForMember(dest => dest.IssuerFirstName, src => src.Ignore())
+				.ForMember(dest => dest.IssuerLastName, src => src.Ignore())
+				.ForMember(dest => dest.IssuerUsername, src => src.Ignore());
 		}
 	}
 }
+
+
+

@@ -1,7 +1,6 @@
 using DevHive.Data.Models;
 using AutoMapper;
 using DevHive.Services.Models.Post.Comment;
-using DevHive.Common.Models.Misc;
 
 namespace DevHive.Services.Configurations.Mapping
 {
@@ -9,11 +8,14 @@ namespace DevHive.Services.Configurations.Mapping
 	{
 		public CommentMappings()
 		{
-			CreateMap<CommentServiceModel, Comment>();
-			CreateMap<Comment, CommentServiceModel>();
-			CreateMap<UpdateCommentServiceModel, Comment>();
-			CreateMap<IdModel, Comment>();
-			CreateMap<Comment, IdModel>();
+			CreateMap<CreateCommentServiceModel, Comment>()
+				.ForMember(src => src.Id, dest => dest.Ignore());
+			CreateMap<UpdateCommentServiceModel, Comment>()
+				.ForMember(src => src.Id, dest => dest.MapFrom(p => p.CommentId));
+
+			CreateMap<Comment, ReadCommentServiceModel>();
+			CreateMap<Comment, UpdateCommentServiceModel>()
+				.ForMember(src => src.CommentId, dest => dest.MapFrom(p => p.Id));
 		}
 	}
 }

@@ -4,6 +4,8 @@ namespace DevHive.Web.Models.Post.Comment
 {
 	public class ReadCommentWebModel
 	{
+		public Guid CommentId { get; set; }
+
 		public Guid PostId { get; set; }
 
 		public string IssuerFirstName { get; set; }

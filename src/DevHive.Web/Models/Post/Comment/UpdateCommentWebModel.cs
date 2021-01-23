@@ -1,6 +1,7 @@
 namespace DevHive.Web.Models.Post.Comment
 {
-	public class UpdateCommentWebModel : BaseCommentWebModel
+	public class UpdateCommentWebModel
 	{
+		public string NewMessage { get; set; }
 	}
 }
