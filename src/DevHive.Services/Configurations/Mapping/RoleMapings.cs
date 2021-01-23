@@ -4,7 +4,7 @@ using DevHive.Services.Models.Identity.Role;
 
 namespace DevHive.Services.Configurations.Mapping
 {
-    public class RoleMappings : Profile
+	public class RoleMappings : Profile
 	{
 		public RoleMappings()
 		{

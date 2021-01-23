@@ -5,7 +5,7 @@ using DevHive.Services.Models.Technology;
 
 namespace DevHive.Services.Models.Identity.User
 {
-    public class UserServiceModel : BaseUserServiceModel
+	public class UserServiceModel : BaseUserServiceModel
 	{
 		public HashSet<RoleServiceModel> Roles { get; set; } = new HashSet<RoleServiceModel>();
 

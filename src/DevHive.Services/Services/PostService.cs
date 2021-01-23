@@ -33,7 +33,7 @@ namespace DevHive.Services.Services
 
 			bool success = await this._postRepository.AddAsync(post);
 
-			if(success)
+			if (success)
 			{
 				Post newPost = await this._postRepository.GetPostByIssuerAndTimeCreatedAsync(postServiceModel.IssuerId, postServiceModel.TimeCreated);
 				return newPost.Id;
@@ -49,7 +49,7 @@ namespace DevHive.Services.Services
 
 			bool success = await this._postRepository.AddCommentAsync(comment);
 
-			if(success)
+			if (success)
 			{
 				Comment newComment = await this._postRepository.GetCommentByIssuerAndTimeCreatedAsync(commentServiceModel.IssuerId, commentServiceModel.TimeCreated);
 				return newComment.Id;

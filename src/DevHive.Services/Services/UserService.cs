@@ -194,7 +194,7 @@ namespace DevHive.Services.Services
 					return false;
 
 			/* Check roles */
-			if(jwtRoleNames.Contains(Role.AdminRole))
+			if (jwtRoleNames.Contains(Role.AdminRole))
 				return true;
 
 			// Check if jwt contains all user roles (if it doesn't, jwt is either old or tampered with)

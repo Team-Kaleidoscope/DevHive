@@ -9,7 +9,7 @@ using DevHive.Services.Models.Language;
 
 namespace DevHive.Services.Services
 {
-    public class RoleService : IRoleService
+	public class RoleService : IRoleService
 	{
 		private readonly IRoleRepository _roleRepository;
 		private readonly IMapper _roleMapper;
@@ -28,7 +28,7 @@ namespace DevHive.Services.Services
 			Role role = this._roleMapper.Map<Role>(roleServiceModel);
 			bool success = await this._roleRepository.AddAsync(role);
 
-			if(success)
+			if (success)
 			{
 				Role newRole = await this._roleRepository.GetByNameAsync(roleServiceModel.Name);
 				return newRole.Id;

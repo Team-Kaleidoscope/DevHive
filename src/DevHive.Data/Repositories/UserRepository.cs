@@ -13,7 +13,7 @@ namespace DevHive.Data.Repositories
 		private readonly DevHiveContext _context;
 
 		public UserRepository(DevHiveContext context)
-			:base(context)
+			: base(context)
 		{
 			this._context = context;
 		}

@@ -11,7 +11,7 @@ namespace DevHive.Data.Repositories
 		private readonly DevHiveContext _context;
 
 		public RoleRepository(DevHiveContext context)
-			:base(context)
+			: base(context)
 		{
 			this._context = context;
 		}

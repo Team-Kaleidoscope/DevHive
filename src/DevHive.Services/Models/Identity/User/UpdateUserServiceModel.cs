@@ -6,7 +6,7 @@ using DevHive.Services.Models.Technology;
 
 namespace DevHive.Services.Models.Identity.User
 {
-    public class UpdateUserServiceModel : BaseUserServiceModel
+	public class UpdateUserServiceModel : BaseUserServiceModel
 	{
 		public Guid Id { get; set; }
 
