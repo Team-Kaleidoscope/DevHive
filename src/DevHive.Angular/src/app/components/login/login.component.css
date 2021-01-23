@@ -16,6 +16,10 @@ form {
   margin-top: 1.2em;
 }
 
+.submit-btn {
+  margin-bottom: .2em;
+}
+
 .redirect-to-register {
   color: var(--focus-color);
   background-color: var(--bg-color);

@@ -1,11 +1,13 @@
 import {Location} from '@angular/common';
 import {HttpErrorResponse} from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AppConstants} from 'src/app/app-constants.module';
 import {UserService} from 'src/app/services/user.service';
 import {User} from 'src/models/identity/user';
+import {ErrorBarComponent} from '../error-bar/error-bar.component';
+import {SuccessBarComponent} from '../success-bar/success-bar.component';
 
 @Component({
   selector: 'app-profile-settings',
@@ -13,11 +15,12 @@ import {User} from 'src/models/identity/user';
   styleUrls: ['./profile-settings.component.css']
 })
 export class ProfileSettingsComponent implements OnInit {
+  @ViewChild(ErrorBarComponent) private _errorBar: ErrorBarComponent;
+  @ViewChild(SuccessBarComponent) private _successBar: SuccessBarComponent;
   private _urlUsername: string;
   public updateUserFormGroup: FormGroup;
   public dataArrived = false;
   public user: User;
-  public successfulUpdate = false;
 
   constructor(private _router: Router, private _userService: UserService, private _fb: FormBuilder, private _location: Location)
   { }
@@ -87,7 +90,10 @@ export class ProfileSettingsComponent implements OnInit {
       ]),
     });
 
-    this.updateUserFormGroup.valueChanges.subscribe(() => this.successfulUpdate = false);
+    this.updateUserFormGroup.valueChanges.subscribe(() => {
+      this._successBar.hideMsg();
+      this._errorBar.hideError();
+    });
   }
 
   private bailOnBadToken(): void {
@@ -96,10 +102,11 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.successfulUpdate = false;
+    this._successBar.hideMsg();
+    this._errorBar.hideError();
     this._userService.putUserFromSessionStorageRequest(this.updateUserFormGroup).subscribe(
-        res => this.successfulUpdate = true,
-        (err: HttpErrorResponse) => console.log(err.message)
+        res => this._successBar.showMsg('Profile updated successfully!'),
+        (err: HttpErrorResponse) => this._errorBar.showError(err)
     );
   }
 

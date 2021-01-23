@@ -1,5 +1,3 @@
-<div id="error-bar">{{errorMsg}}</div>
-
 <div id="content">
 	<div class="title">Login</div>
 
@@ -26,8 +24,7 @@
 
 		<hr>
 		<button class="submit-btn" type="submit">Submit</button>
+		<app-error-bar></app-error-bar>
 	</form>
-	<form [formGroup]="loginUserFormGroup" (ngSubmit)="onRedirectRegister()">
-		<button class="submit-btn redirect-to-register" type="submit">New to DevHive? Register instead</button>
-	</form>
+	<button class="submit-btn redirect-to-register" (click)="onRedirectRegister()">New to DevHive? Register instead</button>
 </div>

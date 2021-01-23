@@ -1,9 +1,10 @@
 import {HttpErrorResponse} from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
+import {ErrorBarComponent} from '../error-bar/error-bar.component';
 
 @Component({
   selector: 'app-register',
@@ -11,6 +12,7 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
+  @ViewChild(ErrorBarComponent) private _errorBar: ErrorBarComponent;
   private _title = 'Register';
   public registerUserFormGroup: FormGroup;
 
@@ -49,7 +51,7 @@ export class RegisterComponent implements OnInit {
   onSubmit(): void {
     this._userService.registerUserRequest(this.registerUserFormGroup).subscribe(
         res => this.finishRegister(res),
-        (err: HttpErrorResponse) => this.showError(err)
+        (err: HttpErrorResponse) => this._errorBar.showError(err)
     );
   }
 
@@ -58,11 +60,7 @@ export class RegisterComponent implements OnInit {
     this._router.navigate(['/']);
   }
 
-  private showError(error: HttpErrorResponse): void {
-    // TODO: implement, holding out until tab-bar component is implemented
-  }
-
-  onRedirectRegister(): void {
+  onRedirectLogin(): void {
     this._router.navigate(['/login']);
   }
 

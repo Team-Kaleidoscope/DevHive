@@ -59,9 +59,8 @@
 				</div>
 			</div>
 			<button class="submit-btn" type="submit">Update profile</button>
-			<div id="successful-update-msg" *ngIf="successfulUpdate">
-				Profile updated successfully!
-			</div>
+			<app-success-bar></app-success-bar>
+			<app-error-bar></app-error-bar>
 		</form>
 		<hr>
 		<button id="delete-account" class="submit-btn" (click)="deleteAccount()">Delete account</button>

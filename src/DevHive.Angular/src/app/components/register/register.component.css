@@ -18,13 +18,17 @@ form {
   margin-top: 1.2em;
 }
 
-.redirect-to-register {
+.submit-btn {
+  margin-bottom: .2em;
+}
+
+.redirect-to-login {
   color: var(--focus-color);
   background-color: var(--bg-color);
   border-color: var(--focus-color);
 }
 
-.redirect-to-register:hover {
+.redirect-to-login:hover {
   border-color: black !important;
   color: black;
 }

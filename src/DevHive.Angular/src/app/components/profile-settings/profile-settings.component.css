@@ -52,13 +52,8 @@ hr {
 
 /* Buttons */
 
-#successful-update-msg {
-  background-color: var(--success);
-  color: white;
-  width: 100%;
-  padding: .2em;
-  margin-top: .5em;
-  text-align: center;
+.submit-btn {
+  margin-bottom: .5em;
 }
 
 #delete-account:hover {

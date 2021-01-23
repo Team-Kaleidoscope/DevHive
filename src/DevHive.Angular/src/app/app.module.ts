@@ -17,6 +17,8 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { ProfileSettingsComponent } from './components/profile-settings/profile-settings.component';
 import { ErrorComponent } from './components/error/error.component';
 import { LoadingComponent } from './components/loading/loading.component';
+import { ErrorBarComponent } from './components/error-bar/error-bar.component';
+import { SuccessBarComponent } from './components/success-bar/success-bar.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { LoadingComponent } from './components/loading/loading.component';
     ProfileComponent,
     ProfileSettingsComponent,
     ErrorComponent,
-    LoadingComponent
+    LoadingComponent,
+    ErrorBarComponent,
+    SuccessBarComponent
   ],
   imports: [
     BrowserModule,
