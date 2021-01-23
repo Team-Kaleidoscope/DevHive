@@ -15,117 +15,141 @@ namespace DevHive.Services.Services
 {
 	public class PostService : IPostService
 	{
-		private readonly IPostRepository _postRepository;
 		private readonly IUserRepository _userRepository;
+		private readonly IPostRepository _postRepository;
+		private readonly ICommentRepository _commentRepository;
 		private readonly IMapper _postMapper;
 
-		public PostService(IPostRepository postRepository, IUserRepository userRepository, IMapper postMapper)
+		public PostService(IUserRepository userRepository, IPostRepository postRepository, ICommentRepository commentRepository, IMapper postMapper)
 		{
-			this._postRepository = postRepository;
 			this._userRepository = userRepository;
+			this._postRepository = postRepository;
+			this._commentRepository = commentRepository;
 			this._postMapper = postMapper;
 		}
 
-		//Create
-		public async Task<Guid> CreatePost(CreatePostServiceModel postServiceModel)
+		#region Create
+		public async Task<Guid> CreatePost(CreatePostServiceModel createPostServiceModel)
 		{
-			Post post = this._postMapper.Map<Post>(postServiceModel);
+			Post post = this._postMapper.Map<Post>(createPostServiceModel);
+			post.TimeCreated = DateTime.Now;
 
 			bool success = await this._postRepository.AddAsync(post);
-
 			if (success)
 			{
-				Post newPost = await this._postRepository.GetPostByIssuerAndTimeCreatedAsync(postServiceModel.IssuerId, postServiceModel.TimeCreated);
+				Post newPost = await this._postRepository
+					.GetPostByCreatorAndTimeCreatedAsync(createPostServiceModel.IssuerId, createPostServiceModel.TimeCreated);
+
 				return newPost.Id;
 			}
 			else
 				return Guid.Empty;
 		}
 
-		public async Task<Guid> AddComment(CreateCommentServiceModel commentServiceModel)
+		public async Task<Guid> AddComment(CreateCommentServiceModel createCommentServiceModel)
 		{
-			commentServiceModel.TimeCreated = DateTime.Now;
-			Comment comment = this._postMapper.Map<Comment>(commentServiceModel);
+			if (!await this._postRepository.DoesPostExist(createCommentServiceModel.PostId))
+				throw new ArgumentException("Post does not exist!");
 
-			bool success = await this._postRepository.AddCommentAsync(comment);
+			Comment comment = this._postMapper.Map<Comment>(createCommentServiceModel);
+			createCommentServiceModel.TimeCreated = DateTime.Now;
 
+			bool success = await this._commentRepository.AddAsync(comment);
 			if (success)
 			{
-				Comment newComment = await this._postRepository.GetCommentByIssuerAndTimeCreatedAsync(commentServiceModel.IssuerId, commentServiceModel.TimeCreated);
+				Comment newComment = await this._commentRepository
+					.GetCommentByIssuerAndTimeCreatedAsync(createCommentServiceModel.IssuerId, createCommentServiceModel.TimeCreated);
+
 				return newComment.Id;
 			}
 			else
 				return Guid.Empty;
 		}
+		#endregion
 
-		//Read
-		public async Task<PostServiceModel> GetPostById(Guid id)
+		#region Read
+		public async Task<ReadPostServiceModel> GetPostById(Guid id)
 		{
-			Post post = await this._postRepository.GetByIdAsync(id)
-				?? throw new ArgumentException("Post does not exist!");
+			Post post = await this._postRepository.GetByIdAsync(id) ??
+				throw new ArgumentException("The post does not exist!");
 
-			return this._postMapper.Map<PostServiceModel>(post);
+			return this._postMapper.Map<ReadPostServiceModel>(post);
 		}
 
-		public async Task<CommentServiceModel> GetCommentById(Guid id)
+		public async Task<ReadCommentServiceModel> GetCommentById(Guid id)
 		{
-			Comment comment = await this._postRepository.GetCommentByIdAsync(id);
-
-			if (comment == null)
+			Comment comment = await this._commentRepository.GetByIdAsync(id) ??
 				throw new ArgumentException("The comment does not exist");
 
-			return this._postMapper.Map<CommentServiceModel>(comment);
+			return this._postMapper.Map<ReadCommentServiceModel>(comment);
+		}
+		#endregion
+
+		#region Update
+		public async Task<Guid> UpdatePost(UpdatePostServiceModel updatePostServiceModel)
+		{
+			if (!await this._postRepository.DoesPostExist(updatePostServiceModel.PostId))
+				throw new ArgumentException("Post does not exist!");
+
+			Post post = this._postMapper.Map<Post>(updatePostServiceModel);
+			bool result = await this._postRepository.EditAsync(updatePostServiceModel.PostId, post);
+
+			if (result)
+				return (await this._postRepository.GetByIdAsync(updatePostServiceModel.PostId)).Id;
+			else
+				return Guid.Empty;
 		}
 
-		//Update
-		public async Task<bool> UpdatePost(UpdatePostServiceModel postServiceModel)
+		public async Task<Guid> UpdateComment(UpdateCommentServiceModel updateCommentServiceModel)
 		{
-			if (!await this._postRepository.DoesPostExist(postServiceModel.IssuerId))
+			if (!await this._commentRepository.DoesCommentExist(updateCommentServiceModel.CommentId))
 				throw new ArgumentException("Comment does not exist!");
 
-			Post post = this._postMapper.Map<Post>(postServiceModel);
-			return await this._postRepository.EditAsync(postServiceModel.Id, post);
+			Comment comment = this._postMapper.Map<Comment>(updateCommentServiceModel);
+			bool result = await this._commentRepository.EditAsync(updateCommentServiceModel.CommentId, comment);
+
+			if (result)
+				return (await this._commentRepository.GetByIdAsync(updateCommentServiceModel.CommentId)).Id;
+			else
+				return Guid.Empty;
 		}
+		#endregion
 
-		public async Task<bool> UpdateComment(UpdateCommentServiceModel commentServiceModel)
-		{
-			if (!await this._postRepository.DoesCommentExist(commentServiceModel.Id))
-				throw new ArgumentException("Comment does not exist!");
-
-			Comment comment = this._postMapper.Map<Comment>(commentServiceModel);
-			bool result = await this._postRepository.EditCommentAsync(comment);
-
-			return result;
-		}
-
-		//Delete
+		#region Delete
 		public async Task<bool> DeletePost(Guid id)
 		{
+			if (!await this._postRepository.DoesPostExist(id))
+				throw new ArgumentException("Post does not exist!");
+
 			Post post = await this._postRepository.GetByIdAsync(id);
 			return await this._postRepository.DeleteAsync(post);
 		}
 
 		public async Task<bool> DeleteComment(Guid id)
 		{
-			if (!await this._postRepository.DoesCommentExist(id))
+			if (!await this._commentRepository.DoesCommentExist(id))
 				throw new ArgumentException("Comment does not exist!");
 
-			Comment comment = await this._postRepository.GetCommentByIdAsync(id);
-			bool result = await this._postRepository.DeleteCommentAsync(comment);
-
-			return result;
+			Comment comment = await this._commentRepository.GetByIdAsync(id);
+			return await this._commentRepository.DeleteAsync(comment);
 		}
+		#endregion
 
-		//Validate
-		public async Task<bool> ValidateJwtForComment(Guid commentId, string rawTokenData)
+		#region Validations
+		public async Task<bool> ValidateJwtForPost(Guid postId, string rawTokenData)
 		{
-			Comment comment = await this._postRepository.GetCommentByIdAsync(commentId);
+			Post post = await this._postRepository.GetByIdAsync(postId);
 			User user = await this.GetUserForValidation(rawTokenData);
 
-			if (comment.IssuerId != user.Id)
-				return false;
+			return post.CreatorId == user.Id;
+		}
 
-			return true;
+		public async Task<bool> ValidateJwtForComment(Guid commentId, string rawTokenData)
+		{
+			Comment comment = await this._commentRepository.GetByIdAsync(commentId);
+			User user = await this.GetUserForValidation(rawTokenData);
+
+			return comment.IssuerId == user.Id;
 		}
 
 		private async Task<User> GetUserForValidation(string rawTokenData)
@@ -151,5 +175,6 @@ namespace DevHive.Services.Services
 
 			return toReturn;
 		}
+		#endregion
 	}
 }

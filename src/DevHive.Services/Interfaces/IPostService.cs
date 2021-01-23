@@ -7,18 +7,19 @@ namespace DevHive.Services.Interfaces
 {
 	public interface IPostService
 	{
-		Task<Guid> CreatePost(CreatePostServiceModel postServiceModel);
-		Task<Guid> AddComment(CreateCommentServiceModel commentServiceModel);
+		Task<Guid> CreatePost(CreatePostServiceModel createPostServiceModel);
+		Task<Guid> AddComment(CreateCommentServiceModel createPostServiceModel);
 
-		Task<CommentServiceModel> GetCommentById(Guid id);
-		Task<PostServiceModel> GetPostById(Guid id);
+		Task<ReadPostServiceModel> GetPostById(Guid id);
+		Task<ReadCommentServiceModel> GetCommentById(Guid id);
 
-		Task<bool> UpdateComment(UpdateCommentServiceModel commentServiceModel);
-		Task<bool> UpdatePost(UpdatePostServiceModel postServiceModel);
+		Task<Guid> UpdatePost(UpdatePostServiceModel updatePostServiceModel);
+		Task<Guid> UpdateComment(UpdateCommentServiceModel updateCommentServiceModel);
 
-		Task<bool> DeleteComment(Guid id);
 		Task<bool> DeletePost(Guid id);
+		Task<bool> DeleteComment(Guid id);
 
+		Task<bool> ValidateJwtForPost(Guid postId, string rawTokenData);
 		Task<bool> ValidateJwtForComment(Guid commentId, string rawTokenData);
 	}
 }

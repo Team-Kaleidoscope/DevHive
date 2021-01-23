@@ -17,10 +17,10 @@ namespace DevHive.Web.Controllers
 		private readonly ITechnologyService _technologyService;
 		private readonly IMapper _technologyMapper;
 
-		public TechnologyController(ITechnologyService technologyService, IMapper mapper)
+		public TechnologyController(ITechnologyService technologyService, IMapper technologyMapper)
 		{
 			this._technologyService = technologyService;
-			this._technologyMapper = mapper;
+			this._technologyMapper = technologyMapper;
 		}
 
 		[HttpPost]

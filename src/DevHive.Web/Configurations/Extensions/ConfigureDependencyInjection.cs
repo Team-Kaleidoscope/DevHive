@@ -16,6 +16,7 @@ namespace DevHive.Web.Configurations.Extensions
 			services.AddTransient<ITechnologyRepository, TechnologyRepository>();
 			services.AddTransient<IUserRepository, UserRepository>();
 			services.AddTransient<IPostRepository, PostRepository>();
+			services.AddTransient<ICommentRepository, CommentRepository>();
 
 			services.AddTransient<ILanguageService, LanguageService>();
 			services.AddTransient<IRoleService, RoleService>();

@@ -13,52 +13,56 @@ namespace DevHive.Web.Controllers
 {
 	[ApiController]
 	[Route("/api/[controller]")]
+	// [Authorize(Roles = "User")]
 	public class PostController
 	{
 		private readonly IPostService _postService;
 		private readonly IMapper _postMapper;
 
-		public PostController(IPostService postService, IMapper mapper)
+		public PostController(IPostService postService, IMapper postMapper)
 		{
 			this._postService = postService;
-			this._postMapper = mapper;
+			this._postMapper = postMapper;
 		}
 
-		//Create
+		#region Create
 		[HttpPost]
-		[Authorize(Roles = "User")]
-		public async Task<IActionResult> Create([FromBody] CreatePostWebModel createPostModel)
+		public async Task<IActionResult> Create(Guid userId, [FromBody] CreatePostWebModel createPostWebModel)
 		{
-			CreatePostServiceModel postServiceModel =
-				this._postMapper.Map<CreatePostServiceModel>(createPostModel);
+			CreatePostServiceModel createPostServiceModel =
+				this._postMapper.Map<CreatePostServiceModel>(createPostWebModel);
+			createPostServiceModel.IssuerId = userId;
 
-			Guid id = await this._postService.CreatePost(postServiceModel);
+			Guid id = await this._postService.CreatePost(createPostServiceModel);
 
 			return id == Guid.Empty ?
-				new BadRequestObjectResult("Could not create post") :
+				new BadRequestObjectResult("Could not create post!") :
 				new OkObjectResult(new { Id = id });
 		}
 
 		[HttpPost]
 		[Route("Comment")]
-		public async Task<IActionResult> AddComment([FromBody] CommentWebModel commentWebModel)
+		public async Task<IActionResult> AddComment(Guid userId, [FromBody] CreateCommentWebModel createCommentWebModel)
 		{
-			CreateCommentServiceModel createCommentServiceModel = this._postMapper.Map<CreateCommentServiceModel>(commentWebModel);
+			CreateCommentServiceModel createCommentServiceModel =
+				this._postMapper.Map<CreateCommentServiceModel>(createCommentWebModel);
+			createCommentServiceModel.IssuerId = userId;
 
 			Guid id = await this._postService.AddComment(createCommentServiceModel);
 
 			return id == Guid.Empty ?
-				new BadRequestObjectResult("Could not create comment") :
+				new BadRequestObjectResult("Could not create comment!") :
 				new OkObjectResult(new { Id = id });
 		}
+		#endregion
 
-		//Read
+		#region Read
 		[HttpGet]
 		[AllowAnonymous]
 		public async Task<IActionResult> GetById(Guid id)
 		{
-			PostServiceModel postServiceModel = await this._postService.GetPostById(id);
-			PostWebModel postWebModel = this._postMapper.Map<PostWebModel>(postServiceModel);
+			ReadPostServiceModel postServiceModel = await this._postService.GetPostById(id);
+			ReadPostWebModel postWebModel = this._postMapper.Map<ReadPostWebModel>(postServiceModel);
 
 			return new OkObjectResult(postWebModel);
 		}
@@ -68,56 +72,58 @@ namespace DevHive.Web.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> GetCommentById(Guid id)
 		{
-			CommentServiceModel commentServiceModel = await this._postService.GetCommentById(id);
-			CommentWebModel commentWebModel = this._postMapper.Map<CommentWebModel>(commentServiceModel);
+			ReadCommentServiceModel readCommentServiceModel = await this._postService.GetCommentById(id);
+			ReadCommentWebModel readCommentWebModel = this._postMapper.Map<ReadCommentWebModel>(readCommentServiceModel);
 
-			return new OkObjectResult(commentWebModel);
+			return new OkObjectResult(readCommentWebModel);
 		}
+		#endregion
 
-		//Update
+		#region Update
 		[HttpPut]
-		public async Task<IActionResult> Update(Guid id, [FromBody] UpdatePostWebModel updatePostModel)
+		public async Task<IActionResult> Update(Guid userId, [FromBody] UpdatePostWebModel updatePostWebModel, [FromHeader] string authorization)
 		{
-			UpdatePostServiceModel postServiceModel =
-				this._postMapper.Map<UpdatePostServiceModel>(updatePostModel);
-			postServiceModel.IssuerId = id;
+			if (!await this._postService.ValidateJwtForPost(userId, authorization))
+				return new UnauthorizedResult();
 
-			bool result = await this._postService.UpdatePost(postServiceModel);
+			UpdatePostServiceModel updatePostServiceModel =
+				this._postMapper.Map<UpdatePostServiceModel>(updatePostWebModel);
 
-			if (!result)
-				return new BadRequestObjectResult("Could not update post!");
+			Guid id = await this._postService.UpdatePost(updatePostServiceModel);
 
-			return new OkResult();
+			return id == Guid.Empty ?
+				new BadRequestObjectResult("Unable to update post!") :
+				new OkObjectResult(new { Id = id });
 		}
 
 		[HttpPut]
 		[Route("Comment")]
-		public async Task<IActionResult> UpdateComment(Guid id, [FromBody] CommentWebModel commentWebModel, [FromHeader] string authorization)
+		public async Task<IActionResult> UpdateComment(Guid userId, [FromBody] UpdateCommentWebModel updateCommentWebModel, [FromHeader] string authorization)
 		{
-			if (!await this._postService.ValidateJwtForComment(id, authorization))
+			if (!await this._postService.ValidateJwtForComment(userId, authorization))
 				return new UnauthorizedResult();
 
-			UpdateCommentServiceModel updateCommentServiceModel = this._postMapper.Map<UpdateCommentServiceModel>(commentWebModel);
-			updateCommentServiceModel.Id = id;
+			UpdateCommentServiceModel updateCommentServiceModel =
+				this._postMapper.Map<UpdateCommentServiceModel>(updateCommentWebModel);
 
-			bool result = await this._postService.UpdateComment(updateCommentServiceModel);
+			Guid id = await this._postService.UpdateComment(updateCommentServiceModel);
 
-			if (!result)
-				return new BadRequestObjectResult("Could not update Comment");
-
-			return new OkResult();
+			return id == Guid.Empty ?
+				new BadRequestObjectResult("Unable to update comment!") :
+				new OkObjectResult(new { Id = id });
 		}
+		#endregion
 
-		//Delete
+		#region Delete
 		[HttpDelete]
-		public async Task<IActionResult> Delete(Guid id)
+		public async Task<IActionResult> Delete(Guid id, [FromHeader] string authorization)
 		{
-			bool result = await this._postService.DeletePost(id);
+			if (!await this._postService.ValidateJwtForPost(id, authorization))
+				return new UnauthorizedResult();
 
-			if (!result)
-				return new BadRequestObjectResult("Could not delete post!");
-
-			return new OkResult();
+			return await this._postService.DeletePost(id) ?
+				new OkResult() :
+				new BadRequestObjectResult("Could not delete Comment");
 		}
 
 		[HttpDelete]
@@ -127,12 +133,10 @@ namespace DevHive.Web.Controllers
 			if (!await this._postService.ValidateJwtForComment(id, authorization))
 				return new UnauthorizedResult();
 
-			bool result = await this._postService.DeleteComment(id);
-
-			if (!result)
-				return new BadRequestObjectResult("Could not delete Comment");
-
-			return new OkResult();
+			return await this._postService.DeleteComment(id) ?
+				new OkResult() :
+				new BadRequestObjectResult("Could not delete Comment");
 		}
+		#endregion
 	}
 }
