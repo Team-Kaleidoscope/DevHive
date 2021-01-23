@@ -13,7 +13,6 @@ namespace DevHive.Web.Controllers
 {
 	[ApiController]
 	[Route("/api/[controller]")]
-	[Authorize(Roles = "User")]
 	public class PostController
 	{
 		private readonly IPostService _postService;
@@ -27,6 +26,7 @@ namespace DevHive.Web.Controllers
 
 		//Create
 		[HttpPost]
+		[Authorize(Roles = "User")]
 		public async Task<IActionResult> Create([FromBody] CreatePostWebModel createPostModel)
 		{
 			CreatePostServiceModel postServiceModel =

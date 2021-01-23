@@ -4,12 +4,14 @@ using AutoMapper;
 using DevHive.Services.Interfaces;
 using DevHive.Services.Models.Technology;
 using DevHive.Web.Models.Technology;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevHive.Web.Controllers
 {
 	[ApiController]
 	[Route("/api/[controller]")]
+	[Authorize(Policy = "Administrator")]
 	public class TechnologyController
 	{
 		private readonly ITechnologyService _technologyService;
@@ -34,6 +36,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpGet]
+		[Authorize(Policy = "User")]
 		public async Task<IActionResult> GetById(Guid id)
 		{
 			CreateTechnologyServiceModel createTechnologyServiceModel = await this._technologyService.GetTechnologyById(id);

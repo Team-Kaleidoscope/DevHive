@@ -7,15 +7,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DevHive.Common.Models.Identity;
 using DevHive.Services.Interfaces;
-using Microsoft.AspNetCore.JsonPatch;
-using DevHive.Common.Models.Misc;
-using System.Collections.Generic;
 
 namespace DevHive.Web.Controllers
 {
 	[ApiController]
 	[Route("/api/[controller]")]
-	[Authorize(Roles = "User")]
+	[Authorize(Policy = "User")]
 	public class UserController : ControllerBase
 	{
 		private readonly IUserService _userService;
@@ -56,7 +53,6 @@ namespace DevHive.Web.Controllers
 		#endregion
 
 		#region Read
-
 		[HttpGet]
 		public async Task<IActionResult> GetById(Guid id, [FromHeader] string authorization)
 		{
@@ -71,7 +67,6 @@ namespace DevHive.Web.Controllers
 
 		[HttpGet]
 		[Route("GetUser")]
-		[AllowAnonymous]
 		public async Task<IActionResult> GetUser(string username)
 		{
 			UserServiceModel friendServiceModel = await this._userService.GetUserByUsername(username);

@@ -20,11 +20,10 @@ namespace DevHive.Services.Services
 			this._roleMapper = mapper;
 		}
 
-		public async Task<Guid> CreateRole(RoleServiceModel roleServiceModel)
+		public async Task<Guid> CreateRole(CreateRoleServiceModel roleServiceModel)
 		{
 			if (await this._roleRepository.DoesNameExist(roleServiceModel.Name))
 				throw new ArgumentException("Role already exists!");
-
 
 			Role role = this._roleMapper.Map<Role>(roleServiceModel);
 			bool success = await this._roleRepository.AddAsync(role);

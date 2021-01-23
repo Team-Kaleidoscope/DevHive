@@ -4,12 +4,14 @@ using AutoMapper;
 using DevHive.Services.Interfaces;
 using DevHive.Services.Models.Language;
 using DevHive.Web.Models.Language;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevHive.Web.Controllers
 {
 	[ApiController]
 	[Route("/api/[controller]")]
+	[Authorize(Policy = "Administrator")]
 	public class LanguageController
 	{
 		private readonly ILanguageService _languageService;
@@ -34,6 +36,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpGet]
+		[Authorize(Policy = "User")]
 		public async Task<IActionResult> GetById(Guid id)
 		{
 			ReadLanguageServiceModel languageServiceModel = await this._languageService.GetLanguageById(id);

@@ -5,12 +5,12 @@ using AutoMapper;
 using System;
 using DevHive.Services.Interfaces;
 using DevHive.Services.Models.Identity.Role;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevHive.Web.Controllers
 {
 	[ApiController]
 	[Route("/api/[controller]")]
-	//[Authorize(Roles = "Admin")]
 	public class RoleController
 	{
 		private readonly IRoleService _roleService;
@@ -23,20 +23,21 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPost]
+		[Authorize(Policy = "Administrator")]
 		public async Task<IActionResult> Create([FromBody] CreateRoleWebModel createRoleWebModel)
 		{
-			RoleServiceModel roleServiceModel =
-				this._roleMapper.Map<RoleServiceModel>(createRoleWebModel);
+			CreateRoleServiceModel roleServiceModel =
+				this._roleMapper.Map<CreateRoleServiceModel>(createRoleWebModel);
 
 			Guid id = await this._roleService.CreateRole(roleServiceModel);
 
 			return id == Guid.Empty ?
 				new BadRequestObjectResult($"Could not create role {createRoleWebModel.Name}") :
 				new OkObjectResult(new { Id = id });
-
 		}
 
 		[HttpGet]
+		[Authorize(Policy = "User")]
 		public async Task<IActionResult> GetById(Guid id)
 		{
 			RoleServiceModel roleServiceModel = await this._roleService.GetRoleById(id);
@@ -46,6 +47,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPut]
+		[Authorize(Policy = "Administrator")]
 		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateRoleWebModel updateRoleWebModel)
 		{
 			UpdateRoleServiceModel updateRoleServiceModel =
@@ -61,6 +63,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpDelete]
+		[Authorize(Policy = "Administrator")]
 		public async Task<IActionResult> Delete(Guid id)
 		{
 			bool result = await this._roleService.DeleteRole(id);

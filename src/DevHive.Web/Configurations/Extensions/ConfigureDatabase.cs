@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Builder;
 using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using DevHive.Data;
+using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 
 namespace DevHive.Web.Configurations.Extensions
 {
@@ -19,6 +21,7 @@ namespace DevHive.Web.Configurations.Extensions
 				options.UseNpgsql(configuration.GetConnectionString("DEV")));
 
 			services.AddIdentity<User, Role>()
+				.AddRoles<Role>()
 				.AddEntityFrameworkStores<DevHiveContext>();
 
 			services.Configure<IdentityOptions>(options =>
@@ -47,6 +50,15 @@ namespace DevHive.Web.Configurations.Extensions
 					options.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
 					options.RequireRole("User");
 				});
+
+				options.AddPolicy("Administrator", options =>
+				{
+					options.RequireAuthenticatedUser();
+					options.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+					options.RequireRole("Admin");
+				});
+
+				// options.DefaultPolicy = ;
 			});
 		}
 
