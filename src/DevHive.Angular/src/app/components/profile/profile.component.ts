@@ -30,7 +30,7 @@ export class ProfileComponent implements OnInit {
 
     this._userService.getUserByUsernameRequest(this._urlUsername).subscribe(
       (res: object) => this.finishUserLoading(res),
-      (err: HttpErrorResponse) => { this._router.navigate(['/error']); }
+      (err: HttpErrorResponse) => { this._router.navigate(['/not-found']); }
     );
   }
 

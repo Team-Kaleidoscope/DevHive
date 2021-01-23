@@ -15,7 +15,7 @@ import { FeedComponent } from './components/feed/feed.component';
 import { PostComponent } from './components/post/post.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ProfileSettingsComponent } from './components/profile-settings/profile-settings.component';
-import { ErrorComponent } from './components/error/error.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { ErrorBarComponent } from './components/error-bar/error-bar.component';
 import { SuccessBarComponent } from './components/success-bar/success-bar.component';
@@ -29,7 +29,7 @@ import { SuccessBarComponent } from './components/success-bar/success-bar.compon
     PostComponent,
     ProfileComponent,
     ProfileSettingsComponent,
-    ErrorComponent,
+    NotFoundComponent,
     LoadingComponent,
     ErrorBarComponent,
     SuccessBarComponent
