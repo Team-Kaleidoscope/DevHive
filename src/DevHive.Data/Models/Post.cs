@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using DevHive.Data.Interfaces.Models;
 
@@ -9,14 +10,14 @@ namespace DevHive.Data.Models
 	{
 		public Guid Id { get; set; }
 
-		public Guid IssuerId { get; set; }
-
-		public DateTime TimeCreated { get; set; }
+		public Guid CreatorId { get; set; }
 
 		public string Message { get; set; }
 
-		//public File[] Files { get; set; }
+		public DateTime TimeCreated { get; set; }
 
-		public Comment[] Comments { get; set; }
+		public List<Comment> Comments { get; set; }
+
+		// public List<string> Files { get; set; }
 	}
 }
