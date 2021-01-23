@@ -1,5 +1,6 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import {IApiError} from 'src/interfaces/api-error';
 
 @Component({
   selector: 'app-error-bar',
@@ -16,7 +17,9 @@ export class ErrorBarComponent implements OnInit {
   }
 
   showError(error: HttpErrorResponse): void {
-    this.errorMsg = error.statusText;
+    const test: IApiError = { type: '', title: 'Error!', status: 0, traceId: '' };
+    Object.assign(test, error.error);
+    this.errorMsg = test.title;
   }
 
   hideError(): void {
