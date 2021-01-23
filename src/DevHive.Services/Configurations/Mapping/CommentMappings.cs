@@ -8,14 +8,13 @@ namespace DevHive.Services.Configurations.Mapping
 	{
 		public CommentMappings()
 		{
-			CreateMap<CreateCommentServiceModel, Comment>()
-				.ForMember(src => src.Id, dest => dest.Ignore());
+			CreateMap<CreateCommentServiceModel, Comment>();
 			CreateMap<UpdateCommentServiceModel, Comment>()
-				.ForMember(src => src.Id, dest => dest.MapFrom(p => p.CommentId));
+				.ForMember(dest => dest.Id, src => src.MapFrom(p => p.CommentId))
+				.ForMember(dest => dest.Message, src => src.MapFrom(p => p.NewMessage));
 
-			CreateMap<Comment, ReadCommentServiceModel>();
-			CreateMap<Comment, UpdateCommentServiceModel>()
-				.ForMember(src => src.CommentId, dest => dest.MapFrom(p => p.Id));
+			CreateMap<Comment, ReadCommentServiceModel>()
+				.ForMember(dest => dest.CommentId, src => src.MapFrom(p => p.Id));
 		}
 	}
 }
