@@ -11,10 +11,7 @@ namespace DevHive.Web.Configurations.Mapping
 			CreateMap<CreatePostWebModel, CreatePostServiceModel>();
 			CreateMap<UpdatePostWebModel, UpdatePostServiceModel>();
 
-			CreateMap<ReadPostServiceModel, ReadPostWebModel>()
-				.ForMember(dest => dest.CreatorFirstName, src => src.Ignore())
-				.ForMember(dest => dest.CreatorLastName, src => src.Ignore())
-				.ForMember(dest => dest.CreatorUsername, src => src.Ignore());
+			CreateMap<ReadPostServiceModel, ReadPostWebModel>();
 		}
 	}
 }

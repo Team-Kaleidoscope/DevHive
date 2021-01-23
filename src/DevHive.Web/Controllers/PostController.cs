@@ -31,7 +31,7 @@ namespace DevHive.Web.Controllers
 		{
 			CreatePostServiceModel createPostServiceModel =
 				this._postMapper.Map<CreatePostServiceModel>(createPostWebModel);
-			createPostServiceModel.IssuerId = userId;
+			createPostServiceModel.CreatorId = userId;
 
 			Guid id = await this._postService.CreatePost(createPostServiceModel);
 
@@ -46,7 +46,7 @@ namespace DevHive.Web.Controllers
 		{
 			CreateCommentServiceModel createCommentServiceModel =
 				this._postMapper.Map<CreateCommentServiceModel>(createCommentWebModel);
-			createCommentServiceModel.IssuerId = userId;
+			createCommentServiceModel.CreatorId = userId;
 
 			Guid id = await this._postService.AddComment(createCommentServiceModel);
 
@@ -83,11 +83,12 @@ namespace DevHive.Web.Controllers
 		[HttpPut]
 		public async Task<IActionResult> Update(Guid userId, [FromBody] UpdatePostWebModel updatePostWebModel, [FromHeader] string authorization)
 		{
-			if (!await this._postService.ValidateJwtForPost(userId, authorization))
+			if (!await this._postService.ValidateJwtForPost(updatePostWebModel.PostId, authorization))
 				return new UnauthorizedResult();
 
 			UpdatePostServiceModel updatePostServiceModel =
 				this._postMapper.Map<UpdatePostServiceModel>(updatePostWebModel);
+			updatePostServiceModel.CreatorId = userId;
 
 			Guid id = await this._postService.UpdatePost(updatePostServiceModel);
 
@@ -100,11 +101,12 @@ namespace DevHive.Web.Controllers
 		[Route("Comment")]
 		public async Task<IActionResult> UpdateComment(Guid userId, [FromBody] UpdateCommentWebModel updateCommentWebModel, [FromHeader] string authorization)
 		{
-			if (!await this._postService.ValidateJwtForComment(userId, authorization))
+			if (!await this._postService.ValidateJwtForComment(updateCommentWebModel.CommentId, authorization))
 				return new UnauthorizedResult();
 
 			UpdateCommentServiceModel updateCommentServiceModel =
 				this._postMapper.Map<UpdateCommentServiceModel>(updateCommentWebModel);
+			updateCommentServiceModel.CreatorId = userId;
 
 			Guid id = await this._postService.UpdateComment(updateCommentServiceModel);
 

@@ -12,6 +12,6 @@ namespace DevHive.Web.Models.Post.Post
 
 		[NotNull]
 		[Required]
-		public string Message { get; set; }
+		public string NewMessage { get; set; }
 	}
 }

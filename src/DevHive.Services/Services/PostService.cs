@@ -31,6 +31,9 @@ namespace DevHive.Services.Services
 		#region Create
 		public async Task<Guid> CreatePost(CreatePostServiceModel createPostServiceModel)
 		{
+			if(!await this._userRepository.DoesUserExistAsync(createPostServiceModel.CreatorId))
+				throw new ArgumentException("User does not exist!");
+
 			Post post = this._postMapper.Map<Post>(createPostServiceModel);
 			post.TimeCreated = DateTime.Now;
 
@@ -38,7 +41,7 @@ namespace DevHive.Services.Services
 			if (success)
 			{
 				Post newPost = await this._postRepository
-					.GetPostByCreatorAndTimeCreatedAsync(createPostServiceModel.IssuerId, createPostServiceModel.TimeCreated);
+					.GetPostByCreatorAndTimeCreatedAsync(post.CreatorId, post.TimeCreated);
 
 				return newPost.Id;
 			}
@@ -52,13 +55,13 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("Post does not exist!");
 
 			Comment comment = this._postMapper.Map<Comment>(createCommentServiceModel);
-			createCommentServiceModel.TimeCreated = DateTime.Now;
+			comment.TimeCreated = DateTime.Now;
 
 			bool success = await this._commentRepository.AddAsync(comment);
 			if (success)
 			{
 				Comment newComment = await this._commentRepository
-					.GetCommentByIssuerAndTimeCreatedAsync(createCommentServiceModel.IssuerId, createCommentServiceModel.TimeCreated);
+					.GetCommentByIssuerAndTimeCreatedAsync(comment.CreatorId, comment.TimeCreated);
 
 				return newComment.Id;
 			}
@@ -73,7 +76,15 @@ namespace DevHive.Services.Services
 			Post post = await this._postRepository.GetByIdAsync(id) ??
 				throw new ArgumentException("The post does not exist!");
 
-			return this._postMapper.Map<ReadPostServiceModel>(post);
+			User user = await this._userRepository.GetByIdAsync(post.CreatorId) ??
+				throw new ArgumentException("User does not exist He could've been deleted!");
+
+			ReadPostServiceModel readPostServiceModel = this._postMapper.Map<ReadPostServiceModel>(post);
+			readPostServiceModel.CreatorFirstName = user.FirstName;
+			readPostServiceModel.CreatorLastName = user.LastName;
+			readPostServiceModel.CreatorUsername = user.UserName;
+
+			return readPostServiceModel;
 		}
 
 		public async Task<ReadCommentServiceModel> GetCommentById(Guid id)
@@ -81,7 +92,14 @@ namespace DevHive.Services.Services
 			Comment comment = await this._commentRepository.GetByIdAsync(id) ??
 				throw new ArgumentException("The comment does not exist");
 
-			return this._postMapper.Map<ReadCommentServiceModel>(comment);
+			User user = await this._userRepository.GetByIdAsync(comment.CreatorId);
+
+			ReadCommentServiceModel readCommentServiceModel = this._postMapper.Map<ReadCommentServiceModel>(comment);
+			readCommentServiceModel.IssuerFirstName = user.FirstName;
+			readCommentServiceModel.IssuerLastName = user.LastName;
+			readCommentServiceModel.IssuerUsername = user.UserName;
+
+			return readCommentServiceModel;
 		}
 		#endregion
 
@@ -92,6 +110,8 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("Post does not exist!");
 
 			Post post = this._postMapper.Map<Post>(updatePostServiceModel);
+			post.TimeCreated = DateTime.Now;
+
 			bool result = await this._postRepository.EditAsync(updatePostServiceModel.PostId, post);
 
 			if (result)
@@ -106,6 +126,8 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("Comment does not exist!");
 
 			Comment comment = this._postMapper.Map<Comment>(updateCommentServiceModel);
+			comment.TimeCreated = DateTime.Now;
+
 			bool result = await this._commentRepository.EditAsync(updateCommentServiceModel.CommentId, comment);
 
 			if (result)
@@ -138,29 +160,45 @@ namespace DevHive.Services.Services
 		#region Validations
 		public async Task<bool> ValidateJwtForPost(Guid postId, string rawTokenData)
 		{
-			Post post = await this._postRepository.GetByIdAsync(postId);
+			Post post = await this._postRepository.GetByIdAsync(postId) ??
+				throw new ArgumentException("Post does not exist!");
 			User user = await this.GetUserForValidation(rawTokenData);
 
-			return post.CreatorId == user.Id;
+			//If user made the post
+			if (post.CreatorId == user.Id)
+				return true;
+			//If user is admin
+			else if(user.Roles.Any(x => x.Name == Role.AdminRole))
+				return true;
+			else
+				return false;
 		}
 
 		public async Task<bool> ValidateJwtForComment(Guid commentId, string rawTokenData)
 		{
-			Comment comment = await this._commentRepository.GetByIdAsync(commentId);
+			Comment comment = await this._commentRepository.GetByIdAsync(commentId) ??
+				throw new ArgumentException("Comment does not exist!");
 			User user = await this.GetUserForValidation(rawTokenData);
 
-			return comment.IssuerId == user.Id;
+			//If user made the comment
+			if (comment.CreatorId == user.Id)
+				return true;
+			//If user is admin
+			else if(user.Roles.Any(x => x.Name == Role.AdminRole))
+				return true;
+			else
+				return false;
 		}
 
 		private async Task<User> GetUserForValidation(string rawTokenData)
 		{
-			var jwt = new JwtSecurityTokenHandler().ReadJwtToken(rawTokenData.Remove(0, 7));
+			JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(rawTokenData.Remove(0, 7));
 
-			string jwtUserName = this.GetClaimTypeValues("unique_name", jwt.Claims).First();
+			Guid jwtUserId = Guid.Parse(this.GetClaimTypeValues("ID", jwt.Claims).First());
 			//HashSet<string> jwtRoleNames = this.GetClaimTypeValues("role", jwt.Claims);
 
-			User user = await this._userRepository.GetByUsernameAsync(jwtUserName)
-				?? throw new ArgumentException("User does not exist!");
+			User user = await this._userRepository.GetByIdAsync(jwtUserId) ??
+				throw new ArgumentException("User does not exist!");
 
 			return user;
 		}

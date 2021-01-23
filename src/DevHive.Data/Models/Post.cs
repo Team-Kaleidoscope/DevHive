@@ -16,8 +16,8 @@ namespace DevHive.Data.Models
 
 		public DateTime TimeCreated { get; set; }
 
-		public List<Comment> Comments { get; set; }
+		public List<Comment> Comments { get; set; } = new();
 
-		// public List<string> Files { get; set; }
+		// public List<string> Files { get; set; } = new();
 	}
 }

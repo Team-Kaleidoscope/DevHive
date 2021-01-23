@@ -25,13 +25,13 @@ namespace DevHive.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("IssuerId")
+                    b.Property<Guid>("CreatorId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Message")
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("PostId")
+                    b.Property<Guid>("PostId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("TimeCreated")
@@ -64,7 +64,7 @@ namespace DevHive.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("IssuerId")
+                    b.Property<Guid>("CreatorId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Message")
@@ -351,7 +351,9 @@ namespace DevHive.Data.Migrations
                 {
                     b.HasOne("DevHive.Data.Models.Post", null)
                         .WithMany("Comments")
-                        .HasForeignKey("PostId");
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DevHive.Data.Models.User", b =>

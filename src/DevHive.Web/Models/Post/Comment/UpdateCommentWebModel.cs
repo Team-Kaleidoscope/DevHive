@@ -6,6 +6,8 @@ namespace DevHive.Web.Models.Post.Comment
 	{
 		public Guid CommentId { get; set; }
 
+		public Guid PostId { get; set; }
+
 		public string NewMessage { get; set; }
 	}
 }

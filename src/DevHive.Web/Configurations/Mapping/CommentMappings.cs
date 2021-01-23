@@ -11,10 +11,7 @@ namespace DevHive.Web.Configurations.Mapping
 			CreateMap<CreateCommentWebModel, CreateCommentServiceModel>();
 			CreateMap<UpdateCommentWebModel, UpdateCommentServiceModel>();
 
-			CreateMap<ReadCommentServiceModel, ReadCommentWebModel>()
-				.ForMember(dest => dest.IssuerFirstName, src => src.Ignore())
-				.ForMember(dest => dest.IssuerLastName, src => src.Ignore())
-				.ForMember(dest => dest.IssuerUsername, src => src.Ignore());
+			CreateMap<ReadCommentServiceModel, ReadCommentWebModel>();
 		}
 	}
 }

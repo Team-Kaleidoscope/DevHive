@@ -6,7 +6,7 @@ namespace DevHive.Data.Interfaces.Models
 	{
 		Guid PostId { get; set; }
 
-		Guid IssuerId { get; set; }
+		Guid CreatorId { get; set; }
 
 		string Message { get; set; }
 

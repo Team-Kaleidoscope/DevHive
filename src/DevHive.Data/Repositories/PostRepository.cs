@@ -17,6 +17,13 @@ namespace DevHive.Data.Repositories
 		}
 
 		#region Read
+		public override async Task<Post> GetByIdAsync(Guid id)
+		{
+			return await this._context.Posts
+					.Include(x => x.Comments)
+					.FirstOrDefaultAsync(x => x.Id == id);
+		}
+
 		public async Task<Post> GetPostByCreatorAndTimeCreatedAsync(Guid creatorId, DateTime timeCreated)
 		{
 			return await this._context.Posts

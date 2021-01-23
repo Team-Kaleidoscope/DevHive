@@ -6,7 +6,11 @@ namespace DevHive.Services.Models.Post.Comment
 	{
 		public Guid CommentId { get; set; }
 
-		public Guid IssuerId { get; set; }
+		public string IssuerFirstName { get; set; }
+
+		public string IssuerLastName { get; set; }
+
+		public string IssuerUsername { get; set; }
 
 		public Guid PostId { get; set; }
 

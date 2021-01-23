@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DevHive.Data.Migrations
 {
     [DbContext(typeof(DevHiveContext))]
-    [Migration("20210121083441_UserRefactor")]
-    partial class UserRefactor
+    [Migration("20210123215634_PostAndComment_Implemented")]
+    partial class PostAndComment_Implemented
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,13 +27,13 @@ namespace DevHive.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("IssuerId")
+                    b.Property<Guid>("CreatorId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Message")
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("PostId")
+                    b.Property<Guid>("PostId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("TimeCreated")
@@ -66,7 +66,7 @@ namespace DevHive.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("IssuerId")
+                    b.Property<Guid>("CreatorId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Message")
@@ -353,7 +353,9 @@ namespace DevHive.Data.Migrations
                 {
                     b.HasOne("DevHive.Data.Models.Post", null)
                         .WithMany("Comments")
-                        .HasForeignKey("PostId");
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DevHive.Data.Models.User", b =>

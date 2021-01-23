@@ -12,6 +12,6 @@ namespace DevHive.Data.Models
 		public const string DefaultRole = "User";
 		public const string AdminRole = "Admin";
 
-		public HashSet<User> Users { get; set; }
+		public HashSet<User> Users { get; set; } = new();
 	}
 }

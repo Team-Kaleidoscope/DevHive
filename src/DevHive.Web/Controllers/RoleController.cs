@@ -23,7 +23,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPost]
-		[Authorize(Policy = "Administrator")]
+		// [Authorize(Policy = "Administrator")]
 		public async Task<IActionResult> Create([FromBody] CreateRoleWebModel createRoleWebModel)
 		{
 			CreateRoleServiceModel roleServiceModel =

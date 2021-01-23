@@ -16,7 +16,10 @@ namespace DevHive.Services.Configurations.Mapping
 				.ForMember(dest => dest.Message, src => src.MapFrom(p => p.NewMessage));
 
 			CreateMap<Post, ReadPostServiceModel>()
-				.ForMember(dest => dest.PostId, src => src.MapFrom(p => p.Id));
+				.ForMember(dest => dest.PostId, src => src.MapFrom(p => p.Id))
+				.ForMember(dest => dest.CreatorFirstName, src => src.Ignore())
+				.ForMember(dest => dest.CreatorLastName, src => src.Ignore())
+				.ForMember(dest => dest.CreatorUsername, src => src.Ignore());
 		}
 	}
 }
