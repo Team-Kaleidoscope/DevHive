@@ -4,6 +4,7 @@ using AutoMapper;
 using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
 using DevHive.Services.Models.Post.Comment;
+using DevHive.Services.Models.Post.Post;
 using DevHive.Services.Services;
 using Moq;
 using NUnit.Framework;
@@ -184,6 +185,53 @@ namespace DevHive.Services.Tests
 		#region ValidateJwtForComment
 		//TO DO: Implement
 		#endregion
+		#endregion
+
+		#region Posts
+		#region Create
+		[Test]
+		public async Task CreatePost_ReturnsIdOfThePost_WhenItIsSuccessfullyCreated()
+		{
+			Guid id = Guid.NewGuid();
+			CreatePostServiceModel createPostServiceModel = new CreatePostServiceModel
+			{
+			};
+			Post post = new Post
+			{
+				Message = MESSAGE,
+				Id = id
+			};
+
+			this.PostRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Post>())).Returns(Task.FromResult(true));
+			this.PostRepositoryMock.Setup(p => p.GetPostByIssuerAndTimeCreatedAsync(It.IsAny<Guid>(), It.IsAny<DateTime>())).Returns(Task.FromResult(post));
+			this.MapperMock.Setup(p => p.Map<Post>(It.IsAny<CreatePostServiceModel>())).Returns(post);
+
+			Guid result = await this.PostService.CreatePost(createPostServiceModel);
+
+			Assert.AreEqual(id, result, "CreatePost does not return the correct id");
+		}
+
+		[Test]
+		public async Task CreatePost_ReturnsEmptyGuid_WhenItIsNotSuccessfullyCreated()
+		{
+			CreatePostServiceModel createPostServiceModel = new CreatePostServiceModel
+			{
+			};
+			Post post = new Post
+			{
+				Message = MESSAGE,
+			};
+
+			this.PostRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Post>())).Returns(Task.FromResult(false));
+			this.MapperMock.Setup(p => p.Map<Post>(It.IsAny<CreatePostServiceModel>())).Returns(post);
+
+			Guid result = await this.PostService.CreatePost(createPostServiceModel);
+
+			Assert.AreEqual(Guid.Empty, result, "CreatePost does not return empty id");
+		}
+		#endregion
+
+
 		#endregion
 	}
 }

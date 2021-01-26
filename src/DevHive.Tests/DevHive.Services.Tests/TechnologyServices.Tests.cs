@@ -140,9 +140,11 @@ namespace DevHive.Services.Tests
 		public async Task UpdateTechnology_ReturnsIfUpdateIsSuccessfull_WhenTechnologyExistsy(bool shouldPass)
 		{
 			string name = "Gosho Trapov";
+			Guid id = Guid.NewGuid();
 			Technology technology = new Technology
 			{
-				Name = name
+				Name = name,
+				Id = id
 			};
 			UpdateTechnologyServiceModel updatetechnologyServiceModel = new UpdateTechnologyServiceModel
 			{
@@ -151,7 +153,7 @@ namespace DevHive.Services.Tests
 
 			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
 			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
-			this.TechnologyRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Technology>())).Returns(Task.FromResult(shouldPass));
+			this.TechnologyRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<Technology>())).Returns(Task.FromResult(shouldPass));
 			this.MapperMock.Setup(p => p.Map<Technology>(It.IsAny<UpdateTechnologyServiceModel>())).Returns(technology);
 
 			bool result = await this.TechnologyService.UpdateTechnology(updatetechnologyServiceModel);

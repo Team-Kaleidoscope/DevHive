@@ -19,7 +19,6 @@ namespace DevHive.Data.Repositories
 		}
 
 		#region Read
-
 		public IEnumerable<User> QueryAll()
 		{
 			return this._context.Users
@@ -73,7 +72,6 @@ namespace DevHive.Data.Repositories
 		#endregion
 
 		#region Validations
-
 		public async Task<bool> DoesUserExistAsync(Guid id)
 		{
 			return await this._context.Users

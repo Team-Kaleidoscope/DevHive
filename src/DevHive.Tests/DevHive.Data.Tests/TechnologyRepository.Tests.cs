@@ -17,6 +17,7 @@ namespace DevHive.Data.Tests
 
 		protected TechnologyRepository TechnologyRepository { get; set; }
 
+		#region Setups
 		[SetUp]
 		public void Setup()
 		{
@@ -33,40 +34,27 @@ namespace DevHive.Data.Tests
 		{
 			this.Context.Database.EnsureDeleted();
 		}
-
-		#region AddAsync
-		[Test]
-		public async Task AddAsync_AddsTheGivenTechnologyToTheDatabase()
-		{
-			await AddEntity();
-
-			int numberOfTechnologies = Context.Technologies.Count();
-
-			Assert.True(numberOfTechnologies > 0, "Technologies repo does not store Technologies correctly");
-		}
 		#endregion
 
-		#region GetByIdAsync
+		#region GetByNameAsync
 		[Test]
-		public async Task GetByIdAsync_ReturnsTheCorrectTechnology_IfIdExists()
+		public async Task GetByNameAsync_ReturnsTheCorrectTechnology_IfItExists()
 		{
 			await AddEntity();
+
 			Technology technology = this.Context.Technologies.Where(x => x.Name == TECHNOLOGY_NAME).ToList().FirstOrDefault();
-			Guid id = technology.Id;
 
-			Technology technologyReturned = await this.TechnologyRepository.GetByIdAsync(id);
+			Technology resultTechnology = await this.TechnologyRepository.GetByNameAsync(TECHNOLOGY_NAME);
 
-			Assert.AreEqual(TECHNOLOGY_NAME, technologyReturned.Name, "GetByIdAsync does not return the correct Technology when id is valid");
+			Assert.AreEqual(technology.Id, resultTechnology.Id);
 		}
 
 		[Test]
-		public async Task GetByIdAsync_ReturnsNull_IfIdDoesNotExists()
+		public async Task GetByNameAsync_ReturnsNull_IfTechnologyDoesNotExists()
 		{
-			Guid id = Guid.NewGuid();
+			Technology resultTechnology = await this.TechnologyRepository.GetByNameAsync(TECHNOLOGY_NAME);
 
-			Technology technologyReturned = await this.TechnologyRepository.GetByIdAsync(id);
-
-			Assert.IsNull(technologyReturned, "GetByIdAsync returns Technology when it should be null");
+			Assert.IsNull(resultTechnology);
 		}
 		#endregion
 
@@ -111,41 +99,6 @@ namespace DevHive.Data.Tests
 			bool result = await this.TechnologyRepository.DoesTechnologyNameExistAsync(TECHNOLOGY_NAME);
 
 			Assert.False(result, "DoesTechnologyNameExistAsync returns true when technology name does not exist");
-		}
-		#endregion
-
-		#region EditAsync
-		//TO DO fix: check UserRepo
-		[Test]
-		public async Task EditAsync_UpdatesEntity()
-		{
-			string newName = "New name";
-			Technology technology = new Technology
-			{
-				Name = TECHNOLOGY_NAME
-			}; Technology newTechnology = new Technology
-			{
-				Name = newName
-			};
-
-			await this.TechnologyRepository.AddAsync(technology);
-
-			bool result = await this.TechnologyRepository.EditAsync(newTechnology);
-
-			Assert.IsTrue(result);
-		}
-		#endregion
-
-		#region DeleteAsync
-		[Test]
-		public async Task DeleteAsync_ReturnsTrue_IfDeletionIsSuccesfull()
-		{
-			await AddEntity();
-			Technology technology = this.Context.Technologies.Where(x => x.Name == TECHNOLOGY_NAME).ToList().FirstOrDefault();
-
-			bool result = await this.TechnologyRepository.DeleteAsync(technology);
-
-			Assert.IsTrue(result, "DeleteAsync returns false when deletion is successfull");
 		}
 		#endregion
 

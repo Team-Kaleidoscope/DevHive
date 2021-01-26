@@ -141,9 +141,11 @@ namespace DevHive.Services.Tests
 		public async Task UpdateLanguage_ReturnsIfUpdateIsSuccessfull_WhenLanguageExistsy(bool shouldPass)
 		{
 			string name = "Gosho Trapov";
+			Guid id = Guid.NewGuid();
 			Language language = new Language
 			{
-				Name = name
+				Name = name,
+				Id = id
 			};
 			UpdateLanguageServiceModel updateLanguageServiceModel = new UpdateLanguageServiceModel
 			{
@@ -152,7 +154,7 @@ namespace DevHive.Services.Tests
 
 			this.LanguageRepositoryMock.Setup(p => p.DoesLanguageExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
 			this.LanguageRepositoryMock.Setup(p => p.DoesLanguageNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
-			this.LanguageRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Language>())).Returns(Task.FromResult(shouldPass));
+			this.LanguageRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<Language>())).Returns(Task.FromResult(shouldPass));
 			this.MapperMock.Setup(p => p.Map<Language>(It.IsAny<UpdateLanguageServiceModel>())).Returns(language);
 
 			bool result = await this.LanguageService.UpdateLanguage(updateLanguageServiceModel);
