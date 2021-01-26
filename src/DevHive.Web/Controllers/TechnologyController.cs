@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Services.Interfaces;
@@ -43,6 +44,17 @@ namespace DevHive.Web.Controllers
 			CreateTechnologyWebModel createTechnologyWebModel = this._technologyMapper.Map<CreateTechnologyWebModel>(createTechnologyServiceModel);
 
 			return new OkObjectResult(createTechnologyWebModel);
+		}
+
+		[HttpGet]
+		[Route("GetTechnologies")]
+		[Authorize(Roles = "User,Admin")]
+		public IActionResult GetAllExistingTechnologies()
+		{
+			HashSet<ReadTechnologyServiceModel> technologyServiceModels = this._technologyService.GetTechnologies();
+			HashSet<ReadTechnologyWebModel> languageWebModels = this._technologyMapper.Map<HashSet<ReadTechnologyWebModel>>(technologyServiceModels);
+
+			return new OkObjectResult(languageWebModels);
 		}
 
 		[HttpPut]

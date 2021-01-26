@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Services.Interfaces;
@@ -43,6 +44,17 @@ namespace DevHive.Web.Controllers
 			ReadLanguageWebModel languageWebModel = this._languageMapper.Map<ReadLanguageWebModel>(languageServiceModel);
 
 			return new OkObjectResult(languageWebModel);
+		}
+
+		[HttpGet]
+		[Route("GetLanguages")]
+		[Authorize(Roles = "User,Admin")]
+		public IActionResult GetAllExistingLanguages()
+		{
+			HashSet<ReadLanguageServiceModel> languageServiceModels = this._languageService.GetLanguages();
+			HashSet<ReadLanguageWebModel> languageWebModels = this._languageMapper.Map<HashSet<ReadLanguageWebModel>>(languageServiceModels);
+
+			return new OkObjectResult(languageWebModels);
 		}
 
 		[HttpPut]

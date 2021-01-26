@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Data.Interfaces.Repositories;
@@ -20,7 +21,6 @@ namespace DevHive.Services.Services
 		}
 
 		#region Create
-
 		public async Task<Guid> CreateLanguage(CreateLanguageServiceModel createLanguageServiceModel)
 		{
 			if (await this._languageRepository.DoesLanguageNameExistAsync(createLanguageServiceModel.Name))
@@ -40,7 +40,6 @@ namespace DevHive.Services.Services
 		#endregion
 
 		#region Read
-
 		public async Task<ReadLanguageServiceModel> GetLanguageById(Guid id)
 		{
 			Language language = await this._languageRepository.GetByIdAsync(id);
@@ -50,10 +49,16 @@ namespace DevHive.Services.Services
 
 			return this._languageMapper.Map<ReadLanguageServiceModel>(language);
 		}
+
+		public HashSet<ReadLanguageServiceModel> GetLanguages()
+		{
+			HashSet<Language> languages = this._languageRepository.GetLanguages();
+
+			return this._languageMapper.Map<HashSet<ReadLanguageServiceModel>>(languages);
+		}
 		#endregion
 
 		#region Update
-
 		public async Task<bool> UpdateLanguage(UpdateLanguageServiceModel languageServiceModel)
 		{
 			bool langExists = await this._languageRepository.DoesLanguageExistAsync(languageServiceModel.Id);
@@ -71,7 +76,6 @@ namespace DevHive.Services.Services
 		#endregion
 
 		#region Delete
-
 		public async Task<bool> DeleteLanguage(Guid id)
 		{
 			if (!await this._languageRepository.DoesLanguageExistAsync(id))

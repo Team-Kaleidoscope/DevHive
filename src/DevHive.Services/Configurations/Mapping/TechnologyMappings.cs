@@ -14,6 +14,7 @@ namespace DevHive.Services.Configurations.Mapping
 
 			CreateMap<Technology, CreateTechnologyServiceModel>();
 			CreateMap<Technology, TechnologyServiceModel>();
+			CreateMap<Technology, ReadTechnologyServiceModel>();
 			CreateMap<Technology, UpdateTechnologyServiceModel>();
 		}
 	}

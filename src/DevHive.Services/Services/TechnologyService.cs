@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Data.Interfaces.Repositories;
@@ -47,6 +48,12 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("The technology does not exist");
 
 			return this._technologyMapper.Map<CreateTechnologyServiceModel>(technology);
+		}
+		public HashSet<ReadTechnologyServiceModel> GetTechnologies()
+		{
+			HashSet<Technology> technologies = this._technologyRepository.GetTechnologies();
+
+			return this._technologyMapper.Map<HashSet<ReadTechnologyServiceModel>>(technologies);
 		}
 		#endregion
 

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
@@ -22,6 +24,11 @@ namespace DevHive.Data.Repositories
 			return await this._context.Technologies
 				.AsNoTracking()
 				.FirstOrDefaultAsync(x => x.Name == technologyName);
+		}
+
+		public HashSet<Technology> GetTechnologies()
+		{
+			return this._context.Technologies.ToHashSet();
 		}
 		#endregion
 
