@@ -27,6 +27,7 @@ namespace DevHive.Web.Controllers
 
 		#region Create
 		[HttpPost]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Create(Guid userId, [FromBody] CreatePostWebModel createPostWebModel)
 		{
 			CreatePostServiceModel createPostServiceModel =

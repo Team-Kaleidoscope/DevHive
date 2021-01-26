@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Services.Interfaces;
@@ -11,7 +12,6 @@ namespace DevHive.Web.Controllers
 {
 	[ApiController]
 	[Route("/api/[controller]")]
-	[Authorize(Policy = "Administrator")]
 	public class TechnologyController
 	{
 		private readonly ITechnologyService _technologyService;
@@ -24,6 +24,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPost]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Create([FromBody] CreateTechnologyWebModel createTechnologyWebModel)
 		{
 			CreateTechnologyServiceModel technologyServiceModel = this._technologyMapper.Map<CreateTechnologyServiceModel>(createTechnologyWebModel);
@@ -36,7 +37,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpGet]
-		[Authorize(Policy = "User")]
+		[Authorize(Roles = "User,Admin")]
 		public async Task<IActionResult> GetById(Guid id)
 		{
 			CreateTechnologyServiceModel createTechnologyServiceModel = await this._technologyService.GetTechnologyById(id);
@@ -45,7 +46,19 @@ namespace DevHive.Web.Controllers
 			return new OkObjectResult(createTechnologyWebModel);
 		}
 
+		[HttpGet]
+		[Route("GetTechnologies")]
+		[Authorize(Roles = "User,Admin")]
+		public IActionResult GetAllExistingTechnologies()
+		{
+			HashSet<ReadTechnologyServiceModel> technologyServiceModels = this._technologyService.GetTechnologies();
+			HashSet<ReadTechnologyWebModel> languageWebModels = this._technologyMapper.Map<HashSet<ReadTechnologyWebModel>>(technologyServiceModels);
+
+			return new OkObjectResult(languageWebModels);
+		}
+
 		[HttpPut]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTechnologyWebModel updateModel)
 		{
 			UpdateTechnologyServiceModel updateTechnologyServiceModel = this._technologyMapper.Map<UpdateTechnologyServiceModel>(updateModel);
@@ -60,6 +73,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpDelete]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Delete(Guid id)
 		{
 			bool result = await this._technologyService.DeleteTechnology(id);

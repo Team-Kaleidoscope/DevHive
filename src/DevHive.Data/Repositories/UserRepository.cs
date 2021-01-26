@@ -47,27 +47,17 @@ namespace DevHive.Data.Repositories
 				.Include(x => x.Technologies)
 				.FirstOrDefaultAsync(x => x.UserName == username);
 		}
+		#endregion
 
-		public HashSet<Language> GetUserLanguages(User user)
+		#region Update
+		public override async Task<bool> EditAsync(Guid id, User newEntity)
 		{
-			return user.Languages;
-		}
+			User user = await GetByIdAsync(id);
 
-		public Language GetUserLanguage(User user, Language language)
-		{
-			return user.Languages
-				.FirstOrDefault(x => x.Id == language.Id);
-		}
+			this._context.Update(user);
+			user = newEntity;
 
-		public HashSet<Technology> GetUserTechnologies(User user)
-		{
-			return user.Technologies;
-		}
-
-		public Technology GetUserTechnology(User user, Technology technology)
-		{
-			return user.Technologies
-				.FirstOrDefault(x => x.Id == technology.Id);
+			return await this.SaveChangesAsync(this._context);
 		}
 		#endregion
 
@@ -110,21 +100,6 @@ namespace DevHive.Data.Repositories
 				.AsNoTracking()
 				.Any(x => x.Id == id &&
 					x.UserName == username);
-		}
-
-		public bool DoesUserHaveFriends(User user)
-		{
-			return user.Friends.Count >= 1;
-		}
-
-		public bool DoesUserHaveThisLanguage(User user, Language language)
-		{
-			return user.Languages.Contains(language);
-		}
-
-		public bool DoesUserHaveThisTechnology(User user, Technology technology)
-		{
-			return user.Technologies.Contains(technology);
 		}
 		#endregion
 	}

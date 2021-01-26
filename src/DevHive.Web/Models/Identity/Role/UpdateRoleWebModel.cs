@@ -4,10 +4,12 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DevHive.Web.Models.Identity.Role
 {
-	public class UpdateRoleWebModel : RoleWebModel
+	public class UpdateRoleWebModel
 	{
 		[NotNull]
 		[Required]
-		public Guid Id { get; set; }
+		[MinLength(3)]
+		[MaxLength(50)]
+		public string Name { get; set; }
 	}
 }

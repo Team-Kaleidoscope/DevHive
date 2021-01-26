@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Services.Interfaces;
@@ -11,7 +12,6 @@ namespace DevHive.Web.Controllers
 {
 	[ApiController]
 	[Route("/api/[controller]")]
-	[Authorize(Policy = "Administrator")]
 	public class LanguageController
 	{
 		private readonly ILanguageService _languageService;
@@ -24,6 +24,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPost]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Create([FromBody] CreateLanguageWebModel createLanguageWebModel)
 		{
 			CreateLanguageServiceModel languageServiceModel = this._languageMapper.Map<CreateLanguageServiceModel>(createLanguageWebModel);
@@ -36,7 +37,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpGet]
-		[Authorize(Policy = "User")]
+		[Authorize(Roles = "User,Admin")]
 		public async Task<IActionResult> GetById(Guid id)
 		{
 			ReadLanguageServiceModel languageServiceModel = await this._languageService.GetLanguageById(id);
@@ -45,7 +46,19 @@ namespace DevHive.Web.Controllers
 			return new OkObjectResult(languageWebModel);
 		}
 
+		[HttpGet]
+		[Route("GetLanguages")]
+		[Authorize(Roles = "User,Admin")]
+		public IActionResult GetAllExistingLanguages()
+		{
+			HashSet<ReadLanguageServiceModel> languageServiceModels = this._languageService.GetLanguages();
+			HashSet<ReadLanguageWebModel> languageWebModels = this._languageMapper.Map<HashSet<ReadLanguageWebModel>>(languageServiceModels);
+
+			return new OkObjectResult(languageWebModels);
+		}
+
 		[HttpPut]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateLanguageWebModel updateModel)
 		{
 			UpdateLanguageServiceModel updatelanguageServiceModel = this._languageMapper.Map<UpdateLanguageServiceModel>(updateModel);
@@ -60,6 +73,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpDelete]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Delete(Guid id)
 		{
 			bool result = await this._languageService.DeleteLanguage(id);

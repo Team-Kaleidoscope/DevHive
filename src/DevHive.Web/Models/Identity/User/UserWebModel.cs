@@ -15,7 +15,7 @@ namespace DevHive.Web.Models.Identity.User
 
 		[NotNull]
 		[Required]
-		public HashSet<FriendWebModel> Friends { get; set; } = new HashSet<FriendWebModel>();
+		public HashSet<UsernameWebModel> Friends { get; set; } = new HashSet<UsernameWebModel>();
 
 		[NotNull]
 		[Required]

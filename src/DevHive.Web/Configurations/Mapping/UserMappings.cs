@@ -2,8 +2,6 @@ using AutoMapper;
 using DevHive.Services.Models.Identity.User;
 using DevHive.Web.Models.Identity.User;
 using DevHive.Common.Models.Identity;
-using DevHive.Web.Models.Language;
-using DevHive.Web.Models.Technology;
 
 namespace DevHive.Web.Configurations.Mapping
 {
@@ -21,16 +19,12 @@ namespace DevHive.Web.Configurations.Mapping
 			CreateMap<TokenModel, TokenWebModel>();
 
 			//Update
-			CreateMap<UpdateUserWebModel, UpdateUserServiceModel>()
-				.ForMember(src => src.Id, dest => dest.Ignore());
-			CreateMap<FriendWebModel, FriendServiceModel>()
-				.ForMember(src => src.Id, dest => dest.Ignore());
-			CreateMap<FriendWebModel, UpdateFriendServiceModel>()
-				.ForMember(src => src.Id, dest => dest.Ignore())
-				.ForMember(src => src.Name, dest => dest.MapFrom(p => p.UserName));
+			CreateMap<UpdateUserWebModel, UpdateUserServiceModel>();
+			CreateMap<UsernameWebModel, FriendServiceModel>();
+			CreateMap<UsernameWebModel, UpdateFriendServiceModel>();
 
 			CreateMap<UpdateUserServiceModel, UpdateUserWebModel>();
-			CreateMap<FriendServiceModel, FriendWebModel>();
+			CreateMap<FriendServiceModel, UsernameWebModel>();
 		}
 	}
 }

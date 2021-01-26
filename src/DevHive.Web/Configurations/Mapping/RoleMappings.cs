@@ -11,11 +11,11 @@ namespace DevHive.Web.Configurations.Mapping
 			CreateMap<CreateRoleWebModel, CreateRoleServiceModel>();
 			CreateMap<UpdateRoleWebModel, UpdateRoleServiceModel>()
 				.ForMember(src => src.Id, dest => dest.Ignore());
-			CreateMap<RoleWebModel, ReadRoleServiceModel>();
+			CreateMap<RoleWebModel, RoleServiceModel>();
 
 			CreateMap<CreateRoleServiceModel, CreateRoleWebModel>();
 			CreateMap<UpdateRoleServiceModel, UpdateRoleWebModel>();
-			CreateMap<ReadRoleServiceModel, RoleWebModel>();
+			CreateMap<RoleServiceModel, RoleWebModel>();
 		}
 	}
 }
