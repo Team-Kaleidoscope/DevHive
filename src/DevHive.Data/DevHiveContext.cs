@@ -27,6 +27,15 @@ namespace DevHive.Data
 			builder.Entity<User>()
 				.HasMany(x => x.Friends);
 
+			builder.Entity<User>()
+				.HasMany(x => x.Languages);
+
+			builder.Entity<User>()
+				.HasMany(x => x.Technologies);
+
+			builder.Entity<User>()
+				.HasChangeTrackingStrategy(ChangeTrackingStrategy.Snapshot);
+
 			base.OnModelCreating(builder);
 		}
 	}

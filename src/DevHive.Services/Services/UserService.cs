@@ -71,6 +71,7 @@ namespace DevHive.Services.Services
 			user.PasswordHash = PasswordModifications.GeneratePasswordHash(registerModel.Password);
 
 			// Make sure the default role exists
+			//TODO: Move when project starts
 			if (!await this._roleRepository.DoesNameExist(Role.DefaultRole))
 				await this._roleRepository.AddAsync(new Role { Name = Role.DefaultRole });
 

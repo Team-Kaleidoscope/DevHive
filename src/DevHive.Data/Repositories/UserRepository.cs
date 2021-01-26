@@ -49,18 +49,6 @@ namespace DevHive.Data.Repositories
 		}
 		#endregion
 
-		#region Update
-		public override async Task<bool> EditAsync(Guid id, User newEntity)
-		{
-			User user = await GetByIdAsync(id);
-
-			this._context.Update(user);
-			user = newEntity;
-
-			return await this.SaveChangesAsync(this._context);
-		}
-		#endregion
-
 		#region Validations
 		public async Task<bool> DoesUserExistAsync(Guid id)
 		{

@@ -38,8 +38,6 @@ namespace DevHive.Web.Configurations.Extensions
 				options.Lockout.AllowedForNewUsers = true;
 				options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
 				options.Lockout.MaxFailedAccessAttempts = 5;
-
-				options.Stores.MaxLengthForKeys = 20;
 			});
 
 			services.AddAuthorization(options =>
@@ -57,8 +55,6 @@ namespace DevHive.Web.Configurations.Extensions
 					options.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
 					options.RequireRole("Admin");
 				});
-
-				// options.DefaultPolicy = ;
 			});
 		}
 
