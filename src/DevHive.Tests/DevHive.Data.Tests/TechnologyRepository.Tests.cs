@@ -110,7 +110,8 @@ namespace DevHive.Data.Tests
 				Name = name
 			};
 
-			await this.TechnologyRepository.AddAsync(technology);
+			this.Context.Technologies.Add(technology);
+			await this.Context.SaveChangesAsync();
 		}
 		#endregion
 
