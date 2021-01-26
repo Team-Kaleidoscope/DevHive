@@ -111,9 +111,7 @@ namespace DevHive.Services.Services
 
 			await this.ValidateUserCollections(updateUserServiceModel);
 
-			updateUserServiceModel = await this.PopulateUpdateModelWithIds(updateUserServiceModel);
-
-			User user = this._userMapper.Map<User>(updateUserServiceModel);
+			User user = await this.PopulateModel(updateUserServiceModel);
 
 			bool successful = await this._userRepository.EditAsync(updateUserServiceModel.Id, user);
 
@@ -298,49 +296,59 @@ namespace DevHive.Services.Services
 			return admin.Id;
 		}
 
-		private async Task<UpdateUserServiceModel> PopulateUpdateModelWithIds(UpdateUserServiceModel updateUserServiceModel)
+		private async Task<User> PopulateModel(UpdateUserServiceModel updateUserServiceModel)
 		{
-			/* Roles */
-			int roleCount = updateUserServiceModel.Roles.Count;
-			for (int i = 0; i < roleCount; i++)
+			User user = this._userMapper.Map<User>(updateUserServiceModel);
+
+			/* Fetch Roles and replace model's*/
+			HashSet<Role> roles = new();
+			int rolesCount = updateUserServiceModel.Roles.Count;
+			for (int i = 0; i < rolesCount; i++)
 			{
 				Role role = await this._roleRepository.GetByNameAsync(updateUserServiceModel.Roles.ElementAt(i).Name) ??
 					throw new ArgumentException("Invalid role name!");
 
-				updateUserServiceModel.Roles.ElementAt(i).Id = role.Id;
+				roles.Add(role);
 			}
+			user.Roles = roles;
 
-			/* Languages */
-			int langCount = updateUserServiceModel.Languages.Count;
-			for (int i = 0; i < langCount; i++)
-			{
-				Language language = await this._languageRepository.GetByNameAsync(updateUserServiceModel.Languages.ElementAt(i).Name) ??
-					throw new ArgumentException("Invalid language name!");
-
-				updateUserServiceModel.Languages.ElementAt(i).Id = language.Id;
-			}
-
-			/* Technologies */
-			int techCount = updateUserServiceModel.Technologies.Count;
-			for (int i = 0; i < techCount; i++)
-			{
-				Technology technology = await this._technologyRepository.GetByNameAsync(updateUserServiceModel.Technologies.ElementAt(i).Name) ??
-					throw new ArgumentException("Invalid technology name!");
-
-				updateUserServiceModel.Technologies.ElementAt(i).Id = technology.Id;
-			}
-
-			/* Friends */
+			/* Fetch Friends and replace model's*/
+			HashSet<User> friends = new();
 			int friendsCount = updateUserServiceModel.Friends.Count;
 			for (int i = 0; i < friendsCount; i++)
 			{
 				User friend = await this._userRepository.GetByUsernameAsync(updateUserServiceModel.Friends.ElementAt(i).UserName) ??
 					throw new ArgumentException("Invalid friend's username!");
 
-				updateUserServiceModel.Friends.ElementAt(i).Id = friend.Id;
+				friends.Add(friend);
 			}
+			user.Friends = friends;
 
-			return updateUserServiceModel;
+			/* Fetch Languages and replace model's*/
+			HashSet<Language> languages = new();
+			int languagesCount = updateUserServiceModel.Languages.Count;
+			for (int i = 0; i < languagesCount; i++)
+			{
+				Language language = await this._languageRepository.GetByNameAsync(updateUserServiceModel.Languages.ElementAt(i).Name) ??
+					throw new ArgumentException("Invalid language name!");
+
+				languages.Add(language);
+			}
+			user.Languages = languages;
+
+			/* Fetch Technologies and replace model's*/
+			HashSet<Technology> technologies = new();
+			int technologiesCount = updateUserServiceModel.Technologies.Count;
+			for (int i = 0; i < technologiesCount; i++)
+			{
+				Technology technology = await this._technologyRepository.GetByNameAsync(updateUserServiceModel.Technologies.ElementAt(i).Name) ??
+					throw new ArgumentException("Invalid technology name!");
+
+				technologies.Add(technology);
+			}
+			user.Technologies = technologies;
+
+			return user;
 		}
 		#endregion
 	}
