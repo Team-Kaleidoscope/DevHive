@@ -4,7 +4,7 @@ using DevHive.Web.Attributes;
 
 namespace DevHive.Web.Models.Identity.User
 {
-	public class FriendWebModel
+	public class UsernameWebModel
 	{
 		[NotNull]
 		[Required]

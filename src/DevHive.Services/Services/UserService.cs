@@ -111,61 +111,9 @@ namespace DevHive.Services.Services
 
 			await this.ValidateUserCollections(updateUserServiceModel);
 
-			/* Roles */
-			int roleCount = updateUserServiceModel.Roles.Count;
-			for (int i = 0; i < roleCount; i++)
-			{
-				Role role = await this._roleRepository.GetByNameAsync(updateUserServiceModel.Roles.ElementAt(i).Name) ??
-					throw new ArgumentException("Invalid role name!");
-
-				UpdateRoleServiceModel updateRoleServiceModel = this._userMapper.Map<UpdateRoleServiceModel>(role);
-
-				updateUserServiceModel.Roles.Add(updateRoleServiceModel);
-			}
-
-			/* Languages */
-			int langCount = updateUserServiceModel.Languages.Count;
-			for (int i = 0; i < langCount; i++)
-			{
-				Language language = await this._languageRepository.GetByNameAsync(updateUserServiceModel.Languages.ElementAt(i).Name) ??
-					throw new ArgumentException("Invalid language name!");
-
-				UpdateLanguageServiceModel updateLanguageServiceModel = this._userMapper.Map<UpdateLanguageServiceModel>(language);
-
-				updateUserServiceModel.Languages.Add(updateLanguageServiceModel);
-			}
-			//Clean the already replaced languages
-			updateUserServiceModel.Languages.RemoveWhere(x => x.Id == Guid.Empty);
-
-			/* Technologies */
-			int techCount = updateUserServiceModel.Technologies.Count;
-			for (int i = 0; i < techCount; i++)
-			{
-				Technology technology = await this._technologyRepository.GetByNameAsync(updateUserServiceModel.Technologies.ElementAt(i).Name) ??
-					throw new ArgumentException("Invalid technology name!");
-
-				UpdateTechnologyServiceModel updateTechnologyServiceModel = this._userMapper.Map<UpdateTechnologyServiceModel>(technology);
-
-				updateUserServiceModel.Technologies.Add(updateTechnologyServiceModel);
-			}
-			//Clean the already replaced technologies
-			updateUserServiceModel.Technologies.RemoveWhere(x => x.Id == Guid.Empty);
-
-			/* Friends */
-			HashSet<User> friends = new();
-			int friendsCount = updateUserServiceModel.Friends.Count;
-			for (int i = 0; i < friendsCount; i++)
-			{
-				User friend = await this._userRepository.GetByUsernameAsync(updateUserServiceModel.Friends.ElementAt(i).Name) ??
-					throw new ArgumentException("Invalid friend's username!");
-
-				friends.Add(friend);
-			}
-			//Clean the already replaced technologies
-			updateUserServiceModel.Friends.RemoveWhere(x => x.Id == Guid.Empty);
+			updateUserServiceModel = await this.PopulateUpdateModelWithIds(updateUserServiceModel);
 
 			User user = this._userMapper.Map<User>(updateUserServiceModel);
-			user.Friends = friends;
 
 			bool successful = await this._userRepository.EditAsync(updateUserServiceModel.Id, user);
 
@@ -249,30 +197,49 @@ namespace DevHive.Services.Services
 
 		private async Task ValidateUserCollections(UpdateUserServiceModel updateUserServiceModel)
 		{
+			//Do NOT allow a user to change his roles, unless he is an Admin
+			bool isAdmin = (await this._userRepository.GetByIdAsync(updateUserServiceModel.Id))
+				.Roles.Any(r => r.Name == Role.AdminRole);
+
+			if (isAdmin)
+			{
+				// Roles
+				foreach (var role in updateUserServiceModel.Roles)
+				{
+					Role returnedRole = await this._roleRepository.GetByNameAsync(role.Name) ??
+						throw new ArgumentException($"Role {role.Name} does not exist!");
+				}
+			}
+			//Preserve original user roles
+			else
+			{
+				HashSet<Role> roles = (await this._userRepository.GetByIdAsync(updateUserServiceModel.Id)).Roles;
+
+				foreach (var role in roles)
+				{
+					Role returnedRole = await this._roleRepository.GetByNameAsync(role.Name) ??
+						throw new ArgumentException($"Role {role.Name} does not exist!");
+				}
+			}
+
 			// Friends
 			foreach (var friend in updateUserServiceModel.Friends)
 			{
-				User returnedFriend = await this._userRepository.GetByUsernameAsync(friend.Name);
-
-				if (returnedFriend == null)
-					throw new ArgumentException($"User {friend.Name} does not exist!");
+				User returnedFriend = await this._userRepository.GetByUsernameAsync(friend.UserName) ??
+					throw new ArgumentException($"User {friend.UserName} does not exist!");
 			}
 
 			// Languages
 			foreach (var language in updateUserServiceModel.Languages)
 			{
-				Language returnedLanguage = await this._languageRepository.GetByNameAsync(language.Name);
-
-				if (returnedLanguage == null)
+				Language returnedLanguage = await this._languageRepository.GetByNameAsync(language.Name) ??
 					throw new ArgumentException($"Language {language.Name} does not exist!");
 			}
 
 			// Technology
 			foreach (var technology in updateUserServiceModel.Technologies)
 			{
-				Technology returnedTechnology = await this._technologyRepository.GetByNameAsync(technology.Name);
-
-				if (returnedTechnology == null)
+				Technology returnedTechnology = await this._technologyRepository.GetByNameAsync(technology.Name) ??
 					throw new ArgumentException($"Technology {technology.Name} does not exist!");
 			}
 		}
@@ -306,12 +273,13 @@ namespace DevHive.Services.Services
 		}
 		#endregion
 
+		#region Misc
 		public async Task<Guid> SuperSecretPromotionToAdmin(Guid userId)
 		{
 			User user = await this._userRepository.GetByIdAsync(userId) ??
 				throw new ArgumentException("User does not exist! Can't promote shit in this country...");
 
-			if(!await this._roleRepository.DoesNameExist("Admin"))
+			if (!await this._roleRepository.DoesNameExist("Admin"))
 			{
 				Role adminRole = new()
 				{
@@ -329,5 +297,51 @@ namespace DevHive.Services.Services
 
 			return admin.Id;
 		}
+
+		private async Task<UpdateUserServiceModel> PopulateUpdateModelWithIds(UpdateUserServiceModel updateUserServiceModel)
+		{
+			/* Roles */
+			int roleCount = updateUserServiceModel.Roles.Count;
+			for (int i = 0; i < roleCount; i++)
+			{
+				Role role = await this._roleRepository.GetByNameAsync(updateUserServiceModel.Roles.ElementAt(i).Name) ??
+					throw new ArgumentException("Invalid role name!");
+
+				updateUserServiceModel.Roles.ElementAt(i).Id = role.Id;
+			}
+
+			/* Languages */
+			int langCount = updateUserServiceModel.Languages.Count;
+			for (int i = 0; i < langCount; i++)
+			{
+				Language language = await this._languageRepository.GetByNameAsync(updateUserServiceModel.Languages.ElementAt(i).Name) ??
+					throw new ArgumentException("Invalid language name!");
+
+				updateUserServiceModel.Languages.ElementAt(i).Id = language.Id;
+			}
+
+			/* Technologies */
+			int techCount = updateUserServiceModel.Technologies.Count;
+			for (int i = 0; i < techCount; i++)
+			{
+				Technology technology = await this._technologyRepository.GetByNameAsync(updateUserServiceModel.Technologies.ElementAt(i).Name) ??
+					throw new ArgumentException("Invalid technology name!");
+
+				updateUserServiceModel.Technologies.ElementAt(i).Id = technology.Id;
+			}
+
+			/* Friends */
+			int friendsCount = updateUserServiceModel.Friends.Count;
+			for (int i = 0; i < friendsCount; i++)
+			{
+				User friend = await this._userRepository.GetByUsernameAsync(updateUserServiceModel.Friends.ElementAt(i).UserName) ??
+					throw new ArgumentException("Invalid friend's username!");
+
+				updateUserServiceModel.Friends.ElementAt(i).Id = friend.Id;
+			}
+
+			return updateUserServiceModel;
+		}
+		#endregion
 	}
 }

@@ -40,7 +40,7 @@ namespace DevHive.Web.Controllers
 		[Authorize(Policy = "User")]
 		public async Task<IActionResult> GetById(Guid id)
 		{
-			ReadRoleServiceModel roleServiceModel = await this._roleService.GetRoleById(id);
+			RoleServiceModel roleServiceModel = await this._roleService.GetRoleById(id);
 			RoleWebModel roleWebModel = this._roleMapper.Map<RoleWebModel>(roleServiceModel);
 
 			return new OkObjectResult(roleWebModel);

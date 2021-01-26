@@ -38,12 +38,12 @@ namespace DevHive.Services.Services
 
 		}
 
-		public async Task<ReadRoleServiceModel> GetRoleById(Guid id)
+		public async Task<RoleServiceModel> GetRoleById(Guid id)
 		{
 			Role role = await this._roleRepository.GetByIdAsync(id)
 				?? throw new ArgumentException("Role does not exist!");
 
-			return this._roleMapper.Map<ReadRoleServiceModel>(role);
+			return this._roleMapper.Map<RoleServiceModel>(role);
 		}
 
 		public async Task<bool> UpdateRole(UpdateRoleServiceModel updateRoleServiceModel)
