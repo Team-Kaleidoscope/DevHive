@@ -17,6 +17,7 @@ namespace DevHive.Data.Repositories
 		{
 			this._context = context;
 		}
+
 		public async Task<List<Post>> GetFriendsPosts(List<User> friendsList, DateTime firstRequestIssued, int pageNumber, int pageSize)
 		{
 			List<Guid> friendsIds = friendsList.Select(f => f.Id).ToList();

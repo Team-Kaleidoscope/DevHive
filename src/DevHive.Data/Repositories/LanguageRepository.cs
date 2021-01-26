@@ -22,7 +22,6 @@ namespace DevHive.Data.Repositories
 		public async Task<Language> GetByNameAsync(string languageName)
 		{
 			return await this._context.Languages
-				.AsNoTracking()
 				.FirstOrDefaultAsync(x => x.Name == languageName);
 		}
 
@@ -36,12 +35,14 @@ namespace DevHive.Data.Repositories
 		public async Task<bool> DoesLanguageNameExistAsync(string languageName)
 		{
 			return await this._context.Languages
+				.AsNoTracking()
 				.AnyAsync(r => r.Name == languageName);
 		}
 
 		public async Task<bool> DoesLanguageExistAsync(Guid id)
 		{
 			return await this._context.Languages
+				.AsNoTracking()
 				.AnyAsync(r => r.Id == id);
 		}
 		#endregion

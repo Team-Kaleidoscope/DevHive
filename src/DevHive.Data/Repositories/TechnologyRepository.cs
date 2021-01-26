@@ -22,7 +22,6 @@ namespace DevHive.Data.Repositories
 		public async Task<Technology> GetByNameAsync(string technologyName)
 		{
 			return await this._context.Technologies
-				.AsNoTracking()
 				.FirstOrDefaultAsync(x => x.Name == technologyName);
 		}
 
@@ -43,6 +42,7 @@ namespace DevHive.Data.Repositories
 		public async Task<bool> DoesTechnologyExistAsync(Guid id)
 		{
 			return await this._context.Technologies
+				.AsNoTracking()
 				.AnyAsync(x => x.Id == id);
 		}
 		#endregion

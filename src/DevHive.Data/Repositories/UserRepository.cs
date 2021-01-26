@@ -40,7 +40,6 @@ namespace DevHive.Data.Repositories
 		public async Task<User> GetByUsernameAsync(string username)
 		{
 			return await this._context.Users
-				.AsNoTracking()
 				.Include(x => x.Friends)
 				.Include(x => x.Roles)
 				.Include(x => x.Languages)
@@ -74,9 +73,11 @@ namespace DevHive.Data.Repositories
 		public async Task<bool> DoesUserHaveThisFriendAsync(Guid userId, Guid friendId)
 		{
 			User user = await this._context.Users
+				.AsNoTracking()
 				.FirstOrDefaultAsync(x => x.Id == userId);
 
 			User friend = await this._context.Users
+				.AsNoTracking()
 				.FirstOrDefaultAsync(x => x.Id == friendId);
 
 			return user.Friends.Contains(friend);

@@ -77,7 +77,7 @@ namespace DevHive.Services.Services
 
 			// Set the default role to the user
 			Role defaultRole = await this._roleRepository.GetByNameAsync(Role.DefaultRole);
-			user.Roles = new HashSet<Role>() { defaultRole };
+			user.Roles.Add(defaultRole);
 
 			await this._userRepository.AddAsync(user);
 

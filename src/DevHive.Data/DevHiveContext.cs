@@ -30,8 +30,14 @@ namespace DevHive.Data
 			builder.Entity<User>()
 				.HasMany(x => x.Languages);
 
+			builder.Entity<Language>()
+				.HasMany(x => x.Users);
+
 			builder.Entity<User>()
 				.HasMany(x => x.Technologies);
+
+			builder.Entity<Technology>()
+				.HasMany(x => x.Users);
 
 			builder.Entity<User>()
 				.HasChangeTrackingStrategy(ChangeTrackingStrategy.Snapshot);

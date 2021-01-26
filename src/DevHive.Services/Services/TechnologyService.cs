@@ -49,6 +49,7 @@ namespace DevHive.Services.Services
 
 			return this._technologyMapper.Map<CreateTechnologyServiceModel>(technology);
 		}
+
 		public HashSet<ReadTechnologyServiceModel> GetTechnologies()
 		{
 			HashSet<Technology> technologies = this._technologyRepository.GetTechnologies();
