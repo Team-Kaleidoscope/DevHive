@@ -8,20 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public interface IUserRepository
-	{
-		Task<bool> DoesEmailExistAsync(string email);
-		Task<bool> DoesUserExistAsync(Guid id);
-		Task<bool> DoesUserHaveThisFriendAsync(Guid userId, Guid friendId);
-		bool DoesUserHaveThisUsername(Guid id, string username);
-		Task<bool> DoesUsernameExistAsync(string username);
-		Task<bool> EditAsync(Guid id, User newEntity);
-		Task<User> GetByIdAsync(Guid id);
-		Task<User> GetByUsernameAsync(string username);
-		IEnumerable<User> QueryAll();
-	}
-
-	public class UserRepository : BaseRepository<User>, IUserRepository, IUserRepository
+	public class UserRepository : BaseRepository<User>, IUserRepository
 	{
 		private readonly DevHiveContext _context;
 
