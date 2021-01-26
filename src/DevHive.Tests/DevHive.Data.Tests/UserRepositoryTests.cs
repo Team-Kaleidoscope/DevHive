@@ -110,38 +110,6 @@ namespace DevHive.Data.Tests
 		}
 		#endregion
 
-		#region GetUserLanguages
-		[Test]
-		public async Task GetUserLanguages_ReturnsAllSavedUserLanguages_WhenTheyExist()
-		{
-			//Arrange
-			User dummyUser = CreateDummyUser();
-			await this._userRepository.AddAsync(dummyUser);
-			HashSet<Language> dummyUserLanguages = dummyUser.Languages;
-
-			//Act
-			HashSet<Language> languages = this._userRepository.GetUserLanguages(dummyUser);
-
-			//Assert
-			Assert.AreEqual(dummyUserLanguages, languages, "Method doesn't query languages properly");
-		}
-
-		[Test]
-		public async Task GetUserLanguages_EmptyList_WhenNoLanguagesExist()
-		{
-			//Arrange
-			User dummyUser = CreateDummyUser();
-			dummyUser.Languages.RemoveWhere(x => x.Name == "csharp");
-			await this._userRepository.AddAsync(dummyUser);
-
-			//Act
-			HashSet<Language> languages = this._userRepository.GetUserLanguages(dummyUser);
-
-			//Assert
-			Assert.IsEmpty(languages, "Method doesn't query languages properly");
-		}
-		#endregion
-
 		#region DoesUserExistAsync
 		[Test]
 		public async Task DoesUserExistAsync_ReturnsTrue_WhenUserExists()
@@ -270,104 +238,9 @@ namespace DevHive.Data.Tests
 			this._context.Users.Add(dummyUser);
 			await this._context.SaveChangesAsync();
 
-			bool result =  this._userRepository.DoesUserHaveThisUsername(dummyUser.Id, username);
+			bool result = this._userRepository.DoesUserHaveThisUsername(dummyUser.Id, username);
 
 			Assert.IsFalse(result, "DoesUserNameExistAsync does not return false when user doesnt have the given name");
-		}
-		#endregion
-
-		#region DoesUserHaveFriends
-		[Test]
-		public async Task DoesUserHaveFriends_ReturnsTrue_WhenUserHasFriends()
-		{
-			User dummyUser = this.CreateDummyUser();
-			User anotherDummyUser = this.CreateAnotherDummyUser();
-			HashSet<User> friends = new HashSet<User>();
-			friends.Add(anotherDummyUser);
-			dummyUser.Friends = friends;
-
-			this._context.Users.Add(dummyUser);
-			this._context.Users.Add(anotherDummyUser);
-			await this._context.SaveChangesAsync();
-
-			bool result = this._userRepository.DoesUserHaveFriends(dummyUser);
-
-			Assert.IsTrue(result, "DoesUserHaveFriends does not return true when user has friends");
-		}
-
-		[Test]
-		public async Task DoesUserHaveFriends_ReturnsFalse_WhenUserDoesNotHaveTheGivenFriend()
-		{
-			User dummyUser = this.CreateDummyUser();
-
-			this._context.Users.Add(dummyUser);
-			await this._context.SaveChangesAsync();
-
-			bool result = this._userRepository.DoesUserHaveFriends(dummyUser);
-
-			Assert.IsFalse(result, "DoesUserHaveFriends does not return false when user des not have friends");
-		}
-		#endregion
-
-		#region DoesUserHaveThisLanguage
-		[Test]
-		public async Task DoesUserHaveThisLanguage_ReturnsTrue_WhenUserHasTheGivenLanguage()
-		{
-			User dummyUser = this.CreateDummyUser();
-
-			this._context.Users.Add(dummyUser);
-			await this._context.SaveChangesAsync();
-
-			Language language = dummyUser.Languages.FirstOrDefault();
-
-			bool result = this._userRepository.DoesUserHaveThisLanguage(dummyUser, language);
-
-			Assert.IsTrue(result, "DoesUserHaveThisLanguage does not return true when user has the given language");
-		}
-
-		[Test]
-		public async Task DoesUserHaveThisLanguage_ReturnsFalse_WhenUserDoesNotHaveTheGivenLanguage()
-		{
-			User dummyUser = this.CreateDummyUser();
-			this._context.Users.Add(dummyUser);
-			await this._context.SaveChangesAsync();
-
-			Language language = new Language();
-
-			bool result = this._userRepository.DoesUserHaveThisLanguage(dummyUser, language);
-
-			Assert.IsFalse(result, "DoesUserHaveThisLanguage does not return false when user does not have the given language");
-		}
-		#endregion
-
-		#region DoesUserHaveThisTechnology
-		[Test]
-		public async Task DoesUserHaveThisTechnology_ReturnsTrue_WhenUserHasTheGivenTechnology()
-		{
-			User dummyUser = this.CreateDummyUser();
-
-			this._context.Users.Add(dummyUser);
-			await this._context.SaveChangesAsync();
-
-			Technology technology = dummyUser.Technologies.FirstOrDefault();
-
-			bool result = this._userRepository.DoesUserHaveThisTechnology(dummyUser, technology);
-
-			Assert.IsTrue(result, "DoesUserHaveThisLanguage does not return true when user has the given technology");
-		}
-
-		[Test]
-		public async Task DoesUserHaveThisTechnology_ReturnsFalse_WhenUserDoesNotHaveTheGivenTechnology()
-		{
-			User dummyUser = this.CreateDummyUser();
-			this._context.Users.Add(dummyUser);
-			await this._context.SaveChangesAsync();
-
-			Technology technology = new Technology();
-
-			bool result = this._userRepository.DoesUserHaveThisTechnology(dummyUser, technology);
-
-			Assert.IsFalse(result, "DoesUserHaveThisLanguage does not return false when user does not have the given technology");
 		}
 		#endregion
 
