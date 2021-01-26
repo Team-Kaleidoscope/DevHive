@@ -14,6 +14,8 @@ namespace DevHive.Services.Configurations.Mapping
 			CreateMap<UpdateUserServiceModel, User>()
 				.AfterMap((src, dest) => dest.PasswordHash = PasswordModifications.GeneratePasswordHash(src.Password));
 			CreateMap<FriendServiceModel, User>();
+			CreateMap<UpdateFriendServiceModel, User>()
+				.ForMember(dest => dest.UserName, src => src.MapFrom(p => p.Name));
 
 			CreateMap<User, UserServiceModel>();
 			CreateMap<User, UpdateUserServiceModel>()

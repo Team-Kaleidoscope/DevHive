@@ -13,7 +13,7 @@ namespace DevHive.Web.Controllers
 {
 	[ApiController]
 	[Route("/api/[controller]")]
-	// [Authorize(Roles = "User")]
+	[Authorize(Roles = "User,Admin")]
 	public class PostController
 	{
 		private readonly IPostService _postService;

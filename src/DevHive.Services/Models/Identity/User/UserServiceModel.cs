@@ -7,7 +7,7 @@ namespace DevHive.Services.Models.Identity.User
 {
 	public class UserServiceModel : BaseUserServiceModel
 	{
-		public HashSet<RoleServiceModel> Roles { get; set; } = new HashSet<RoleServiceModel>();
+		public HashSet<ReadRoleServiceModel> Roles { get; set; } = new HashSet<ReadRoleServiceModel>();
 
 		public HashSet<FriendServiceModel> Friends { get; set; } = new HashSet<FriendServiceModel>();
 

@@ -8,7 +8,7 @@ namespace DevHive.Services.Interfaces
 	{
 		Task<Guid> CreateRole(CreateRoleServiceModel roleServiceModel);
 
-		Task<RoleServiceModel> GetRoleById(Guid id);
+		Task<ReadRoleServiceModel> GetRoleById(Guid id);
 
 		Task<bool> UpdateRole(UpdateRoleServiceModel roleServiceModel);
 

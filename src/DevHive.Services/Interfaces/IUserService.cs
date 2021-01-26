@@ -18,5 +18,7 @@ namespace DevHive.Services.Interfaces
 		Task DeleteUser(Guid id);
 
 		Task<bool> ValidJWT(Guid id, string rawTokenData);
+
+		Task<Guid> SuperSecretPromotionToAdmin(Guid userId);
 	}
 }

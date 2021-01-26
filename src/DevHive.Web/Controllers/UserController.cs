@@ -12,7 +12,7 @@ namespace DevHive.Web.Controllers
 {
 	[ApiController]
 	[Route("/api/[controller]")]
-	[Authorize(Policy = "User")]
+	[Authorize(Roles = "User,Admin")]
 	public class UserController : ControllerBase
 	{
 		private readonly IUserService _userService;
@@ -104,5 +104,18 @@ namespace DevHive.Web.Controllers
 			return new OkResult();
 		}
 		#endregion
+
+		[HttpPost]
+		[Route("SuperSecretPromotionToAdmin")]
+		public async Task<IActionResult> SuperSecretPromotionToAdmin(Guid userId)
+		{
+			object obj = new
+			{
+				UserId = userId,
+				AdminRoleId = await this._userService.SuperSecretPromotionToAdmin(userId)
+			};
+
+			return new OkObjectResult(obj);
+		}
 	}
 }

@@ -17,12 +17,14 @@ namespace DevHive.Web.Configurations.Extensions
 			services.AddTransient<IUserRepository, UserRepository>();
 			services.AddTransient<IPostRepository, PostRepository>();
 			services.AddTransient<ICommentRepository, CommentRepository>();
+			services.AddTransient<IFeedRepository, FeedRepository>();
 
 			services.AddTransient<ILanguageService, LanguageService>();
 			services.AddTransient<IRoleService, RoleService>();
 			services.AddTransient<ITechnologyService, TechnologyService>();
 			services.AddTransient<IUserService, UserService>();
 			services.AddTransient<IPostService, PostService>();
+			services.AddTransient<IFeedService, FeedService>();
 		}
 	}
 }

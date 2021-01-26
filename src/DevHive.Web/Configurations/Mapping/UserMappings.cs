@@ -25,6 +25,9 @@ namespace DevHive.Web.Configurations.Mapping
 				.ForMember(src => src.Id, dest => dest.Ignore());
 			CreateMap<FriendWebModel, FriendServiceModel>()
 				.ForMember(src => src.Id, dest => dest.Ignore());
+			CreateMap<FriendWebModel, UpdateFriendServiceModel>()
+				.ForMember(src => src.Id, dest => dest.Ignore())
+				.ForMember(src => src.Name, dest => dest.MapFrom(p => p.UserName));
 
 			CreateMap<UpdateUserServiceModel, UpdateUserWebModel>();
 			CreateMap<FriendServiceModel, FriendWebModel>();

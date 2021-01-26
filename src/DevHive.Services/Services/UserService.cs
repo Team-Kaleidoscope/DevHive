@@ -111,7 +111,7 @@ namespace DevHive.Services.Services
 
 			await this.ValidateUserCollections(updateUserServiceModel);
 
-			//Preserve roles
+			/* Roles */
 			int roleCount = updateUserServiceModel.Roles.Count;
 			for (int i = 0; i < roleCount; i++)
 			{
@@ -123,6 +123,7 @@ namespace DevHive.Services.Services
 				updateUserServiceModel.Roles.Add(updateRoleServiceModel);
 			}
 
+			/* Languages */
 			int langCount = updateUserServiceModel.Languages.Count;
 			for (int i = 0; i < langCount; i++)
 			{
@@ -133,10 +134,10 @@ namespace DevHive.Services.Services
 
 				updateUserServiceModel.Languages.Add(updateLanguageServiceModel);
 			}
-
 			//Clean the already replaced languages
 			updateUserServiceModel.Languages.RemoveWhere(x => x.Id == Guid.Empty);
 
+			/* Technologies */
 			int techCount = updateUserServiceModel.Technologies.Count;
 			for (int i = 0; i < techCount; i++)
 			{
@@ -147,11 +148,25 @@ namespace DevHive.Services.Services
 
 				updateUserServiceModel.Technologies.Add(updateTechnologyServiceModel);
 			}
-
 			//Clean the already replaced technologies
 			updateUserServiceModel.Technologies.RemoveWhere(x => x.Id == Guid.Empty);
 
+			/* Friends */
+			HashSet<User> friends = new();
+			int friendsCount = updateUserServiceModel.Friends.Count;
+			for (int i = 0; i < friendsCount; i++)
+			{
+				User friend = await this._userRepository.GetByUsernameAsync(updateUserServiceModel.Friends.ElementAt(i).Name) ??
+					throw new ArgumentException("Invalid friend's username!");
+
+				friends.Add(friend);
+			}
+			//Clean the already replaced technologies
+			updateUserServiceModel.Friends.RemoveWhere(x => x.Id == Guid.Empty);
+
 			User user = this._userMapper.Map<User>(updateUserServiceModel);
+			user.Friends = friends;
+
 			bool successful = await this._userRepository.EditAsync(updateUserServiceModel.Id, user);
 
 			if (!successful)
@@ -189,13 +204,13 @@ namespace DevHive.Services.Services
 
 			/* Check if user is trying to do something to himself, unless he's an admin */
 
-			if (!jwtRoleNames.Contains(Role.AdminRole))
-				if (user.Id != id)
-					return false;
-
 			/* Check roles */
 			if (jwtRoleNames.Contains(Role.AdminRole))
 				return true;
+
+			if (!jwtRoleNames.Contains(Role.AdminRole))
+				if (user.Id != id)
+					return false;
 
 			// Check if jwt contains all user roles (if it doesn't, jwt is either old or tampered with)
 			foreach (var role in user.Roles)
@@ -290,5 +305,29 @@ namespace DevHive.Services.Services
 			return tokenHandler.WriteToken(token);
 		}
 		#endregion
+
+		public async Task<Guid> SuperSecretPromotionToAdmin(Guid userId)
+		{
+			User user = await this._userRepository.GetByIdAsync(userId) ??
+				throw new ArgumentException("User does not exist! Can't promote shit in this country...");
+
+			if(!await this._roleRepository.DoesNameExist("Admin"))
+			{
+				Role adminRole = new()
+				{
+					Name = Role.AdminRole
+				};
+				adminRole.Users.Add(user);
+
+				await this._roleRepository.AddAsync(adminRole);
+			}
+
+			Role admin = await this._roleRepository.GetByNameAsync(Role.AdminRole);
+
+			user.Roles.Add(admin);
+			await this._userRepository.EditAsync(user.Id, user);
+
+			return admin.Id;
+		}
 	}
 }
