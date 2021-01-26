@@ -23,7 +23,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPost]
-		// [Authorize(Policy = "Administrator")]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Create([FromBody] CreateRoleWebModel createRoleWebModel)
 		{
 			CreateRoleServiceModel roleServiceModel =
@@ -37,7 +37,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpGet]
-		[Authorize(Policy = "User")]
+		[Authorize(Roles = "User,Admin")]
 		public async Task<IActionResult> GetById(Guid id)
 		{
 			RoleServiceModel roleServiceModel = await this._roleService.GetRoleById(id);
@@ -47,7 +47,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPut]
-		[Authorize(Policy = "Administrator")]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateRoleWebModel updateRoleWebModel)
 		{
 			UpdateRoleServiceModel updateRoleServiceModel =
@@ -63,7 +63,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpDelete]
-		[Authorize(Policy = "Administrator")]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Delete(Guid id)
 		{
 			bool result = await this._roleService.DeleteRole(id);

@@ -4,12 +4,14 @@ using AutoMapper;
 using DevHive.Services.Interfaces;
 using DevHive.Services.Models;
 using DevHive.Web.Models.Feed;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevHive.Web.Controllers
 {
 	[ApiController]
 	[Route("/api/[controller]")]
+	[Authorize(Roles = "User,Admin")]
 	public class FeedController
 	{
 		private readonly IFeedService _feedService;
