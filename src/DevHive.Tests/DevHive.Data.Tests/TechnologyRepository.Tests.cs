@@ -114,10 +114,5 @@ namespace DevHive.Data.Tests
 			await this.Context.SaveChangesAsync();
 		}
 		#endregion
-
-		//Task.Run(async () =>
-		//{
-
-		//}).GetAwaiter().GetResult();
 	}
 }

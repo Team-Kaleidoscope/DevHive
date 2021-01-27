@@ -14,9 +14,6 @@ using DevHive.Services.Interfaces;
 using DevHive.Data.Interfaces.Repositories;
 using System.Linq;
 using DevHive.Common.Models.Misc;
-using DevHive.Services.Models.Language;
-using DevHive.Services.Models.Technology;
-using DevHive.Services.Models.Identity.Role;
 
 namespace DevHive.Services.Services
 {
