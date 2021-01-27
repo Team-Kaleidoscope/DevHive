@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Data.Interfaces.Repositories;
@@ -17,6 +18,7 @@ namespace DevHive.Services.Tests
 		private Mock<IMapper> MapperMock { get; set; }
 		private LanguageService LanguageService { get; set; }
 
+		#region SetUps
 		[SetUp]
 		public void SetUp()
 		{
@@ -24,8 +26,9 @@ namespace DevHive.Services.Tests
 			this.MapperMock = new Mock<IMapper>();
 			this.LanguageService = new LanguageService(this.LanguageRepositoryMock.Object, this.MapperMock.Object);
 		}
+		#endregion
 
-		#region Create
+		#region CreateLanguage
 		[Test]
 		public async Task CreateLanguage_ReturnsNonEmptyGuid_WhenEntityIsAddedSuccessfully()
 		{
@@ -98,7 +101,7 @@ namespace DevHive.Services.Tests
 		}
 		#endregion
 
-		#region Read
+		#region GetLanguageById
 		[Test]
 		public async Task GetLanguageById_ReturnsTheLanguage_WhenItExists()
 		{
@@ -134,7 +137,37 @@ namespace DevHive.Services.Tests
 		}
 		#endregion
 
-		#region Update
+		#region GetLanguages
+		[Test]
+		public void GetLanguages_ReturnsAllLanguages_IfAnyExist()
+		{
+			ReadLanguageServiceModel firstLanguage = new ReadLanguageServiceModel();
+			ReadLanguageServiceModel secondLanguage = new ReadLanguageServiceModel();
+			HashSet<ReadLanguageServiceModel> languges = new HashSet<ReadLanguageServiceModel>();
+			languges.Add(firstLanguage);
+			languges.Add(secondLanguage);
+
+			this.LanguageRepositoryMock.Setup(p => p.GetLanguages()).Returns(new HashSet<Language>());
+			this.MapperMock.Setup(p => p.Map<HashSet<ReadLanguageServiceModel>>(It.IsAny<HashSet<Language>>())).Returns(languges);
+
+			HashSet<ReadLanguageServiceModel> result = this.LanguageService.GetLanguages();
+
+			Assert.GreaterOrEqual(2, result.Count, "GetLanguages does not return all languages");
+		}
+
+		[Test]
+		public void GetLanguages_ReturnsEmptyHashSet_IfNoLanguagesExist()
+		{
+			this.LanguageRepositoryMock.Setup(p => p.GetLanguages()).Returns(new HashSet<Language>());
+			this.MapperMock.Setup(p => p.Map<HashSet<ReadLanguageServiceModel>>(It.IsAny<HashSet<Language>>())).Returns(new HashSet<ReadLanguageServiceModel>());
+
+			HashSet<ReadLanguageServiceModel> result = this.LanguageService.GetLanguages();
+
+			Assert.IsEmpty(result, "GetLanguages does not return empty string when no languages exist");
+		}
+		#endregion
+
+		#region UpdateLanguage
 		[Test]
 		[TestCase(true)]
 		[TestCase(false)]
@@ -194,7 +227,7 @@ namespace DevHive.Services.Tests
 		}
 		#endregion
 
-		#region Delete
+		#region DeleteLanguage
 		[Test]
 		[TestCase(true)]
 		[TestCase(false)]
@@ -225,9 +258,5 @@ namespace DevHive.Services.Tests
 			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}
 		#endregion
-		//Task.Run(async () =>
-		//{
-
-		//}).GetAwaiter().GetResult();
 	}
 }

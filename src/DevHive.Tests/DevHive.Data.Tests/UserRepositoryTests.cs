@@ -277,7 +277,7 @@ namespace DevHive.Data.Tests
 			return new()
 			{
 				Id = Guid.NewGuid(),
-				UserName = "pioneer10",
+				UserName = "dummyUser",
 				FirstName = "Spas",
 				LastName = "Spasov",
 				Email = "abv@abv.bg",
@@ -319,7 +319,7 @@ namespace DevHive.Data.Tests
 			return new()
 			{
 				Id = Guid.NewGuid(),
-				UserName = "pioneer10",
+				UserName = "anotherDummyUser",
 				FirstName = "Alex",
 				LastName = "Spiridonov",
 				Email = "a_spiridonov@abv.bg",
