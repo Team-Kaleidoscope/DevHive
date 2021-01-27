@@ -6,6 +6,7 @@ using DevHive.Services.Services;
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DevHive.Services.Tests
@@ -17,6 +18,7 @@ namespace DevHive.Services.Tests
 		private Mock<IMapper> MapperMock { get; set; }
 		private TechnologyService TechnologyService { get; set; }
 
+		#region SetUps
 		[SetUp]
 		public void Setup()
 		{
@@ -24,6 +26,7 @@ namespace DevHive.Services.Tests
 			this.MapperMock = new Mock<IMapper>();
 			this.TechnologyService = new TechnologyService(this.TechnologyRepositoryMock.Object, this.MapperMock.Object);
 		}
+		#endregion
 
 		#region CreateTechnology
 		[Test]
@@ -130,6 +133,36 @@ namespace DevHive.Services.Tests
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.TechnologyService.GetTechnologyById(id));
 
 			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
+		}
+		#endregion
+
+		#region GetTechnologies
+		[Test]
+		public void GetTechnologies_ReturnsAllLanguages_IfAnyExist()
+		{
+			ReadTechnologyServiceModel firstTechnology = new ReadTechnologyServiceModel();
+			ReadTechnologyServiceModel secondTechnology = new ReadTechnologyServiceModel();
+			HashSet<ReadTechnologyServiceModel> technologies = new HashSet<ReadTechnologyServiceModel>();
+			technologies.Add(firstTechnology);
+			technologies.Add(secondTechnology);
+
+			this.TechnologyRepositoryMock.Setup(p => p.GetTechnologies()).Returns(new HashSet<Technology>());
+			this.MapperMock.Setup(p => p.Map<HashSet<ReadTechnologyServiceModel>>(It.IsAny<HashSet<Technology>>())).Returns(technologies);
+
+			HashSet<ReadTechnologyServiceModel> result = this.TechnologyService.GetTechnologies();
+
+			Assert.GreaterOrEqual(2, result.Count, "GetTechnologies does not return all technologies");
+		}
+
+		[Test]
+		public void GetLanguages_ReturnsEmptyHashSet_IfNoLanguagesExist()
+		{
+			this.TechnologyRepositoryMock.Setup(p => p.GetTechnologies()).Returns(new HashSet<Technology>());
+			this.MapperMock.Setup(p => p.Map<HashSet<ReadTechnologyServiceModel>>(It.IsAny<HashSet<Technology>>())).Returns(new HashSet<ReadTechnologyServiceModel>());
+
+			HashSet<ReadTechnologyServiceModel> result = this.TechnologyService.GetTechnologies();
+
+			Assert.IsEmpty(result, "GetTechnologies does not return empty string when no technologies exist");
 		}
 		#endregion
 
