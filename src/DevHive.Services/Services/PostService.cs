@@ -31,7 +31,7 @@ namespace DevHive.Services.Services
 		#region Create
 		public async Task<Guid> CreatePost(CreatePostServiceModel createPostServiceModel)
 		{
-			if(!await this._userRepository.DoesUserExistAsync(createPostServiceModel.CreatorId))
+			if (!await this._userRepository.DoesUserExistAsync(createPostServiceModel.CreatorId))
 				throw new ArgumentException("User does not exist!");
 
 			Post post = this._postMapper.Map<Post>(createPostServiceModel);
@@ -77,7 +77,7 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("The post does not exist!");
 
 			User user = await this._userRepository.GetByIdAsync(post.CreatorId) ??
-				throw new ArgumentException("User does not exist He could've been deleted!");
+				throw new ArgumentException("The user does not exist!");
 
 			ReadPostServiceModel readPostServiceModel = this._postMapper.Map<ReadPostServiceModel>(post);
 			readPostServiceModel.CreatorFirstName = user.FirstName;
@@ -92,7 +92,8 @@ namespace DevHive.Services.Services
 			Comment comment = await this._commentRepository.GetByIdAsync(id) ??
 				throw new ArgumentException("The comment does not exist");
 
-			User user = await this._userRepository.GetByIdAsync(comment.CreatorId);
+			User user = await this._userRepository.GetByIdAsync(comment.CreatorId) ??
+				throw new ArgumentException("The user does not exist");
 
 			ReadCommentServiceModel readCommentServiceModel = this._postMapper.Map<ReadCommentServiceModel>(comment);
 			readCommentServiceModel.IssuerFirstName = user.FirstName;
@@ -168,7 +169,7 @@ namespace DevHive.Services.Services
 			if (post.CreatorId == user.Id)
 				return true;
 			//If user is admin
-			else if(user.Roles.Any(x => x.Name == Role.AdminRole))
+			else if (user.Roles.Any(x => x.Name == Role.AdminRole))
 				return true;
 			else
 				return false;
@@ -184,7 +185,7 @@ namespace DevHive.Services.Services
 			if (comment.CreatorId == user.Id)
 				return true;
 			//If user is admin
-			else if(user.Roles.Any(x => x.Name == Role.AdminRole))
+			else if (user.Roles.Any(x => x.Name == Role.AdminRole))
 				return true;
 			else
 				return false;
