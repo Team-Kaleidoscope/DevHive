@@ -21,7 +21,7 @@ namespace DevHive.Services.Services
 		}
 
 		#region Create
-		public async Task<Guid> Create(CreateTechnologyServiceModel technologyServiceModel)
+		public async Task<Guid> CreateTechnology(CreateTechnologyServiceModel technologyServiceModel)
 		{
 			if (await this._technologyRepository.DoesTechnologyNameExistAsync(technologyServiceModel.Name))
 				throw new ArgumentException("Technology already exists!");

@@ -7,7 +7,7 @@ namespace DevHive.Services.Interfaces
 {
 	public interface ITechnologyService
 	{
-		Task<Guid> Create(CreateTechnologyServiceModel technologyServiceModel);
+		Task<Guid> CreateTechnology(CreateTechnologyServiceModel technologyServiceModel);
 
 		Task<CreateTechnologyServiceModel> GetTechnologyById(Guid id);
 		HashSet<ReadTechnologyServiceModel> GetTechnologies();

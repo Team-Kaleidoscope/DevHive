@@ -44,7 +44,7 @@ namespace DevHive.Web.Tests
 			Guid id = Guid.NewGuid();
 
 			this.MapperMock.Setup(p => p.Map<CreateTechnologyServiceModel>(It.IsAny<CreateTechnologyWebModel>())).Returns(createTechnologyServiceModel);
-			this.TechnologyServiceMock.Setup(p => p.Create(It.IsAny<CreateTechnologyServiceModel>())).Returns(Task.FromResult(id));
+			this.TechnologyServiceMock.Setup(p => p.CreateTechnology(It.IsAny<CreateTechnologyServiceModel>())).Returns(Task.FromResult(id));
 
 			IActionResult result = this.TechnologyController.Create(createTechnologyWebModel).Result;
 
@@ -76,7 +76,7 @@ namespace DevHive.Web.Tests
 			string errorMessage = $"Could not create technology {NAME}";
 
 			this.MapperMock.Setup(p => p.Map<CreateTechnologyServiceModel>(It.IsAny<CreateTechnologyWebModel>())).Returns(createTechnologyServiceModel);
-			this.TechnologyServiceMock.Setup(p => p.Create(It.IsAny<CreateTechnologyServiceModel>())).Returns(Task.FromResult(id));
+			this.TechnologyServiceMock.Setup(p => p.CreateTechnology(It.IsAny<CreateTechnologyServiceModel>())).Returns(Task.FromResult(id));
 
 			IActionResult result = this.TechnologyController.Create(createTechnologyWebModel).Result;
 

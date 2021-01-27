@@ -29,7 +29,7 @@ namespace DevHive.Web.Controllers
 		{
 			CreateTechnologyServiceModel technologyServiceModel = this._technologyMapper.Map<CreateTechnologyServiceModel>(createTechnologyWebModel);
 
-			Guid id = await this._technologyService.Create(technologyServiceModel);
+			Guid id = await this._technologyService.CreateTechnology(technologyServiceModel);
 
 			return id == Guid.Empty ?
 				new BadRequestObjectResult($"Could not create technology {createTechnologyWebModel.Name}") :
