@@ -3,15 +3,17 @@ using System;
 using DevHive.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DevHive.Data.Migrations
 {
     [DbContext(typeof(DevHiveContext))]
-    partial class DevHiveContextModelSnapshot : ModelSnapshot
+    [Migration("20210127213238_RelationsManuallyConfiguredTwo")]
+    partial class RelationsManuallyConfiguredTwo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -201,7 +203,7 @@ namespace DevHive.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("DevHive.Data.RelationModels.UserFriends", b =>
+            modelBuilder.Entity("DevHive.Data.RelationModels.UserUser", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -213,7 +215,7 @@ namespace DevHive.Data.Migrations
 
                     b.HasIndex("FriendId");
 
-                    b.ToTable("UserFriends");
+                    b.ToTable("UserUser");
                 });
 
             modelBuilder.Entity("LanguageUser", b =>
@@ -378,7 +380,7 @@ namespace DevHive.Data.Migrations
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("DevHive.Data.RelationModels.UserFriends", b =>
+            modelBuilder.Entity("DevHive.Data.RelationModels.UserUser", b =>
                 {
                     b.HasOne("DevHive.Data.Models.User", "Friend")
                         .WithMany()

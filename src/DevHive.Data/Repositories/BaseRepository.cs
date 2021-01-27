@@ -13,7 +13,6 @@ namespace DevHive.Data.Repositories
 		public BaseRepository(DbContext context)
 		{
 			this._context = context;
-			this._context.ChangeTracker.AutoDetectChangesEnabled = false;
 		}
 
 		public virtual async Task<bool> AddAsync(TEntity entity)
@@ -34,11 +33,11 @@ namespace DevHive.Data.Repositories
 
 		public virtual async Task<bool> EditAsync(Guid id, TEntity newEntity)
 		{
-			TEntity currEnt = await this.GetByIdAsync(id);
-			this._context
-				.Entry(currEnt)
-				.CurrentValues
-				.SetValues(newEntity);
+			var entry = this._context.Entry(newEntity);
+            if (entry.State == EntityState.Detached)
+                this._context.Attach(newEntity);
+
+            entry.State = EntityState.Modified;
 
 			return await this.SaveChangesAsync(_context);
 		}
