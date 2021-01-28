@@ -24,7 +24,7 @@ namespace DevHive.Data.Repositories
 
 			List<Post> posts = await this._context.Posts
 				.Where(post => post.TimeCreated < firstRequestIssued)
-				.Where(p => friendsIds.Contains(p.CreatorId))
+				.Where(p => friendsIds.Contains(p.Creator.Id))
 				.OrderByDescending(x => x.TimeCreated)
 				.Skip((pageNumber - 1) * pageSize)
 				.Take(pageSize)

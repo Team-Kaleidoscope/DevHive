@@ -27,7 +27,7 @@ namespace DevHive.Data.Repositories
 		public async Task<Post> GetPostByCreatorAndTimeCreatedAsync(Guid creatorId, DateTime timeCreated)
 		{
 			return await this._context.Posts
-				.FirstOrDefaultAsync(p => p.CreatorId == creatorId &&
+				.FirstOrDefaultAsync(p => p.Creator.Id == creatorId &&
 					p.TimeCreated == timeCreated);
 		}
 		#endregion

@@ -20,7 +20,7 @@ namespace DevHive.Data.Repositories
 		public async Task<Comment> GetCommentByIssuerAndTimeCreatedAsync(Guid issuerId, DateTime timeCreated)
 		{
 			return await this._context.Comments
-				.FirstOrDefaultAsync(p => p.CreatorId == issuerId &&
+				.FirstOrDefaultAsync(p => p.Creator.Id == issuerId &&
 					p.TimeCreated == timeCreated);
 		}
 		#endregion

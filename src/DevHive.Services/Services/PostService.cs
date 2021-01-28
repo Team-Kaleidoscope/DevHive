@@ -37,11 +37,13 @@ namespace DevHive.Services.Services
 			Post post = this._postMapper.Map<Post>(createPostServiceModel);
 			post.TimeCreated = DateTime.Now;
 
+			post.Creator = await this._userRepository.GetByIdAsync(createPostServiceModel.CreatorId);
+
 			bool success = await this._postRepository.AddAsync(post);
 			if (success)
 			{
 				Post newPost = await this._postRepository
-					.GetPostByCreatorAndTimeCreatedAsync(post.CreatorId, post.TimeCreated);
+					.GetPostByCreatorAndTimeCreatedAsync(post.Creator.Id, post.TimeCreated);
 
 				return newPost.Id;
 			}
@@ -57,11 +59,14 @@ namespace DevHive.Services.Services
 			Comment comment = this._postMapper.Map<Comment>(createCommentServiceModel);
 			comment.TimeCreated = DateTime.Now;
 
+			comment.Creator = await this._userRepository.GetByIdAsync(createCommentServiceModel.CreatorId);
+			comment.Post = await this._postRepository.GetByIdAsync(createCommentServiceModel.PostId);
+
 			bool success = await this._commentRepository.AddAsync(comment);
 			if (success)
 			{
 				Comment newComment = await this._commentRepository
-					.GetCommentByIssuerAndTimeCreatedAsync(comment.CreatorId, comment.TimeCreated);
+					.GetCommentByIssuerAndTimeCreatedAsync(comment.Creator.Id, comment.TimeCreated);
 
 				return newComment.Id;
 			}
@@ -76,7 +81,7 @@ namespace DevHive.Services.Services
 			Post post = await this._postRepository.GetByIdAsync(id) ??
 				throw new ArgumentException("The post does not exist!");
 
-			User user = await this._userRepository.GetByIdAsync(post.CreatorId) ??
+			User user = await this._userRepository.GetByIdAsync(post.Creator.Id) ??
 				throw new ArgumentException("The user does not exist!");
 
 			ReadPostServiceModel readPostServiceModel = this._postMapper.Map<ReadPostServiceModel>(post);
@@ -92,7 +97,7 @@ namespace DevHive.Services.Services
 			Comment comment = await this._commentRepository.GetByIdAsync(id) ??
 				throw new ArgumentException("The comment does not exist");
 
-			User user = await this._userRepository.GetByIdAsync(comment.CreatorId) ??
+			User user = await this._userRepository.GetByIdAsync(comment.Creator.Id) ??
 				throw new ArgumentException("The user does not exist");
 
 			ReadCommentServiceModel readCommentServiceModel = this._postMapper.Map<ReadCommentServiceModel>(comment);
@@ -113,6 +118,8 @@ namespace DevHive.Services.Services
 			Post post = this._postMapper.Map<Post>(updatePostServiceModel);
 			post.TimeCreated = DateTime.Now;
 
+			post.Creator = await this._userRepository.GetByIdAsync(updatePostServiceModel.CreatorId);
+
 			bool result = await this._postRepository.EditAsync(updatePostServiceModel.PostId, post);
 
 			if (result)
@@ -128,6 +135,9 @@ namespace DevHive.Services.Services
 
 			Comment comment = this._postMapper.Map<Comment>(updateCommentServiceModel);
 			comment.TimeCreated = DateTime.Now;
+
+			comment.Creator = await this._userRepository.GetByIdAsync(updateCommentServiceModel.CreatorId);
+			comment.Post = await this._postRepository.GetByIdAsync(updateCommentServiceModel.PostId);
 
 			bool result = await this._commentRepository.EditAsync(updateCommentServiceModel.CommentId, comment);
 
@@ -166,7 +176,7 @@ namespace DevHive.Services.Services
 			User user = await this.GetUserForValidation(rawTokenData);
 
 			//If user made the post
-			if (post.CreatorId == user.Id)
+			if (post.Creator.Id == user.Id)
 				return true;
 			//If user is admin
 			else if (user.Roles.Any(x => x.Name == Role.AdminRole))
@@ -182,7 +192,7 @@ namespace DevHive.Services.Services
 			User user = await this.GetUserForValidation(rawTokenData);
 
 			//If user made the comment
-			if (comment.CreatorId == user.Id)
+			if (comment.Creator.Id == user.Id)
 				return true;
 			//If user is admin
 			else if (user.Roles.Any(x => x.Name == Role.AdminRole))
