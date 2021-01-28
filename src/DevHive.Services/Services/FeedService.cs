@@ -30,12 +30,14 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("User doesn't exist!");
 
 			List<User> friendsList = user.Friends.ToList();
-			// if(friendsList.Count == 0)
-			// 	throw new ArgumentException("This user does not have any friends!");
+			if (friendsList.Count == 0)
+				throw new ArgumentException("User has no friends to get feed from!");
 
 			List<Post> posts = await this._feedRepository
-				.GetFriendsPosts(friendsList, model.FirstRequestIssued, model.PageNumber, model.PageSize) ??
-					throw new ArgumentException("No posts to query.");
+				.GetFriendsPosts(friendsList, model.FirstRequestIssued, model.PageNumber, model.PageSize);
+
+			if (posts.Count <= 0)
+				throw new ArgumentException("No friends of user have posted anything yet!");
 
 			ReadPageServiceModel readPageServiceModel = new();
 			foreach (Post post in posts)
