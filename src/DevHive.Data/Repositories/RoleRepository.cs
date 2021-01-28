@@ -24,6 +24,18 @@ namespace DevHive.Data.Repositories
 		}
 		#endregion
 
+		public override async Task<bool> EditAsync(Guid id, Role newEntity)
+		{
+			Role role = await this.GetByIdAsync(id);
+
+			this._context
+				.Entry(role)
+				.CurrentValues
+				.SetValues(newEntity);
+
+			return await this.SaveChangesAsync(this._context);
+		}
+
 		#region Validations
 		public async Task<bool> DoesNameExist(string name)
 		{
