@@ -27,9 +27,11 @@ namespace DevHive.Web.Controllers
 
 		#region Create
 		[HttpPost]
-		[Authorize(Roles = "Admin")]
-		public async Task<IActionResult> Create(Guid userId, [FromBody] CreatePostWebModel createPostWebModel)
+		public async Task<IActionResult> Create(Guid userId, [FromBody] CreatePostWebModel createPostWebModel, [FromHeader] string authorization)
 		{
+			if (await this._postService.ValidateJwtForCreating(userId, authorization))
+				return new UnauthorizedResult();
+
 			CreatePostServiceModel createPostServiceModel =
 				this._postMapper.Map<CreatePostServiceModel>(createPostWebModel);
 			createPostServiceModel.CreatorId = userId;
@@ -43,8 +45,11 @@ namespace DevHive.Web.Controllers
 
 		[HttpPost]
 		[Route("Comment")]
-		public async Task<IActionResult> AddComment(Guid userId, [FromBody] CreateCommentWebModel createCommentWebModel)
+		public async Task<IActionResult> AddComment(Guid userId, [FromBody] CreateCommentWebModel createCommentWebModel, [FromHeader] string authorization)
 		{
+			if (await this._postService.ValidateJwtForCreating(userId, authorization))
+				return new UnauthorizedResult();
+
 			CreateCommentServiceModel createCommentServiceModel =
 				this._postMapper.Map<CreateCommentServiceModel>(createCommentWebModel);
 			createCommentServiceModel.CreatorId = userId;

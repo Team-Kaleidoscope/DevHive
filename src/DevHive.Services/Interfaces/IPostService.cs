@@ -19,6 +19,7 @@ namespace DevHive.Services.Interfaces
 		Task<bool> DeletePost(Guid id);
 		Task<bool> DeleteComment(Guid id);
 
+		Task<bool> ValidateJwtForCreating(Guid userId, string rawTokenData);
 		Task<bool> ValidateJwtForPost(Guid postId, string rawTokenData);
 		Task<bool> ValidateJwtForComment(Guid commentId, string rawTokenData);
 	}

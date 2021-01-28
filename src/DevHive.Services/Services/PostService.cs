@@ -169,6 +169,13 @@ namespace DevHive.Services.Services
 		#endregion
 
 		#region Validations
+		public async Task<bool> ValidateJwtForCreating(Guid userId, string rawTokenData)
+		{
+			User user = await this.GetUserForValidation(rawTokenData);
+
+			return user.Id == userId;
+		}
+
 		public async Task<bool> ValidateJwtForPost(Guid postId, string rawTokenData)
 		{
 			Post post = await this._postRepository.GetByIdAsync(postId) ??
