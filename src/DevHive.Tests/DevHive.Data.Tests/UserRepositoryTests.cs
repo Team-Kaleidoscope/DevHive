@@ -72,7 +72,6 @@ namespace DevHive.Data.Tests
 			bool result = await this._userRepository.EditAsync(oldUser.Id, oldUser);
 
 			Assert.IsTrue(result, "EditAsync does not return true when User is updated successfully");
-			Assert.Fail("Docurshi drugite");
 		}
 		#endregion
 

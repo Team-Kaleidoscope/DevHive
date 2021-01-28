@@ -92,12 +92,12 @@ namespace DevHive.Services.Services
 
 		public async Task<UserServiceModel> GetUserByUsername(string username)
 		{
-			User friend = await this._userRepository.GetByUsernameAsync(username);
+			User user = await this._userRepository.GetByUsernameAsync(username);
 
-			if (friend == null)
+			if (user == null)
 				throw new ArgumentException("User does not exist!");
 
-			return this._userMapper.Map<UserServiceModel>(friend);
+			return this._userMapper.Map<UserServiceModel>(user);
 		}
 		#endregion
 
