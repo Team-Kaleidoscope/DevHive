@@ -29,5 +29,7 @@ namespace DevHive.Data.Models
 		public HashSet<Role> Roles { get; set; } = new();
 
 		public HashSet<User> Friends { get; set; } = new();
+
+		public HashSet<Post> Posts { get; set; } = new();
 	}
 }
