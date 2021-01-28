@@ -29,7 +29,7 @@ namespace DevHive.Web.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Create(Guid userId, [FromBody] CreatePostWebModel createPostWebModel, [FromHeader] string authorization)
 		{
-			if (await this._postService.ValidateJwtForCreating(userId, authorization))
+			if (!await this._postService.ValidateJwtForCreating(userId, authorization))
 				return new UnauthorizedResult();
 
 			CreatePostServiceModel createPostServiceModel =
@@ -47,7 +47,7 @@ namespace DevHive.Web.Controllers
 		[Route("Comment")]
 		public async Task<IActionResult> AddComment(Guid userId, [FromBody] CreateCommentWebModel createCommentWebModel, [FromHeader] string authorization)
 		{
-			if (await this._postService.ValidateJwtForCreating(userId, authorization))
+			if (!await this._postService.ValidateJwtForCreating(userId, authorization))
 				return new UnauthorizedResult();
 
 			CreateCommentServiceModel createCommentServiceModel =
