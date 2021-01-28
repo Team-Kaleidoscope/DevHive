@@ -42,7 +42,6 @@ namespace DevHive.Services.Services
 		}
 
 		#region Authentication
-
 		public async Task<TokenModel> LoginUser(LoginServiceModel loginModel)
 		{
 			if (!await this._userRepository.DoesUsernameExistAsync(loginModel.UserName))

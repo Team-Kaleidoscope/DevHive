@@ -60,6 +60,22 @@ namespace DevHive.Data.Tests
 		}
 		#endregion
 
+		#region EditAsync
+		[Test]
+		public async Task EditAsync_ReturnsTrue_WhenUserIsUpdatedSuccessfully()
+		{
+			User oldUser = this.CreateDummyUser();
+			this._context.Users.Add(oldUser);
+			await this._context.SaveChangesAsync();
+
+			oldUser.UserName = "SuperSecretUserName";
+			bool result = await this._userRepository.EditAsync(oldUser.Id, oldUser);
+
+			Assert.IsTrue(result, "EditAsync does not return true when User is updated successfully");
+			Assert.Fail("Docurshi drugite");
+		}
+		#endregion
+
 		#region GetByIdAsync
 		[Test]
 		public async Task GetByIdAsync_ReturnsTheUse_WhenItExists()
@@ -188,8 +204,10 @@ namespace DevHive.Data.Tests
 		{
 			User dummyUser = this.CreateDummyUser();
 			User anotherDummyUser = this.CreateAnotherDummyUser();
-			HashSet<User> friends = new HashSet<User>();
-			friends.Add(anotherDummyUser);
+			HashSet<User> friends = new HashSet<User>
+			{
+				anotherDummyUser
+			};
 			dummyUser.Friends = friends;
 
 			this._context.Users.Add(dummyUser);

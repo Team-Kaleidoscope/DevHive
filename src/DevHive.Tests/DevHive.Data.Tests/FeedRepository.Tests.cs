@@ -44,8 +44,8 @@ namespace DevHive.Data.Tests
 
 			DateTime dateTime = new DateTime(3000, 05, 09, 9, 15, 0);
 
-			Post dummyPost = this.CreateDummyPost(dummyUser.Id);
-			Post anotherDummnyPost = this.CreateDummyPost(dummyUser.Id);
+			Post dummyPost = this.CreateDummyPost(dummyUser);
+			Post anotherDummnyPost = this.CreateDummyPost(dummyUser);
 
 			const int PAGE_NUMBER = 1;
 			const int PAGE_SIZE = 10;
@@ -96,16 +96,15 @@ namespace DevHive.Data.Tests
 			};
 		}
 
-		private Post CreateDummyPost(Guid posterId)
+		private Post CreateDummyPost(User poster)
 		{
 			const string POST_MESSAGE = "random message";
 			Guid id = Guid.NewGuid();
-
 			Post post = new Post
 			{
 				Id = id,
 				Message = POST_MESSAGE,
-				CreatorId = posterId
+				Creator = poster
 			};
 
 			this.Context.Posts.Add(post);

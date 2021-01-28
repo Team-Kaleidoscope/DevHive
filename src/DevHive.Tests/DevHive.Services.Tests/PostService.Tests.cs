@@ -39,6 +39,7 @@ namespace DevHive.Services.Tests
 		public async Task AddComment_ReturnsNonEmptyGuid_WhenEntityIsAddedSuccessfully()
 		{
 			Guid id = Guid.NewGuid();
+			User creator = new User { Id = Guid.NewGuid() };
 			CreateCommentServiceModel createCommentServiceModel = new CreateCommentServiceModel
 			{
 				Message = MESSAGE
@@ -46,12 +47,13 @@ namespace DevHive.Services.Tests
 			Comment comment = new Comment
 			{
 				Message = MESSAGE,
-				Id = id
+				Id = id,
 			};
 
 			this.CommentRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Comment>())).Returns(Task.FromResult(true));
 			this.CommentRepositoryMock.Setup(p => p.GetCommentByIssuerAndTimeCreatedAsync(It.IsAny<Guid>(), It.IsAny<DateTime>())).Returns(Task.FromResult(comment));
 			this.PostRepositoryMock.Setup(p => p.DoesPostExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this.UserRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(creator));
 			this.MapperMock.Setup(p => p.Map<Comment>(It.IsAny<CreateCommentServiceModel>())).Returns(comment);
 
 			Guid result = await this.PostService.AddComment(createCommentServiceModel);
@@ -101,10 +103,11 @@ namespace DevHive.Services.Tests
 		public async Task GetCommentById_ReturnsTheComment_WhenItExists()
 		{
 			Guid creatorId = new Guid();
+			User creator = new User { Id = creatorId };
 			Comment comment = new Comment
 			{
 				Message = MESSAGE,
-				CreatorId = creatorId
+				Creator = creator
 			};
 			ReadCommentServiceModel commentServiceModel = new ReadCommentServiceModel
 			{
@@ -129,10 +132,11 @@ namespace DevHive.Services.Tests
 		{
 			const string EXCEPTION_MESSAGE = "The user does not exist";
 			Guid creatorId = new Guid();
+			User creator = new User { Id = creatorId };
 			Comment comment = new Comment
 			{
 				Message = MESSAGE,
-				CreatorId = creatorId
+				Creator = creator
 			};
 
 			this.CommentRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(comment));
@@ -268,6 +272,7 @@ namespace DevHive.Services.Tests
 		public async Task CreatePost_ReturnsIdOfThePost_WhenItIsSuccessfullyCreated()
 		{
 			Guid postId = Guid.NewGuid();
+			User creator = new User { Id = Guid.NewGuid() };
 			CreatePostServiceModel createPostServiceModel = new CreatePostServiceModel
 			{
 			};
@@ -280,6 +285,7 @@ namespace DevHive.Services.Tests
 			this.PostRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Post>())).Returns(Task.FromResult(true));
 			this.PostRepositoryMock.Setup(p => p.GetPostByCreatorAndTimeCreatedAsync(It.IsAny<Guid>(), It.IsAny<DateTime>())).Returns(Task.FromResult(post));
 			this.UserRepositoryMock.Setup(p => p.DoesUserExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this.UserRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(creator));
 			this.MapperMock.Setup(p => p.Map<Post>(It.IsAny<CreatePostServiceModel>())).Returns(post);
 
 			Guid result = await this.PostService.CreatePost(createPostServiceModel);
@@ -330,10 +336,11 @@ namespace DevHive.Services.Tests
 		public async Task GetPostById_ReturnsThePost_WhenItExists()
 		{
 			Guid creatorId = new Guid();
+			User creator = new User { Id = creatorId };
 			Post post = new Post
 			{
 				Message = MESSAGE,
-				CreatorId = creatorId
+				Creator = creator
 			};
 			ReadPostServiceModel readPostServiceModel = new ReadPostServiceModel
 			{
@@ -358,10 +365,11 @@ namespace DevHive.Services.Tests
 		{
 			const string EXCEPTION_MESSAGE = "The user does not exist!";
 			Guid creatorId = new Guid();
+			User creator = new User { Id = creatorId };
 			Post post = new Post
 			{
 				Message = MESSAGE,
-				CreatorId = creatorId
+				Creator = creator
 			};
 
 			this.PostRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(post));

@@ -62,7 +62,7 @@ namespace DevHive.Data.Tests
 		{
 			Post post = await this.AddEntity();
 
-			Post resultPost = await this.PostRepository.GetPostByCreatorAndTimeCreatedAsync(post.CreatorId, post.TimeCreated);
+			Post resultPost = await this.PostRepository.GetPostByCreatorAndTimeCreatedAsync(post.Creator.Id, post.TimeCreated);
 
 			Assert.AreEqual(post.Id, resultPost.Id, "GetPostByCreatorAndTimeCreatedAsync does not return the corect post when it exists");
 		}
@@ -101,11 +101,12 @@ namespace DevHive.Data.Tests
 		#region HelperMethods
 		private async Task<Post> AddEntity(string name = POST_MESSAGE)
 		{
+			User creator = new User { Id = Guid.NewGuid() };
 			Post post = new Post
 			{
 				Message = POST_MESSAGE,
 				Id = Guid.NewGuid(),
-				CreatorId = Guid.NewGuid(),
+				Creator = creator,
 				TimeCreated = DateTime.Now
 			};
 

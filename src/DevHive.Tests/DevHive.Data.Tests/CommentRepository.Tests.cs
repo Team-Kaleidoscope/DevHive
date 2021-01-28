@@ -41,7 +41,7 @@ namespace DevHive.Data.Tests
 		{
 			Comment comment = await this.AddEntity();
 
-			Comment resultComment = await this.CommentRepository.GetCommentByIssuerAndTimeCreatedAsync(comment.CreatorId, comment.TimeCreated);
+			Comment resultComment = await this.CommentRepository.GetCommentByIssuerAndTimeCreatedAsync(comment.Creator.Id, comment.TimeCreated);
 
 			Assert.AreEqual(comment.Id, resultComment.Id, "GetCommentByIssuerAndTimeCreatedAsync does not return the corect comment when it exists");
 		}
@@ -81,10 +81,11 @@ namespace DevHive.Data.Tests
 		#region HelperMethods
 		private async Task<Comment> AddEntity(string name = COMMENT_MESSAGE)
 		{
+			User creator = new User { Id = Guid.NewGuid() };
 			Comment comment = new Comment
 			{
 				Message = COMMENT_MESSAGE,
-				CreatorId = Guid.NewGuid(),
+				Creator = creator,
 				TimeCreated = DateTime.Now
 			};
 
