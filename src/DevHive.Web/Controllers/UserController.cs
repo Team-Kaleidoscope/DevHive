@@ -100,7 +100,10 @@ namespace DevHive.Web.Controllers
 			if (!await this._userService.ValidJWT(id, authorization))
 				return new UnauthorizedResult();
 
-			await this._userService.DeleteUser(id);
+			bool result = await this._userService.DeleteUser(id);
+			if (!result)
+				return new BadRequestObjectResult("Could not delete User");
+
 			return new OkResult();
 		}
 		#endregion

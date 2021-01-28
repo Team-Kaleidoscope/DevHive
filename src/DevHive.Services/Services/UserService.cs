@@ -120,7 +120,7 @@ namespace DevHive.Services.Services
 		#endregion
 
 		#region Delete
-		public async Task DeleteUser(Guid id)
+		public async Task<bool> DeleteUser(Guid id)
 		{
 			if (!await this._userRepository.DoesUserExistAsync(id))
 				throw new ArgumentException("User does not exist!");
@@ -128,8 +128,7 @@ namespace DevHive.Services.Services
 			User user = await this._userRepository.GetByIdAsync(id);
 			bool result = await this._userRepository.DeleteAsync(user);
 
-			if (!result)
-				throw new InvalidOperationException("Unable to delete user!");
+			return result;
 		}
 		#endregion
 

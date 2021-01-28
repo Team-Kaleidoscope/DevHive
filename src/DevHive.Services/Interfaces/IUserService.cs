@@ -15,7 +15,7 @@ namespace DevHive.Services.Interfaces
 
 		Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateModel);
 
-		Task DeleteUser(Guid id);
+		Task<bool> DeleteUser(Guid id);
 
 		Task<bool> ValidJWT(Guid id, string rawTokenData);
 

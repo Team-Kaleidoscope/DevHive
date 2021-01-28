@@ -333,9 +333,9 @@ namespace DevHive.Services.Tests
 			this.UserRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
 			this.UserRepositoryMock.Setup(p => p.DeleteAsync(It.IsAny<User>())).Returns(Task.FromResult(shouldPass));
 
-			//bool result = await this.UserService.DeleteUser(id);
+			bool result = await this.UserService.DeleteUser(id);
 
-			Assert.Pass();
+			Assert.AreEqual(shouldPass, result);
 		}
 
 		[Test]
