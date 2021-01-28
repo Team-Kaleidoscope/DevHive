@@ -109,13 +109,9 @@ namespace DevHive.Data.Repositories
 
 		public async Task<bool> DoesUserHaveThisFriendAsync(Guid userId, Guid friendId)
 		{
-			User user = await this._context.Users
-				.AsNoTracking()
-				.FirstOrDefaultAsync(x => x.Id == userId);
+			User user = await this.GetByIdAsync(userId);
 
-			User friend = await this._context.Users
-				.AsNoTracking()
-				.FirstOrDefaultAsync(x => x.Id == friendId);
+			User friend = await this.GetByIdAsync(friendId);
 
 			return user.Friends.Contains(friend);
 		}
