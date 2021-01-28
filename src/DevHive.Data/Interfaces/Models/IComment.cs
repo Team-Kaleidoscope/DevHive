@@ -1,12 +1,13 @@
 using System;
+using DevHive.Data.Models;
 
 namespace DevHive.Data.Interfaces.Models
 {
 	public interface IComment : IModel
 	{
-		Guid PostId { get; set; }
+		Post Parrent { get; set; }
 
-		Guid CreatorId { get; set; }
+		User Creator { get; set; }
 
 		string Message { get; set; }
 
