@@ -5,7 +5,7 @@ namespace DevHive.Data.Interfaces.Models
 {
 	public interface IComment : IModel
 	{
-		Post Parrent { get; set; }
+		Post Post { get; set; }
 
 		User Creator { get; set; }
 

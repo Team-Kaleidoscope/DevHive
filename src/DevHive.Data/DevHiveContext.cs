@@ -20,9 +20,6 @@ namespace DevHive.Data
 		{
 			/* User */
 			builder.Entity<User>()
-				.HasKey(x => x.Id);
-
-			builder.Entity<User>()
 				.HasIndex(x => x.UserName)
 				.IsUnique();
 
@@ -32,13 +29,11 @@ namespace DevHive.Data
 				.WithMany(x => x.Users);
 
 			/* Friends */
+			//TODO: Look into the User - User
 			builder.Entity<UserFriends>()
 				.HasKey(uu => new { uu.UserId, uu.FriendId });
 
 			/* Languages */
-			builder.Entity<Language>()
-				.HasKey(x => x.Id);
-
 			builder.Entity<User>()
 				.HasMany(x => x.Languages)
 				.WithMany(x => x.Users)
@@ -62,6 +57,24 @@ namespace DevHive.Data
 				.HasMany(x => x.Users)
 				.WithMany(x => x.Technologies)
 				.UsingEntity(x => x.ToTable("TechnologyUser"));
+
+			/* Post */
+			builder.Entity<Post>()
+				.HasMany(x => x.Comments)
+				.WithOne(x => x.Post);
+
+			builder.Entity<Post>()
+				.HasOne(x => x.Creator)
+				.WithMany(x => x.Posts);
+
+			/* Comment */
+			builder.Entity<Comment>()
+				.HasOne(x => x.Post)
+				.WithMany(x => x.Comments);
+
+			builder.Entity<Comment>()
+				.HasOne(x => x.Creator)
+				.WithMany(x => x.Comments);
 
 			base.OnModelCreating(builder);
 		}
