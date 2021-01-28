@@ -1,5 +1,6 @@
 using System;
 using DevHive.Data.Models;
+using DevHive.Data.RelationModels;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,30 +18,50 @@ namespace DevHive.Data
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
+			/* User */
+			builder.Entity<User>()
+				.HasKey(x => x.Id);
+
 			builder.Entity<User>()
 				.HasIndex(x => x.UserName)
 				.IsUnique();
 
+			/* Roles */
 			builder.Entity<User>()
-				.HasMany(x => x.Roles);
+				.HasMany(x => x.Roles)
+				.WithMany(x => x.Users);
+
+			/* Friends */
+			builder.Entity<UserFriends>()
+				.HasKey(uu => new { uu.UserId, uu.FriendId });
+
+			/* Languages */
+			builder.Entity<Language>()
+				.HasKey(x => x.Id);
 
 			builder.Entity<User>()
-				.HasMany(x => x.Friends);
-
-			builder.Entity<User>()
-				.HasMany(x => x.Languages);
+				.HasMany(x => x.Languages)
+				.WithMany(x => x.Users)
+				.UsingEntity(x => x.ToTable("LanguageUser"));
 
 			builder.Entity<Language>()
-				.HasMany(x => x.Users);
+				.HasMany(x => x.Users)
+				.WithMany(x => x.Languages)
+				.UsingEntity(x => x.ToTable("LanguageUser"));
+
+			/* Technologies */
+			builder.Entity<Technology>()
+				.HasKey(x => x.Id);
 
 			builder.Entity<User>()
-				.HasMany(x => x.Technologies);
+				.HasMany(x => x.Technologies)
+				.WithMany(x => x.Users)
+				.UsingEntity(x => x.ToTable("TechnologyUser"));
 
 			builder.Entity<Technology>()
-				.HasMany(x => x.Users);
-
-			builder.Entity<User>()
-				.HasChangeTrackingStrategy(ChangeTrackingStrategy.Snapshot);
+				.HasMany(x => x.Users)
+				.WithMany(x => x.Technologies)
+				.UsingEntity(x => x.ToTable("TechnologyUser"));
 
 			base.OnModelCreating(builder);
 		}

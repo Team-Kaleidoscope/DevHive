@@ -3,15 +3,17 @@ using System;
 using DevHive.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DevHive.Data.Migrations
 {
     [DbContext(typeof(DevHiveContext))]
-    partial class DevHiveContextModelSnapshot : ModelSnapshot
+    [Migration("20210127110304_RelationsManuallyConfigured")]
+    partial class RelationsManuallyConfigured
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,9 +179,6 @@ namespace DevHive.Data.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -193,27 +192,10 @@ namespace DevHive.Data.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.HasIndex("UserId");
-
                     b.HasIndex("UserName")
                         .IsUnique();
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("DevHive.Data.RelationModels.UserFriends", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("FriendId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("UserId", "FriendId");
-
-                    b.HasIndex("FriendId");
-
-                    b.ToTable("UserFriends");
                 });
 
             modelBuilder.Entity("LanguageUser", b =>
@@ -362,6 +344,16 @@ namespace DevHive.Data.Migrations
                     b.ToTable("TechnologyUser");
                 });
 
+            modelBuilder.Entity("UserUser", b =>
+                {
+                    b.Property<Guid>("FriendsId")
+                        .HasColumnType("uuid");
+
+                    b.HasIndex("FriendsId");
+
+                    b.ToTable("UserUser");
+                });
+
             modelBuilder.Entity("DevHive.Data.Models.Comment", b =>
                 {
                     b.HasOne("DevHive.Data.Models.Post", null)
@@ -369,32 +361,6 @@ namespace DevHive.Data.Migrations
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("DevHive.Data.Models.User", b =>
-                {
-                    b.HasOne("DevHive.Data.Models.User", null)
-                        .WithMany("Friends")
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("DevHive.Data.RelationModels.UserFriends", b =>
-                {
-                    b.HasOne("DevHive.Data.Models.User", "Friend")
-                        .WithMany()
-                        .HasForeignKey("FriendId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DevHive.Data.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Friend");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LanguageUser", b =>
@@ -493,14 +459,18 @@ namespace DevHive.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("UserUser", b =>
+                {
+                    b.HasOne("DevHive.Data.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("FriendsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DevHive.Data.Models.Post", b =>
                 {
                     b.Navigation("Comments");
-                });
-
-            modelBuilder.Entity("DevHive.Data.Models.User", b =>
-                {
-                    b.Navigation("Friends");
                 });
 #pragma warning restore 612, 618
         }
