@@ -55,6 +55,11 @@ namespace DevHive.Data.Repositories
 		{
 			User user = await this.GetByIdAsync(id);
 
+			this._context
+				.Entry(user)
+				.CurrentValues
+				.SetValues(newEntity);
+
 			user.Languages.Clear();
 			foreach (var lang in newEntity.Languages)
 				user.Languages.Add(lang);
