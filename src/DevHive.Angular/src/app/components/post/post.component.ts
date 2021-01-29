@@ -22,7 +22,9 @@ export class PostComponent implements OnInit {
         'Gosho',
         'Trapov',
         'gotra@bg.com',
-        AppConstants.FALLBACK_PROFILE_ICON
+        AppConstants.FALLBACK_PROFILE_ICON,
+        new Array(),
+        new Array()
     );
 
     this.votesNumber = 23;

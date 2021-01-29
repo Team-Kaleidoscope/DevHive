@@ -16,7 +16,7 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   getDefaultUser(): User {
-    return new User(Guid.createEmpty(), 'gosho_trapov', 'Gosho', 'Trapov', 'gotra@bg.com', AppConstants.FALLBACK_PROFILE_ICON);
+    return new User(Guid.createEmpty(), 'gosho_trapov', 'Gosho', 'Trapov', 'gotra@bg.com', AppConstants.FALLBACK_PROFILE_ICON, new Array(), new Array());
   }
 
   getUserIdFromSessionStorageToken(): Guid {
