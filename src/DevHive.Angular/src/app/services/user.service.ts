@@ -94,7 +94,6 @@ export class UserService {
   }
 
   putUserRequest(userId: Guid, authToken: string, updateUserFormGroup: FormGroup): Observable<object> {
-    // TODO?: add a check for form data validity
     const body = {
       UserName: updateUserFormGroup.get('username')?.value,
       Email: updateUserFormGroup.get('email')?.value,
@@ -104,8 +103,8 @@ export class UserService {
       // TODO: make the following fields dynamically selectable
       Roles: [ { Name: 'User' } ],
       Friends: [],
-      Languages: [],
-      Technologies: []
+      Languages: updateUserFormGroup.get('languages')?.value,
+      Technologies: updateUserFormGroup.get('technologies')?.value
     };
     const options = {
       params: new HttpParams().set('Id', userId.toString()),
