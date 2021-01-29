@@ -6,6 +6,8 @@ namespace DevHive.Services.Models
 	{
 		public Guid UserId { get; set; }
 
+		public string Username { get; set; }
+
 		public int PageNumber { get; set; }
 
 		public DateTime FirstRequestIssued { get; set; }

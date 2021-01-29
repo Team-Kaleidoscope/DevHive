@@ -34,5 +34,17 @@ namespace DevHive.Web.Controllers
 
 			return new OkObjectResult(readPageWebModel);
 		}
+
+		[HttpGet]
+		public async Task<IActionResult> GetUserPost(string username, [FromBody] GetPageWebModel getPageWebModel)
+		{
+			GetPageServiceModel getPageServiceModel = this._mapper.Map<GetPageServiceModel>(getPageWebModel);
+			getPageServiceModel.Username = username;
+
+			ReadPageServiceModel readPageServiceModel = await this._feedService.GetPage(getPageServiceModel);
+			ReadPageWebModel readPageWebModel = this._mapper.Map<ReadPageWebModel>(readPageServiceModel);
+
+			return new OkObjectResult(readPageWebModel);
+		}
 	}
 }

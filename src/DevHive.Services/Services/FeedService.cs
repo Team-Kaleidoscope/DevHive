@@ -26,7 +26,16 @@ namespace DevHive.Services.Services
 
 		public async Task<ReadPageServiceModel> GetPage(GetPageServiceModel model)
 		{
-			User user = await this._userRepository.GetByIdAsync(model.UserId) ??
+			User user = null;
+
+			if (model.UserId != Guid.Empty)
+				user = await this._userRepository.GetByIdAsync(model.UserId);
+			else if (!string.IsNullOrEmpty(model.Username))
+				user = await this._userRepository.GetByUsernameAsync(model.Username);
+			else
+				throw new ArgumentException("Invalid given data!");
+
+			if (user == null)
 				throw new ArgumentException("User doesn't exist!");
 
 			List<User> friendsList = user.Friends.ToList();
