@@ -77,9 +77,10 @@
 
 #top-bar {
   display: flex;
-  width: 95%;
+  width: 98%;
   margin: 0 auto;
   margin-bottom: .5em;
+  box-sizing: border-box;
 }
 
 #top-bar-profile-pic {
@@ -100,19 +101,12 @@
   margin: 0 auto;
   box-sizing: border-box;
   border: 2px solid var(--bg-color);
-  padding: .5em;
   border-radius: .6em;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
 #top-bar-open-chat {
   /* Until implemented */
   display: none;
-}
-
-#profile-bar,
-#top-bar > * {
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
 /* Elements, that act as buttons */
