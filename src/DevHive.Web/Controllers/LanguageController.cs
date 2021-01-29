@@ -37,7 +37,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpGet]
-		[Authorize(Roles = "User,Admin")]
+		[AllowAnonymous]
 		public async Task<IActionResult> GetById(Guid id)
 		{
 			ReadLanguageServiceModel languageServiceModel = await this._languageService.GetLanguageById(id);

@@ -21,20 +21,24 @@
 		</div>
 		<div class="secondary-info rounded-border">
 			Languages:
-			<div class="user-language">
-				C#
+			<div *ngFor="let lang of user.languages">
+				<div class="user-language">
+					{{ lang.name }}
+				</div>
 			</div>
-			<div class="user-language">
-				TypeScript
+			<div *ngIf="showNoLangMsg">
+				&nbsp;None
 			</div>
 		</div>
 		<div class="secondary-info rounded-border">
 			Technologies:
-			<div class="user-technology">
-				.NET 5
+			<div *ngFor="let tech of user.technologies">
+				<div class="user-language">
+					{{ tech.name }}
+				</div>
 			</div>
-			<div class="user-technology">
-				Angular
+			<div *ngIf="showNoTechMsg">
+				&nbsp;None
 			</div>
 		</div>
 		<div id="posts">

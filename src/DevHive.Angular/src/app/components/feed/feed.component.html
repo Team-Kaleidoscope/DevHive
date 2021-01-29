@@ -1,9 +1,9 @@
 <app-loading *ngIf="!dataArrived"></app-loading>
 
 <div id="feed-page" *ngIf="dataArrived">
-	<nav id="profile-bar">
+	<nav id="profile-bar" class="round-image rounded-border">
 		<div id="profile-info" (click)="goToProfile()">
-			<img id="profile-bar-profile-pic" class="round-image" [src]="user.imageUrl" alt=""/>
+			<img id="profile-bar-profile-pic" [src]="user.imageUrl" alt=""/>
 			<div id="profile-bar-name">
 				{{ user.firstName }} {{ user.lastName }}
 			</div>
@@ -15,7 +15,7 @@
 		<button class="submit-btn" (click)="logout()">Logout</button>
 	</nav>
 	<div id="feed-content">
-		<nav id="top-bar">
+		<nav id="top-bar" class="rounded-border">
 			<img id="top-bar-profile-pic" class="round-image" [src]="user.imageUrl" alt="" (click)="goToProfile()">
 			<input id="top-bar-create-post" type="text" placeholder="What's on your mind?"/>
 			<a id="top-bar-open-chat" href="">

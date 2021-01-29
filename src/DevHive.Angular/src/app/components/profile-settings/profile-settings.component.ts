@@ -21,6 +21,7 @@ export class ProfileSettingsComponent implements OnInit {
   public updateUserFormGroup: FormGroup;
   public dataArrived = false;
   public user: User;
+  public deleteAccountConfirm = false;
 
   constructor(private _router: Router, private _userService: UserService, private _fb: FormBuilder, private _location: Location)
   { }
@@ -128,12 +129,17 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   deleteAccount(): void {
-    this._userService.deleteUserFromSessionStorageRequest().subscribe(
-      (res: object) => {
-        this._userService.logoutUserFromSessionStorage();
-        this._router.navigate(['/login']);
-      },
-      (err: HttpErrorResponse) => console.log(err)
-    );
+    if (this.deleteAccountConfirm) {
+      this._userService.deleteUserFromSessionStorageRequest().subscribe(
+        (res: object) => {
+          this._userService.logoutUserFromSessionStorage();
+          this._router.navigate(['/login']);
+        },
+        (err: HttpErrorResponse) => console.log(err)
+      );
+    }
+    else {
+      this.deleteAccountConfirm = true;
+    }
   }
 }

@@ -1,5 +1,15 @@
 import { Guid } from 'guid-typescript';
 
+export class Language {
+  public id: Guid;
+  public name: string;
+}
+
+export class Technology {
+  public id: Guid;
+  public name: string;
+}
+
 export class User {
   private _id : Guid;
   private _lastName : string;
@@ -7,14 +17,17 @@ export class User {
   private _userName : string;
   private _email: string;
   private _imageUrl : string;
+  private _languages: Language[];
+  private _technologies: Technology[];
 
-  constructor(id: Guid, userName: string, firstName: string, lastName: string, email: string, imageUrl: string) {
+  constructor(id: Guid, userName: string, firstName: string, lastName: string, email: string, imageUrl: string, languages: Language[], technologies: Technology[]) {
     this.id = id;
     this.userName = userName;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.imageUrl = imageUrl;
+    this.technologies = technologies;
   }
 
   public get id(): Guid {
@@ -57,5 +70,19 @@ export class User {
   }
   public set imageUrl(v: string) {
     this._imageUrl = v;
+  }
+
+  public get languages(): Language[] {
+    return this._languages;
+  }
+  public set languages(v: Language[]) {
+    this._languages = v;
+  }
+
+  public get technologies(): Technology[] {
+    return this._technologies;
+  }
+  public set technologies(v: Technology[]) {
+    this._technologies = v;
   }
 }

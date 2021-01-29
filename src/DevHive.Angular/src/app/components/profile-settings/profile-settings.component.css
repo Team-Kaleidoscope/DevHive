@@ -60,3 +60,12 @@ hr {
   color: indianred;
   border-color: indianred !important;
 }
+
+#confirm-delete {
+  box-sizing: border-box;
+  width: 100%;
+  background-color: var(--failure);
+  color: white;
+  padding: .2em;
+  text-align: center;
+}
