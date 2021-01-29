@@ -67,6 +67,7 @@ namespace DevHive.Web.Controllers
 
 		[HttpGet]
 		[Route("GetUser")]
+		[AllowAnonymous]
 		public async Task<IActionResult> GetUser(string username)
 		{
 			UserServiceModel friendServiceModel = await this._userService.GetUserByUsername(username);
