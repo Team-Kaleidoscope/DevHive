@@ -24,6 +24,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpGet]
+		[Route("GetPosts")]
 		public async Task<IActionResult> GetPosts(Guid userId, [FromBody] GetPageWebModel getPageWebModel)
 		{
 			GetPageServiceModel getPageServiceModel = this._mapper.Map<GetPageServiceModel>(getPageWebModel);
@@ -36,7 +37,8 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> GetUserPost(string username, [FromBody] GetPageWebModel getPageWebModel)
+		[Route("GetUserPosts")]
+		public async Task<IActionResult> GetUserPosts(string username, [FromBody] GetPageWebModel getPageWebModel)
 		{
 			GetPageServiceModel getPageServiceModel = this._mapper.Map<GetPageServiceModel>(getPageWebModel);
 			getPageServiceModel.Username = username;
