@@ -11,15 +11,17 @@
     </PackageReference>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
     <ProjectReference Include="..\DevHive.Data\DevHive.Data.csproj" />
-    
+
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
+
+    <PackageReference Include="CloudinaryDotNet" Version="1.14.0"/>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DevHive.Common\DevHive.Common.csproj" />
   </ItemGroup>
-  
+
   <PropertyGroup>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>

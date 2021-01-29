@@ -34,10 +34,10 @@ namespace DevHive.Data.Repositories
 		public virtual async Task<bool> EditAsync(Guid id, TEntity newEntity)
 		{
 			var entry = this._context.Entry(newEntity);
-            if (entry.State == EntityState.Detached)
-                this._context.Attach(newEntity);
+			if (entry.State == EntityState.Detached)
+				this._context.Attach(newEntity);
 
-            entry.State = EntityState.Modified;
+			entry.State = EntityState.Modified;
 
 			return await this.SaveChangesAsync(_context);
 		}

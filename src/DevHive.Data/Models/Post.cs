@@ -18,6 +18,6 @@ namespace DevHive.Data.Models
 
 		public List<Comment> Comments { get; set; } = new();
 
-		// public List<string> Files { get; set; } = new();
+		public List<string> FileUrls { get; set; } = new();
 	}
 }

@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Http;
 
 namespace DevHive.Web.Models.Post.Post
 {
@@ -13,5 +15,7 @@ namespace DevHive.Web.Models.Post.Post
 		[NotNull]
 		[Required]
 		public string NewMessage { get; set; }
+
+		public List<IFormFile> Files { get; set; } = new();
 	}
 }

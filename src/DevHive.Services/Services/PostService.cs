@@ -15,13 +15,15 @@ namespace DevHive.Services.Services
 {
 	public class PostService : IPostService
 	{
+		private readonly ICloudService _cloudService;
 		private readonly IUserRepository _userRepository;
 		private readonly IPostRepository _postRepository;
 		private readonly ICommentRepository _commentRepository;
 		private readonly IMapper _postMapper;
 
-		public PostService(IUserRepository userRepository, IPostRepository postRepository, ICommentRepository commentRepository, IMapper postMapper)
+		public PostService(ICloudService cloudService, IUserRepository userRepository, IPostRepository postRepository, ICommentRepository commentRepository, IMapper postMapper)
 		{
+			this._cloudService = cloudService;
 			this._userRepository = userRepository;
 			this._postRepository = postRepository;
 			this._commentRepository = commentRepository;
@@ -35,9 +37,12 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("User does not exist!");
 
 			Post post = this._postMapper.Map<Post>(createPostServiceModel);
-			post.TimeCreated = DateTime.Now;
+
+			if (createPostServiceModel.Files.Count != 0)
+				post.FileUrls = await _cloudService.UploadFilesToCloud(createPostServiceModel.Files);
 
 			post.Creator = await this._userRepository.GetByIdAsync(createPostServiceModel.CreatorId);
+			post.TimeCreated = DateTime.Now;
 
 			bool success = await this._postRepository.AddAsync(post);
 			if (success)
@@ -116,9 +121,23 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("Post does not exist!");
 
 			Post post = this._postMapper.Map<Post>(updatePostServiceModel);
-			post.TimeCreated = DateTime.Now;
+
+			if (updatePostServiceModel.Files.Count != 0)
+			{
+				if (await this._postRepository.DoesPostHaveFiles(updatePostServiceModel.PostId))
+				{
+					List<string> fileUrls = await this._postRepository.GetFileUrls(updatePostServiceModel.PostId);
+					bool success = await _cloudService.RemoveFilesFromCloud(fileUrls);
+					if (!success)
+						throw new InvalidCastException("Could not delete files from the post!");
+				}
+
+				post.FileUrls = await _cloudService.UploadFilesToCloud(updatePostServiceModel.Files) ??
+					throw new ArgumentNullException("Unable to upload images to cloud");
+			}
 
 			post.Creator = await this._userRepository.GetByIdAsync(updatePostServiceModel.CreatorId);
+			post.TimeCreated = DateTime.Now;
 
 			bool result = await this._postRepository.EditAsync(updatePostServiceModel.PostId, post);
 
@@ -155,6 +174,15 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("Post does not exist!");
 
 			Post post = await this._postRepository.GetByIdAsync(id);
+
+			if (await this._postRepository.DoesPostHaveFiles(id))
+			{
+				List<string> fileUrls = await this._postRepository.GetFileUrls(id);
+				bool success = await _cloudService.RemoveFilesFromCloud(fileUrls);
+				if (!success)
+					throw new InvalidCastException("Could not delete files from the post. Please try again");
+			}
+
 			return await this._postRepository.DeleteAsync(post);
 		}
 

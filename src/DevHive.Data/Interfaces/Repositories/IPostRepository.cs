@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DevHive.Data.Models;
 using DevHive.Data.Repositories.Interfaces;
@@ -8,6 +9,9 @@ namespace DevHive.Data.Interfaces.Repositories
 	public interface IPostRepository : IRepository<Post>
 	{
 		Task<Post> GetPostByCreatorAndTimeCreatedAsync(Guid issuerId, DateTime timeCreated);
+		Task<List<string>> GetFileUrls(Guid postId);
+
 		Task<bool> DoesPostExist(Guid postId);
+		Task<bool> DoesPostHaveFiles(Guid postId);
 	}
 }

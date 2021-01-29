@@ -9,7 +9,7 @@ namespace DevHive.Services.Configurations.Mapping
 		public PostMappings()
 		{
 			CreateMap<CreatePostServiceModel, Post>();
-				// .ForMember(dest => dest.Files, src => src.Ignore());
+			// .ForMember(dest => dest.Files, src => src.Ignore());
 			CreateMap<UpdatePostServiceModel, Post>()
 				.ForMember(dest => dest.Id, src => src.MapFrom(p => p.PostId))
 				// .ForMember(dest => dest.Files, src => src.Ignore())
@@ -20,7 +20,7 @@ namespace DevHive.Services.Configurations.Mapping
 				.ForMember(dest => dest.CreatorFirstName, src => src.Ignore())
 				.ForMember(dest => dest.CreatorLastName, src => src.Ignore())
 				.ForMember(dest => dest.CreatorUsername, src => src.Ignore());
-				//TODO: Map those here /\
+			//TODO: Map those here /\
 		}
 	}
 }

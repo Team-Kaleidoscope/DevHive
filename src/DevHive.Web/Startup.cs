@@ -32,7 +32,7 @@ namespace DevHive.Web
 			services.SwaggerConfiguration();
 			services.JWTConfiguration(Configuration);
 			services.AutoMapperConfiguration();
-			services.DependencyInjectionConfiguration();
+			services.DependencyInjectionConfiguration(this.Configuration);
 			services.ExceptionHandlerMiddlewareConfiguration();
 		}
 

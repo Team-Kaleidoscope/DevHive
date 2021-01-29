@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 namespace DevHive.Services.Models.Post.Post
 {
@@ -10,6 +12,6 @@ namespace DevHive.Services.Models.Post.Post
 
 		public string NewMessage { get; set; }
 
-		// public List<IFormFile> Files { get; set; }
+		public List<IFormFile> Files { get; set; }
 	}
 }

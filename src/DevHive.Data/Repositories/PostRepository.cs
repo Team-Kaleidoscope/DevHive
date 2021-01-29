@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
@@ -30,6 +32,11 @@ namespace DevHive.Data.Repositories
 				.FirstOrDefaultAsync(p => p.Creator.Id == creatorId &&
 					p.TimeCreated == timeCreated);
 		}
+
+		public async Task<List<string>> GetFileUrls(Guid postId)
+		{
+			return (await this.GetByIdAsync(postId)).FileUrls;
+		}
 		#endregion
 
 		#region Validations
@@ -38,6 +45,15 @@ namespace DevHive.Data.Repositories
 			return await this._context.Posts
 				.AsNoTracking()
 				.AnyAsync(r => r.Id == postId);
+		}
+
+		public async Task<bool> DoesPostHaveFiles(Guid postId)
+		{
+			return await this._context.Posts
+				.AsNoTracking()
+				.Where(x => x.Id == postId)
+				.Select(x => x.FileUrls)
+				.AnyAsync();
 		}
 		#endregion
 	}
