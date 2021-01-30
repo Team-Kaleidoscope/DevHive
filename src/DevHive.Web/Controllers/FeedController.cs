@@ -38,6 +38,7 @@ namespace DevHive.Web.Controllers
 
 		[HttpGet]
 		[Route("GetUserPosts")]
+		[AllowAnonymous]
 		public async Task<IActionResult> GetUserPosts(string username, [FromBody] GetPageWebModel getPageWebModel)
 		{
 			GetPageServiceModel getPageServiceModel = this._mapper.Map<GetPageServiceModel>(getPageWebModel);
