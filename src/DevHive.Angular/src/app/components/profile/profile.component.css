@@ -74,13 +74,6 @@ hr {
   align-items: center;
 }
 
-.user-language, .user-technology {
-  border-radius: .4em;
-  background-color: lightgrey;
-  padding: .2em;
-  margin: 0 .2em;
-}
-
 /* Posts */
 
 #posts {

@@ -58,28 +58,42 @@
 					<label *ngIf="updateUserFormGroup.get('password')?.errors?.pattern" class="error">*At least 1 number</label>
 				</div>
 			</div>
-			<button type="button" (click)="toggleLanguages()">Edit Languages</button>
+			<button type="button" class="submit-btn edit-btn" (click)="toggleLanguages()">▼ Edit Languages ▼</button>
 			<div *ngIf="showLanguages">
-				Type in your desired languages, separated by a space.
-				<input type="text" class="input-field" formControlName="languageInput" required>
+				<div class="input-selection">
+					<input type="text" class="input-field" formControlName="languageInput" required>
+
+					<div class="input-errors">
+						<label class="error">Type in your desired languages, separated by a space</label>
+					</div>
+				</div>
 				Available languages:
-				<div *ngFor="let lang of availableLanguages">
-					{{ lang.name }}
+				<div id="all-languages">
+					<div class="user-language" *ngFor="let lang of availableLanguages">
+						{{ lang.name }}
+					</div>
 				</div>
 			</div>
 
-			<button type="button" (click)="toggleTechnologies()">Edit Technologies</button>
+			<button type="button" class="submit-btn edit-btn" (click)="toggleTechnologies()">▼ Edit Technologies ▼</button>
 			<div *ngIf="showTechnologies">
-				Type in your desired technologies, separated by a space.
-				<input type="text" class="input-field" formControlName="technologyInput" required>
+				<div class="input-selection">
+					<input type="text" class="input-field" formControlName="technologyInput" required>
+
+					<div class="input-errors">
+						<label class="error">Type in your desired technologies, separated by a space</label>
+					</div>
+				</div>
 				Available technologies:
-				<div *ngFor="let tech of availableTechnologies">
-					{{ tech.name }}
+				<div id="all-technologies">
+					<div class="user-technology" *ngFor="let tech of availableTechnologies">
+						{{ tech.name }}
+					</div>
 				</div>
 			</div>
 
 
-			<button class="submit-btn" type="submit">Update profile</button>
+			<button id="update-profile-btn" class="submit-btn" type="submit">Update profile</button>
 			<app-success-bar></app-success-bar>
 			<app-error-bar></app-error-bar>
 		</form>

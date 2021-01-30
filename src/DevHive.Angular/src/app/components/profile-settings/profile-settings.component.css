@@ -50,10 +50,38 @@ hr {
   transform: translate(0, -1.2em);
 }
 
+#all-languages, #all-technologies {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#all-languages > *, #all-technologies > * {
+  width: fit-content;
+  margin-top: .1em;
+  margin-bottom: .1em;
+}
+
 /* Buttons */
+
+.edit-btn {
+  border-radius: 0 !important;
+  color: var(--focus-color);
+  background-color: white;
+  border-color: var(--focus-color);
+}
+
+.edit-btn:hover {
+  color: white;
+  background-color: black;
+  border-color: black !important;
+}
 
 .submit-btn {
   margin-bottom: .5em;
+}
+
+#update-profile-btn {
+  margin-top: 1em;
 }
 
 #delete-account:hover {
