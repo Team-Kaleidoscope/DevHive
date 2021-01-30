@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import {Router} from '@angular/router';
 import { Guid } from 'guid-typescript';
 import {AppConstants} from 'src/app/app-constants.module';
 import {FeedService} from 'src/app/services/feed.service';
@@ -20,7 +21,7 @@ export class PostComponent implements OnInit {
   public loaded = false;
   @Input() paramId: string;
 
-  constructor(private _postService: PostService, private _userService: UserService)
+  constructor(private _postService: PostService, private _userService: UserService, private _router: Router)
   {}
 
   ngOnInit(): void {
@@ -44,5 +45,9 @@ export class PostComponent implements OnInit {
         this.loaded = true;
       }
     );
+  }
+
+  goToAuthorProfile(): void {
+    this._router.navigate(['/profile/' + this.user.userName]);
   }
 }

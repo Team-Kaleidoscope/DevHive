@@ -1,6 +1,6 @@
 <div class="post rounded-border" *ngIf="loaded">
 	<div class="content">
-		<div class="author">
+		<div class="author" (click)="goToAuthorProfile()">
 			<img class="round-image" [src]="user.imageUrl">
 			<div class="author-info">
 				<div class="name">
