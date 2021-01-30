@@ -185,7 +185,9 @@ export class ProfileSettingsComponent implements OnInit {
       // Transfer user input to objects of type { "name": "value" }
       const actualLanguages = [];
       for (const lName of names) {
-        actualLanguages.push({ name : lName });
+        if (lName !== '') {
+          actualLanguages.push({ name : lName });
+        }
       }
 
       // Add the data to the form (to the value that is going to be sent)
@@ -211,7 +213,9 @@ export class ProfileSettingsComponent implements OnInit {
       // Transfer user input to objects of type { "name": "value" }
       const actualTechnologies = [];
       for (const tName of names) {
-        actualTechnologies.push({ name : tName });
+        if (tName !== '') {
+          actualTechnologies.push({ name : tName });
+        }
       }
 
       // Add the data to the form (to the value that is going to be sent)
