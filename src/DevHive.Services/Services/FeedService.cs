@@ -38,7 +38,7 @@ namespace DevHive.Services.Services
 			if (user == null)
 				throw new ArgumentException("User doesn't exist!");
 
-			List<User> friendsList = user.Friends.ToList();
+			List<User> friendsList = user.Friends.Select(x => x.Friend).ToList();
 			if (friendsList.Count == 0)
 				throw new ArgumentException("User has no friends to get feed from!");
 

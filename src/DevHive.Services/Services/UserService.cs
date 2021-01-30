@@ -14,6 +14,7 @@ using DevHive.Services.Interfaces;
 using DevHive.Data.Interfaces.Repositories;
 using System.Linq;
 using DevHive.Common.Models.Misc;
+using DevHive.Data.RelationModels;
 
 namespace DevHive.Services.Services
 {
@@ -309,14 +310,21 @@ namespace DevHive.Services.Services
 			user.Roles = roles;
 
 			/* Fetch Friends and replace model's*/
-			HashSet<User> friends = new();
+			HashSet<UserFriends> friends = new();
 			int friendsCount = updateUserServiceModel.Friends.Count;
 			for (int i = 0; i < friendsCount; i++)
 			{
 				User friend = await this._userRepository.GetByUsernameAsync(updateUserServiceModel.Friends.ElementAt(i).UserName) ??
 					throw new ArgumentException("Invalid friend's username!");
 
-				friends.Add(friend);
+				UserFriends relation = new()
+				{
+					UserId = user.Id,
+					User = user,
+					FriendId = friend.Id,
+					Friend = friend
+				};
+				friends.Add(relation);
 			}
 			user.Friends = friends;
 

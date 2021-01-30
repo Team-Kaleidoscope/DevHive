@@ -1,5 +1,4 @@
 using DevHive.Data.Interfaces.Repositories;
-using DevHive.Data.Models;
 using DevHive.Data.Repositories;
 using DevHive.Services.Interfaces;
 using DevHive.Services.Services;
@@ -19,6 +18,7 @@ namespace DevHive.Web.Configurations.Extensions
 			services.AddTransient<IPostRepository, PostRepository>();
 			services.AddTransient<ICommentRepository, CommentRepository>();
 			services.AddTransient<IFeedRepository, FeedRepository>();
+			services.AddTransient<IRatingRepository, RatingRepository>();
 
 			services.AddTransient<ILanguageService, LanguageService>();
 			services.AddTransient<IRoleService, RoleService>();

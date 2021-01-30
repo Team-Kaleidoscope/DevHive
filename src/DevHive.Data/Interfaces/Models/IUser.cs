@@ -12,6 +12,6 @@ namespace DevHive.Data.Interfaces.Models
 		HashSet<Language> Languages { get; set; }
 		HashSet<Technology> Technologies { get; set; }
 		HashSet<Role> Roles { get; set; }
-		HashSet<User> Friends { get; set; }
+		HashSet<UserFriends> Friends { get; set; }
 	}
 }

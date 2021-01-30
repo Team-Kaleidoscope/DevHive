@@ -14,6 +14,8 @@ namespace DevHive.Data.Interfaces.Models
 
 		List<Comment> Comments { get; set; }
 
+		Rating Rating { get; set; }
+
 		List<string> FileUrls { get; set; }
 	}
 }

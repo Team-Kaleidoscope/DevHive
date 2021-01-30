@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper.Mappers;
 using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
+using DevHive.Data.RelationModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -68,17 +70,21 @@ namespace DevHive.Data.Repositories
 			foreach (var role in newEntity.Roles)
 				user.Roles.Add(role);
 
-			foreach (var friend in user.Friends)
-			{
-				friend.Friends.Remove(user);
-				this._context.Entry(friend).State = EntityState.Modified;
-			}
-			user.Friends.Clear();
-			foreach (var friend in newEntity.Friends)
-			{
-				friend.Friends.Add(user);
-				user.Friends.Add(friend);
-			}
+			// foreach (var friend in user.Friends)
+			// {
+			// 	friend.Friends.Remove(user);
+			// 	this._context.Entry(friend).State = EntityState.Modified;
+			// }
+			// user.Friends.Clear();
+			// foreach (var friend in newEntity.Friends)
+			// {
+			// 	friend.Friends.Add(user);
+			// 	user.Friends.Add(friend);
+			// }
+			this._context.UserFriends.RemoveRange(
+				this._context.UserFriends
+				.Where(x => x.FriendId == user.Id &&
+					x.UserId == user.Id));
 
 			user.Technologies.Clear();
 			foreach (var tech in newEntity.Technologies)
@@ -118,7 +124,7 @@ namespace DevHive.Data.Repositories
 
 			User friend = await this.GetByIdAsync(friendId);
 
-			return user.Friends.Contains(friend);
+			return user.Friends.Any(x => x.Friend.Id == friendId);
 		}
 
 		public bool DoesUserHaveThisUsername(Guid id, string username)

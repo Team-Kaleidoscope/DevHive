@@ -15,6 +15,7 @@ namespace DevHive.Data
 		public DbSet<Language> Languages { get; set; }
 		public DbSet<Post> Posts { get; set; }
 		public DbSet<Comment> Comments { get; set; }
+		public DbSet<UserFriends> UserFriends { get; set; }
 		public DbSet<Rating> Rating { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
@@ -30,10 +31,16 @@ namespace DevHive.Data
 				.WithMany(x => x.Users);
 
 			/* Friends */
+			builder.Entity<UserFriends>()
+				.HasKey(x => new { x.UserId, x.FriendId });
+
+			// builder.Entity<UserFriends>()
+			// 	.HasOne(x => x.Friend)
+			// 	.WithMany(x => x.Friends);
+
 			builder.Entity<User>()
 				.HasMany(x => x.Friends)
-				.WithMany(x => x.Friends)
-				.UsingEntity(x => x.ToTable("UserFriends"));
+				.WithOne(x => x.User);
 
 			/* Languages */
 			builder.Entity<User>()
@@ -64,6 +71,10 @@ namespace DevHive.Data
 
 			builder.Entity<Post>()
 				.HasMany(x => x.Comments)
+				.WithOne(x => x.Post);
+
+			builder.Entity<Post>()
+				.HasOne(x => x.Rating)
 				.WithOne(x => x.Post);
 
 			/* Comment */
