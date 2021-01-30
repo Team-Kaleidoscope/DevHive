@@ -7,7 +7,7 @@ using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
 using DevHive.Services.Interfaces;
 using DevHive.Services.Models;
-using DevHive.Services.Models.Post.Post;
+using DevHive.Services.Models.Post;
 
 namespace DevHive.Services.Services
 {

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Http;
 
-namespace DevHive.Web.Models.Post.Post
+namespace DevHive.Web.Models.Post
 {
 	public class UpdatePostWebModel
 	{

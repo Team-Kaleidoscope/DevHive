@@ -1,6 +1,6 @@
 using DevHive.Data.Models;
 using AutoMapper;
-using DevHive.Services.Models.Post.Post;
+using DevHive.Services.Models.Post;
 
 namespace DevHive.Services.Configurations.Mapping
 {
