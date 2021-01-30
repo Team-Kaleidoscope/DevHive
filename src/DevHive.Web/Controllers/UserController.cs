@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DevHive.Common.Models.Identity;
 using DevHive.Services.Interfaces;
+using Microsoft.Extensions.Hosting;
 
 namespace DevHive.Web.Controllers
 {

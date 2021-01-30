@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DevHive.Data.Models;
+using DevHive.Data.RelationModels;
 
 namespace DevHive.Data.Interfaces.Models
 {

@@ -15,6 +15,7 @@ namespace DevHive.Data
 		public DbSet<Language> Languages { get; set; }
 		public DbSet<Post> Posts { get; set; }
 		public DbSet<Comment> Comments { get; set; }
+		public DbSet<Rating> Rating { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
@@ -29,9 +30,10 @@ namespace DevHive.Data
 				.WithMany(x => x.Users);
 
 			/* Friends */
-			//TODO: Look into the User - User
-			builder.Entity<UserFriends>()
-				.HasKey(uu => new { uu.UserId, uu.FriendId });
+			builder.Entity<User>()
+				.HasMany(x => x.Friends)
+				.WithMany(x => x.Friends)
+				.UsingEntity(x => x.ToTable("UserFriends"));
 
 			/* Languages */
 			builder.Entity<User>()
@@ -45,9 +47,6 @@ namespace DevHive.Data
 				.UsingEntity(x => x.ToTable("LanguageUser"));
 
 			/* Technologies */
-			builder.Entity<Technology>()
-				.HasKey(x => x.Id);
-
 			builder.Entity<User>()
 				.HasMany(x => x.Technologies)
 				.WithMany(x => x.Users)
@@ -60,12 +59,12 @@ namespace DevHive.Data
 
 			/* Post */
 			builder.Entity<Post>()
-				.HasMany(x => x.Comments)
-				.WithOne(x => x.Post);
-
-			builder.Entity<Post>()
 				.HasOne(x => x.Creator)
 				.WithMany(x => x.Posts);
+
+			builder.Entity<Post>()
+				.HasMany(x => x.Comments)
+				.WithOne(x => x.Post);
 
 			/* Comment */
 			builder.Entity<Comment>()
