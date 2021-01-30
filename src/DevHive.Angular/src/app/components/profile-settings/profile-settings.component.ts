@@ -126,8 +126,8 @@ export class ProfileSettingsComponent implements OnInit {
       .then(value => this.updateUserFormGroup.patchValue({ technologyInput : value }));
 
     this.updateUserFormGroup.valueChanges.subscribe(() => {
-      this._successBar.hideMsg();
-      this._errorBar.hideError();
+      this._successBar?.hideMsg();
+      this._errorBar?.hideError();
     });
   }
 
