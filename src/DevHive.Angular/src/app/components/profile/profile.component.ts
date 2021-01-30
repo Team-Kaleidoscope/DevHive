@@ -69,15 +69,17 @@ export class ProfileComponent implements OnInit {
     }
     else {
       this.showNoTechMsg = true;
-      this.finishUserLoading();
+      this.loadPosts();
     }
   }
 
   private loadPosts(): void {
-    this._feedService.getUserPostsRequest(this.user.userName, 1, '2021-01-29T21:35:30.977Z', 5).subscribe(
+    const now = new Date();
+    now.setHours(now.getHours() + 2); // accounting for eastern europe timezone
+
+    this._feedService.getUserPostsRequest(this.user.userName, 1, now.toISOString(), AppConstants.PAGE_SIZE).subscribe(
       (result: object) => {
         this.userPosts = Object.values(result)[0];
-        console.log(this.userPosts);
         this.finishUserLoading();
       }
     );
