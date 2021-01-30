@@ -6,6 +6,7 @@ import { PostComponent } from '../post/post.component';
 import { UserService } from '../../services/user.service';
 import { AppConstants } from 'src/app/app-constants.module';
 import {HttpErrorResponse} from '@angular/common/http';
+import {FeedService} from 'src/app/services/feed.service';
 
 @Component({
   selector: 'app-feed',
@@ -14,26 +15,24 @@ import {HttpErrorResponse} from '@angular/common/http';
 })
 export class FeedComponent implements OnInit {
   private _title = 'Feed';
+  private _timeLoaded: string;
   public dataArrived = false;
   public user: User;
-  public posts: PostComponent[];
+  public posts: PostComponent[] = [];
 
-  constructor(private _titleService: Title, private _router: Router, private _userService: UserService) {
+  constructor(private _titleService: Title, private _router: Router, private _userService: UserService, private _feedService: FeedService) {
     this._titleService.setTitle(this._title);
   }
 
   ngOnInit(): void {
     this.user = this._userService.getDefaultUser();
-    this.posts = [
-      new PostComponent(),
-      new PostComponent(),
-      new PostComponent(),
-      new PostComponent(),
-    ];
+    const now = new Date();
+    now.setHours(now.getHours() + 2); // accounting for eastern european timezone
+    this._timeLoaded = now.toISOString();
 
     if (sessionStorage.getItem('UserCred')) {
       this._userService.getUserFromSessionStorageRequest().subscribe(
-        (res: object) => this.finishUserLoading(res),
+        (res: object) => this.loadFeed(res),
         (err: HttpErrorResponse) => this.bailOnBadToken()
       );
     } else {
@@ -41,8 +40,18 @@ export class FeedComponent implements OnInit {
     }
   }
 
-  private finishUserLoading(res: object): void {
+  private loadFeed(res: object): void {
     Object.assign(this.user, res);
+
+    this._feedService.getUserFeedFromSessionStorageRequest(1, this._timeLoaded, AppConstants.PAGE_SIZE).subscribe(
+      (result: object) => {
+        this.posts = Object.values(result)[0];
+        this.finishUserLoading();
+      }
+    );
+  }
+
+  private finishUserLoading(): void {
     if (this.user.imageUrl === '') {
       this.user.imageUrl = AppConstants.FALLBACK_PROFILE_ICON;
     }

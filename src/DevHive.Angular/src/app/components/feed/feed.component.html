@@ -23,8 +23,8 @@
 			</a>
 		</nav>
 		<div id="posts" class="scroll-standalone">
-			<div *ngFor="let post of posts" class="post">
-				<app-post></app-post>
+			<div *ngFor="let friendPost of posts" class="post">
+				<app-post [paramId]="friendPost.postId.toString()"></app-post>
 			</div>
 		</div>
 	</div>
