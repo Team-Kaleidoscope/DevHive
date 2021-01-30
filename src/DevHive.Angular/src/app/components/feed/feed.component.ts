@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { User } from 'src/models/identity/user';
@@ -46,6 +46,9 @@ export class FeedComponent implements OnInit {
     this._feedService.getUserFeedFromSessionStorageRequest(1, this._timeLoaded, AppConstants.PAGE_SIZE).subscribe(
       (result: object) => {
         this.posts = Object.values(result)[0];
+        this.finishUserLoading();
+      },
+      (err: HttpErrorResponse) => {
         this.finishUserLoading();
       }
     );

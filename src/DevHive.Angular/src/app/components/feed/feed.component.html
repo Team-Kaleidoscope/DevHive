@@ -23,6 +23,10 @@
 			</a>
 		</nav>
 		<div id="posts" class="scroll-standalone">
+			<div id="no-posts-msg" *ngIf="posts.length === 0">
+				None of your friends have posted anything yet!<br>
+				Try refreshing your page!
+			</div>
 			<div *ngFor="let friendPost of posts" class="post">
 				<app-post [paramId]="friendPost.postId.toString()"></app-post>
 			</div>
