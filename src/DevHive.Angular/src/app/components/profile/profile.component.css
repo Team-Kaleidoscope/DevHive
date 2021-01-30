@@ -76,7 +76,13 @@ hr {
 
 /* Posts */
 
+#no-posts {
+  width: 100%;
+  text-align: center;
+  color: gray;
+  margin-top: .2em;
+}
+
 #posts {
   width: 100%;
 }
-

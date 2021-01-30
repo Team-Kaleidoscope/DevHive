@@ -43,6 +43,9 @@
 		</div>
 		<hr>
 		<div id="posts" class="scroll-standalone">
+			<div id="no-posts" *ngIf="userPosts.length === 0">
+				{{ user.firstName }} {{ user.lastName }} hasn't posted anything yet!
+			</div>
 			<div *ngFor="let userPost of userPosts">
 				<app-post [paramId]="userPost.postId.toString()"></app-post>
 			</div>

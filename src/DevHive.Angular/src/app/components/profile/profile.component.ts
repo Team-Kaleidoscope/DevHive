@@ -81,6 +81,9 @@ export class ProfileComponent implements OnInit {
       (result: object) => {
         this.userPosts = Object.values(result)[0];
         this.finishUserLoading();
+      },
+      (err: HttpErrorResponse) => {
+        this.finishUserLoading();
       }
     );
   }
