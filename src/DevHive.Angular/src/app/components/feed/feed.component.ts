@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { User } from 'src/models/identity/user';
-import { PostComponent } from '../post/post.component';
 import { UserService } from '../../services/user.service';
 import { AppConstants } from 'src/app/app-constants.module';
 import {HttpErrorResponse} from '@angular/common/http';
 import {FeedService} from 'src/app/services/feed.service';
+import {Post} from 'src/models/post';
 
 @Component({
   selector: 'app-feed',
@@ -18,7 +18,7 @@ export class FeedComponent implements OnInit {
   private _timeLoaded: string;
   public dataArrived = false;
   public user: User;
-  public posts: PostComponent[] = [];
+  public posts: Post[] = [];
 
   constructor(private _titleService: Title, private _router: Router, private _userService: UserService, private _feedService: FeedService) {
     this._titleService.setTitle(this._title);
