@@ -43,8 +43,8 @@
 		</div>
 		<hr>
 		<div id="posts" class="scroll-standalone">
-			<div *ngFor="let userPost of userPosts" class="post">
-				<app-post [paramId]="userPost.postId"></app-post>
+			<div *ngFor="let userPost of userPosts">
+				<app-post [paramId]="userPost.postId.toString()"></app-post>
 			</div>
 		</div>
 	</div>

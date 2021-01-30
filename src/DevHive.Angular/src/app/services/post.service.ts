@@ -12,7 +12,7 @@ export class PostService {
   constructor(private http: HttpClient) { }
 
   getDefaultPost(): Post {
-    return new Post(Guid.createEmpty(), '', new Date());
+    return new Post(Guid.createEmpty(), 'Gosho', 'Trapov', 'gosho_trapov', 'Your opinion on my idea?', new Date());
   }
 
   getPostRequest(id: Guid): Observable<object> {
