@@ -15,7 +15,10 @@ export class SuccessBarComponent implements OnInit {
   }
 
   showMsg(msg?: string | undefined): void {
-    if (msg === undefined || msg.trim() === '') {
+    if (msg === undefined) {
+      this.successMsg = 'Success!';
+    }
+    else if (msg.trim() === '') {
       this.successMsg = 'Success!';
     }
     else {
