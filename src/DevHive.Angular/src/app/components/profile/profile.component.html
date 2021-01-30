@@ -41,9 +41,11 @@
 				&nbsp;None
 			</div>
 		</div>
-		<div id="posts">
-			<hr>
-			Posts go here
+		<hr>
+		<div id="posts" class="scroll-standalone">
+			<div *ngFor="let userPost of userPosts" class="post">
+				<app-post [paramId]="userPost.postId"></app-post>
+			</div>
 		</div>
 	</div>
 </div>
