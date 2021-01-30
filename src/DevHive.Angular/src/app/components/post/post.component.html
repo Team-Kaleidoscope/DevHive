@@ -1,4 +1,4 @@
-<div class="post rounded-border">
+<div class="post rounded-border" *ngIf="loaded">
 	<div class="content">
 		<div class="author">
 			<img class="round-image" [src]="user.imageUrl">
@@ -12,10 +12,10 @@
 			</div>
 		</div>
 		<div class="message">
-			Your opinion on my idea?
+			{{ post.message }}
 		</div>
 		<div class="timestamp">
-			17:41 - 27 Dec 2020
+			{{ post.timeCreated }}
 		</div>
 	</div>
 	<div class="rating">
