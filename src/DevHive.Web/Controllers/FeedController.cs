@@ -43,7 +43,7 @@ namespace DevHive.Web.Controllers
 			GetPageServiceModel getPageServiceModel = this._mapper.Map<GetPageServiceModel>(getPageWebModel);
 			getPageServiceModel.Username = username;
 
-			ReadPageServiceModel readPageServiceModel = await this._feedService.GetPage(getPageServiceModel);
+			ReadPageServiceModel readPageServiceModel = await this._feedService.GetUserPage(getPageServiceModel);
 			ReadPageWebModel readPageWebModel = this._mapper.Map<ReadPageWebModel>(readPageServiceModel);
 
 			return new OkObjectResult(readPageWebModel);

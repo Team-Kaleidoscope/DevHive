@@ -32,5 +32,18 @@ namespace DevHive.Data.Repositories
 
 			return posts;
 		}
+
+		public async Task<List<Post>> GetUsersPosts(User user, DateTime firstRequestIssued, int pageNumber, int pageSize)
+		{
+			List<Post> posts = await this._context.Posts
+				.Where(post => post.TimeCreated < firstRequestIssued)
+				.Where(p => p.Creator.Id == user.Id)
+				.OrderByDescending(x => x.TimeCreated)
+				.Skip((pageNumber - 1) * pageSize)
+				.Take(pageSize)
+				.ToListAsync();
+
+			return posts;
+		}
 	}
 }
