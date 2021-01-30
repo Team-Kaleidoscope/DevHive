@@ -8,5 +8,7 @@ export class AppConstants {
   public static API_LANGUAGE_URL = AppConstants.BASE_API_URL + '/Language';
   public static API_TECHNOLOGY_URL = AppConstants.BASE_API_URL + '/Technology';
 
+  public static API_POST_URL = AppConstants.BASE_API_URL + '/Post';
+
   public static FALLBACK_PROFILE_ICON = 'assets/images/feed/profile-pic.png';
 }
