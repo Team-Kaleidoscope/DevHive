@@ -1,6 +1,14 @@
 <div id="content">
-	<div id="back-btns">
+	<div class="many-buttons">
 		<button class="submit-btn" type="submit" (click)="backToFeed()">ᐊ Back to feed</button>
 	</div>
 	<app-post [paramId]="postId.toString()"></app-post>
+	<div class="many-buttons" *ngIf="editable">
+		<button class="submit-btn" (click)="editPost()">Edit post</button>
+		<button class="submit-btn delete-btn" (click)="deletePost()">Delete post</button>
+	</div>
+	<form *ngIf="editingPost" [formGroup]="editPostFormGroup" (ngSubmit)="editPost()">
+		<input type="text" placeholder="New post message" class="input-field" formControlName="newPostMessage">
+		<input type="submit" style="display: none" />
+	</form>
 <div>
