@@ -1,23 +1,27 @@
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Guid} from 'guid-typescript';
-import {Observable} from 'rxjs';
-import {IJWTPayload} from 'src/interfaces/jwt-payload';
-import {AppConstants} from '../app-constants.module';
-import jwt_decode from 'jwt-decode';
-import {IUserCredentials} from 'src/interfaces/user-credentials';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Guid } from 'guid-typescript';
+import { Observable } from 'rxjs';
+import { AppConstants } from '../app-constants.module';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FeedService {
-  constructor(private http: HttpClient) { }
+  constructor(private _http: HttpClient, private _tokenService: TokenService)
+  { }
+
+  /* Requests from session storage */
 
   getUserFeedFromSessionStorageRequest(pageNumber: number, firstTimeIssued: string, pageSize: number): Observable<object> {
-    const jwt: IJWTPayload = { token: sessionStorage.getItem('UserCred') ?? '' };
-    const userCred = jwt_decode<IUserCredentials>(jwt.token);
-    return this.getUserFeedRequest(userCred.ID, jwt.token, pageNumber, firstTimeIssued, pageSize);
+    const token = this._tokenService.getTokenFromSessionStorage();
+    const userId = this._tokenService.getUserIdFromSessionStorageToken();
+
+    return this.getUserFeedRequest(userId, token, pageNumber, firstTimeIssued, pageSize);
   }
+
+  /* Feed requests */
 
   getUserFeedRequest(userId: Guid, authToken: string, pageNumber: number, firstTimeIssued: string, pageSize: number): Observable<object> {
     const body = {
@@ -29,7 +33,7 @@ export class FeedService {
       params: new HttpParams().set('UserId', userId.toString()),
       headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
     };
-    return this.http.post(AppConstants.API_FEED_URL + '/GetPosts', body, options);
+    return this._http.post(AppConstants.API_FEED_URL + '/GetPosts', body, options);
   }
 
   getUserPostsRequest(userName: string, pageNumber: number, firstTimeIssued: string, pageSize: number): Observable<object> {
@@ -41,6 +45,6 @@ export class FeedService {
     const options = {
       params: new HttpParams().set('UserName', userName)
     };
-    return this.http.post(AppConstants.API_FEED_URL + '/GetUserPosts', body, options);
+    return this._http.post(AppConstants.API_FEED_URL + '/GetUserPosts', body, options);
   }
 }

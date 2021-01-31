@@ -1,17 +1,17 @@
-import {Location} from '@angular/common';
-import {HttpErrorResponse} from '@angular/common/http';
+import { Location } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {AppConstants} from 'src/app/app-constants.module';
-import {LanguageService} from 'src/app/services/language.service';
-import {UserService} from 'src/app/services/user.service';
-import {TechnologyService} from 'src/app/services/technology.service';
-import {User} from 'src/models/identity/user';
-import {ErrorBarComponent} from '../error-bar/error-bar.component';
-import {SuccessBarComponent} from '../success-bar/success-bar.component';
-import {Language} from 'src/models/language';
-import {Technology} from 'src/models/technology';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { LanguageService } from 'src/app/services/language.service';
+import { UserService } from 'src/app/services/user.service';
+import { TechnologyService } from 'src/app/services/technology.service';
+import { User } from 'src/models/identity/user';
+import { ErrorBarComponent } from '../error-bar/error-bar.component';
+import { SuccessBarComponent } from '../success-bar/success-bar.component';
+import { Language } from 'src/models/language';
+import { Technology } from 'src/models/technology';
+import { TokenService } from 'src/app/services/token.service';
 
 @Component({
   selector: 'app-profile-settings',
@@ -22,26 +22,34 @@ export class ProfileSettingsComponent implements OnInit {
   @ViewChild(ErrorBarComponent) private _errorBar: ErrorBarComponent;
   @ViewChild(SuccessBarComponent) private _successBar: SuccessBarComponent;
   private _urlUsername: string;
-  public updateUserFormGroup: FormGroup;
   public dataArrived = false;
-  public user: User;
   public deleteAccountConfirm = false;
   public showLanguages = false;
-  public availableLanguages: Language[] = [];
   public showTechnologies = false;
-  public availableTechnologies: Technology[] = [];
+  public updateUserFormGroup: FormGroup;
+  public user: User;
+  public availableLanguages: Language[];
+  public availableTechnologies: Technology[];
 
-  constructor(private _router: Router, private _userService: UserService, private _languageService: LanguageService, private _technologyService: TechnologyService, private _fb: FormBuilder, private _location: Location)
+  constructor(private _router: Router, private _userService: UserService, private _languageService: LanguageService, private _technologyService: TechnologyService, private _tokenService: TokenService, private _fb: FormBuilder, private _location: Location)
   { }
 
   ngOnInit(): void {
     this._urlUsername = this._router.url.substring(9);
     this._urlUsername = this._urlUsername.substring(0, this._urlUsername.length - 9);
+
     this.user = this._userService.getDefaultUser();
+    this.availableLanguages = [];
+    this.availableTechnologies = [];
 
     this._userService.getUserByUsernameRequest(this._urlUsername).subscribe(
-      (res: object) => this.finishUserLoading(res),
-      (err: HttpErrorResponse) => { this._router.navigate(['/not-found']); }
+      (res: object) => {
+        Object.assign(this.user, res);
+        this.finishUserLoading();
+      },
+      (err: HttpErrorResponse) => {
+        this._router.navigate(['/not-found']);
+      }
     );
 
     this._languageService.getAllLanguagesWithSessionStorageRequest().subscribe(
@@ -56,12 +64,7 @@ export class ProfileSettingsComponent implements OnInit {
     );
   }
 
-  private finishUserLoading(res: object): void {
-    Object.assign(this.user, res);
-    if (this.user.imageUrl === '') {
-      this.user.imageUrl = AppConstants.FALLBACK_PROFILE_ICON;
-    }
-
+  private finishUserLoading(): void {
     if (sessionStorage.getItem('UserCred')) {
       const userFromToken: User = this._userService.getDefaultUser();
 
@@ -77,7 +80,9 @@ export class ProfileSettingsComponent implements OnInit {
             this.goToProfile();
           }
         },
-        (err: HttpErrorResponse) => this.bailOnBadToken()
+        (err: HttpErrorResponse) => {
+          this.logout();
+        }
       );
     }
     else {
@@ -121,11 +126,13 @@ export class ProfileSettingsComponent implements OnInit {
       technologies: new FormControl('')
     });
 
-    this.getLanguagesForShowing()
-      .then(value => this.updateUserFormGroup.patchValue({ languageInput : value }));
+    this.getLanguagesForShowing().then(value => {
+        this.updateUserFormGroup.patchValue({ languageInput : value });
+    });
 
-    this.getTechnologiesForShowing()
-      .then(value => this.updateUserFormGroup.patchValue({ technologyInput : value }));
+    this.getTechnologiesForShowing().then(value => {
+      this.updateUserFormGroup.patchValue({ technologyInput : value });
+    });
 
     this.updateUserFormGroup.valueChanges.subscribe(() => {
       this._successBar?.hideMsg();
@@ -134,28 +141,21 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   private getLanguagesForShowing(): Promise<string> {
-    return new Promise(resolve =>
-      this._languageService.getFullLanguagesFromIncomplete(this.user.languages)
-        .then(value => {
-          this.user.languages = value;
-          resolve(value.map(x => x.name).join(' '));
-        })
-      );
+    return new Promise(resolve => {
+      this._languageService.getFullLanguagesFromIncomplete(this.user.languages).then(value => {
+        this.user.languages = value;
+        resolve(value.map(x => x.name).join(' '));
+      });
+    });
   }
 
   private getTechnologiesForShowing(): Promise<string> {
-    return new Promise(resolve =>
-      this._technologyService.getFullTechnologiesFromIncomplete(this.user.technologies)
-        .then(value => {
-          this.user.technologies = value;
-          resolve(value.map(x => x.name).join(' '));
-        })
-      );
-  }
-
-  private bailOnBadToken(): void {
-    this._userService.logoutUserFromSessionStorage();
-    this._router.navigate(['/login']);
+    return new Promise(resolve => {
+      this._technologyService.getFullTechnologiesFromIncomplete(this.user.technologies).then(value => {
+        this.user.technologies = value;
+        resolve(value.map(x => x.name).join(' '));
+      });
+    });
   }
 
   onSubmit(): void {
@@ -166,8 +166,12 @@ export class ProfileSettingsComponent implements OnInit {
     this.patchTechnologiesControl();
 
     this._userService.putUserFromSessionStorageRequest(this.updateUserFormGroup, this.user.roles, this.user.friends).subscribe(
-        res => this._successBar.showMsg('Profile updated successfully!'),
-        (err: HttpErrorResponse) => this._errorBar.showError(err)
+        res => {
+          this._successBar.showMsg('Profile updated successfully!');
+        },
+        (err: HttpErrorResponse) => {
+          this._errorBar.showError(err);
+        }
     );
   }
 
@@ -227,7 +231,6 @@ export class ProfileSettingsComponent implements OnInit {
     }
   }
 
-
   goToProfile(): void {
     this._router.navigate([this._router.url.substring(0, this._router.url.length - 9)]);
   }
@@ -241,7 +244,7 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   logout(): void {
-    this._userService.logoutUserFromSessionStorage();
+    this._tokenService.logoutUserFromSessionStorage();
     this.goToProfile();
   }
 
@@ -257,10 +260,11 @@ export class ProfileSettingsComponent implements OnInit {
     if (this.deleteAccountConfirm) {
       this._userService.deleteUserFromSessionStorageRequest().subscribe(
         (res: object) => {
-          this._userService.logoutUserFromSessionStorage();
-          this._router.navigate(['/login']);
+          this.logout();
         },
-        (err: HttpErrorResponse) => console.log(err)
+        (err: HttpErrorResponse) => {
+          this._errorBar.showError(err);
+        }
       );
     }
     else {

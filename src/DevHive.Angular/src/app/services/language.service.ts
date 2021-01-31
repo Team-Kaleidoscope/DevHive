@@ -1,33 +1,40 @@
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Guid} from 'guid-typescript';
-import {Observable} from 'rxjs';
-import {Language} from 'src/models/language';
-import {AppConstants} from '../app-constants.module';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Guid } from 'guid-typescript';
+import { Observable } from 'rxjs';
+import { Language } from 'src/models/language';
+import { AppConstants } from '../app-constants.module';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LanguageService {
-  constructor(private http: HttpClient) { }
+  constructor(private _http: HttpClient, private _tokenService: TokenService)
+  { }
+
+  /* Requests from session storage */
+
+  getAllLanguagesWithSessionStorageRequest(): Observable<object> {
+    const token = this._tokenService.getTokenFromSessionStorage();
+
+    return this.getAllLanguagesRequest(token);
+  }
+
+  /* Language requests */
 
   getLanguageRequest(langId: Guid): Observable<object> {
     const options = {
       params: new HttpParams().set('Id', langId.toString()),
     };
-    return this.http.get(AppConstants.API_LANGUAGE_URL, options);
-  }
-
-  getAllLanguagesWithSessionStorageRequest(): Observable<object> {
-    const token = sessionStorage.getItem('UserCred') ?? '';
-    return this.getAllLanguagesRequest(token);
+    return this._http.get(AppConstants.API_LANGUAGE_URL, options);
   }
 
   getAllLanguagesRequest(authToken: string): Observable<object> {
     const options = {
       headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
     };
-    return this.http.get(AppConstants.API_LANGUAGE_URL + '/GetLanguages', options);
+    return this._http.get(AppConstants.API_LANGUAGE_URL + '/GetLanguages', options);
   }
 
   getFullLanguagesFromIncomplete(givenLanguages: Language[]): Promise<Language[]> {

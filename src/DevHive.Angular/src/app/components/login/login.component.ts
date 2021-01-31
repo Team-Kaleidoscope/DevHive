@@ -1,11 +1,11 @@
-import { Component, ErrorHandler, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { UserService } from 'src/app/services/user.service';
-import {AppConstants} from 'src/app/app-constants.module';
-import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
-import {ErrorBarComponent} from '../error-bar/error-bar.component';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ErrorBarComponent } from '../error-bar/error-bar.component';
+import { TokenService } from 'src/app/services/token.service';
 
 @Component({
   selector: 'app-login',
@@ -15,9 +15,9 @@ import {ErrorBarComponent} from '../error-bar/error-bar.component';
 export class LoginComponent implements OnInit {
   @ViewChild(ErrorBarComponent) private _errorBar: ErrorBarComponent;
   private _title = 'Login';
-  loginUserFormGroup: FormGroup;
+  public loginUserFormGroup: FormGroup;
 
-  constructor(private _titleService: Title, private _fb: FormBuilder, private _router: Router, private _userService: UserService) {
+  constructor(private _titleService: Title, private _fb: FormBuilder, private _router: Router, private _userService: UserService, private _tokenService: TokenService) {
     this._titleService.setTitle(this._title);
   }
 
@@ -35,14 +35,14 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     this._errorBar.hideError();
     this._userService.loginUserRequest(this.loginUserFormGroup).subscribe(
-        res => this.finishLogin(res),
-        (err: HttpErrorResponse) => this._errorBar.showError(err)
+        res => {
+          this._tokenService.setUserTokenToSessionStorage(res);
+          this._router.navigate(['/']);
+        },
+        (err: HttpErrorResponse) => {
+          this._errorBar.showError(err);
+        }
     );
-  }
-
-  private finishLogin(res: object): void {
-    this._userService.setUserTokenToSessionStorage(res);
-    this._router.navigate(['/']);
   }
 
   onRedirectRegister(): void {

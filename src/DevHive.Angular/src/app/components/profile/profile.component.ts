@@ -3,12 +3,13 @@ import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/models/identity/user';
 import { AppConstants } from 'src/app/app-constants.module';
-import {HttpErrorResponse} from '@angular/common/http';
-import {Location} from '@angular/common';
-import {LanguageService} from 'src/app/services/language.service';
-import {TechnologyService} from 'src/app/services/technology.service';
-import {Post} from 'src/models/post';
-import {FeedService} from 'src/app/services/feed.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Location } from '@angular/common';
+import { LanguageService } from 'src/app/services/language.service';
+import { TechnologyService } from 'src/app/services/technology.service';
+import { Post } from 'src/models/post';
+import { FeedService } from 'src/app/services/feed.service';
+import { TokenService } from 'src/app/services/token.service';
 
 @Component({
   selector: 'app-profile',
@@ -20,9 +21,9 @@ export class ProfileComponent implements OnInit {
   public loggedInUser = false;
   public dataArrived = false;
   public user: User;
-  public userPosts: Post[] = [];
+  public userPosts: Post[];
 
-  constructor(private _router: Router, private _userService: UserService, private _languageService: LanguageService, private _technologyService: TechnologyService, private _feedService: FeedService, private _location: Location)
+  constructor(private _router: Router, private _userService: UserService, private _languageService: LanguageService, private _technologyService: TechnologyService, private _feedService: FeedService, private _location: Location, private _tokenService: TokenService)
   { }
 
   private setDefaultUser(): void {
@@ -32,23 +33,26 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this._urlUsername = this._router.url.substring(9);
     this.user = this._userService.getDefaultUser();
+    this.userPosts = [];
 
     this._userService.getUserByUsernameRequest(this._urlUsername).subscribe(
-      (res: object) => this.loadLanguages(res),
-      (err: HttpErrorResponse) => { this._router.navigate(['/not-found']); }
+      (res: object) => {
+        Object.assign(this.user, res);
+        this.loadLanguages();
+      },
+      (err: HttpErrorResponse) => {
+        this._router.navigate(['/not-found']);
+      }
     );
   }
 
-  private loadLanguages(res: object): void {
-    Object.assign(this.user, res);
-
+  private loadLanguages(): void {
     if (this.user.languages.length > 0) {
       // When user has languages, get their names and load technologies
-      this._languageService.getFullLanguagesFromIncomplete(this.user.languages)
-        .then(value => {
-          this.user.languages = value;
-          this.loadTechnologies();
-       });
+      this._languageService.getFullLanguagesFromIncomplete(this.user.languages).then(value => {
+        this.user.languages = value;
+        this.loadTechnologies();
+      });
     }
     else {
       this.loadTechnologies();
@@ -58,11 +62,10 @@ export class ProfileComponent implements OnInit {
   private loadTechnologies(): void {
     if (this.user.technologies.length > 0) {
       // When user has technologies, get their names and then load posts
-      this._technologyService.getFullTechnologiesFromIncomplete(this.user.technologies)
-        .then(value => {
-          this.user.technologies = value;
-          this.loadPosts();
-        });
+      this._technologyService.getFullTechnologiesFromIncomplete(this.user.technologies).then(value => {
+        this.user.technologies = value;
+        this.loadPosts();
+      });
     }
     else {
       this.loadPosts();
@@ -85,10 +88,6 @@ export class ProfileComponent implements OnInit {
   }
 
   private finishUserLoading(): void {
-    if (this.user.imageUrl === '') {
-      this.user.imageUrl = AppConstants.FALLBACK_PROFILE_ICON;
-    }
-
     if (sessionStorage.getItem('UserCred')) {
       const userFromToken: User = this._userService.getDefaultUser();
 
@@ -101,17 +100,14 @@ export class ProfileComponent implements OnInit {
           }
           this.dataArrived = true;
         },
-        (err: HttpErrorResponse) => this.bailOnBadToken()
+        (err: HttpErrorResponse) => {
+          this.logout();
+        }
       );
     }
     else {
       this.dataArrived = true;
     }
-  }
-
-  private bailOnBadToken(): void {
-    this._userService.logoutUserFromSessionStorage();
-    this._router.navigate(['/login']);
   }
 
   goBack(): void {
@@ -127,7 +123,7 @@ export class ProfileComponent implements OnInit {
   }
 
   logout(): void {
-    this._userService.logoutUserFromSessionStorage();
+    this._tokenService.logoutUserFromSessionStorage();
 
     // Reload the page
     this._router.routeReuseStrategy.shouldReuseRoute = () => false;
