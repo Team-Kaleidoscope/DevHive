@@ -4,8 +4,9 @@ import { FeedComponent } from './components/feed/feed.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import {ProfileSettingsComponent} from './components/profile-settings/profile-settings.component';
-import {NotFoundComponent} from './components/not-found/not-found.component';
+import { ProfileSettingsComponent } from './components/profile-settings/profile-settings.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { PostPageComponent } from './components/post-page/post-page.component';
 
 const routes: Routes = [
   { path: '', component: FeedComponent },
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'profile/:username', component: ProfileComponent },
   { path: 'profile/:username/settings', component: ProfileSettingsComponent },
+  { path: 'post/:id', component: PostPageComponent },
   { path: 'not-found', component: NotFoundComponent },
   { path: '**', component: NotFoundComponent }
 ];

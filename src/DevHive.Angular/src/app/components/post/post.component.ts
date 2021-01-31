@@ -49,4 +49,8 @@ export class PostComponent implements OnInit {
   goToAuthorProfile(): void {
     this._router.navigate(['/profile/' + this.user.userName]);
   }
+
+  goToPostPage(): void {
+    this._router.navigate(['/post/' + this.post.postId]);
+  }
 }

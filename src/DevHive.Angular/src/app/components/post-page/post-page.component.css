@@ -1,0 +1,7 @@
+#content {
+  justify-content: flex-start !important;
+}
+
+#content > * {
+  width: 100%;
+}

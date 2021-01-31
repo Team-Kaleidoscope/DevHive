@@ -55,6 +55,10 @@ hr {
   color: gray;
 }
 
+.message:hover, .timestamp:hover {
+  cursor: pointer;
+}
+
 /* Rating */
 
 .rating {
