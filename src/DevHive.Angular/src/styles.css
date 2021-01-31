@@ -215,3 +215,8 @@ input:focus, button:focus {
   transition: 0s;
   transform: scale(.9);
 }
+
+.delete-btn:hover {
+  color: indianred;
+  border-color: indianred !important;
+}
