@@ -73,6 +73,13 @@ input:focus, button:focus {
   scrollbar-width: none;  /* Firefox */
 }
 
+.user-language, .user-technology {
+  border-radius: .4em;
+  background-color: lightgrey;
+  padding: .26em;
+  margin: 0 .2em;
+}
+
 /* Inputs, the type found in login and register */
 
 .input-selection {

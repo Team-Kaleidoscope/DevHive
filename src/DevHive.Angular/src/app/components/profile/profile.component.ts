@@ -7,6 +7,8 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Location} from '@angular/common';
 import {LanguageService} from 'src/app/services/language.service';
 import {TechnologyService} from 'src/app/services/technology.service';
+import {Post} from 'src/models/post';
+import {FeedService} from 'src/app/services/feed.service';
 
 @Component({
   selector: 'app-profile',
@@ -18,10 +20,11 @@ export class ProfileComponent implements OnInit {
   public loggedInUser = false;
   public dataArrived = false;
   public user: User;
+  public userPosts: Post[] = [];
   public showNoLangMsg = false;
   public showNoTechMsg = false;
 
-  constructor(private _router: Router, private _userService: UserService, private _languageService: LanguageService, private _technologyService: TechnologyService, private _location: Location)
+  constructor(private _router: Router, private _userService: UserService, private _languageService: LanguageService, private _technologyService: TechnologyService, private _feedService: FeedService, private _location: Location)
   { }
 
   private setDefaultUser(): void {
@@ -57,17 +60,32 @@ export class ProfileComponent implements OnInit {
 
   private loadTechnologies(): void {
     if (this.user.technologies.length > 0) {
-      // When user has technologies, get their names and finally finish loading
+      // When user has technologies, get their names and then load posts
       this._technologyService.getFullTechnologiesFromIncomplete(this.user.technologies)
         .then(value => {
           this.user.technologies = value;
-          this.finishUserLoading();
+          this.loadPosts();
         });
     }
     else {
       this.showNoTechMsg = true;
-      this.finishUserLoading();
+      this.loadPosts();
     }
+  }
+
+  private loadPosts(): void {
+    const now = new Date();
+    now.setHours(now.getHours() + 2); // accounting for eastern europe timezone
+
+    this._feedService.getUserPostsRequest(this.user.userName, 1, now.toISOString(), AppConstants.PAGE_SIZE).subscribe(
+      (result: object) => {
+        this.userPosts = Object.values(result)[0];
+        this.finishUserLoading();
+      },
+      (err: HttpErrorResponse) => {
+        this.finishUserLoading();
+      }
+    );
   }
 
   private finishUserLoading(): void {

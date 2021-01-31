@@ -23,7 +23,7 @@ namespace DevHive.Web.Controllers
 			this._mapper = mapper;
 		}
 
-		[HttpGet]
+		[HttpPost]
 		[Route("GetPosts")]
 		public async Task<IActionResult> GetPosts(Guid userId, [FromBody] GetPageWebModel getPageWebModel)
 		{
@@ -36,14 +36,15 @@ namespace DevHive.Web.Controllers
 			return new OkObjectResult(readPageWebModel);
 		}
 
-		[HttpGet]
+		[HttpPost]
 		[Route("GetUserPosts")]
+		[AllowAnonymous]
 		public async Task<IActionResult> GetUserPosts(string username, [FromBody] GetPageWebModel getPageWebModel)
 		{
 			GetPageServiceModel getPageServiceModel = this._mapper.Map<GetPageServiceModel>(getPageWebModel);
 			getPageServiceModel.Username = username;
 
-			ReadPageServiceModel readPageServiceModel = await this._feedService.GetPage(getPageServiceModel);
+			ReadPageServiceModel readPageServiceModel = await this._feedService.GetUserPage(getPageServiceModel);
 			ReadPageWebModel readPageWebModel = this._mapper.Map<ReadPageWebModel>(readPageServiceModel);
 
 			return new OkObjectResult(readPageWebModel);

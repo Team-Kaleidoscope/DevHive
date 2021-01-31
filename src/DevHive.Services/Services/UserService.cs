@@ -53,7 +53,7 @@ namespace DevHive.Services.Services
 			if (user.PasswordHash != PasswordModifications.GeneratePasswordHash(loginModel.Password))
 				throw new ArgumentException("Incorrect password!");
 
-			return new TokenModel(WriteJWTSecurityToken(user.Id, user.Roles));
+			return new TokenModel(WriteJWTSecurityToken(user.Id, user.UserName, user.Roles));
 		}
 
 		public async Task<TokenModel> RegisterUser(RegisterServiceModel registerModel)
@@ -78,7 +78,7 @@ namespace DevHive.Services.Services
 
 			await this._userRepository.AddAsync(user);
 
-			return new TokenModel(WriteJWTSecurityToken(user.Id, user.Roles));
+			return new TokenModel(WriteJWTSecurityToken(user.Id, user.UserName, user.Roles));
 		}
 		#endregion
 
@@ -106,8 +106,6 @@ namespace DevHive.Services.Services
 		public async Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateUserServiceModel)
 		{
 			await this.ValidateUserOnUpdate(updateUserServiceModel);
-
-			await this.ValidateUserCollections(updateUserServiceModel);
 
 			User user = await this.PopulateModel(updateUserServiceModel);
 
@@ -190,62 +188,13 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("Username already exists!");
 		}
 
-		private async Task ValidateUserCollections(UpdateUserServiceModel updateUserServiceModel)
-		{
-			//Do NOT allow a user to change his roles, unless he is an Admin
-			bool isAdmin = (await this._userRepository.GetByIdAsync(updateUserServiceModel.Id))
-				.Roles.Any(r => r.Name == Role.AdminRole);
-
-			if (isAdmin)
-			{
-				// Roles
-				foreach (var role in updateUserServiceModel.Roles)
-				{
-					Role returnedRole = await this._roleRepository.GetByNameAsync(role.Name) ??
-						throw new ArgumentException($"Role {role.Name} does not exist!");
-				}
-			}
-			//Preserve original user roles
-			else
-			{
-				HashSet<Role> roles = (await this._userRepository.GetByIdAsync(updateUserServiceModel.Id)).Roles;
-
-				foreach (var role in roles)
-				{
-					Role returnedRole = await this._roleRepository.GetByNameAsync(role.Name) ??
-						throw new ArgumentException($"Role {role.Name} does not exist!");
-				}
-			}
-
-			// Friends
-			foreach (var friend in updateUserServiceModel.Friends)
-			{
-				User returnedFriend = await this._userRepository.GetByUsernameAsync(friend.UserName) ??
-					throw new ArgumentException($"User {friend.UserName} does not exist!");
-			}
-
-			// Languages
-			foreach (var language in updateUserServiceModel.Languages)
-			{
-				Language returnedLanguage = await this._languageRepository.GetByNameAsync(language.Name) ??
-					throw new ArgumentException($"Language {language.Name} does not exist!");
-			}
-
-			// Technology
-			foreach (var technology in updateUserServiceModel.Technologies)
-			{
-				Technology returnedTechnology = await this._technologyRepository.GetByNameAsync(technology.Name) ??
-					throw new ArgumentException($"Technology {technology.Name} does not exist!");
-			}
-		}
-
-		private string WriteJWTSecurityToken(Guid userId, HashSet<Role> roles)
+		private string WriteJWTSecurityToken(Guid userId, string username, HashSet<Role> roles)
 		{
 			byte[] signingKey = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
-
 			HashSet<Claim> claims = new()
 			{
 				new Claim("ID", $"{userId}"),
+				new Claim("Username", username),
 			};
 
 			foreach (var role in roles)
@@ -269,12 +218,12 @@ namespace DevHive.Services.Services
 		#endregion
 
 		#region Misc
-		public async Task<Guid> SuperSecretPromotionToAdmin(Guid userId)
+		public async Task<TokenModel> SuperSecretPromotionToAdmin(Guid userId)
 		{
 			User user = await this._userRepository.GetByIdAsync(userId) ??
 				throw new ArgumentException("User does not exist! Can't promote shit in this country...");
 
-			if (!await this._roleRepository.DoesNameExist("Admin"))
+			if (!await this._roleRepository.DoesNameExist(Role.AdminRole))
 			{
 				Role adminRole = new()
 				{
@@ -290,7 +239,9 @@ namespace DevHive.Services.Services
 			user.Roles.Add(admin);
 			await this._userRepository.EditAsync(user.Id, user);
 
-			return admin.Id;
+			User newUser = await this._userRepository.GetByIdAsync(userId);
+
+			return new TokenModel(WriteJWTSecurityToken(newUser.Id, newUser.UserName, newUser.Roles);
 		}
 
 		private async Task<User> PopulateModel(UpdateUserServiceModel updateUserServiceModel)

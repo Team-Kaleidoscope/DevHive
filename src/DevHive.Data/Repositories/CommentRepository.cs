@@ -17,6 +17,14 @@ namespace DevHive.Data.Repositories
 		}
 
 		#region Read
+		public override async Task<Comment> GetByIdAsync(Guid id)
+		{
+			return await this._context.Comments
+				.Include(x => x.Creator)
+				.Include(x => x.Post)
+				.FirstOrDefaultAsync(x => x.Id == id);
+		}
+
 		public async Task<Comment> GetCommentByIssuerAndTimeCreatedAsync(Guid issuerId, DateTime timeCreated)
 		{
 			return await this._context.Comments
@@ -24,6 +32,21 @@ namespace DevHive.Data.Repositories
 					p.TimeCreated == timeCreated);
 		}
 		#endregion
+
+		#region Update
+		public override async Task<bool> EditAsync(Guid id, Comment newEntity)
+		{
+			Comment comment = await this.GetByIdAsync(id);
+
+			this._context
+				.Entry(comment)
+				.CurrentValues
+				.SetValues(newEntity);
+
+			return await this.SaveChangesAsync(this._context);
+		}
+		#endregion
+
 
 		#region Validations
 		public async Task<bool> DoesCommentExist(Guid id)

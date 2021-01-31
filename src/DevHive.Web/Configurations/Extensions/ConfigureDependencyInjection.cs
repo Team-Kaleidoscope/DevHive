@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DevHive.Web.Configurations.Extensions
 {
-	public static class ConfigureDependencyInjection
+    public static class ConfigureDependencyInjection
 	{
 		public static void DependencyInjectionConfiguration(this IServiceCollection services, IConfiguration configuration)
 		{
@@ -25,6 +25,7 @@ namespace DevHive.Web.Configurations.Extensions
 			services.AddTransient<ITechnologyService, TechnologyService>();
 			services.AddTransient<IUserService, UserService>();
 			services.AddTransient<IPostService, PostService>();
+			services.AddTransient<ICommentService, CommentService>();
 			services.AddTransient<IFeedService, FeedService>();
 			services.AddTransient<ICloudService, CloudinaryService>(options =>
 				new CloudinaryService(

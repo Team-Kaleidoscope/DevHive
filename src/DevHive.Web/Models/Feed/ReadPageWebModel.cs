@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DevHive.Web.Models.Post.Post;
+using DevHive.Web.Models.Post;
 
 namespace DevHive.Web.Controllers
 {

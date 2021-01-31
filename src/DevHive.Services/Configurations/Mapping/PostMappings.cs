@@ -1,6 +1,6 @@
 using DevHive.Data.Models;
 using AutoMapper;
-using DevHive.Services.Models.Post.Post;
+using DevHive.Services.Models.Post;
 
 namespace DevHive.Services.Configurations.Mapping
 {
@@ -17,10 +17,9 @@ namespace DevHive.Services.Configurations.Mapping
 
 			CreateMap<Post, ReadPostServiceModel>()
 				.ForMember(dest => dest.PostId, src => src.MapFrom(p => p.Id))
-				.ForMember(dest => dest.CreatorFirstName, src => src.Ignore())
-				.ForMember(dest => dest.CreatorLastName, src => src.Ignore())
-				.ForMember(dest => dest.CreatorUsername, src => src.Ignore());
-			//TODO: Map those here /\
+				.ForMember(dest => dest.CreatorFirstName, src => src.MapFrom(p => p.Creator.FirstName))
+				.ForMember(dest => dest.CreatorLastName, src => src.MapFrom(p => p.Creator.LastName))
+				.ForMember(dest => dest.CreatorUsername, src => src.MapFrom(p => p.Creator.UserName));
 		}
 	}
 }

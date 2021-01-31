@@ -23,6 +23,7 @@ namespace DevHive.Data.Repositories
 		{
 			return await this._context.Posts
 					.Include(x => x.Comments)
+					.Include(x => x.Creator)
 					.FirstOrDefaultAsync(x => x.Id == id);
 		}
 
@@ -36,6 +37,30 @@ namespace DevHive.Data.Repositories
 		public async Task<List<string>> GetFileUrls(Guid postId)
 		{
 			return (await this.GetByIdAsync(postId)).FileUrls;
+		}
+		#endregion
+
+		#region Update
+		public override async Task<bool> EditAsync(Guid id, Post newEntity)
+		{
+			Post post = await this.GetByIdAsync(id);
+
+			this._context
+				.Entry(post)
+				.CurrentValues
+				.SetValues(newEntity);
+
+			post.FileUrls.Clear();
+			foreach(var fileUrl in newEntity.FileUrls)
+				post.FileUrls.Add(fileUrl);
+
+			post.Comments.Clear();
+			foreach(var comment in newEntity.Comments)
+				post.Comments.Add(comment);
+
+			this._context.Entry(post).State = EntityState.Modified;
+
+			return await this.SaveChangesAsync(this._context);
 		}
 		#endregion
 

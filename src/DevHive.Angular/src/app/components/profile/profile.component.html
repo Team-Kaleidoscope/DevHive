@@ -41,9 +41,14 @@
 				&nbsp;None
 			</div>
 		</div>
+		<hr>
 		<div id="posts">
-			<hr>
-			Posts go here
+			<div id="no-posts" *ngIf="userPosts.length === 0">
+				{{ user.firstName }} {{ user.lastName }} hasn't posted anything yet!
+			</div>
+			<div *ngFor="let userPost of userPosts">
+				<app-post [paramId]="userPost.postId.toString()"></app-post>
+			</div>
 		</div>
 	</div>
 </div>

@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using DevHive.Web.Models.Post.Comment;
-using Microsoft.AspNetCore.Http;
+using DevHive.Services.Models.Comment;
+using Microsoft.Extensions.FileProviders;
 
-namespace DevHive.Web.Models.Post.Post
+namespace DevHive.Services.Models.Post
 {
-	public class ReadPostWebModel
+	public class ReadPostServiceModel
 	{
 		public Guid PostId { get; set; }
 
@@ -19,8 +19,8 @@ namespace DevHive.Web.Models.Post.Post
 
 		public DateTime TimeCreated { get; set; }
 
-		public List<ReadCommentWebModel> Comments { get; set; }
+		public List<ReadCommentServiceModel> Comments { get; set; } = new();
 
-		public List<IFormFile> Files { get; set; }
+		public List<IFileInfo> Files { get; set; }
 	}
 }

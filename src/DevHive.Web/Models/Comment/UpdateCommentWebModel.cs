@@ -1,6 +1,6 @@
 using System;
 
-namespace DevHive.Web.Models.Post.Comment
+namespace DevHive.Web.Models.Comment
 {
 	public class UpdateCommentWebModel
 	{

@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
-namespace DevHive.Web.Models.Post.Comment
+namespace DevHive.Web.Models.Comment
 {
 	public class CreateCommentWebModel
 	{

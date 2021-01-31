@@ -74,16 +74,15 @@ hr {
   align-items: center;
 }
 
-.user-language, .user-technology {
-  border-radius: .4em;
-  background-color: lightgrey;
-  padding: .2em;
-  margin: 0 .2em;
-}
-
 /* Posts */
+
+#no-posts {
+  width: 100%;
+  text-align: center;
+  color: gray;
+  margin-top: .2em;
+}
 
 #posts {
   width: 100%;
 }
-

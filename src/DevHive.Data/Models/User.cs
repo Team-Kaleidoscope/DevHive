@@ -16,15 +16,8 @@ namespace DevHive.Data.Models
 
 		public string ProfilePictureUrl { get; set; }
 
-		/// <summary>
-		/// Languages that the user uses or is familiar with
-		/// </summary>
-		// [Unique]
 		public HashSet<Language> Languages { get; set; } = new();
 
-		/// <summary>
-		/// Technologies that the user uses or is familiar with
-		/// </summary>
 		public HashSet<Technology> Technologies { get; set; } = new();
 
 		public HashSet<Role> Roles { get; set; } = new();

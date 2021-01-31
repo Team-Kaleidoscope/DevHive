@@ -1,6 +1,6 @@
 using AutoMapper;
-using DevHive.Services.Models.Post.Comment;
-using DevHive.Web.Models.Post.Comment;
+using DevHive.Services.Models.Comment;
+using DevHive.Web.Models.Comment;
 
 namespace DevHive.Web.Configurations.Mapping
 {
@@ -15,6 +15,3 @@ namespace DevHive.Web.Configurations.Mapping
 		}
 	}
 }
-
-
-

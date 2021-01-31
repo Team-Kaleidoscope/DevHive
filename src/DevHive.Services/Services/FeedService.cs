@@ -7,7 +7,7 @@ using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
 using DevHive.Services.Interfaces;
 using DevHive.Services.Models;
-using DevHive.Services.Models.Post.Post;
+using DevHive.Services.Models.Post;
 
 namespace DevHive.Services.Services
 {
@@ -47,6 +47,30 @@ namespace DevHive.Services.Services
 
 			if (posts.Count <= 0)
 				throw new ArgumentException("No friends of user have posted anything yet!");
+
+			ReadPageServiceModel readPageServiceModel = new();
+			foreach (Post post in posts)
+				readPageServiceModel.Posts.Add(this._mapper.Map<ReadPostServiceModel>(post));
+
+			return readPageServiceModel;
+		}
+
+		public async Task<ReadPageServiceModel> GetUserPage(GetPageServiceModel model) {
+			User user = null;
+
+			if (!string.IsNullOrEmpty(model.Username))
+				user = await this._userRepository.GetByUsernameAsync(model.Username);
+			else
+				throw new ArgumentException("Invalid given data!");
+
+			if (user == null)
+				throw new ArgumentException("User doesn't exist!");
+
+			List<Post> posts = await this._feedRepository
+				.GetUsersPosts(user, model.FirstRequestIssued, model.PageNumber, model.PageSize);
+
+			if (posts.Count <= 0)
+				throw new ArgumentException("User hasn't posted anything yet!");
 
 			ReadPageServiceModel readPageServiceModel = new();
 			foreach (Post post in posts)

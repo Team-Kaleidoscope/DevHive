@@ -1,6 +1,6 @@
 using System;
 
-namespace DevHive.Services.Models.Post.Comment
+namespace DevHive.Services.Models.Comment
 {
 	public class ReadCommentServiceModel
 	{

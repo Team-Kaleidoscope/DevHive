@@ -24,6 +24,10 @@ hr {
   margin-bottom: .2em;
 }
 
+.author:hover {
+  cursor: pointer;
+}
+
 .author > img {
   width: 2.2em;
   height: 2.2em;
