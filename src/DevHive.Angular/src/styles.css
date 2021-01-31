@@ -77,7 +77,8 @@ input:focus, button:focus {
   border-radius: .4em;
   background-color: lightgrey;
   padding: .26em;
-  margin: 0 .2em;
+  margin: .1em .2em;
+  width: fit-content;
 }
 
 /* Inputs, the type found in login and register */
