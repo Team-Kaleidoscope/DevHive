@@ -32,6 +32,15 @@ export class TokenService {
     return userCred.ID;
   }
 
+  getUsernameFromSessionStorageToken(): string {
+    const jwt: IJWTPayload = {
+      token: this.getTokenFromSessionStorage()
+    };
+    const userCred = jwt_decode<IUserCredentials>(jwt.token);
+
+    return userCred.Username;
+  }
+
   logoutUserFromSessionStorage(): void {
     sessionStorage.removeItem(AppConstants.SESSION_TOKEN_KEY);
   }
