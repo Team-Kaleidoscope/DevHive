@@ -7,6 +7,8 @@ import { AppConstants } from 'src/app/app-constants.module';
 import {HttpErrorResponse} from '@angular/common/http';
 import {FeedService} from 'src/app/services/feed.service';
 import {Post} from 'src/models/post';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {PostService} from 'src/app/services/post.service';
 
 @Component({
   selector: 'app-feed',
@@ -19,16 +21,22 @@ export class FeedComponent implements OnInit {
   public dataArrived = false;
   public user: User;
   public posts: Post[] = [];
+  public createPostFormGroup: FormGroup;
 
-  constructor(private _titleService: Title, private _router: Router, private _userService: UserService, private _feedService: FeedService) {
+  constructor(private _titleService: Title, private _fb: FormBuilder, private _router: Router, private _userService: UserService, private _feedService: FeedService, private _postService: PostService) {
     this._titleService.setTitle(this._title);
   }
 
   ngOnInit(): void {
     this.user = this._userService.getDefaultUser();
+
     const now = new Date();
     now.setHours(now.getHours() + 2); // accounting for eastern european timezone
     this._timeLoaded = now.toISOString();
+
+    this.createPostFormGroup = this._fb.group({
+      newPostMessage: new FormControl('')
+    });
 
     if (sessionStorage.getItem('UserCred')) {
       this._userService.getUserFromSessionStorageRequest().subscribe(
@@ -77,5 +85,17 @@ export class FeedComponent implements OnInit {
   logout(): void {
     this._userService.logoutUserFromSessionStorage();
     this._router.navigate(['/login']);
+  }
+
+  createPost(): void {
+    const postMessage = this.createPostFormGroup.get('newPostMessage')?.value;
+    this._postService.createPostFromSessionStorageRequest(postMessage).subscribe(
+      (result: object) => {
+        this.createPostFormGroup.patchValue({
+          newPostMessage: ''
+        });
+        this.goToProfile();
+      }
+    );
   }
 }

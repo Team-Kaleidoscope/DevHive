@@ -75,6 +75,10 @@
 
 /* Top bar */
 
+form {
+  width: 100%;
+}
+
 #top-bar {
   display: flex;
   width: 98%;
