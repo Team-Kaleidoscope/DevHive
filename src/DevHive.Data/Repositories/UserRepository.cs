@@ -62,13 +62,15 @@ namespace DevHive.Data.Repositories
 				.CurrentValues
 				.SetValues(newEntity);
 
-			user.Languages.Clear();
+			HashSet<Language> languages = new();
 			foreach (var lang in newEntity.Languages)
-				user.Languages.Add(lang);
+				languages.Add(lang);
+			user.Languages = languages;
 
-			user.Roles.Clear();
+			HashSet<Role> roles = new();
 			foreach (var role in newEntity.Roles)
-				user.Roles.Add(role);
+				roles.Add(role);
+			user.Roles = roles;
 
 			// foreach (var friend in user.Friends)
 			// {
@@ -86,9 +88,10 @@ namespace DevHive.Data.Repositories
 				.Where(x => x.FriendId == user.Id &&
 					x.UserId == user.Id));
 
-			user.Technologies.Clear();
+			HashSet<Technology> technologies = new();
 			foreach (var tech in newEntity.Technologies)
-				user.Technologies.Add(tech);
+				technologies.Add(tech);
+			user.Technologies = technologies;
 
 			this._context.Entry(user).State = EntityState.Modified;
 

@@ -10,7 +10,6 @@ namespace DevHive.Web.Models.Identity.User
 		[Required]
 		[MinLength(3)]
 		[MaxLength(50)]
-		[OnlyAlphanumerics(ErrorMessage = "Username can only contain letters and digits!")]
 		public string UserName { get; set; }
 	}
 }

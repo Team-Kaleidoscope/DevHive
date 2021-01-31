@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DevHive.Web.Configurations.Extensions
 {
-    public static class ConfigureDependencyInjection
+	public static class ConfigureDependencyInjection
 	{
 		public static void DependencyInjectionConfiguration(this IServiceCollection services, IConfiguration configuration)
 		{

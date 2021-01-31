@@ -19,6 +19,6 @@ namespace DevHive.Services.Interfaces
 
 		Task<bool> ValidJWT(Guid id, string rawTokenData);
 
-		Task<Guid> SuperSecretPromotionToAdmin(Guid userId);
+		Task<TokenModel> SuperSecretPromotionToAdmin(Guid userId);
 	}
 }

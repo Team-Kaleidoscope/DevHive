@@ -9,7 +9,7 @@ using DevHive.Services.Interfaces;
 
 namespace DevHive.Web.Controllers
 {
-    [ApiController]
+	[ApiController]
 	[Route("/api/[controller]")]
 	[Authorize(Roles = "User,Admin")]
 	public class PostController
@@ -25,7 +25,7 @@ namespace DevHive.Web.Controllers
 
 		#region Create
 		[HttpPost]
-		public async Task<IActionResult> Create(Guid userId, [FromBody] CreatePostWebModel createPostWebModel, [FromHeader] string authorization)
+		public async Task<IActionResult> Create(Guid userId, [FromForm] CreatePostWebModel createPostWebModel, [FromHeader] string authorization)
 		{
 			if (!await this._postService.ValidateJwtForCreating(userId, authorization))
 				return new UnauthorizedResult();

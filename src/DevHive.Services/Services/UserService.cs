@@ -241,7 +241,7 @@ namespace DevHive.Services.Services
 
 			User newUser = await this._userRepository.GetByIdAsync(userId);
 
-			return new TokenModel(WriteJWTSecurityToken(newUser.Id, newUser.UserName, newUser.Roles);
+			return new TokenModel(WriteJWTSecurityToken(newUser.Id, newUser.UserName, newUser.Roles));
 		}
 
 		private async Task<User> PopulateModel(UpdateUserServiceModel updateUserServiceModel)
@@ -249,16 +249,25 @@ namespace DevHive.Services.Services
 			User user = this._userMapper.Map<User>(updateUserServiceModel);
 
 			/* Fetch Roles and replace model's*/
-			HashSet<Role> roles = new();
-			int rolesCount = updateUserServiceModel.Roles.Count;
-			for (int i = 0; i < rolesCount; i++)
-			{
-				Role role = await this._roleRepository.GetByNameAsync(updateUserServiceModel.Roles.ElementAt(i).Name) ??
-					throw new ArgumentException("Invalid role name!");
+			//Do NOT allow a user to change his roles, unless he is an Admin
+			bool isAdmin = (await this._userRepository.GetByIdAsync(updateUserServiceModel.Id))
+				.Roles.Any(r => r.Name == Role.AdminRole);
 
-				roles.Add(role);
+			if (isAdmin)
+			{
+				HashSet<Role> roles = new();
+				foreach (var role in updateUserServiceModel.Roles)
+				{
+					Role returnedRole = await this._roleRepository.GetByNameAsync(role.Name) ??
+						throw new ArgumentException($"Role {role.Name} does not exist!");
+
+					roles.Add(returnedRole);
+				}
+				user.Roles = roles;
 			}
-			user.Roles = roles;
+			//Preserve original user roles
+			else
+				user.Roles = (await this._userRepository.GetByIdAsync(updateUserServiceModel.Id)).Roles;
 
 			/* Fetch Friends and replace model's*/
 			HashSet<UserFriends> friends = new();

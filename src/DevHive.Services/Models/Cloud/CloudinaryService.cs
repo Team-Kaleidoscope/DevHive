@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using DevHive.Data.Migrations;
 using DevHive.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -25,22 +26,19 @@ namespace DevHive.Services.Services
 			{
 				string formFileId = Guid.NewGuid().ToString();
 
-				if (formFile.Length > 0)
+				using (var ms = new MemoryStream())
 				{
-					using (var ms = new MemoryStream())
+					formFile.CopyTo(ms);
+					byte[] formBytes = ms.ToArray();
+
+					RawUploadParams rawUploadParams = new()
 					{
-						formFile.CopyTo(ms);
-						byte[] formBytes = ms.ToArray();
+						File = new FileDescription(formFileId, new MemoryStream(formBytes)),
+						PublicId = formFileId
+					};
 
-						ImageUploadParams imageUploadParams = new()
-						{
-							File = new FileDescription(formFileId, new MemoryStream(formBytes)),
-							PublicId = formFileId
-						};
-
-						ImageUploadResult uploadResult = await this._cloudinary.UploadAsync(imageUploadParams);
-						fileUrls.Add(uploadResult.Url.AbsoluteUri);
-					}
+					RawUploadResult rawUploadResult = await this._cloudinary.UploadAsync(rawUploadParams);
+					fileUrls.Add(rawUploadResult.Url.AbsoluteUri);
 				}
 			}
 

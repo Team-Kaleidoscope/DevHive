@@ -13,7 +13,6 @@ namespace DevHive.Web.Controllers
 {
 	[ApiController]
 	[Route("/api/[controller]")]
-	[Authorize(Roles = "User,Admin")]
 	public class UserController : ControllerBase
 	{
 		private readonly IUserService _userService;
@@ -55,6 +54,7 @@ namespace DevHive.Web.Controllers
 
 		#region Read
 		[HttpGet]
+		[Authorize(Roles = "User,Admin")]
 		public async Task<IActionResult> GetById(Guid id, [FromHeader] string authorization)
 		{
 			if (!await this._userService.ValidJWT(id, authorization))
@@ -80,6 +80,7 @@ namespace DevHive.Web.Controllers
 
 		#region Update
 		[HttpPut]
+		[Authorize(Roles = "User,Admin")]
 		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserWebModel updateUserWebModel, [FromHeader] string authorization)
 		{
 			if (!await this._userService.ValidJWT(id, authorization))
@@ -97,6 +98,7 @@ namespace DevHive.Web.Controllers
 
 		#region Delete
 		[HttpDelete]
+		[Authorize(Roles = "User,Admin")]
 		public async Task<IActionResult> Delete(Guid id, [FromHeader] string authorization)
 		{
 			if (!await this._userService.ValidJWT(id, authorization))
@@ -111,16 +113,11 @@ namespace DevHive.Web.Controllers
 		#endregion
 
 		[HttpPost]
+		[Authorize(Roles = "User,Admin")]
 		[Route("SuperSecretPromotionToAdmin")]
 		public async Task<IActionResult> SuperSecretPromotionToAdmin(Guid userId)
 		{
-			object obj = new
-			{
-				UserId = userId,
-				AdminRoleId = await this._userService.SuperSecretPromotionToAdmin(userId)
-			};
-
-			return new OkObjectResult(obj);
+			return new OkObjectResult(await this._userService.SuperSecretPromotionToAdmin(userId));
 		}
 	}
 }

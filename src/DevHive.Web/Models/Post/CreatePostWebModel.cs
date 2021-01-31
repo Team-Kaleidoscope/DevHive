@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace DevHive.Web.Models.Post
 {
-    public class CreatePostWebModel
+	public class CreatePostWebModel
 	{
 		[NotNull]
 		[Required]

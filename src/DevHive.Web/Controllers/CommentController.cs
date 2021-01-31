@@ -9,10 +9,11 @@ using DevHive.Services.Interfaces;
 
 namespace DevHive.Web.Controllers
 {
-    [ApiController]
+	[ApiController]
 	[Route("/api/[controller]")]
 	[Authorize(Roles = "User,Admin")]
-	public class CommentController {
+	public class CommentController
+	{
 		private readonly ICommentService _commentService;
 		private readonly IMapper _commentMapper;
 
@@ -50,9 +51,9 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPut]
-		public async Task<IActionResult> UpdateComment(Guid userId, [FromBody] UpdateCommentWebModel updateCommentWebModel, [FromHeader] string authorization)
+		public async Task<IActionResult> UpdateComment(Guid userId, Guid commentId, [FromBody] UpdateCommentWebModel updateCommentWebModel, [FromHeader] string authorization)
 		{
-			if (!await this._commentService.ValidateJwtForComment(updateCommentWebModel.CommentId, authorization))
+			if (!await this._commentService.ValidateJwtForComment(commentId, authorization))
 				return new UnauthorizedResult();
 
 			UpdateCommentServiceModel updateCommentServiceModel =

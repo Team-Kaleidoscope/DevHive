@@ -19,7 +19,7 @@ namespace DevHive.Data.Models
 		public List<Comment> Comments { get; set; } = new();
 
 		public Guid RatingId { get; set; }
-		public Rating Rating { get; set; }
+		public Rating Rating { get; set; } = new();
 
 		public List<string> FileUrls { get; set; } = new();
 	}
