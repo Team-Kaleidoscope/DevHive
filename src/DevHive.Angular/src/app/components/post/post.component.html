@@ -1,3 +1,5 @@
+<app-loading *ngIf="!loaded"></app-loading>
+
 <div class="post rounded-border" *ngIf="loaded">
 	<div class="content">
 		<div class="author" (click)="goToAuthorProfile()">
