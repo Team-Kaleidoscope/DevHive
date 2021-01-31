@@ -165,7 +165,7 @@ export class ProfileSettingsComponent implements OnInit {
     this.patchLanguagesControl();
     this.patchTechnologiesControl();
 
-    this._userService.putUserFromSessionStorageRequest(this.updateUserFormGroup).subscribe(
+    this._userService.putUserFromSessionStorageRequest(this.updateUserFormGroup, this.user.roles, this.user.friends).subscribe(
         res => this._successBar.showMsg('Profile updated successfully!'),
         (err: HttpErrorResponse) => this._errorBar.showError(err)
     );

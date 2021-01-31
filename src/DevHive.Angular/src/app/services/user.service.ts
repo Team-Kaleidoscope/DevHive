@@ -8,6 +8,8 @@ import { FormGroup } from '@angular/forms';
 import { AppConstants } from 'src/app/app-constants.module';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {Role} from 'src/models/identity/role';
+import {Friend} from 'src/models/identity/friend';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,7 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   getDefaultUser(): User {
-    return new User(Guid.createEmpty(), 'gosho_trapov', 'Gosho', 'Trapov', 'gotra@bg.com', AppConstants.FALLBACK_PROFILE_ICON, new Array(), new Array());
+    return new User(Guid.createEmpty(), 'gosho_trapov', 'Gosho', 'Trapov', 'gotra@bg.com', AppConstants.FALLBACK_PROFILE_ICON, [], [], [], []);
   }
 
   getUserIdFromSessionStorageToken(): Guid {
@@ -38,12 +40,12 @@ export class UserService {
     return this.getUserRequest(userCred.ID, jwt.token);
   }
 
-  putUserFromSessionStorageRequest(updateUserFormGroup: FormGroup): Observable<object> {
+  putUserFromSessionStorageRequest(updateUserFormGroup: FormGroup, userRoles: Role[], userFriends: Friend[]): Observable<object> {
     // Get the token and userid from session storage
     const jwt: IJWTPayload = { token: sessionStorage.getItem('UserCred') ?? '' };
     const userCred = jwt_decode<IUserCredentials>(jwt.token);
 
-    return this.putUserRequest(userCred.ID, jwt.token, updateUserFormGroup);
+    return this.putUserRequest(userCred.ID, jwt.token, updateUserFormGroup, userRoles, userFriends);
   }
 
   deleteUserFromSessionStorageRequest(): Observable<object> {
@@ -93,16 +95,15 @@ export class UserService {
     return this.http.get(AppConstants.API_USER_URL + '/GetUser', options);
   }
 
-  putUserRequest(userId: Guid, authToken: string, updateUserFormGroup: FormGroup): Observable<object> {
+  putUserRequest(userId: Guid, authToken: string, updateUserFormGroup: FormGroup, userRoles: Role[], userFriends: Friend[]): Observable<object> {
     const body = {
       UserName: updateUserFormGroup.get('username')?.value,
       Email: updateUserFormGroup.get('email')?.value,
       FirstName: updateUserFormGroup.get('firstName')?.value,
       LastName: updateUserFormGroup.get('lastName')?.value,
       Password: updateUserFormGroup.get('password')?.value,
-      // TODO: make the following fields dynamically selectable
-      Roles: [ { Name: 'User' } ],
-      Friends: [],
+      Roles: userRoles,
+      Friends: userFriends,
       Languages: updateUserFormGroup.get('languages')?.value,
       Technologies: updateUserFormGroup.get('technologies')?.value
     };
