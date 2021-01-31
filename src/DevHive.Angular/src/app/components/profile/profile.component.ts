@@ -21,8 +21,6 @@ export class ProfileComponent implements OnInit {
   public dataArrived = false;
   public user: User;
   public userPosts: Post[] = [];
-  public showNoLangMsg = false;
-  public showNoTechMsg = false;
 
   constructor(private _router: Router, private _userService: UserService, private _languageService: LanguageService, private _technologyService: TechnologyService, private _feedService: FeedService, private _location: Location)
   { }
@@ -53,7 +51,6 @@ export class ProfileComponent implements OnInit {
        });
     }
     else {
-      this.showNoLangMsg = true;
       this.loadTechnologies();
     }
   }
@@ -68,7 +65,6 @@ export class ProfileComponent implements OnInit {
         });
     }
     else {
-      this.showNoTechMsg = true;
       this.loadPosts();
     }
   }

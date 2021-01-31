@@ -26,7 +26,7 @@
 					{{ lang.name }}
 				</div>
 			</div>
-			<div *ngIf="showNoLangMsg">
+			<div *ngIf="user.languages.length === 0">
 				&nbsp;None
 			</div>
 		</div>
@@ -37,7 +37,7 @@
 					{{ tech.name }}
 				</div>
 			</div>
-			<div *ngIf="showNoTechMsg">
+			<div *ngIf="user.technologies.length === 0">
 				&nbsp;None
 			</div>
 		</div>
