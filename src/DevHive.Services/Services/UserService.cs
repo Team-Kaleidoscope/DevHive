@@ -241,7 +241,7 @@ namespace DevHive.Services.Services
 
 			User newUser = await this._userRepository.GetByIdAsync(userId);
 
-			return new TokenModel(WriteJWTSecurityToken(newUser.Id, newUser.UserName, newUser.Roles);
+			return new TokenModel(WriteJWTSecurityToken(newUser.Id, newUser.UserName, newUser.Roles));
 		}
 
 		private async Task<User> PopulateModel(UpdateUserServiceModel updateUserServiceModel)
