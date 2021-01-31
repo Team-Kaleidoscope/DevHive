@@ -111,11 +111,7 @@ export class ProfileComponent implements OnInit {
   }
 
   goBack(): void {
-    const currURL = this._location.path();
-    this._location.back();
-    if (this._location.path() === currURL) {
-      this._router.navigate(['/']);
-    }
+    this._router.navigate(['/']);
   }
 
   navigateToSettings(): void {
