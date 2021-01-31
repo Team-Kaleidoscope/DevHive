@@ -60,7 +60,8 @@ hr {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-right: -.1em;
+  min-height: 4.4em;
+  margin: auto -.1em auto 0;
 }
 
 .score {
