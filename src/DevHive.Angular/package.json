@@ -22,6 +22,7 @@
     "@angular/platform-browser-dynamic": "^11.0.7",
     "@angular/router": "^11.0.7",
     "@types/jwt-decode": "^3.1.0",
+    "form-data": "^3.0.0",
     "guid-typescript": "^1.0.9",
     "jwt-decode": "^3.1.2",
     "normalize.css": "^8.0.1",

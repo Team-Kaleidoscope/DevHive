@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import * as FormData from 'form-data';
 import { Guid } from 'guid-typescript';
 import { Observable } from 'rxjs';
 import { Post } from 'src/models/post';
@@ -26,18 +27,23 @@ export class PostService {
     return this.createPostRequest(userId, token, postMessage);
   }
 
+  putPostFromSessionStorageRequest(postId: Guid, newMessage: string): Observable<object> {
+    const userId = this._tokenService.getUserIdFromSessionStorageToken();
+    const token = this._tokenService.getTokenFromSessionStorage();
+
+    return this.putPostRequest(userId, token, postId, newMessage);
+  }
+
   /* Post requests */
 
   createPostRequest(userId: Guid, authToken: string, postMessage: string): Observable<object> {
-    const body = {
-      message: postMessage,
-      files: []
-    };
+    const form = new FormData();
+    form.append('message', postMessage);
     const options = {
       params: new HttpParams().set('UserId', userId.toString()),
       headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
     };
-    return this._http.post(AppConstants.API_POST_URL, body, options);
+    return this._http.post(AppConstants.API_POST_URL, form, options);
   }
 
   getPostRequest(id: Guid): Observable<object> {
@@ -45,5 +51,17 @@ export class PostService {
       params: new HttpParams().set('Id', id.toString())
     };
     return this._http.get(AppConstants.API_POST_URL, options);
+  }
+
+  putPostRequest(userId: Guid, authToken: string, postId: Guid, newMessage: string): Observable<object> {
+    const body = {
+      postId: postId.toString(),
+      newMessage: newMessage
+    };
+    const options = {
+      params: new HttpParams().set('UserId', userId.toString()),
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
+    };
+    return this._http.put(AppConstants.API_POST_URL, body, options);
   }
 }
