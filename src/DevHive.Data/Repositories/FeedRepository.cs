@@ -25,14 +25,16 @@ namespace DevHive.Data.Repositories
 			List<Post> posts = await this._context.Posts
 				.Where(post => post.TimeCreated < firstRequestIssued)
 				.Where(p => friendsIds.Contains(p.Creator.Id))
-				.Skip((pageNumber - 1) * pageSize)
-				.Take(pageSize)
 				.ToListAsync();
 
 			// Ordering by descending can't happen in query, because it doesn't order it
 			// completely correctly (example: in query these two times are ordered
 			// like this: 2021-01-30T11:49:45, 2021-01-28T21:37:40.701244)
-			posts = posts.OrderByDescending(x => x.TimeCreated.ToFileTime()).ToList();
+			posts = posts
+				.OrderByDescending(x => x.TimeCreated.ToFileTime())
+				.Skip((pageNumber - 1) * pageSize)
+				.Take(pageSize)
+				.ToList();
 			return posts;
 		}
 
@@ -41,12 +43,14 @@ namespace DevHive.Data.Repositories
 			List<Post> posts = await this._context.Posts
 				.Where(post => post.TimeCreated < firstRequestIssued)
 				.Where(p => p.Creator.Id == user.Id)
-				.Skip((pageNumber - 1) * pageSize)
-				.Take(pageSize)
 				.ToListAsync();
 
 			// Look at GetFriendsPosts on why this is done like this
-			posts = posts.OrderByDescending(x => x.TimeCreated.ToFileTime()).ToList();
+			posts = posts
+				.OrderByDescending(x => x.TimeCreated.ToFileTime())
+				.Skip((pageNumber - 1) * pageSize)
+				.Take(pageSize)
+				.ToList();
 			return posts;
 		}
 	}
