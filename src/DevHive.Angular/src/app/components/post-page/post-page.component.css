@@ -5,3 +5,15 @@
 #content > * {
   width: 100%;
 }
+
+#back-btns {
+  width: 100%;
+  display: flex;
+}
+
+.submit-btn {
+  flex: 1;
+  max-width: 98%;
+  margin: 0 auto;
+  margin-bottom: .5em;
+}

@@ -17,4 +17,7 @@ export class PostPageComponent implements OnInit {
     this.postId = Guid.parse(this._router.url.substring(6));
   }
 
+  backToFeed(): void {
+    this._router.navigate(['/']);
+  }
 }
