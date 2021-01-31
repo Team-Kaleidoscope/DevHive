@@ -47,11 +47,16 @@ hr {
 
 .message {
   margin: .3em 0;
+  word-break: break-all;
 }
 
 .timestamp {
   font-size: .5em;
   color: gray;
+}
+
+.message:hover, .timestamp:hover {
+  cursor: pointer;
 }
 
 /* Rating */
@@ -60,7 +65,8 @@ hr {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-right: -.1em;
+  min-height: 4.4em;
+  margin: auto -.1em auto 0;
 }
 
 .score {

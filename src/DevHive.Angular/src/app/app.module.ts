@@ -19,6 +19,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { ErrorBarComponent } from './components/error-bar/error-bar.component';
 import { SuccessBarComponent } from './components/success-bar/success-bar.component';
+import { PostPageComponent } from './components/post-page/post-page.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { SuccessBarComponent } from './components/success-bar/success-bar.compon
     NotFoundComponent,
     LoadingComponent,
     ErrorBarComponent,
-    SuccessBarComponent
+    SuccessBarComponent,
+    PostPageComponent
   ],
   imports: [
     BrowserModule,

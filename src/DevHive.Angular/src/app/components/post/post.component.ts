@@ -1,12 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
-import {AppConstants} from 'src/app/app-constants.module';
-import {FeedService} from 'src/app/services/feed.service';
-import {PostService} from 'src/app/services/post.service';
-import {UserService} from 'src/app/services/user.service';
+import { PostService } from 'src/app/services/post.service';
+import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/models/identity/user';
-import {Post} from 'src/models/post';
+import { Post } from 'src/models/post';
 
 @Component({
   selector: 'app-post',
@@ -14,15 +12,15 @@ import {Post} from 'src/models/post';
   styleUrls: ['./post.component.css'],
 })
 export class PostComponent implements OnInit {
+  public loaded = false;
   public user: User;
   public post: Post;
   public votesNumber: number;
   public timeCreated: string;
-  public loaded = false;
   @Input() paramId: string;
 
   constructor(private _postService: PostService, private _userService: UserService, private _router: Router)
-  {}
+  { }
 
   ngOnInit(): void {
     this.post = this._postService.getDefaultPost();
@@ -31,11 +29,12 @@ export class PostComponent implements OnInit {
     this._postService.getPostRequest(Guid.parse(this.paramId)).subscribe(
       (result: object) => {
         Object.assign(this.post, result);
+        this.votesNumber = 23;
+
         this.timeCreated = new Date(this.post.timeCreated).toLocaleString('en-GB');
         this.loadUser();
       }
     );
-    this.votesNumber = 23;
   }
 
   private loadUser(): void {
@@ -49,5 +48,9 @@ export class PostComponent implements OnInit {
 
   goToAuthorProfile(): void {
     this._router.navigate(['/profile/' + this.user.userName]);
+  }
+
+  goToPostPage(): void {
+    this._router.navigate(['/post/' + this.post.postId]);
   }
 }

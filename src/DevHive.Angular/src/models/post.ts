@@ -1,4 +1,4 @@
-import {Guid} from 'guid-typescript';
+import { Guid } from 'guid-typescript';
 
 export class Post {
   private _postId: Guid;

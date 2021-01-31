@@ -8,7 +8,8 @@ import { Component, OnInit } from '@angular/core';
 export class SuccessBarComponent implements OnInit {
   public successMsg = '';
 
-  constructor() { }
+  constructor()
+  { }
 
   ngOnInit(): void {
     this.hideMsg();

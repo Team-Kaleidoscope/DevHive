@@ -1,10 +1,11 @@
-import {HttpErrorResponse} from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { TokenService } from 'src/app/services/token.service';
 import { UserService } from 'src/app/services/user.service';
-import {ErrorBarComponent} from '../error-bar/error-bar.component';
+import { ErrorBarComponent } from '../error-bar/error-bar.component';
 
 @Component({
   selector: 'app-register',
@@ -16,7 +17,7 @@ export class RegisterComponent implements OnInit {
   private _title = 'Register';
   public registerUserFormGroup: FormGroup;
 
-  constructor(private _titleService: Title, private _fb: FormBuilder, private _router: Router, private _userService: UserService) {
+  constructor(private _titleService: Title, private _fb: FormBuilder, private _router: Router, private _userService: UserService, private _tokenService: TokenService) {
     this._titleService.setTitle(this._title);
   }
 
@@ -50,16 +51,15 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(): void {
     this._userService.registerUserRequest(this.registerUserFormGroup).subscribe(
-        res => this.finishRegister(res),
-        (err: HttpErrorResponse) => this._errorBar.showError(err)
+        res => {
+          this._tokenService.setUserTokenToSessionStorage(res);
+          this._router.navigate(['/']);
+        },
+        (err: HttpErrorResponse) => {
+          this._errorBar.showError(err);
+        }
     );
   }
-
-  private finishRegister(res: object): void {
-    this._userService.setUserTokenToSessionStorage(res);
-    this._router.navigate(['/']);
-  }
-
   onRedirectLogin(): void {
     this._router.navigate(['/login']);
   }

@@ -1,33 +1,40 @@
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Guid} from 'guid-typescript';
-import {Observable} from 'rxjs';
-import {Technology} from 'src/models/identity/user';
-import {AppConstants} from '../app-constants.module';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Guid } from 'guid-typescript';
+import { Observable } from 'rxjs';
+import { Technology } from 'src/models/technology';
+import { AppConstants } from '../app-constants.module';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TechnologyService {
-  constructor(private http: HttpClient) { }
+  constructor(private _http: HttpClient, private _tokenService: TokenService)
+  { }
+
+  /* Requests from session storage */
+
+  getAllTechnologiesWithSessionStorageRequest(): Observable<object> {
+    const token = this._tokenService.getTokenFromSessionStorage();
+
+    return this.getAllTechnologiesRequest(token);
+  }
+
+  /* Technology requests */
 
   getTechnologyRequest(techId: Guid): Observable<object> {
     const options = {
       params: new HttpParams().set('Id', techId.toString())
     };
-    return this.http.get(AppConstants.API_TECHNOLOGY_URL, options);
-  }
-
-  getAllTechnologiesWithSessionStorageRequest(): Observable<object> {
-    const token = sessionStorage.getItem('UserCred') ?? '';
-    return this.getAllTechnologiesRequest(token);
+    return this._http.get(AppConstants.API_TECHNOLOGY_URL, options);
   }
 
   getAllTechnologiesRequest(authToken: string): Observable<object> {
     const options = {
       headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
     };
-    return this.http.get(AppConstants.API_TECHNOLOGY_URL + '/GetTechnologies', options);
+    return this._http.get(AppConstants.API_TECHNOLOGY_URL + '/GetTechnologies', options);
   }
 
   getFullTechnologiesFromIncomplete(givenTechnologies: Technology[]): Promise<Technology[]> {
@@ -56,5 +63,4 @@ export class TechnologyService {
       }
     });
   }
-
 }

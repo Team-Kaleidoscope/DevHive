@@ -17,7 +17,10 @@
 	<div id="feed-content">
 		<nav id="top-bar" class="rounded-border">
 			<img id="top-bar-profile-pic" class="round-image" [src]="user.imageUrl" alt="" (click)="goToProfile()">
-			<input id="top-bar-create-post" type="text" placeholder="What's on your mind?"/>
+			<form [formGroup]="createPostFormGroup" (ngSubmit)="createPost()">
+				<input id="top-bar-create-post" type="text" formControlName="newPostMessage" placeholder="What's on your mind?"/>
+				<input type="submit" style="display: none" /> <!-- You need this element, so when you press enter the request is sent -->
+			</form>
 			<a id="top-bar-open-chat" href="">
 				<img src="assets/images/feed/chat-pic.png" alt=""/>
 			</a>

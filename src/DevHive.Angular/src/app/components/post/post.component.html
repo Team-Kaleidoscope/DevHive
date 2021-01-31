@@ -1,3 +1,5 @@
+<app-loading *ngIf="!loaded"></app-loading>
+
 <div class="post rounded-border" *ngIf="loaded">
 	<div class="content">
 		<div class="author" (click)="goToAuthorProfile()">
@@ -11,10 +13,10 @@
 				</div>
 			</div>
 		</div>
-		<div class="message">
+		<div class="message" (click)="goToPostPage()">
 			{{ post.message }}
 		</div>
-		<div class="timestamp">
+		<div class="timestamp" (click)="goToPostPage()">
 			{{ timeCreated }}
 		</div>
 	</div>

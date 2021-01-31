@@ -55,12 +55,6 @@ hr {
   flex-wrap: wrap;
 }
 
-#all-languages > *, #all-technologies > * {
-  width: fit-content;
-  margin-top: .1em;
-  margin-bottom: .1em;
-}
-
 /* Buttons */
 
 .edit-btn {

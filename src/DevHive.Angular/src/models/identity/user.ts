@@ -1,14 +1,8 @@
 import { Guid } from 'guid-typescript';
-
-export class Language {
-  public id: Guid;
-  public name: string;
-}
-
-export class Technology {
-  public id: Guid;
-  public name: string;
-}
+import { Language } from '../language';
+import { Technology } from '../technology';
+import { Friend } from './friend';
+import { Role } from './role';
 
 export class User {
   private _id : Guid;
@@ -19,15 +13,19 @@ export class User {
   private _imageUrl : string;
   private _languages: Language[];
   private _technologies: Technology[];
+  private _roles: Role[];
+  private _friends: Friend[];
 
-  constructor(id: Guid, userName: string, firstName: string, lastName: string, email: string, imageUrl: string, languages: Language[], technologies: Technology[]) {
+  constructor(id: Guid, userName: string, firstName: string, lastName: string, email: string, imageUrl: string, languages: Language[], technologies: Technology[], roles: Role[], friends: Friend[]) {
     this.id = id;
     this.userName = userName;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.imageUrl = imageUrl;
+    this.languages = languages;
     this.technologies = technologies;
+    this.roles = roles;
   }
 
   public get id(): Guid {
@@ -84,5 +82,19 @@ export class User {
   }
   public set technologies(v: Technology[]) {
     this._technologies = v;
+  }
+
+  public get roles(): Role[] {
+    return this._roles;
+  }
+  public set roles(v: Role[]) {
+    this._roles = v;
+  }
+
+  public get friends(): Friend[] {
+    return this._friends;
+  }
+  public set friends(v: Friend[]) {
+    this._friends = v;
   }
 }
