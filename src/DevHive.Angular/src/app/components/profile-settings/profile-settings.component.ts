@@ -7,9 +7,11 @@ import {AppConstants} from 'src/app/app-constants.module';
 import {LanguageService} from 'src/app/services/language.service';
 import {UserService} from 'src/app/services/user.service';
 import {TechnologyService} from 'src/app/services/technology.service';
-import {Language, Technology, User} from 'src/models/identity/user';
+import {User} from 'src/models/identity/user';
 import {ErrorBarComponent} from '../error-bar/error-bar.component';
 import {SuccessBarComponent} from '../success-bar/success-bar.component';
+import {Language} from 'src/models/language';
+import {Technology} from 'src/models/technology';
 
 @Component({
   selector: 'app-profile-settings',

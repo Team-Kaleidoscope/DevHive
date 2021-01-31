@@ -2,7 +2,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Guid} from 'guid-typescript';
 import {Observable} from 'rxjs';
-import {Technology} from 'src/models/identity/user';
+import {Technology} from 'src/models/technology';
 import {AppConstants} from '../app-constants.module';
 
 @Injectable({

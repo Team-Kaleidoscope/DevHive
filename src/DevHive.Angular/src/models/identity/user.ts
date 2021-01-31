@@ -1,14 +1,6 @@
 import { Guid } from 'guid-typescript';
-
-export class Language {
-  public id: Guid;
-  public name: string;
-}
-
-export class Technology {
-  public id: Guid;
-  public name: string;
-}
+import {Language} from '../language';
+import {Technology} from '../technology';
 
 export class User {
   private _id : Guid;
