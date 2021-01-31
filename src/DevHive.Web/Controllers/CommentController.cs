@@ -59,6 +59,7 @@ namespace DevHive.Web.Controllers
 			UpdateCommentServiceModel updateCommentServiceModel =
 				this._commentMapper.Map<UpdateCommentServiceModel>(updateCommentWebModel);
 			updateCommentServiceModel.CreatorId = userId;
+			updateCommentServiceModel.CommentId = commentId;
 
 			Guid id = await this._commentService.UpdateComment(updateCommentServiceModel);
 
