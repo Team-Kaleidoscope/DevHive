@@ -5,7 +5,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DevHive.Data.Migrations
 {
-    public partial class User_Friends_Relation : Migration
+    public partial class Database_Creation : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

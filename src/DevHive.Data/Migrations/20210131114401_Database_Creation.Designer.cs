@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DevHive.Data.Migrations
 {
     [DbContext(typeof(DevHiveContext))]
-    [Migration("20210130092813_CloudinaryFileUpload")]
-    partial class CloudinaryFileUpload
+    [Migration("20210131114401_Database_Creation")]
+    partial class Database_Creation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -78,6 +78,9 @@ namespace DevHive.Data.Migrations
                     b.Property<string>("Message")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("RatingId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("TimeCreated")
                         .HasColumnType("timestamp without time zone");
 
@@ -85,7 +88,27 @@ namespace DevHive.Data.Migrations
 
                     b.HasIndex("CreatorId");
 
+                    b.HasIndex("RatingId")
+                        .IsUnique();
+
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("DevHive.Data.Models.Rating", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Dislikes")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Likes")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Rating");
                 });
 
             modelBuilder.Entity("DevHive.Data.Models.Role", b =>
@@ -187,9 +210,6 @@ namespace DevHive.Data.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -202,8 +222,6 @@ namespace DevHive.Data.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
-
-                    b.HasIndex("UserId");
 
                     b.HasIndex("UserName")
                         .IsUnique();
@@ -393,14 +411,15 @@ namespace DevHive.Data.Migrations
                         .WithMany("Posts")
                         .HasForeignKey("CreatorId");
 
-                    b.Navigation("Creator");
-                });
+                    b.HasOne("DevHive.Data.Models.Rating", "Rating")
+                        .WithOne("Post")
+                        .HasForeignKey("DevHive.Data.Models.Post", "RatingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("DevHive.Data.Models.User", b =>
-                {
-                    b.HasOne("DevHive.Data.Models.User", null)
-                        .WithMany("Friends")
-                        .HasForeignKey("UserId");
+                    b.Navigation("Creator");
+
+                    b.Navigation("Rating");
                 });
 
             modelBuilder.Entity("DevHive.Data.RelationModels.UserFriends", b =>
@@ -412,7 +431,7 @@ namespace DevHive.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("DevHive.Data.Models.User", "User")
-                        .WithMany()
+                        .WithMany("Friends")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -521,6 +540,11 @@ namespace DevHive.Data.Migrations
             modelBuilder.Entity("DevHive.Data.Models.Post", b =>
                 {
                     b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("DevHive.Data.Models.Rating", b =>
+                {
+                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("DevHive.Data.Models.User", b =>
