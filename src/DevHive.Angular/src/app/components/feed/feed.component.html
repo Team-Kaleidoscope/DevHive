@@ -19,7 +19,7 @@
 			<img id="top-bar-profile-pic" class="round-image" [src]="user.imageUrl" alt="" (click)="goToProfile()">
 			<form [formGroup]="createPostFormGroup" (ngSubmit)="createPost()">
 				<input id="top-bar-create-post" type="text" formControlName="newPostMessage" placeholder="What's on your mind?"/>
-				<input type="submit" style="display: none" /> <!--> You need this element, so when you press enter the request is sent <--!>
+				<input type="submit" style="display: none" /> <!-- You need this element, so when you press enter the request is sent -->
 			</form>
 			<a id="top-bar-open-chat" href="">
 				<img src="assets/images/feed/chat-pic.png" alt=""/>

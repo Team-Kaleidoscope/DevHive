@@ -74,7 +74,7 @@ export class UserService {
 
   getUserByUsernameRequest(username: string): Observable<object> {
     const options = {
-      params: new HttpParams().set(AppConstants.SESSION_TOKEN_KEY, username),
+      params: new HttpParams().set('UserName', username),
     };
     return this._http.get(AppConstants.API_USER_URL + '/GetUser', options);
   }
