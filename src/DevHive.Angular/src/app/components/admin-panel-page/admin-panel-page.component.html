@@ -35,20 +35,30 @@
 			</div>
 			<hr>
 		</form>
-			<button type="button" class="submit-btn edit-btn" (click)="toggleTechnologies()">▼ Edit Technologies ▼</button>
-		<div *ngIf="showTechnologies">
-				<div class="input-selection">
-				<input type="text" class="input-field" formControlName="technologyInput" required>
-					<div class="input-errors">
-					<label class="error">Type in your desired technologies, separated by a space</label>
-				</div>
+		<button type="button" class="submit-btn edit-btn" (click)="toggleTechnologies()">▼ Edit Technologies ▼</button>
+		<form [formGroup]="technologyForm" (ngSubmit)="submitTechnologies()" *ngIf="showTechnologies">
+			<div class="input-selection">
+				<label>Create technology:</label>
+				<input type="text" class="input-field" formControlName="technologyCreate" placeholder="New technology name">
 			</div>
+			<label>Update technology:</label>
+			<div class="flexbox input-selection">
+				<input type="text" class="input-field" formControlName="updateTechnologyOldName" placeholder="Old technology name">
+				<input type="text" class="input-field" formControlName="updateTechnologyNewName" placeholder="New technology name">
+			</div>
+			<label>Delete technology:</label>
+			<div class="flexbox input-selection">
+				<input type="text" class="input-field" formControlName="deleteTechnologyName" placeholder="Technology name">
+			</div>
+			<button class="submit-btn" type="submit">Modify technologies</button>
+			<hr>
 			Available technologies:
 			<div id="all-technologies">
 				<div class="user-technology" *ngFor="let tech of availableTechnologies">
 					{{ tech.name }}
 				</div>
 			</div>
-		</div>
+			<hr>
+		</form>
 	</div>
 </div>

@@ -15,13 +15,41 @@ export class TechnologyService {
 
   /* Requests from session storage */
 
+   createTechnologyWithSessionStorageRequest(name: string): Observable<object> {
+    const token = this._tokenService.getTokenFromSessionStorage();
+
+    return this.createtTechnologyRequest(name, token);
+  }
+
   getAllTechnologiesWithSessionStorageRequest(): Observable<object> {
     const token = this._tokenService.getTokenFromSessionStorage();
 
     return this.getAllTechnologiesRequest(token);
   }
 
+  putTechnologyWithSessionStorageRequest(langId: Guid, newName: string): Observable<object> {
+    const token = this._tokenService.getTokenFromSessionStorage();
+
+    return this.putTechnologyRequest(token, langId, newName);
+  }
+
+  deleteTechnologyWithSessionStorageRequest(langId: Guid): Observable<object> {
+    const token = this._tokenService.getTokenFromSessionStorage();
+
+    return this.deleteTechnologyRequest(token, langId);
+  }
+
   /* Technology requests */
+
+  createtTechnologyRequest(name: string, authToken: string): Observable<object> {
+    const body = {
+      name: name
+    };
+    const options = {
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
+    };
+    return this._http.post(AppConstants.API_TECHNOLOGY_URL, body, options);
+  }
 
   getTechnologyRequest(techId: Guid): Observable<object> {
     const options = {
@@ -62,5 +90,24 @@ export class TechnologyService {
         );
       }
     });
+  }
+
+  putTechnologyRequest(authToken: string, langId: Guid, newName: string): Observable<object> {
+    const body = {
+      name: newName
+    };
+    const options = {
+      params: new HttpParams().set('Id', langId.toString()),
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
+    };
+    return this._http.put(AppConstants.API_TECHNOLOGY_URL, body, options);
+  }
+
+  deleteTechnologyRequest(authToken: string, langId: Guid): Observable<object> {
+    const options = {
+      params: new HttpParams().set('Id', langId.toString()),
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
+    };
+    return this._http.delete(AppConstants.API_TECHNOLOGY_URL, options);
   }
 }

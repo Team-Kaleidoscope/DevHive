@@ -27,6 +27,7 @@ export class AdminPanelPageComponent implements OnInit {
   public availableLanguages: Language[];
   public availableTechnologies: Technology[];
   public languageForm: FormGroup;
+  public technologyForm: FormGroup;
 
   constructor(private _router: Router, private _fb: FormBuilder, private _userService: UserService, private _languageService: LanguageService, private _technologyService: TechnologyService, private _tokenService: TokenService)
   { }
@@ -39,7 +40,6 @@ export class AdminPanelPageComponent implements OnInit {
 
     this._userService.getUserFromSessionStorageRequest().subscribe(
       (result: object) => {
-        console.log('bruh');
         const user = result as User;
         if (!user.roles.map(x => x.name).includes(AppConstants.ADMIN_ROLE_NAME)) {
           this._router.navigate(['/login']);
@@ -56,6 +56,14 @@ export class AdminPanelPageComponent implements OnInit {
       updateLanguageNewName: new FormControl(''),
       deleteLanguageName: new FormControl('')
     });
+
+    this.technologyForm = this._fb.group({
+      technologyCreate: new FormControl(''),
+      updateTechnologyOldName: new FormControl(''),
+      updateTechnologyNewName: new FormControl(''),
+      deleteTechnologyName: new FormControl('')
+    });
+
 
     this.loadAvailableLanguages();
     this.loadAvailableTechnologies();
@@ -155,15 +163,77 @@ export class AdminPanelPageComponent implements OnInit {
 
   // Technology modifying
 
+  toggleTechnologies(): void {
+    this.showTechnologies = !this.showTechnologies;
+  }
+
+  submitTechnologies(): void {
+    this.tryCreateTechnology();
+    this.tryUpdateTechnology();
+    this.tryDeleteTechnology();
+  }
+
+  private tryCreateTechnology(): void {
+    const technologyCreate: string = this.technologyForm.get('technologyCreate')?.value;
+
+    if (technologyCreate !== '' && technologyCreate !== null) {
+      this._technologyService.createTechnologyWithSessionStorageRequest(technologyCreate.trim()).subscribe(
+        (result: object) => {
+          this.technologyModifiedSuccess('Successfully updated technologies!');
+        },
+        (err: HttpErrorResponse) => {
+          this._errorBar.showError(err);
+        }
+      );
+    }
+  }
+
+  private tryUpdateTechnology(): void {
+    const updateTechnologyOldName: string = this.technologyForm.get('updateTechnologyOldName')?.value;
+    const updateTechnologyNewName: string = this.technologyForm.get('updateTechnologyNewName')?.value;
+
+    if (updateTechnologyOldName !== '' && updateTechnologyOldName !== null && updateTechnologyNewName !== '' && updateTechnologyNewName !== null) {
+      const techId = this.availableTechnologies.filter(x => x.name === updateTechnologyOldName.trim())[0].id;
+
+      this._technologyService.putTechnologyWithSessionStorageRequest(techId, updateTechnologyNewName.trim()).subscribe(
+        (result: object) => {
+          this.technologyModifiedSuccess('Successfully updated technologies!');
+        },
+        (err: HttpErrorResponse) => {
+          this._errorBar.showError(err);
+        }
+      );
+    }
+  }
+
+  private tryDeleteTechnology(): void {
+    const deleteTechnologyName: string = this.technologyForm.get('deleteTechnologyName')?.value;
+
+    if (deleteTechnologyName !== '' && deleteTechnologyName !== null) {
+      const techId = this.availableTechnologies.filter(x => x.name === deleteTechnologyName.trim())[0].id;
+
+      this._technologyService.deleteTechnologyWithSessionStorageRequest(techId).subscribe(
+        (result: object) => {
+          this.technologyModifiedSuccess('Successfully deleted technology!');
+        },
+        (err: HttpErrorResponse) => {
+          this._errorBar.showError(err);
+        }
+      );
+    }
+  }
+
+  private technologyModifiedSuccess(successMsg: string): void {
+    this._successBar.showMsg(successMsg);
+    this.loadAvailableTechnologies();
+    this.technologyForm.reset();
+  }
+
   private loadAvailableTechnologies(): void {
      this._technologyService.getAllTechnologiesWithSessionStorageRequest().subscribe(
       (result: object) => {
         this.availableTechnologies = result as Technology[];
       }
     );
-  }
-
-  toggleTechnologies(): void {
-    this.showTechnologies = !this.showTechnologies;
   }
 }
