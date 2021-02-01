@@ -29,6 +29,11 @@ export class FeedComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (!this._tokenService.getTokenFromSessionStorage()) {
+      this._router.navigate(['/login']);
+      return;
+    }
+
     this.posts = [];
     this.user = this._userService.getDefaultUser();
 
@@ -40,19 +45,15 @@ export class FeedComponent implements OnInit {
       newPostMessage: new FormControl('')
     });
 
-    if (sessionStorage.getItem('UserCred')) {
-      this._userService.getUserFromSessionStorageRequest().subscribe(
-        (res: object) => {
-          Object.assign(this.user, res);
-          this.loadFeed();
-        },
-        (err: HttpErrorResponse) => {
-          this.logout();
-        }
-      );
-    } else {
-      this._router.navigate(['/login']);
-    }
+    this._userService.getUserFromSessionStorageRequest().subscribe(
+      (res: object) => {
+        Object.assign(this.user, res);
+        this.loadFeed();
+      },
+      (err: HttpErrorResponse) => {
+        this.logout();
+      }
+    );
   }
 
   private loadFeed(): void {
@@ -62,6 +63,7 @@ export class FeedComponent implements OnInit {
         this.finishUserLoading();
       },
       (err: HttpErrorResponse) => {
+        const test = err.status;
         this.finishUserLoading();
       }
     );
@@ -87,7 +89,7 @@ export class FeedComponent implements OnInit {
   createPost(): void {
     const postMessage = this.createPostFormGroup.get('newPostMessage')?.value;
 
-    this._postService.createPostFromSessionStorageRequest(postMessage).subscribe(
+    this._postService.createPostWithSessionStorageRequest(postMessage).subscribe(
       (result: object) => {
         this.goToProfile();
       }

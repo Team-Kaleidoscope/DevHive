@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     this._errorBar.hideError();
     this._userService.loginUserRequest(this.loginUserFormGroup).subscribe(
-        res => {
+        (res: object) => {
           this._tokenService.setUserTokenToSessionStorage(res);
           this._router.navigate(['/']);
         },
