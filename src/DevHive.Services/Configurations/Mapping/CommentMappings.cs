@@ -15,9 +15,9 @@ namespace DevHive.Services.Configurations.Mapping
 
 			CreateMap<Comment, ReadCommentServiceModel>()
 				.ForMember(dest => dest.CommentId, src => src.MapFrom(p => p.Id))
-				.ForMember(dest => dest.IssuerFirstName, src => src.Ignore())
-				.ForMember(dest => dest.IssuerLastName, src => src.Ignore())
-				.ForMember(dest => dest.IssuerUsername, src => src.Ignore());
+				.ForMember(dest => dest.IssuerFirstName, src => src.MapFrom(p => p.Creator.FirstName))
+				.ForMember(dest => dest.IssuerLastName, src => src.MapFrom(p => p.Creator.LastName))
+				.ForMember(dest => dest.IssuerUsername, src => src.MapFrom(p => p.Creator.UserName));
 		}
 	}
 }
