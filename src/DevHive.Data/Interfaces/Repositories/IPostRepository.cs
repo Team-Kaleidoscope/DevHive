@@ -8,6 +8,8 @@ namespace DevHive.Data.Interfaces.Repositories
 {
 	public interface IPostRepository : IRepository<Post>
 	{
+		Task<bool> AddNewPostToCreator(Guid userId, Post post);
+
 		Task<Post> GetPostByCreatorAndTimeCreatedAsync(Guid issuerId, DateTime timeCreated);
 		Task<List<string>> GetFileUrls(Guid postId);
 

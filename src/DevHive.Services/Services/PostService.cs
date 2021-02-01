@@ -9,6 +9,7 @@ using System.Security.Claims;
 using DevHive.Services.Interfaces;
 using DevHive.Data.Interfaces.Repositories;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace DevHive.Services.Services
 {
@@ -49,6 +50,8 @@ namespace DevHive.Services.Services
 				Post newPost = await this._postRepository
 					.GetPostByCreatorAndTimeCreatedAsync(post.Creator.Id, post.TimeCreated);
 
+				await this._postRepository.AddNewPostToCreator(createPostServiceModel.CreatorId, newPost);
+
 				return newPost.Id;
 			}
 			else
@@ -69,7 +72,6 @@ namespace DevHive.Services.Services
 			readPostServiceModel.CreatorFirstName = user.FirstName;
 			readPostServiceModel.CreatorLastName = user.LastName;
 			readPostServiceModel.CreatorUsername = user.UserName;
-			// readPostServiceModel.Files = await this._cloudService.GetFilesFromCloud(post.FileUrls);
 
 			return readPostServiceModel;
 		}

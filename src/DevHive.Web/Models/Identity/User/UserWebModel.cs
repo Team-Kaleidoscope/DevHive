@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using DevHive.Common.Models.Misc;
 using DevHive.Web.Models.Identity.Role;
 using DevHive.Web.Models.Language;
 using DevHive.Web.Models.Technology;
@@ -11,18 +12,20 @@ namespace DevHive.Web.Models.Identity.User
 	{
 		[NotNull]
 		[Required]
-		public HashSet<RoleWebModel> Roles { get; set; } = new HashSet<RoleWebModel>();
+		public HashSet<RoleWebModel> Roles { get; set; } = new();
 
 		[NotNull]
 		[Required]
-		public HashSet<UsernameWebModel> Friends { get; set; } = new HashSet<UsernameWebModel>();
+		public HashSet<UsernameWebModel> Friends { get; set; } = new();
 
 		[NotNull]
 		[Required]
-		public HashSet<LanguageWebModel> Languages { get; set; } = new HashSet<LanguageWebModel>();
+		public HashSet<LanguageWebModel> Languages { get; set; } = new();
 
 		[NotNull]
 		[Required]
-		public HashSet<TechnologyWebModel> Technologies { get; set; } = new HashSet<TechnologyWebModel>();
+		public HashSet<TechnologyWebModel> Technologies { get; set; } = new();
+
+		public List<IdModel> Posts { get; set; } = new();
 	}
 }

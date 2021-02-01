@@ -38,6 +38,7 @@ namespace DevHive.Data.Repositories
 				.Include(x => x.Roles)
 				.Include(x => x.Languages)
 				.Include(x => x.Technologies)
+				.Include(x => x.Posts)
 				.FirstOrDefaultAsync(x => x.Id == id);
 		}
 
@@ -48,6 +49,7 @@ namespace DevHive.Data.Repositories
 				.Include(x => x.Roles)
 				.Include(x => x.Languages)
 				.Include(x => x.Technologies)
+				.Include(x => x.Posts)
 				.FirstOrDefaultAsync(x => x.UserName == username);
 		}
 		#endregion

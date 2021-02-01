@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DevHive.Common.Models.Misc;
 using DevHive.Services.Models.Identity.Role;
 using DevHive.Services.Models.Language;
 using DevHive.Services.Models.Technology;
@@ -14,5 +15,7 @@ namespace DevHive.Services.Models.Identity.User
 		public HashSet<LanguageServiceModel> Languages { get; set; } = new();
 
 		public HashSet<TechnologyServiceModel> Technologies { get; set; } = new();
+
+		public List<IdModel> Posts { get; set; } = new();
 	}
 }

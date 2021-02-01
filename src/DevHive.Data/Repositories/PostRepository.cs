@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DevHive.Data.Interfaces.Models;
 using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -11,11 +12,21 @@ namespace DevHive.Data.Repositories
 	public class PostRepository : BaseRepository<Post>, IPostRepository
 	{
 		private readonly DevHiveContext _context;
+		private readonly IUserRepository _userRepository;
 
-		public PostRepository(DevHiveContext context)
+		public PostRepository(DevHiveContext context, IUserRepository userRepository)
 			: base(context)
 		{
 			this._context = context;
+			this._userRepository = userRepository;
+		}
+
+		public async Task<bool> AddNewPostToCreator(Guid userId, Post post)
+		{
+			User user = await this._userRepository.GetByIdAsync(userId);
+			user.Posts.Add(post);
+
+			return await this.SaveChangesAsync();
 		}
 
 		#region Read
