@@ -17,6 +17,7 @@ import { TokenService } from 'src/app/services/token.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+  private _title = 'Profile';
   private _urlUsername: string;
   public loggedInUser = false;
   public isAdminUser = false;
@@ -24,8 +25,9 @@ export class ProfileComponent implements OnInit {
   public user: User;
   public userPosts: Post[];
 
-  constructor(private _router: Router, private _userService: UserService, private _languageService: LanguageService, private _technologyService: TechnologyService, private _feedService: FeedService, private _location: Location, private _tokenService: TokenService)
-  { }
+  constructor(private _titleService: Title, private _router: Router, private _userService: UserService, private _languageService: LanguageService, private _technologyService: TechnologyService, private _feedService: FeedService, private _location: Location, private _tokenService: TokenService) {
+    this._titleService.setTitle(this._title);
+  }
 
   private setDefaultUser(): void {
     this.user = this._userService.getDefaultUser();

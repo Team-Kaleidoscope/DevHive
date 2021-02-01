@@ -19,6 +19,7 @@ import { TokenService } from 'src/app/services/token.service';
   styleUrls: ['./profile-settings.component.css']
 })
 export class ProfileSettingsComponent implements OnInit {
+  private _title = 'Profile Settings';
   @ViewChild(ErrorBarComponent) private _errorBar: ErrorBarComponent;
   @ViewChild(SuccessBarComponent) private _successBar: SuccessBarComponent;
   private _urlUsername: string;
@@ -31,8 +32,9 @@ export class ProfileSettingsComponent implements OnInit {
   public availableLanguages: Language[];
   public availableTechnologies: Technology[];
 
-  constructor(private _router: Router, private _userService: UserService, private _languageService: LanguageService, private _technologyService: TechnologyService, private _tokenService: TokenService, private _fb: FormBuilder, private _location: Location)
-  { }
+  constructor(private _titleService: Title, private _router: Router, private _userService: UserService, private _languageService: LanguageService, private _technologyService: TechnologyService, private _tokenService: TokenService, private _fb: FormBuilder, private _location: Location) {
+    this._titleService.setTitle(this._title);
+  }
 
   ngOnInit(): void {
     this._urlUsername = this._router.url.substring(9);

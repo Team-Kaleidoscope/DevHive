@@ -14,6 +14,7 @@ import { Post } from 'src/models/post';
   styleUrls: ['./post-page.component.css']
 })
 export class PostPageComponent implements OnInit {
+  private _title = 'Post';
   public editable = false;
   public editingPost = false;
   public postId: Guid;
@@ -21,8 +22,9 @@ export class PostPageComponent implements OnInit {
   public editPostFormGroup: FormGroup;
   public addCommentFormGroup: FormGroup;
 
-  constructor(private _router: Router, private _fb: FormBuilder, private _tokenService: TokenService, private _postService: PostService, private _commentService: CommentService)
-  { }
+  constructor(private _titleService: Title, private _router: Router, private _fb: FormBuilder, private _tokenService: TokenService, private _postService: PostService, private _commentService: CommentService){
+    this._titleService.setTitle(this._title);
+  }
 
   ngOnInit(): void {
     this.postId = Guid.parse(this._router.url.substring(6));

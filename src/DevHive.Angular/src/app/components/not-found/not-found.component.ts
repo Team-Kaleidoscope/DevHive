@@ -7,9 +7,11 @@ import { Router } from '@angular/router';
   styleUrls: ['./not-found.component.css']
 })
 export class NotFoundComponent implements OnInit {
+  private _title = 'Not Found!';
 
-  constructor(private _router: Router)
-  { }
+  constructor(private _titleService: Title,private _router: Router) {
+    this._titleService.setTitle(this._title);
+  }
 
   ngOnInit(): void {
   }

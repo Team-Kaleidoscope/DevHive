@@ -21,6 +21,7 @@ import { SuccessBarComponent } from '../success-bar/success-bar.component';
   styleUrls: ['./admin-panel-page.component.css']
 })
 export class AdminPanelPageComponent implements OnInit {
+  private _title = 'Admin Panel';
   @ViewChild(ErrorBarComponent) private _errorBar: ErrorBarComponent;
   @ViewChild(SuccessBarComponent) private _successBar: SuccessBarComponent;
   public dataArrived = false;
@@ -33,8 +34,9 @@ export class AdminPanelPageComponent implements OnInit {
   public technologyForm: FormGroup;
   public deleteForm: FormGroup;
 
-  constructor(private _router: Router, private _fb: FormBuilder, private _userService: UserService, private _languageService: LanguageService, private _technologyService: TechnologyService, private _tokenService: TokenService, private _postService: PostService)
-  { }
+  constructor(private _titleService: Title, private _router: Router, private _fb: FormBuilder, private _userService: UserService, private _languageService: LanguageService, private _technologyService: TechnologyService, private _tokenService: TokenService, private _postService: PostService) {
+    this._titleService.setTitle(this._title);
+  }
 
   ngOnInit(): void {
     if (!this._tokenService.getTokenFromSessionStorage()) {
