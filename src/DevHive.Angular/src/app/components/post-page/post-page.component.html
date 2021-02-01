@@ -11,4 +11,9 @@
 		<input type="text" placeholder="New post message" class="input-field" formControlName="newPostMessage">
 		<input type="submit" style="display: none" />
 	</form>
+	<div>
+		<div class="comment" *ngFor="let comm of post?.comments">
+			<app-comment [paramId]="comm.commentId.toString()"></app-comment>
+		</div>
+	</div>
 <div>

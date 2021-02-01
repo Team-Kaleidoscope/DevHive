@@ -1,0 +1,59 @@
+.comment {
+  display: flex;
+  width: 100%;
+
+  margin: .5em auto;
+  box-sizing: border-box;
+  padding: .5em;
+  background-color: var(--card-bg);
+}
+
+.comment:first-child {
+  margin-top: 0;
+}
+
+/* Author */
+
+.author {
+  display: flex;
+  margin-bottom: .2em;
+}
+
+.author:hover {
+  cursor: pointer;
+}
+
+.author > img {
+  width: 1.7em;
+  height: 1.7em;
+  margin-right: .2em;
+}
+
+.author-info > .name {
+  font-size: .8em;
+}
+
+.author-info > .handle {
+  font-size: .6em;
+  color: gray;
+}
+
+/* Content */
+
+.content {
+  flex: 1;
+}
+
+.message {
+  margin: .3em 0;
+  word-break: break-all;
+}
+
+.timestamp {
+  font-size: .5em;
+  color: gray;
+}
+
+.message:hover, .timestamp:hover {
+  cursor: pointer;
+}

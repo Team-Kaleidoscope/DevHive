@@ -1,11 +1,11 @@
-import {HttpErrorResponse} from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
-import {PostService} from 'src/app/services/post.service';
-import {TokenService} from 'src/app/services/token.service';
-import {Post} from 'src/models/post';
+import { PostService } from 'src/app/services/post.service';
+import { TokenService } from 'src/app/services/token.service';
+import { Post } from 'src/models/post';
 
 @Component({
   selector: 'app-post-page',
@@ -16,6 +16,7 @@ export class PostPageComponent implements OnInit {
   public editable = false;
   public editingPost = false;
   public postId: Guid;
+  public post: Post;
   public editPostFormGroup: FormGroup;
 
   constructor(private _router: Router, private _fb: FormBuilder, private _tokenService: TokenService, private _postService: PostService)
@@ -28,8 +29,11 @@ export class PostPageComponent implements OnInit {
     // to determine if the current post is made by the user
     this._postService.getPostRequest(this.postId).subscribe(
       (result: object) => {
-        const post = result as Post;
-        this.editable = post.creatorUsername === this._tokenService.getUsernameFromSessionStorageToken();
+        this.post = result as Post;
+        this.post.comments = this.post.comments.sort((x, y) => {
+          return Date.parse(y.timeCreated.toString()) - Date.parse(x.timeCreated.toString());
+        });
+        this.editable = this.post.creatorUsername === this._tokenService.getUsernameFromSessionStorageToken();
       },
       (err: HttpErrorResponse) => {
         this._router.navigate(['/not-found']);

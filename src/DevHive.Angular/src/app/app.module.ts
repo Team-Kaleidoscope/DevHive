@@ -21,6 +21,7 @@ import { ErrorBarComponent } from './components/error-bar/error-bar.component';
 import { SuccessBarComponent } from './components/success-bar/success-bar.component';
 import { PostPageComponent } from './components/post-page/post-page.component';
 import { AdminPanelPageComponent } from './components/admin-panel-page/admin-panel-page.component';
+import { CommentComponent } from './components/comment/comment.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { AdminPanelPageComponent } from './components/admin-panel-page/admin-pan
     ErrorBarComponent,
     SuccessBarComponent,
     PostPageComponent,
-    AdminPanelPageComponent
+    AdminPanelPageComponent,
+    CommentComponent
   ],
   imports: [
     BrowserModule,
