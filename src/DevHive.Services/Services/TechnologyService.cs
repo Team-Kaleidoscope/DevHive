@@ -40,14 +40,14 @@ namespace DevHive.Services.Services
 		#endregion
 
 		#region Read
-		public async Task<CreateTechnologyServiceModel> GetTechnologyById(Guid id)
+		public async Task<ReadTechnologyServiceModel> GetTechnologyById(Guid id)
 		{
 			Technology technology = await this._technologyRepository.GetByIdAsync(id);
 
 			if (technology == null)
 				throw new ArgumentException("The technology does not exist");
 
-			return this._technologyMapper.Map<CreateTechnologyServiceModel>(technology);
+			return this._technologyMapper.Map<ReadTechnologyServiceModel>(technology);
 		}
 
 		public HashSet<ReadTechnologyServiceModel> GetTechnologies()

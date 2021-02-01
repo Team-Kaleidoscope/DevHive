@@ -9,7 +9,7 @@ namespace DevHive.Services.Interfaces
 	{
 		Task<Guid> CreateTechnology(CreateTechnologyServiceModel technologyServiceModel);
 
-		Task<CreateTechnologyServiceModel> GetTechnologyById(Guid id);
+		Task<ReadTechnologyServiceModel> GetTechnologyById(Guid id);
 		HashSet<ReadTechnologyServiceModel> GetTechnologies();
 
 		Task<bool> UpdateTechnology(UpdateTechnologyServiceModel updateTechnologyServiceModel);
