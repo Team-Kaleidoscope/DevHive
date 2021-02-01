@@ -7,8 +7,12 @@
 		<button class="submit-btn" (click)="editPost()">Edit post</button>
 		<button class="submit-btn delete-btn" (click)="deletePost()">Delete post</button>
 	</div>
-	<form *ngIf="editingPost" [formGroup]="editPostFormGroup" (ngSubmit)="editPost()">
-		<input type="text" placeholder="New post message" class="input-field" formControlName="newPostMessage">
+	<form  [formGroup]="editPostFormGroup" (ngSubmit)="editPost()">
+		<input type="text" *ngIf="editingPost" placeholder="New post message" class="input-field" formControlName="newPostMessage">
+		<input type="submit" style="display: none" />
+	</form>
+	<form [formGroup]="addCommentFormGroup" (ngSubmit)="addComment()">
+		<input type="text" placeholder="Add comment" class="input-field" formControlName="newComment">
 		<input type="submit" style="display: none" />
 	</form>
 	<div>

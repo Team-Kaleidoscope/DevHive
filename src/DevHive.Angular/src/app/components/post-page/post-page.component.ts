@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
+import {CommentService} from 'src/app/services/comment.service';
 import { PostService } from 'src/app/services/post.service';
 import { TokenService } from 'src/app/services/token.service';
 import { Post } from 'src/models/post';
@@ -18,8 +19,9 @@ export class PostPageComponent implements OnInit {
   public postId: Guid;
   public post: Post;
   public editPostFormGroup: FormGroup;
+  public addCommentFormGroup: FormGroup;
 
-  constructor(private _router: Router, private _fb: FormBuilder, private _tokenService: TokenService, private _postService: PostService)
+  constructor(private _router: Router, private _fb: FormBuilder, private _tokenService: TokenService, private _postService: PostService, private _commentService: CommentService)
   { }
 
   ngOnInit(): void {
@@ -43,6 +45,10 @@ export class PostPageComponent implements OnInit {
     this.editPostFormGroup = this._fb.group({
       newPostMessage: new FormControl('')
     });
+
+    this.addCommentFormGroup = this._fb.group({
+      newComment: new FormControl('')
+    });
   }
 
   backToFeed(): void {
@@ -50,20 +56,35 @@ export class PostPageComponent implements OnInit {
   }
 
   editPost(): void {
+    if (this._tokenService.getTokenFromSessionStorage() === '') {
+      this._router.navigate(['/login']);
+      return;
+    }
+
     if (this.editingPost) {
       const newMessage = this.editPostFormGroup.get('newPostMessage')?.value;
       if (newMessage !== '') {
         this._postService.putPostWithSessionStorageRequest(this.postId, newMessage).subscribe(
           (result: object) => {
-            // Reload the page
-            this._router.routeReuseStrategy.shouldReuseRoute = () => false;
-            this._router.onSameUrlNavigation = 'reload';
-            this._router.navigate([this._router.url]);
+            this.reloadPage();
           }
         );
       }
     }
     this.editingPost = !this.editingPost;
+  }
+
+  addComment(): void {
+    const newComment = this.addCommentFormGroup.get('newComment')?.value;
+    if (newComment !== '' && newComment !== null) {
+      console.log(newComment);
+      this._commentService.createCommentWithSessionStorageRequest(this.postId, newComment).subscribe(
+        (result: object) => {
+          this.editPostFormGroup.reset();
+          this.reloadPage();
+        }
+      );
+    }
   }
 
   deletePost(): void {
@@ -72,5 +93,11 @@ export class PostPageComponent implements OnInit {
         this._router.navigate(['/profile/' + this._tokenService.getUsernameFromSessionStorageToken()]);
       }
     );
+  }
+
+  private reloadPage(): void {
+    this._router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this._router.onSameUrlNavigation = 'reload';
+    this._router.navigate([this._router.url]);
   }
 }
