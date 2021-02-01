@@ -15,13 +15,41 @@ export class LanguageService {
 
   /* Requests from session storage */
 
+  createLanguageWithSessionStorageRequest(name: string): Observable<object> {
+    const token = this._tokenService.getTokenFromSessionStorage();
+
+    return this.createLanguageRequest(name, token);
+  }
+
   getAllLanguagesWithSessionStorageRequest(): Observable<object> {
     const token = this._tokenService.getTokenFromSessionStorage();
 
     return this.getAllLanguagesRequest(token);
   }
 
+  putLanguageWithSessionStorageRequest(langId: Guid, newName: string): Observable<object> {
+    const token = this._tokenService.getTokenFromSessionStorage();
+
+    return this.putLanguageRequest(token, langId, newName);
+  }
+
+  deleteLanguageWithSessionStorageRequest(langId: Guid): Observable<object> {
+    const token = this._tokenService.getTokenFromSessionStorage();
+
+    return this.deleteLanguageRequest(token, langId);
+  }
+
   /* Language requests */
+
+  createLanguageRequest(name: string, authToken: string): Observable<object> {
+    const body = {
+      name: name
+    };
+    const options = {
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
+    };
+    return this._http.post(AppConstants.API_LANGUAGE_URL, body, options);
+  }
 
   getLanguageRequest(langId: Guid): Observable<object> {
     const options = {
@@ -62,5 +90,24 @@ export class LanguageService {
         );
       }
     });
+  }
+
+  putLanguageRequest(authToken: string, langId: Guid, newName: string): Observable<object> {
+    const body = {
+      name: newName
+    };
+    const options = {
+      params: new HttpParams().set('Id', langId.toString()),
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
+    };
+    return this._http.put(AppConstants.API_LANGUAGE_URL, body, options);
+  }
+
+  deleteLanguageRequest(authToken: string, langId: Guid): Observable<object> {
+    const options = {
+      params: new HttpParams().set('Id', langId.toString()),
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
+    };
+    return this._http.delete(AppConstants.API_LANGUAGE_URL, options);
   }
 }

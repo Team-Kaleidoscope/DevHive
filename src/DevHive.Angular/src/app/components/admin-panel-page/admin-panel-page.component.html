@@ -1,0 +1,54 @@
+<!-- <app&#45;loading *ngIf="!dataArrived"></app&#45;loading> -->
+
+<div id="content" *ngIf="!dataArrived">
+	<nav id="navigation">
+		<button class="submit-btn" (click)="backToProfile()">ᐊ Back to profile</button>
+		<button class="submit-btn" (click)="backToFeed()">ᐊ Back to feed</button>
+		<button class="submit-btn" (click)="logout()">Logout</button>
+	</nav>
+	<hr>
+	<div class="scroll-standalone">
+		<app-success-bar></app-success-bar>
+		<app-error-bar></app-error-bar>
+		<button type="button" class="submit-btn edit-btn" (click)="toggleLanguages()">▼ Edit Languages ▼</button>
+		<form [formGroup]="languageForm" (ngSubmit)="submitLanguages()" *ngIf="showLanguages">
+			<div class="input-selection">
+				<label>Create language:</label>
+				<input type="text" class="input-field" formControlName="languageCreate" placeholder="New language name">
+			</div>
+			<label>Update language:</label>
+			<div class="flexbox input-selection">
+				<input type="text" class="input-field" formControlName="updateLanguageOldName" placeholder="Old language name">
+				<input type="text" class="input-field" formControlName="updateLanguageNewName" placeholder="New language name">
+			</div>
+			<label>Delete language:</label>
+			<div class="flexbox input-selection">
+				<input type="text" class="input-field" formControlName="deleteLanguageName" placeholder="Language name">
+			</div>
+			<button class="submit-btn" type="submit">Modify languages</button>
+			<hr>
+			Available languages:
+			<div id="all-languages">
+				<div class="user-language" *ngFor="let lang of availableLanguages">
+					{{ lang.name }}
+				</div>
+			</div>
+			<hr>
+		</form>
+			<button type="button" class="submit-btn edit-btn" (click)="toggleTechnologies()">▼ Edit Technologies ▼</button>
+		<div *ngIf="showTechnologies">
+				<div class="input-selection">
+				<input type="text" class="input-field" formControlName="technologyInput" required>
+					<div class="input-errors">
+					<label class="error">Type in your desired technologies, separated by a space</label>
+				</div>
+			</div>
+			Available technologies:
+			<div id="all-technologies">
+				<div class="user-technology" *ngFor="let tech of availableTechnologies">
+					{{ tech.name }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

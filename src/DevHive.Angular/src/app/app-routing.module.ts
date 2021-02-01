@@ -7,6 +7,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { ProfileSettingsComponent } from './components/profile-settings/profile-settings.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PostPageComponent } from './components/post-page/post-page.component';
+import {AdminPanelPageComponent} from './components/admin-panel-page/admin-panel-page.component';
 
 const routes: Routes = [
   { path: '', component: FeedComponent },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'profile/:username', component: ProfileComponent },
   { path: 'profile/:username/settings', component: ProfileSettingsComponent },
   { path: 'post/:id', component: PostPageComponent },
+  { path: 'admin-panel', component: AdminPanelPageComponent },
   { path: 'not-found', component: NotFoundComponent },
   { path: '**', component: NotFoundComponent }
 ];

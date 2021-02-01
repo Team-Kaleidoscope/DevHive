@@ -15,4 +15,5 @@ export class AppConstants {
   public static FALLBACK_PROFILE_ICON = 'assets/images/feed/profile-pic.png';
 
   public static SESSION_TOKEN_KEY = 'UserCred';
+  public static ADMIN_ROLE_NAME = 'Admin';
 }

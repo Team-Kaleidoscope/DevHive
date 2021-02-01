@@ -19,6 +19,7 @@ import { TokenService } from 'src/app/services/token.service';
 export class ProfileComponent implements OnInit {
   private _urlUsername: string;
   public loggedInUser = false;
+  public isAdminUser = false;
   public dataArrived = false;
   public user: User;
   public userPosts: Post[];
@@ -99,6 +100,7 @@ export class ProfileComponent implements OnInit {
             this.loggedInUser = true;
           }
           this.dataArrived = true;
+          this.isAdminUser = this.user.roles.map(x => x.name).includes(AppConstants.ADMIN_ROLE_NAME);
         },
         (err: HttpErrorResponse) => {
           this.logout();
@@ -112,6 +114,10 @@ export class ProfileComponent implements OnInit {
 
   goBack(): void {
     this._router.navigate(['/']);
+  }
+
+  navigateToAdminPanel(): void {
+    this._router.navigate(['/admin-panel']);
   }
 
   navigateToSettings(): void {

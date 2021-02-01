@@ -4,6 +4,7 @@
 	<nav id="navigation">
 		<button class="submit-btn" (click)="goBack()">ᐊ Back</button>
 		<button class="submit-btn" (click)="navigateToSettings()" *ngIf="loggedInUser">Settings</button>
+		<button class="submit-btn" (click)="navigateToAdminPanel()" *ngIf="isAdminUser">Panel</button>
 		<button class="submit-btn" (click)="logout()" *ngIf="loggedInUser">Logout</button>
 	</nav>
 	<hr>
