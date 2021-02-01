@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DevHive.Web.Models.Comment;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DevHive.Web.Models.Post
 {
@@ -21,6 +21,7 @@ namespace DevHive.Web.Models.Post
 
 		public List<ReadCommentWebModel> Comments { get; set; }
 
-		public List<IFormFile> Files { get; set; }
+		public List<string> FileUrls { get; set; }
+		// public List<FileContentResult> Files { get; set; }
 	}
 }

@@ -4,7 +4,6 @@ using System.IO;
 using System.Threading.Tasks;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using DevHive.Data.Migrations;
 using DevHive.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 

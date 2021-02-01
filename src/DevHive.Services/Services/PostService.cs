@@ -69,6 +69,7 @@ namespace DevHive.Services.Services
 			readPostServiceModel.CreatorFirstName = user.FirstName;
 			readPostServiceModel.CreatorLastName = user.LastName;
 			readPostServiceModel.CreatorUsername = user.UserName;
+			// readPostServiceModel.Files = await this._cloudService.GetFilesFromCloud(post.FileUrls);
 
 			return readPostServiceModel;
 		}

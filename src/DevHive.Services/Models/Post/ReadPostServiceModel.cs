@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DevHive.Services.Models.Comment;
-using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DevHive.Services.Models.Post
 {
@@ -21,6 +21,7 @@ namespace DevHive.Services.Models.Post
 
 		public List<ReadCommentServiceModel> Comments { get; set; } = new();
 
-		public List<IFileInfo> Files { get; set; }
+		public List<string> FileUrls { get; set; }
+		// public List<FileContentResult> Files { get; set; } = new();
 	}
 }
