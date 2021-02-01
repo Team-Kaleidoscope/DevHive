@@ -2,8 +2,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import {Guid} from 'guid-typescript';
 import { AppConstants } from 'src/app/app-constants.module';
 import { LanguageService } from 'src/app/services/language.service';
+import {PostService} from 'src/app/services/post.service';
 import { TechnologyService } from 'src/app/services/technology.service';
 import { TokenService } from 'src/app/services/token.service';
 import { UserService } from 'src/app/services/user.service';
@@ -24,12 +26,14 @@ export class AdminPanelPageComponent implements OnInit {
   public dataArrived = false;
   public showLanguages = false;
   public showTechnologies = false;
+  public showDeletions = false;
   public availableLanguages: Language[];
   public availableTechnologies: Technology[];
   public languageForm: FormGroup;
   public technologyForm: FormGroup;
+  public deleteForm: FormGroup;
 
-  constructor(private _router: Router, private _fb: FormBuilder, private _userService: UserService, private _languageService: LanguageService, private _technologyService: TechnologyService, private _tokenService: TokenService)
+  constructor(private _router: Router, private _fb: FormBuilder, private _userService: UserService, private _languageService: LanguageService, private _technologyService: TechnologyService, private _tokenService: TokenService, private _postService: PostService)
   { }
 
   ngOnInit(): void {
@@ -57,6 +61,11 @@ export class AdminPanelPageComponent implements OnInit {
       deleteLanguageName: new FormControl('')
     });
 
+    this.languageForm.valueChanges.subscribe(() => {
+      this._successBar?.hideMsg();
+      this._errorBar?.hideError();
+    });
+
     this.technologyForm = this._fb.group({
       technologyCreate: new FormControl(''),
       updateTechnologyOldName: new FormControl(''),
@@ -64,6 +73,21 @@ export class AdminPanelPageComponent implements OnInit {
       deleteTechnologyName: new FormControl('')
     });
 
+    this.technologyForm.valueChanges.subscribe(() => {
+      this._successBar?.hideMsg();
+      this._errorBar?.hideError();
+    });
+
+    this.deleteForm = this._fb.group({
+      deleteUser: new FormControl(''),
+      deletePost: new FormControl(''),
+      deleteComment: new FormControl('')
+    });
+
+    this.deleteForm.valueChanges.subscribe(() => {
+      this._successBar?.hideMsg();
+      this._errorBar?.hideError();
+    });
 
     this.loadAvailableLanguages();
     this.loadAvailableTechnologies();
@@ -135,7 +159,6 @@ export class AdminPanelPageComponent implements OnInit {
     if (deleteLanguageName !== '' && deleteLanguageName !== null) {
       const langId = this.availableLanguages.filter(x => x.name === deleteLanguageName.trim())[0].id;
 
-      console.log(langId);
       this._languageService.deleteLanguageWithSessionStorageRequest(langId).subscribe(
         (result: object) => {
           this.languageModifiedSuccess('Successfully deleted language!');
@@ -148,9 +171,9 @@ export class AdminPanelPageComponent implements OnInit {
   }
 
   private languageModifiedSuccess(successMsg: string): void {
+    this.languageForm.reset();
     this._successBar.showMsg(successMsg);
     this.loadAvailableLanguages();
-    this.languageForm.reset();
   }
 
   private loadAvailableLanguages(): void {
@@ -224,9 +247,9 @@ export class AdminPanelPageComponent implements OnInit {
   }
 
   private technologyModifiedSuccess(successMsg: string): void {
+    this.technologyForm.reset();
     this._successBar.showMsg(successMsg);
     this.loadAvailableTechnologies();
-    this.technologyForm.reset();
   }
 
   private loadAvailableTechnologies(): void {
@@ -235,5 +258,59 @@ export class AdminPanelPageComponent implements OnInit {
         this.availableTechnologies = result as Technology[];
       }
     );
+  }
+
+  // Deletions
+
+  toggleDeletions(): void {
+    this.showDeletions = !this.showDeletions;
+  }
+
+  submitDelete(): void {
+    this.tryDeleteUser();
+    this.tryDeletePost();
+    this.tryDeleteComment();
+  }
+
+  private tryDeleteUser(): void {
+    const deleteUser: string = this.deleteForm.get('deleteUser')?.value;
+
+    if (deleteUser !== '' && deleteUser !== null) {
+      const userId: Guid = Guid.parse(deleteUser);
+
+      this._userService.deleteUserRequest(userId, this._tokenService.getTokenFromSessionStorage()).subscribe(
+        (result: object) => {
+          this.deletionSuccess('Successfully deleted user!');
+        },
+        (err: HttpErrorResponse) => {
+          this._errorBar.showError(err);
+        }
+      );
+    }
+  }
+
+  private tryDeletePost(): void {
+    const deletePost: string = this.deleteForm.get('deletePost')?.value;
+
+    if (deletePost !== '' && deletePost !== null) {
+      const postId: Guid = Guid.parse(deletePost);
+
+      this._postService.deletePostRequest(postId, this._tokenService.getTokenFromSessionStorage()).subscribe(
+        (result: object) => {
+          this.deletionSuccess('Successfully deleted user!');
+        },
+        (err: HttpErrorResponse) => {
+          this._errorBar.showError(err);
+        }
+      );
+    }
+  }
+
+  private tryDeleteComment(): void {
+  }
+
+  private deletionSuccess(successMsg: string): void {
+    this.deleteForm.reset();
+    this._successBar.showMsg(successMsg);
   }
 }

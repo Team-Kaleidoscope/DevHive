@@ -10,6 +10,7 @@
 	<div class="scroll-standalone">
 		<app-success-bar></app-success-bar>
 		<app-error-bar></app-error-bar>
+
 		<button type="button" class="submit-btn edit-btn" (click)="toggleLanguages()">▼ Edit Languages ▼</button>
 		<form [formGroup]="languageForm" (ngSubmit)="submitLanguages()" *ngIf="showLanguages">
 			<div class="input-selection">
@@ -35,6 +36,7 @@
 			</div>
 			<hr>
 		</form>
+
 		<button type="button" class="submit-btn edit-btn" (click)="toggleTechnologies()">▼ Edit Technologies ▼</button>
 		<form [formGroup]="technologyForm" (ngSubmit)="submitTechnologies()" *ngIf="showTechnologies">
 			<div class="input-selection">
@@ -58,6 +60,25 @@
 					{{ tech.name }}
 				</div>
 			</div>
+			<hr>
+		</form>
+
+		<button type="button" class="submit-btn delete-btn" (click)="toggleDeletions()">▼ Deletions ▼</button>
+		<form [formGroup]="deleteForm" (ngSubmit)="submitDelete()" *ngIf="showDeletions">
+			<div class="input-selection">
+				<label>Delete user by Id:</label>
+				<input type="text" class="input-field" formControlName="deleteUser" placeholder="User Id">
+			</div>
+
+			<div class="input-selection">
+				<label>Delete post by Id:</label>
+				<input type="text" class="input-field" formControlName="deletePost" placeholder="Post Id">
+			</div>
+			<div class="input-selection">
+				<label>Delete comment by Id:</label>
+				<input type="text" class="input-field" formControlName="deleteComment" placeholder="Comment Id">
+			</div>
+			<button class="submit-btn" type="submit">Delete</button>
 			<hr>
 		</form>
 	</div>
