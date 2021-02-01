@@ -35,6 +35,7 @@ namespace DevHive.Data.Repositories
 				.Skip((pageNumber - 1) * pageSize)
 				.Take(pageSize)
 				.ToList();
+
 			return posts;
 		}
 
@@ -51,6 +52,7 @@ namespace DevHive.Data.Repositories
 				.Skip((pageNumber - 1) * pageSize)
 				.Take(pageSize)
 				.ToList();
+
 			return posts;
 		}
 	}

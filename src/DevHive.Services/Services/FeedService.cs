@@ -45,7 +45,10 @@ namespace DevHive.Services.Services
 			List<Post> posts = await this._feedRepository
 				.GetFriendsPosts(friendsList, model.FirstRequestIssued, model.PageNumber, model.PageSize);
 
-			ReadPageServiceModel readPageServiceModel = this._mapper.Map<ReadPageServiceModel>(posts);
+			ReadPageServiceModel readPageServiceModel = new();
+			foreach (Post post in posts)
+				readPageServiceModel.Posts.Add(this._mapper.Map<ReadPostServiceModel>(post));
+
 			return readPageServiceModel;
 		}
 
@@ -63,7 +66,9 @@ namespace DevHive.Services.Services
 			List<Post> posts = await this._feedRepository
 				.GetUsersPosts(user, model.FirstRequestIssued, model.PageNumber, model.PageSize);
 
-			ReadPageServiceModel readPageServiceModel = this._mapper.Map<ReadPageServiceModel>(posts);
+			ReadPageServiceModel readPageServiceModel = new();
+			foreach (Post post in posts)
+				readPageServiceModel.Posts.Add(this._mapper.Map<ReadPostServiceModel>(post));
 
 			return readPageServiceModel;
 		}
