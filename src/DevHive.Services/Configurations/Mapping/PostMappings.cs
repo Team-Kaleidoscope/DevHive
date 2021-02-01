@@ -2,6 +2,8 @@ using DevHive.Data.Models;
 using AutoMapper;
 using DevHive.Services.Models.Post;
 using DevHive.Common.Models.Misc;
+using System.Collections.Generic;
+using DevHive.Services.Models;
 
 namespace DevHive.Services.Configurations.Mapping
 {
@@ -24,6 +26,8 @@ namespace DevHive.Services.Configurations.Mapping
 
 			CreateMap<Post, IdModel>()
 				.ForMember(dest => dest.Id, src => src.MapFrom(x => x.Id));
+
+			CreateMap<List<Post>, ReadPageServiceModel>();
 		}
 	}
 }

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using DevHive.Common.Models.Misc;
-using DevHive.Services.Models.Comment;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DevHive.Services.Models.Post
 {

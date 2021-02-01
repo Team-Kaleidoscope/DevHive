@@ -45,13 +45,10 @@ namespace DevHive.Services.Services
 			List<Post> posts = await this._feedRepository
 				.GetFriendsPosts(friendsList, model.FirstRequestIssued, model.PageNumber, model.PageSize);
 
-			if (posts.Count <= 0)
-				throw new ArgumentException("No friends of user have posted anything yet!");
-
-			ReadPageServiceModel readPageServiceModel = new();
-			foreach (Post post in posts)
-				readPageServiceModel.Posts.Add(this._mapper.Map<ReadPostServiceModel>(post));
-
+			// ReadPageServiceModel readPageServiceModel = new();
+			// foreach (Post post in posts)
+			// 	readPageServiceModel.Posts.Add(this._mapper.Map<ReadPostServiceModel>(post));
+			ReadPageServiceModel readPageServiceModel = this._mapper.Map<ReadPageServiceModel>(posts);
 			return readPageServiceModel;
 		}
 
@@ -69,12 +66,10 @@ namespace DevHive.Services.Services
 			List<Post> posts = await this._feedRepository
 				.GetUsersPosts(user, model.FirstRequestIssued, model.PageNumber, model.PageSize);
 
-			if (posts.Count <= 0)
-				throw new ArgumentException("User hasn't posted anything yet!");
-
-			ReadPageServiceModel readPageServiceModel = new();
-			foreach (Post post in posts)
-				readPageServiceModel.Posts.Add(this._mapper.Map<ReadPostServiceModel>(post));
+			// ReadPageServiceModel readPageServiceModel = new();
+			// foreach (Post post in posts)
+			// 	readPageServiceModel.Posts.Add(this._mapper.Map<ReadPostServiceModel>(post));
+			ReadPageServiceModel readPageServiceModel = this._mapper.Map<ReadPageServiceModel>(posts);
 
 			return readPageServiceModel;
 		}
