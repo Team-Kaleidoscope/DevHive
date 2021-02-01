@@ -20,18 +20,24 @@ export class PostService {
 
   /* Requests from session storage */
 
-  createPostFromSessionStorageRequest(postMessage: string): Observable<object> {
+  createPostWithSessionStorageRequest(postMessage: string): Observable<object> {
     const userId = this._tokenService.getUserIdFromSessionStorageToken();
     const token = this._tokenService.getTokenFromSessionStorage();
 
     return this.createPostRequest(userId, token, postMessage);
   }
 
-  putPostFromSessionStorageRequest(postId: Guid, newMessage: string): Observable<object> {
+  putPostWithSessionStorageRequest(postId: Guid, newMessage: string): Observable<object> {
     const userId = this._tokenService.getUserIdFromSessionStorageToken();
     const token = this._tokenService.getTokenFromSessionStorage();
 
     return this.putPostRequest(userId, token, postId, newMessage);
+  }
+
+  deletePostWithSessionStorage(postId: Guid): Observable<object> {
+    const token = this._tokenService.getTokenFromSessionStorage();
+
+    return this.deletePostRequest(postId, token);
   }
 
   /* Post requests */
@@ -63,5 +69,13 @@ export class PostService {
       headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
     };
     return this._http.put(AppConstants.API_POST_URL, body, options);
+  }
+
+  deletePostRequest(postId: Guid, authToken: string): Observable<object> {
+    const options = {
+      params: new HttpParams().set('Id', postId.toString()),
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
+    };
+    return this._http.delete(AppConstants.API_POST_URL, options);
   }
 }

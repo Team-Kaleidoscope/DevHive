@@ -49,7 +49,7 @@ export class PostPageComponent implements OnInit {
     if (this.editingPost) {
       const newMessage = this.editPostFormGroup.get('newPostMessage')?.value;
       if (newMessage !== '') {
-        this._postService.putPostFromSessionStorageRequest(this.postId, newMessage).subscribe(
+        this._postService.putPostWithSessionStorageRequest(this.postId, newMessage).subscribe(
           (result: object) => {
             // Reload the page
             this._router.routeReuseStrategy.shouldReuseRoute = () => false;
@@ -63,5 +63,10 @@ export class PostPageComponent implements OnInit {
   }
 
   deletePost(): void {
+    this._postService.deletePostWithSessionStorage(this.postId).subscribe(
+      (result: object) => {
+        this._router.navigate(['/profile/' + this._tokenService.getUsernameFromSessionStorageToken()]);
+      }
+    );
   }
 }
