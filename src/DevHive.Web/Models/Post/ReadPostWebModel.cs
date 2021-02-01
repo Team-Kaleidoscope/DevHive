@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DevHive.Web.Models.Comment;
-using Microsoft.AspNetCore.Mvc;
+using DevHive.Common.Models.Misc;
 
 namespace DevHive.Web.Models.Post
 {
@@ -19,7 +18,7 @@ namespace DevHive.Web.Models.Post
 
 		public DateTime TimeCreated { get; set; }
 
-		public List<ReadCommentWebModel> Comments { get; set; }
+		public List<IdModel> Comments { get; set; }
 
 		public List<string> FileUrls { get; set; }
 		// public List<FileContentResult> Files { get; set; }

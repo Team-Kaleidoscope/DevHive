@@ -1,6 +1,7 @@
 using DevHive.Data.Models;
 using AutoMapper;
 using DevHive.Services.Models.Comment;
+using DevHive.Common.Models.Misc;
 
 namespace DevHive.Services.Configurations.Mapping
 {
@@ -18,6 +19,9 @@ namespace DevHive.Services.Configurations.Mapping
 				.ForMember(dest => dest.IssuerFirstName, src => src.MapFrom(p => p.Creator.FirstName))
 				.ForMember(dest => dest.IssuerLastName, src => src.MapFrom(p => p.Creator.LastName))
 				.ForMember(dest => dest.IssuerUsername, src => src.MapFrom(p => p.Creator.UserName));
+
+			CreateMap<Comment, IdModel>()
+				.ForMember(dest => dest.Id, src => src.MapFrom(p => p.Id));
 		}
 	}
 }

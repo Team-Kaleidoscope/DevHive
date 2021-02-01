@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DevHive.Common.Models.Misc;
 using DevHive.Services.Models.Comment;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,7 @@ namespace DevHive.Services.Models.Post
 
 		public DateTime TimeCreated { get; set; }
 
-		public List<ReadCommentServiceModel> Comments { get; set; } = new();
+		public List<IdModel> Comments { get; set; } = new();
 
 		public List<string> FileUrls { get; set; }
 		// public List<FileContentResult> Files { get; set; } = new();
