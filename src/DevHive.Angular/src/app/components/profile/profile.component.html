@@ -8,7 +8,7 @@
 		<button class="submit-btn" (click)="logout()" *ngIf="loggedInUser">Logout</button>
 	</nav>
 	<hr>
-	<div class="scroll-standalone">
+	<div class="scroll-standalone" (scroll)="onScroll($event)">
 		<div id="main-info" class="rounded-border">
 			<img class="round-image" [src]="user.imageUrl" alt=""/>
 			<div id="other-main-info">

@@ -20,6 +20,8 @@ import { Title } from '@angular/platform-browser';
 export class ProfileComponent implements OnInit {
   private _title = 'Profile';
   private _urlUsername: string;
+  private _timeLoaded: string;
+  private _currentPage: number;
   public loggedInUser = false;
   public isAdminUser = false;
   public dataArrived = false;
@@ -36,6 +38,12 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this._urlUsername = this._router.url.substring(9);
+
+    const now = new Date();
+    now.setHours(now.getHours() + 2); // accounting for eastern europe timezone
+    this._timeLoaded = now.toISOString();
+    this._currentPage = 1;
+
     this.user = this._userService.getDefaultUser();
     this.userPosts = [];
 
@@ -77,15 +85,14 @@ export class ProfileComponent implements OnInit {
   }
 
   private loadPosts(): void {
-    const now = new Date();
-    now.setHours(now.getHours() + 2); // accounting for eastern europe timezone
-
-    this._feedService.getUserPostsRequest(this.user.userName, 1, now.toISOString(), AppConstants.PAGE_SIZE).subscribe(
+    this._feedService.getUserPostsRequest(this.user.userName, this._currentPage++, this._timeLoaded, AppConstants.PAGE_SIZE).subscribe(
       (result: object) => {
-        this.userPosts = Object.values(result)[0];
+        const resultArr: Post[] = Object.values(result)[0];
+        this.userPosts.push(...resultArr);
         this.finishUserLoading();
       },
       (err: HttpErrorResponse) => {
+        this._currentPage = -1;
         this.finishUserLoading();
       }
     );
@@ -134,5 +141,12 @@ export class ProfileComponent implements OnInit {
     this._router.routeReuseStrategy.shouldReuseRoute = () => false;
     this._router.onSameUrlNavigation = 'reload';
     this._router.navigate([this._router.url]);
+  }
+
+  onScroll(event: any): void {
+    // Detects when the element has reached the bottom, thx https://stackoverflow.com/a/50038429/12036073
+    if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight && this._currentPage > 0) {
+      this.loadPosts();
+    }
   }
 }
