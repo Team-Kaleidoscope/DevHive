@@ -27,5 +27,7 @@ namespace DevHive.Data.Models
 		public HashSet<Post> Posts { get; set; } = new();
 
 		public HashSet<Comment> Comments { get; set; } = new();
+
+		// public HashSet<RatedPost> RatedPosts { get; set; } = new();
 	}
 }

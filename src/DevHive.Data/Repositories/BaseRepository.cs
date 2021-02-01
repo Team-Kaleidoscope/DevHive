@@ -21,7 +21,7 @@ namespace DevHive.Data.Repositories
 				.Set<TEntity>()
 				.AddAsync(entity);
 
-			return await this.SaveChangesAsync(_context);
+			return await this.SaveChangesAsync();
 		}
 
 		public virtual async Task<TEntity> GetByIdAsync(Guid id)
@@ -39,19 +39,19 @@ namespace DevHive.Data.Repositories
 
 			entry.State = EntityState.Modified;
 
-			return await this.SaveChangesAsync(_context);
+			return await this.SaveChangesAsync();
 		}
 
 		public virtual async Task<bool> DeleteAsync(TEntity entity)
 		{
 			this._context.Remove(entity);
 
-			return await this.SaveChangesAsync(_context);
+			return await this.SaveChangesAsync();
 		}
 
-		public virtual async Task<bool> SaveChangesAsync(DbContext context)
+		public virtual async Task<bool> SaveChangesAsync()
 		{
-			int result = await context.SaveChangesAsync();
+			int result = await _context.SaveChangesAsync();
 
 			return result >= 1;
 		}

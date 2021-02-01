@@ -9,29 +9,26 @@ namespace DevHive.Data.Repositories
 	public class RatingRepository : BaseRepository<Rating>, IRatingRepository
 	{
 		private readonly DevHiveContext _context;
+		private readonly IPostRepository _postRepository;
 
-		public RatingRepository(DevHiveContext context)
+		public RatingRepository(DevHiveContext context, IPostRepository postRepository)
 			: base(context)
 		{
 			this._context = context;
+			this._postRepository = postRepository;
 		}
 
 		public async Task<Rating> GetByPostId(Guid postId)
 		{
-			return await this._context.Rating
-				.FirstOrDefaultAsync(x => x.Post.Id == postId);
+			throw new NotImplementedException();
+			// return await this._context.Rating
+			// 	.FirstOrDefaultAsync(x => x.Post.Id == postId);
 		}
 
-		public async Task<Tuple<int, int>> GetRating(Guid postId)
-		{
-			Rating rating = await this.GetByPostId(postId);
-
-			return new Tuple<int, int>(rating.Likes, rating.Dislikes);
-		}
-
-		public async Task<bool> HasUserRatedThisPost(Guid userId, Guid postId)
+		public async Task<int> GetRating(Guid postId)
 		{
 			throw new NotImplementedException();
+			// return (await this.GetByPostId(postId)).Rate;
 		}
 	}
 }

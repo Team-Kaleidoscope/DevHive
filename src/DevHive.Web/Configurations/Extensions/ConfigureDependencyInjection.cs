@@ -32,6 +32,7 @@ namespace DevHive.Web.Configurations.Extensions
 					cloudName: configuration.GetSection("Cloud").GetSection("cloudName").Value,
 					apiKey: configuration.GetSection("Cloud").GetSection("apiKey").Value,
 					apiSecret: configuration.GetSection("Cloud").GetSection("apiSecret").Value));
+			services.AddTransient<IRateService, RateService>();
 		}
 	}
 }

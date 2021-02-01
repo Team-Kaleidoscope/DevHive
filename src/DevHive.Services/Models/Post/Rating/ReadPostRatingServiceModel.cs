@@ -2,8 +2,10 @@ using System;
 
 namespace DevHive.Services.Models.Post.Rating
 {
-	public class ReadRatingServiceModel
+	public class ReadPostRatingServiceModel
 	{
+		public Guid Id { get; set; }
+
 		public Guid PostId { get; set; }
 
 		public int Likes { get; set; }

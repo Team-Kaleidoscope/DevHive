@@ -33,7 +33,7 @@ namespace DevHive.Data.Repositories
 				.CurrentValues
 				.SetValues(newEntity);
 
-			return await this.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync();
 		}
 
 		#region Validations

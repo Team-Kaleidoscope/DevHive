@@ -95,7 +95,7 @@ namespace DevHive.Data.Repositories
 
 			this._context.Entry(user).State = EntityState.Modified;
 
-			return await this.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync();
 		}
 		#endregion
 

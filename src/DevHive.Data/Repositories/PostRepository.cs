@@ -24,7 +24,7 @@ namespace DevHive.Data.Repositories
 			return await this._context.Posts
 					.Include(x => x.Comments)
 					.Include(x => x.Creator)
-					.Include(x => x.Rating)
+					// .Include(x => x.Rating)
 					.FirstOrDefaultAsync(x => x.Id == id);
 		}
 
@@ -45,7 +45,7 @@ namespace DevHive.Data.Repositories
 		public override async Task<bool> EditAsync(Guid id, Post newEntity)
 		{
 			Post post = await this.GetByIdAsync(id);
-			var ratingId = post.RatingId;
+			// var ratingId = post.Rating.Id;
 
 			this._context
 				.Entry(post)
@@ -60,11 +60,11 @@ namespace DevHive.Data.Repositories
 			foreach(var comment in newEntity.Comments)
 				post.Comments.Add(comment);
 
-			post.RatingId = ratingId;
+			// post.Rating.Id = ratingId;
 
 			this._context.Entry(post).State = EntityState.Modified;
 
-			return await this.SaveChangesAsync(this._context);
+			return await this.SaveChangesAsync();
 		}
 		#endregion
 
