@@ -10,6 +10,7 @@ import { TechnologyService } from 'src/app/services/technology.service';
 import { Post } from 'src/models/post';
 import { FeedService } from 'src/app/services/feed.service';
 import { TokenService } from 'src/app/services/token.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-profile',

@@ -1,11 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import {Guid} from 'guid-typescript';
+import { Guid } from 'guid-typescript';
 import { AppConstants } from 'src/app/app-constants.module';
+import { CommentService } from 'src/app/services/comment.service';
 import { LanguageService } from 'src/app/services/language.service';
-import {PostService} from 'src/app/services/post.service';
+import { PostService } from 'src/app/services/post.service';
 import { TechnologyService } from 'src/app/services/technology.service';
 import { TokenService } from 'src/app/services/token.service';
 import { UserService } from 'src/app/services/user.service';
@@ -34,7 +36,7 @@ export class AdminPanelPageComponent implements OnInit {
   public technologyForm: FormGroup;
   public deleteForm: FormGroup;
 
-  constructor(private _titleService: Title, private _router: Router, private _fb: FormBuilder, private _userService: UserService, private _languageService: LanguageService, private _technologyService: TechnologyService, private _tokenService: TokenService, private _postService: PostService) {
+  constructor(private _titleService: Title, private _router: Router, private _fb: FormBuilder, private _userService: UserService, private _languageService: LanguageService, private _technologyService: TechnologyService, private _tokenService: TokenService, private _postService: PostService, private _commentService: CommentService) {
     this._titleService.setTitle(this._title);
   }
 
@@ -309,6 +311,20 @@ export class AdminPanelPageComponent implements OnInit {
   }
 
   private tryDeleteComment(): void {
+    const deleteComment: string = this.deleteForm.get('deleteComment')?.value;
+
+    if (deleteComment !== '' && deleteComment !== null) {
+      const commentId: Guid = Guid.parse(deleteComment);
+
+      this._commentService.deleteCommentWithSessionStorage(commentId).subscribe(
+        (result: object) => {
+          this.deletionSuccess('Successfully deleted comment!');
+        },
+        (err: HttpErrorResponse) => {
+          this._errorBar.showError(err);
+        }
+      );
+    }
   }
 
   private deletionSuccess(successMsg: string): void {

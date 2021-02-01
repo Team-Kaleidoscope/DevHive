@@ -12,6 +12,7 @@ import { SuccessBarComponent } from '../success-bar/success-bar.component';
 import { Language } from 'src/models/language';
 import { Technology } from 'src/models/technology';
 import { TokenService } from 'src/app/services/token.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-profile-settings',

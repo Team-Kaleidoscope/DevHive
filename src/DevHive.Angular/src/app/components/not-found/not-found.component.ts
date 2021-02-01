@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,7 +10,7 @@ import { Router } from '@angular/router';
 export class NotFoundComponent implements OnInit {
   private _title = 'Not Found!';
 
-  constructor(private _titleService: Title,private _router: Router) {
+  constructor(private _titleService: Title, private _router: Router) {
     this._titleService.setTitle(this._title);
   }
 

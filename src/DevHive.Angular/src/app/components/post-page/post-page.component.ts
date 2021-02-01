@@ -1,9 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
-import {CommentService} from 'src/app/services/comment.service';
+import { CommentService } from 'src/app/services/comment.service';
 import { PostService } from 'src/app/services/post.service';
 import { TokenService } from 'src/app/services/token.service';
 import { Post } from 'src/models/post';
@@ -79,7 +80,6 @@ export class PostPageComponent implements OnInit {
   addComment(): void {
     const newComment = this.addCommentFormGroup.get('newComment')?.value;
     if (newComment !== '' && newComment !== null) {
-      console.log(newComment);
       this._commentService.createCommentWithSessionStorageRequest(this.postId, newComment).subscribe(
         (result: object) => {
           this.editPostFormGroup.reset();
