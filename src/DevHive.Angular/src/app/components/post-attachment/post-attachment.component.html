@@ -1,0 +1,18 @@
+<div class="attachment">
+	<div class="clickable" (click)="toggleShowFull()">
+		<div class="attachment-name">
+			Attachment
+		</div>
+		<div class="attachment-type">
+			{{ fileType }}
+		</div>
+	</div>
+</div>
+
+<div class="show-full-attachment" *ngIf="showFull" (click)="toggleShowFull()">
+	<img class="attachment-img" *ngIf="paramURL.includes('image')" src="{{paramURL}}">
+	<a class="attachment-download submit-btn" *ngIf="!paramURL.includes('image')" href="{{paramURL}}">Download attachment</a>
+	<div class="close">
+		☒
+	</div>
+</div>

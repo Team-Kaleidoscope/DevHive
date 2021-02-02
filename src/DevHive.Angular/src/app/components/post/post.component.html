@@ -42,3 +42,8 @@
 		</button>
 	</div>
 </div>
+<div class="attachments">
+	<div *ngFor="let fileURL of post.fileURLs">
+		<app-post-attachment class="no-events" [paramURL]="fileURL"></app-post-attachment>
+	</div>
+</div>

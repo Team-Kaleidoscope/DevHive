@@ -6,6 +6,7 @@
   box-sizing: border-box;
   padding: .5em;
   background-color: var(--card-bg);
+  position: relative;
 }
 
 .post:first-child {
@@ -108,4 +109,21 @@ hr {
   border: 1px solid var(--focus-color);
   color: var(--focus-color);
   cursor: pointer;
+}
+
+/* Attachments */
+
+.attachments {
+  display: flex;
+  width: 98%;
+  margin: -.3em auto .5em auto;
+  flex-wrap: wrap;
+}
+
+.attachments:empty {
+  display: none;
+}
+
+.attachments > * {
+  flex: 1;
 }

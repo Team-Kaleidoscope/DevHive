@@ -10,9 +10,9 @@ export class Post {
   private _message: string;
   private _timeCreated: Date;
   private _comments: PostComment[];
-  // _files
+  private _fileURLs: string[];
 
-  constructor(postId: Guid, creatorFirstName: string, creatorLastName: string, creatorUsername: string, message: string, timeCreated: Date, comments: PostComment[]) {
+  constructor(postId: Guid, creatorFirstName: string, creatorLastName: string, creatorUsername: string, message: string, timeCreated: Date, comments: PostComment[], fileURLs: string[]) {
     this.postId = postId;
     this.creatorFirstName = creatorFirstName;
     this.creatorLastName = creatorLastName;
@@ -20,6 +20,7 @@ export class Post {
     this.message = message;
     this.timeCreated = timeCreated;
     this.comments = comments;
+    this.fileURLs = fileURLs;
   }
 
   public get postId(): Guid {
@@ -69,5 +70,12 @@ export class Post {
   }
   public set comments(v: PostComment[]) {
     this._comments = v;
+  }
+
+  public get fileURLs(): string[] {
+    return this._fileURLs;
+  }
+  public set fileURLs(v: string[]) {
+    this._fileURLs = v;
   }
 }

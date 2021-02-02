@@ -15,7 +15,7 @@ export class PostService {
   { }
 
   getDefaultPost(): Post {
-    return new Post(Guid.createEmpty(), 'Gosho', 'Trapov', 'gosho_trapov', 'Your opinion on my idea?', new Date(), []);
+    return new Post(Guid.createEmpty(), 'Gosho', 'Trapov', 'gosho_trapov', 'Your opinion on my idea?', new Date(), [], []);
   }
 
   /* Requests from session storage */

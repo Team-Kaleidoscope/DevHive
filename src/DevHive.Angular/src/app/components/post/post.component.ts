@@ -29,6 +29,7 @@ export class PostComponent implements OnInit {
     this._postService.getPostRequest(Guid.parse(this.paramId)).subscribe(
       (result: object) => {
         Object.assign(this.post, result);
+        this.post.fileURLs = Object.values(result)[7];
         this.votesNumber = 23;
 
         this.timeCreated = new Date(this.post.timeCreated).toLocaleString('en-GB');

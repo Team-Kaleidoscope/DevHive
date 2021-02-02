@@ -23,6 +23,7 @@ import { PostPageComponent } from './components/post-page/post-page.component';
 import { AdminPanelPageComponent } from './components/admin-panel-page/admin-panel-page.component';
 import { CommentComponent } from './components/comment/comment.component';
 import { CommentPageComponent } from './components/comment-page/comment-page.component';
+import { PostAttachmentComponent } from './components/post-attachment/post-attachment.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { CommentPageComponent } from './components/comment-page/comment-page.com
     PostPageComponent,
     AdminPanelPageComponent,
     CommentComponent,
-    CommentPageComponent
+    CommentPageComponent,
+    PostAttachmentComponent
   ],
   imports: [
     BrowserModule,
