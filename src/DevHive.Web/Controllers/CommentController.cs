@@ -51,15 +51,14 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPut]
-		public async Task<IActionResult> UpdateComment(Guid userId, Guid commentId, [FromBody] UpdateCommentWebModel updateCommentWebModel, [FromHeader] string authorization)
+		public async Task<IActionResult> UpdateComment(Guid userId, [FromBody] UpdateCommentWebModel updateCommentWebModel, [FromHeader] string authorization)
 		{
-			if (!await this._commentService.ValidateJwtForComment(commentId, authorization))
+			if (!await this._commentService.ValidateJwtForComment(updateCommentWebModel.CommentId, authorization))
 				return new UnauthorizedResult();
 
 			UpdateCommentServiceModel updateCommentServiceModel =
 				this._commentMapper.Map<UpdateCommentServiceModel>(updateCommentWebModel);
 			updateCommentServiceModel.CreatorId = userId;
-			updateCommentServiceModel.CommentId = commentId;
 
 			Guid id = await this._commentService.UpdateComment(updateCommentServiceModel);
 
