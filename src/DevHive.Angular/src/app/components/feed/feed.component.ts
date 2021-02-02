@@ -23,6 +23,7 @@ export class FeedComponent implements OnInit {
   public user: User;
   public posts: Post[];
   public createPostFormGroup: FormGroup;
+  public files: File[];
 
   constructor(private _titleService: Title, private _fb: FormBuilder, private _router: Router, private _userService: UserService, private _feedService: FeedService, private _postService: PostService, private _tokenService: TokenService) {
     this._titleService.setTitle(this._title);
@@ -36,13 +37,15 @@ export class FeedComponent implements OnInit {
 
     this.posts = [];
     this.user = this._userService.getDefaultUser();
+    this.files = [];
 
     const now = new Date();
     now.setHours(now.getHours() + 2); // accounting for eastern european timezone
     this._timeLoaded = now.toISOString();
 
     this.createPostFormGroup = this._fb.group({
-      newPostMessage: new FormControl('')
+      newPostMessage: new FormControl(''),
+      fileUpload: new FormControl('')
     });
 
     this._userService.getUserFromSessionStorageRequest().subscribe(
@@ -62,8 +65,7 @@ export class FeedComponent implements OnInit {
         this.posts = Object.values(result)[0];
         this.finishUserLoading();
       },
-      (err: HttpErrorResponse) => {
-        const test = err.status;
+      (err) => {
         this.finishUserLoading();
       }
     );
@@ -84,6 +86,15 @@ export class FeedComponent implements OnInit {
   logout(): void {
     this._tokenService.logoutUserFromSessionStorage();
     this._router.navigate(['/login']);
+  }
+
+  onFileUpload(event: any): void {
+    this.files.push(event.target.files[0]);
+    this.createPostFormGroup.get('fileUpload')?.reset();
+  }
+
+  removeAttachment(fileName: string): void {
+    this.files = this.files.filter(x => x.name !== fileName);
   }
 
   createPost(): void {

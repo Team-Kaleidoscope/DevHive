@@ -15,15 +15,29 @@
 		<button class="submit-btn" (click)="logout()">Logout</button>
 	</nav>
 	<div id="feed-content">
-		<nav id="top-bar" class="rounded-border">
-			<img id="top-bar-profile-pic" class="round-image" [src]="user.imageUrl" alt="" (click)="goToProfile()">
-			<form [formGroup]="createPostFormGroup" (ngSubmit)="createPost()">
-				<input id="top-bar-create-post" type="text" formControlName="newPostMessage" placeholder="What's on your mind?"/>
-				<input type="submit" style="display: none" /> <!-- You need this element, so when you press enter the request is sent -->
-			</form>
-			<a id="top-bar-open-chat" href="">
-				<img src="assets/images/feed/chat-pic.png" alt=""/>
-			</a>
+		<nav id="top-bar">
+			<div id="main-content">
+				<img id="top-bar-profile-pic" class="round-image" [src]="user.imageUrl" alt="" (click)="goToProfile()">
+				<form id="create-post-form" class="rounded-border" [formGroup]="createPostFormGroup" (ngSubmit)="createPost()">
+					<div id="form-inputs">
+						<input id="top-bar-create-post" type="text" formControlName="newPostMessage" placeholder="What's on your mind?"/>
+						<input type="submit" style="display: none" /> <!-- You need this element, so when you press enter the request is sent -->
+						<img id="attachment-img" src="assets/images/paper-clip.png">
+						<input id="file-upload" type="file" formControlName="fileUpload" (change)="onFileUpload($event)">
+					</div>
+					<div id="attachments">
+						<div *ngFor="let file of files" class="attachment">
+							{{ file.name }}
+							<div class="remove-attachment" (click)="removeAttachment(file.name)">
+								☒
+							</div>
+						</div>
+					</div>
+				</form>
+				<a id="top-bar-open-chat" href="">
+					<img src="assets/images/feed/chat-pic.png" alt=""/>
+				</a>
+			</div>
 		</nav>
 		<div id="posts" class="scroll-standalone">
 			<div id="no-posts-msg" *ngIf="posts.length === 0">
