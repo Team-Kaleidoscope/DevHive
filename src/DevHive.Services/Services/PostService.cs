@@ -65,6 +65,11 @@ namespace DevHive.Services.Services
 			Post post = await this._postRepository.GetByIdAsync(id) ??
 				throw new ArgumentException("The post does not exist!");
 
+			// This can't happen in repo, because of how time is usually compared
+			post.Comments = post.Comments
+				.OrderByDescending(x => x.TimeCreated.ToFileTimeUtc())
+				.ToList();
+
 			User user = await this._userRepository.GetByIdAsync(post.Creator.Id) ??
 				throw new ArgumentException("The user does not exist!");
 
