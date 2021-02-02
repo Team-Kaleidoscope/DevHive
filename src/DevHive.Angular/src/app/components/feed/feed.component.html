@@ -27,7 +27,7 @@
 					</div>
 					<div class="form-attachments">
 						<div *ngFor="let file of files" class="form-attachment">
-							{{ file.name }}
+							{{ file.name ? file.name : 'Attachment' }}
 							<div class="remove-form-attachment" (click)="removeAttachment(file.name)">
 								☒
 							</div>
