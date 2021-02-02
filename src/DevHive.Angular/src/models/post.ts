@@ -1,5 +1,6 @@
 import { Guid } from 'guid-typescript';
-import {Comment} from './comment';
+import { Comment } from './comment';
+import { PostComment } from './post-comment';
 
 export class Post {
   private _postId: Guid;
@@ -8,10 +9,10 @@ export class Post {
   private _creatorUsername: string;
   private _message: string;
   private _timeCreated: Date;
-  private _comments: Comment[];
+  private _comments: PostComment[];
   // _files
 
-  constructor(postId: Guid, creatorFirstName: string, creatorLastName: string, creatorUsername: string, message: string, timeCreated: Date, comments: Comment[]) {
+  constructor(postId: Guid, creatorFirstName: string, creatorLastName: string, creatorUsername: string, message: string, timeCreated: Date, comments: PostComment[]) {
     this.postId = postId;
     this.creatorFirstName = creatorFirstName;
     this.creatorLastName = creatorLastName;
@@ -63,10 +64,10 @@ export class Post {
     this._timeCreated = v;
   }
 
-  public get comments(): Comment[] {
+  public get comments(): PostComment[] {
     return this._comments;
   }
-  public set comments(v: Comment[]) {
+  public set comments(v: PostComment[]) {
     this._comments = v;
   }
 }

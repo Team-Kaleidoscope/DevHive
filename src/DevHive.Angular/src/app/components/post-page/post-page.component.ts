@@ -35,9 +35,6 @@ export class PostPageComponent implements OnInit {
     this._postService.getPostRequest(this.postId).subscribe(
       (result: object) => {
         this.post = result as Post;
-        this.post.comments = this.post.comments.sort((x, y) => {
-          return Date.parse(y.timeCreated.toString()) - Date.parse(x.timeCreated.toString());
-        });
         this.editable = this.post.creatorUsername === this._tokenService.getUsernameFromSessionStorageToken();
       },
       (err: HttpErrorResponse) => {

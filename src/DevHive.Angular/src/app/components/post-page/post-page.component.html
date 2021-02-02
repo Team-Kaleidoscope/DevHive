@@ -18,7 +18,7 @@
 	</form>
 	<div>
 		<div class="comment" *ngFor="let comm of post?.comments">
-			<app-comment [paramId]="comm.commentId.toString()"></app-comment>
+			<app-comment [paramId]="comm.id.toString()"></app-comment>
 		</div>
 	</div>
 <div>
