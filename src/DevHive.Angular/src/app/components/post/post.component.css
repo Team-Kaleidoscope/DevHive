@@ -50,9 +50,23 @@ hr {
   word-break: break-all;
 }
 
-.timestamp {
+.bottom-post {
   font-size: .5em;
   color: gray;
+  display: flex;
+  align-items: center;
+}
+
+.separator {
+  margin: 0 .5em;
+}
+
+.comment-count {
+  font-size: 1em;
+}
+
+.comment-count > img {
+  height: .8em;
 }
 
 .message:hover, .timestamp:hover {

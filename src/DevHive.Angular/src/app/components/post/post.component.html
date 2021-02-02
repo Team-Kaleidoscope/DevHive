@@ -16,9 +16,19 @@
 		<div class="message" (click)="goToPostPage()">
 			{{ post.message }}
 		</div>
-		<div class="timestamp" (click)="goToPostPage()">
-			{{ timeCreated }}
+		<div class="bottom-post" (click)="goToPostPage()">
+			<div class="timestamp">
+				{{ timeCreated }}
+			</div>
+			<div class="separator">
+				║
+			</div>
+			<div class="comment-count">
+				{{ post.comments.length }}
+				<img src="assets/images/comment.png">
+			</div>
 		</div>
+
 	</div>
 	<div class="rating">
 		<button class="vote">
