@@ -63,9 +63,10 @@ namespace DevHive.Data.Repositories
 				.CurrentValues
 				.SetValues(newEntity);
 
-			post.FileUrls.Clear();
+			List<string> fileUrls = new();
 			foreach(var fileUrl in newEntity.FileUrls)
-				post.FileUrls.Add(fileUrl);
+				fileUrls.Add(fileUrl);
+			post.FileUrls = fileUrls;
 
 			post.Comments.Clear();
 			foreach(var comment in newEntity.Comments)

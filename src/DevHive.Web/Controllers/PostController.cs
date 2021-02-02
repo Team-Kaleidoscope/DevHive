@@ -56,7 +56,7 @@ namespace DevHive.Web.Controllers
 
 		#region Update
 		[HttpPut]
-		public async Task<IActionResult> Update(Guid userId, [FromBody] UpdatePostWebModel updatePostWebModel, [FromHeader] string authorization)
+		public async Task<IActionResult> Update(Guid userId, [FromForm] UpdatePostWebModel updatePostWebModel, [FromHeader] string authorization)
 		{
 			if (!await this._postService.ValidateJwtForPost(updatePostWebModel.PostId, authorization))
 				return new UnauthorizedResult();
