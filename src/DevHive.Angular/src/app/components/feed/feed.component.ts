@@ -89,7 +89,7 @@ export class FeedComponent implements OnInit {
   }
 
   onFileUpload(event: any): void {
-    this.files.push(event.target.files[0]);
+    this.files.push(...event.target.files);
     this.createPostFormGroup.get('fileUpload')?.reset();
   }
 
@@ -100,7 +100,7 @@ export class FeedComponent implements OnInit {
   createPost(): void {
     const postMessage = this.createPostFormGroup.get('newPostMessage')?.value;
 
-    this._postService.createPostWithSessionStorageRequest(postMessage).subscribe(
+    this._postService.createPostWithSessionStorageRequest(postMessage, this.files).subscribe(
       (result: object) => {
         this.goToProfile();
       }

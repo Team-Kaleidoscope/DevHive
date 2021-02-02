@@ -23,7 +23,7 @@
 						<input id="top-bar-create-post" type="text" formControlName="newPostMessage" placeholder="What's on your mind?"/>
 						<input type="submit" style="display: none" /> <!-- You need this element, so when you press enter the request is sent -->
 						<img id="attachment-img" src="assets/images/paper-clip.png">
-						<input id="file-upload" type="file" formControlName="fileUpload" (change)="onFileUpload($event)">
+						<input id="file-upload" type="file" formControlName="fileUpload" (change)="onFileUpload($event)" multiple>
 					</div>
 					<div id="attachments">
 						<div *ngFor="let file of files" class="attachment">

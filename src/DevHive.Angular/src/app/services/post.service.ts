@@ -20,11 +20,11 @@ export class PostService {
 
   /* Requests from session storage */
 
-  createPostWithSessionStorageRequest(postMessage: string): Observable<object> {
+  createPostWithSessionStorageRequest(postMessage: string, files: File[]): Observable<object> {
     const userId = this._tokenService.getUserIdFromSessionStorageToken();
     const token = this._tokenService.getTokenFromSessionStorage();
 
-    return this.createPostRequest(userId, token, postMessage);
+    return this.createPostRequest(userId, token, postMessage, files);
   }
 
   putPostWithSessionStorageRequest(postId: Guid, newMessage: string): Observable<object> {
@@ -42,9 +42,12 @@ export class PostService {
 
   /* Post requests */
 
-  createPostRequest(userId: Guid, authToken: string, postMessage: string): Observable<object> {
+  createPostRequest(userId: Guid, authToken: string, postMessage: string, files: File[]): Observable<object> {
     const form = new FormData();
     form.append('message', postMessage);
+    for (const file of files) {
+      form.append('files', file, file.name);
+    }
     const options = {
       params: new HttpParams().set('UserId', userId.toString()),
       headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
