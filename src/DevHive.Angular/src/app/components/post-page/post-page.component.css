@@ -16,7 +16,7 @@
   margin-right: .3em;
 }
 
-.many-buttons:last-of-type {
+.many-buttons > *:last-of-type {
   margin-right: 0;
 }
 
