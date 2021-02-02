@@ -1,8 +1,9 @@
 <div id="content">
-	<div class="many-buttons">
+	<div class="many-buttons"  *ngIf="loggedIn">
 		<button class="submit-btn" type="submit" (click)="backToFeed()">ᐊ Back to feed</button>
 		<button class="submit-btn" type="submit" (click)="backToProfile()">ᐊ Back to profile</button>
 	</div>
+	<button class="submit-btn" type="submit" (click)="toLogin()" *ngIf="!loggedIn">Login</button>
 	<app-post [paramId]="postId.toString()"></app-post>
 	<div class="many-buttons" *ngIf="editable">
 		<button class="submit-btn" (click)="editPost()">Edit post</button>

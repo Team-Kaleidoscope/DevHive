@@ -16,6 +16,7 @@ import { Post } from 'src/models/post';
 })
 export class PostPageComponent implements OnInit {
   private _title = 'Post';
+  public loggedIn = false;
   public editable = false;
   public editingPost = false;
   public postId: Guid;
@@ -28,6 +29,7 @@ export class PostPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loggedIn = this._tokenService.getTokenFromSessionStorage() !== '';
     this.postId = Guid.parse(this._router.url.substring(6));
 
     // Gets the post and the logged in user and compares them,
@@ -35,7 +37,9 @@ export class PostPageComponent implements OnInit {
     this._postService.getPostRequest(this.postId).subscribe(
       (result: object) => {
         this.post = result as Post;
-        this.editable = this.post.creatorUsername === this._tokenService.getUsernameFromSessionStorageToken();
+        if (this.loggedIn) {
+          this.editable = this.post.creatorUsername === this._tokenService.getUsernameFromSessionStorageToken();
+        }
       },
       (err: HttpErrorResponse) => {
         this._router.navigate(['/not-found']);
@@ -59,9 +63,13 @@ export class PostPageComponent implements OnInit {
     this._router.navigate(['/profile/' + this.post.creatorUsername]);
   }
 
+  toLogin(): void {
+    this._router.navigate(['/login']);
+  }
+
   editPost(): void {
     if (this._tokenService.getTokenFromSessionStorage() === '') {
-      this._router.navigate(['/login']);
+      this.toLogin();
       return;
     }
 
@@ -79,6 +87,11 @@ export class PostPageComponent implements OnInit {
   }
 
   addComment(): void {
+    if (!this.loggedIn) {
+      this._router.navigate(['/login']);
+      return;
+    }
+
     const newComment = this.addCommentFormGroup.get('newComment')?.value;
     if (newComment !== '' && newComment !== null) {
       this._commentService.createCommentWithSessionStorageRequest(this.postId, newComment).subscribe(
