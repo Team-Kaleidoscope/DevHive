@@ -27,11 +27,11 @@ export class PostService {
     return this.createPostRequest(userId, token, postMessage, files);
   }
 
-  putPostWithSessionStorageRequest(postId: Guid, newMessage: string): Observable<object> {
+  putPostWithSessionStorageRequest(postId: Guid, newMessage: string, posts: File[]): Observable<object> {
     const userId = this._tokenService.getUserIdFromSessionStorageToken();
     const token = this._tokenService.getTokenFromSessionStorage();
 
-    return this.putPostRequest(userId, token, postId, newMessage);
+    return this.putPostRequest(userId, token, postId, newMessage, posts);
   }
 
   deletePostWithSessionStorage(postId: Guid): Observable<object> {
@@ -62,16 +62,18 @@ export class PostService {
     return this._http.get(AppConstants.API_POST_URL, options);
   }
 
-  putPostRequest(userId: Guid, authToken: string, postId: Guid, newMessage: string): Observable<object> {
-    const body = {
-      postId: postId.toString(),
-      newMessage: newMessage
-    };
+  putPostRequest(userId: Guid, authToken: string, postId: Guid, newMessage: string, files: File[]): Observable<object> {
+    const form = new FormData();
+    form.append('postId', postId);
+    form.append('newMessage', newMessage);
+    for (const file of files) {
+      form.append('files', file, file.name);
+    }
     const options = {
       params: new HttpParams().set('UserId', userId.toString()),
       headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
     };
-    return this._http.put(AppConstants.API_POST_URL, body, options);
+    return this._http.put(AppConstants.API_POST_URL, form, options);
   }
 
   deletePostRequest(postId: Guid, authToken: string): Observable<object> {

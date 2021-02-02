@@ -101,14 +101,15 @@ export class PostPageComponent implements OnInit {
     }
 
     if (this.editingPost) {
-      const newMessage = this.editPostFormGroup.get('newPostMessage')?.value;
-      if (newMessage !== '') {
-        this._postService.putPostWithSessionStorageRequest(this.postId, newMessage).subscribe(
-          (result: object) => {
-            this.reloadPage();
-          }
-        );
+      let newMessage = this.editPostFormGroup.get('newPostMessage')?.value;
+      if (newMessage === '') {
+        newMessage = this.post.message;
       }
+      this._postService.putPostWithSessionStorageRequest(this.postId, newMessage, this.files).subscribe(
+        (result: object) => {
+          this.reloadPage();
+        }
+      );
     }
     this.editingPost = !this.editingPost;
   }
