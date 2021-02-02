@@ -1,6 +1,7 @@
 <div id="content">
 	<div class="many-buttons">
 		<button class="submit-btn" type="submit" (click)="backToFeed()">ᐊ Back to feed</button>
+		<button class="submit-btn" type="submit" (click)="backToProfile()">ᐊ Back to profile</button>
 	</div>
 	<app-post [paramId]="postId.toString()"></app-post>
 	<div class="many-buttons" *ngIf="editable">

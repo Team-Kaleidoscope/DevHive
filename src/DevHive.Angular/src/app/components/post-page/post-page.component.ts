@@ -58,6 +58,10 @@ export class PostPageComponent implements OnInit {
     this._router.navigate(['/']);
   }
 
+  backToProfile(): void {
+    this._router.navigate(['/profile/' + this.post.creatorUsername]);
+  }
+
   editPost(): void {
     if (this._tokenService.getTokenFromSessionStorage() === '') {
       this._router.navigate(['/login']);
