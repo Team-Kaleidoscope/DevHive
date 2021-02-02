@@ -1,4 +1,6 @@
-<div id="content">
+<app-loading *ngIf="!dataArrived"></app-loading>
+
+<div id="content" *ngIf="dataArrived">
 	<div class="many-buttons"  *ngIf="loggedIn">
 		<button class="submit-btn" type="submit" (click)="backToFeed()">ᐊ Back to feed</button>
 		<button class="submit-btn" type="submit" (click)="backToProfile()">ᐊ Back to profile</button>

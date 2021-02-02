@@ -17,6 +17,7 @@ import { CloudinaryService } from 'src/app/services/cloudinary.service';
 })
 export class PostPageComponent implements OnInit {
   private _title = 'Post';
+  public dataArrived = false;
   public loggedIn = false;
   public editable = false;
   public editingPost = false;
@@ -69,8 +70,13 @@ export class PostPageComponent implements OnInit {
           const tmp = {
             name: fileURL.match('(?<=\/)(?:.(?!\/))+$')?.pop() ?? 'Attachment'
           };
+
           Object.assign(file, tmp);
           this.files.push(file);
+
+          if (this.files.length === this.post.fileURLs.length) {
+            this.dataArrived = true;
+          }
         }
       );
     }
@@ -114,6 +120,7 @@ export class PostPageComponent implements OnInit {
           this.reloadPage();
         }
       );
+      this.dataArrived = false;
     }
     this.editingPost = !this.editingPost;
   }
