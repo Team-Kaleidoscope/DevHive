@@ -49,5 +49,6 @@ export class CommentComponent implements OnInit {
   }
 
   goToCommentPage(): void {
+    this._router.navigate(['/comment/' + this.comment.commentId]);
   }
 }

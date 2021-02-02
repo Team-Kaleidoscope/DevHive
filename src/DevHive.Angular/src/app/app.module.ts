@@ -22,6 +22,7 @@ import { SuccessBarComponent } from './components/success-bar/success-bar.compon
 import { PostPageComponent } from './components/post-page/post-page.component';
 import { AdminPanelPageComponent } from './components/admin-panel-page/admin-panel-page.component';
 import { CommentComponent } from './components/comment/comment.component';
+import { CommentPageComponent } from './components/comment-page/comment-page.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { CommentComponent } from './components/comment/comment.component';
     SuccessBarComponent,
     PostPageComponent,
     AdminPanelPageComponent,
-    CommentComponent
+    CommentComponent,
+    CommentPageComponent
   ],
   imports: [
     BrowserModule,
