@@ -8,6 +8,7 @@ import { CommentService } from 'src/app/services/comment.service';
 import { PostService } from 'src/app/services/post.service';
 import { TokenService } from 'src/app/services/token.service';
 import { Post } from 'src/models/post';
+import { CloudinaryService } from 'src/app/services/cloudinary.service';
 
 @Component({
   selector: 'app-post-page',
@@ -21,25 +22,29 @@ export class PostPageComponent implements OnInit {
   public editingPost = false;
   public postId: Guid;
   public post: Post;
+  public files: File[];
   public editPostFormGroup: FormGroup;
   public addCommentFormGroup: FormGroup;
 
-  constructor(private _titleService: Title, private _router: Router, private _fb: FormBuilder, private _tokenService: TokenService, private _postService: PostService, private _commentService: CommentService){
+  constructor(private _titleService: Title, private _router: Router, private _fb: FormBuilder, private _tokenService: TokenService, private _postService: PostService, private _commentService: CommentService, private _cloudinaryService: CloudinaryService){
     this._titleService.setTitle(this._title);
   }
 
   ngOnInit(): void {
     this.loggedIn = this._tokenService.getTokenFromSessionStorage() !== '';
     this.postId = Guid.parse(this._router.url.substring(6));
+    this.files = [];
 
     // Gets the post and the logged in user and compares them,
     // to determine if the current post is made by the user
     this._postService.getPostRequest(this.postId).subscribe(
       (result: object) => {
         this.post = result as Post;
+        this.post.fileURLs = Object.values(result)[7];
         if (this.loggedIn) {
           this.editable = this.post.creatorUsername === this._tokenService.getUsernameFromSessionStorageToken();
         }
+        this.loadFiles();
       },
       (err: HttpErrorResponse) => {
         this._router.navigate(['/not-found']);
@@ -47,12 +52,25 @@ export class PostPageComponent implements OnInit {
     );
 
     this.editPostFormGroup = this._fb.group({
-      newPostMessage: new FormControl('')
+      newPostMessage: new FormControl(''),
+      fileUpload: new FormControl('')
     });
 
     this.addCommentFormGroup = this._fb.group({
       newComment: new FormControl('')
     });
+  }
+
+  private loadFiles(): void {
+    for (const fileURL of this.post.fileURLs) {
+      this._cloudinaryService.getFileRequest(fileURL).subscribe(
+        (result: object) => {
+          const file = result as File;
+          file.name = 'Attachment';
+          this.files.push(file);
+        }
+      );
+    }
   }
 
   backToFeed(): void {
@@ -66,6 +84,16 @@ export class PostPageComponent implements OnInit {
   toLogin(): void {
     this._router.navigate(['/login']);
   }
+
+  onFileUpload(event: any): void {
+    this.files.push(...event.target.files);
+    this.editPostFormGroup.get('fileUpload')?.reset();
+  }
+
+  removeAttachment(fileName: string): void {
+    this.files = this.files.filter(x => x.name !== fileName);
+  }
+
 
   editPost(): void {
     if (this._tokenService.getTokenFromSessionStorage() === '') {

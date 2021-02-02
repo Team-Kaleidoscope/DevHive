@@ -9,10 +9,20 @@
 		<button class="submit-btn" (click)="editPost()">Edit post</button>
 		<button class="submit-btn delete-btn" (click)="deletePost()">Delete post</button>
 	</div>
-	<form  [formGroup]="editPostFormGroup" (ngSubmit)="editPost()">
-		<input type="text" *ngIf="editingPost" placeholder="New post message" class="input-field" formControlName="newPostMessage">
+	<form  id="editPost" [formGroup]="editPostFormGroup"  *ngIf="editingPost" (ngSubmit)="editPost()">
+		<input id="new-message-input" type="text" placeholder="New post message" class="input-field" formControlName="newPostMessage">
+		<img id="attachment-img" src="assets/images/paper-clip.png">
+		<input id="file-upload" type="file" formControlName="fileUpload" (change)="onFileUpload($event)" multiple>
 		<input type="submit" style="display: none" />
 	</form>
+	<div class="form-attachments" *ngIf="editingPost">
+		<div *ngFor="let file of files" class="form-attachment">
+			{{ file.name }}
+			<div class="remove-form-attachment" (click)="removeAttachment(file.name)">
+				☒
+			</div>
+		</div>
+	</div>
 	<form [formGroup]="addCommentFormGroup" (ngSubmit)="addComment()">
 		<input type="text" placeholder="Add comment" class="input-field" formControlName="newComment">
 		<input type="submit" style="display: none" />

@@ -152,43 +152,6 @@
   pointer-events: none;
 }
 
-#attachments {
-  display: flex;
-  flex-wrap: wrap;
-  color: gray;
-  font-size: .75em;
-  margin: 0 .3em;
-}
-
-.attachment {
-  border: 2px solid black;
-  border-radius: .6em;
-  margin-top: .2em;
-  margin-right: .2em;
-  padding: .2em;
-  display: flex;
-  align-items: center;
-}
-
-.attachment:last-child {
-  margin-right: 0;
-}
-
-.remove-attachment {
-  font-size: .9em;
-  color: var(--failure);
-  background-color: white;
-  border-radius: .2em;
-  margin: 0 .2em;
-  padding: .2em;
-}
-
-.remove-attachment:hover {
-  color: white;
-  background-color: var(--failure);
-  cursor: pointer;
-}
-
 /* Posts */
 
 #no-posts-msg {

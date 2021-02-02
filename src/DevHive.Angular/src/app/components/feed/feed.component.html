@@ -25,10 +25,10 @@
 						<img id="attachment-img" src="assets/images/paper-clip.png">
 						<input id="file-upload" type="file" formControlName="fileUpload" (change)="onFileUpload($event)" multiple>
 					</div>
-					<div id="attachments">
-						<div *ngFor="let file of files" class="attachment">
+					<div class="form-attachments">
+						<div *ngFor="let file of files" class="form-attachment">
 							{{ file.name }}
-							<div class="remove-attachment" (click)="removeAttachment(file.name)">
+							<div class="remove-form-attachment" (click)="removeAttachment(file.name)">
 								☒
 							</div>
 						</div>

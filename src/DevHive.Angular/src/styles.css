@@ -220,3 +220,43 @@ input:focus, button:focus {
   color: indianred;
   border-color: indianred !important;
 }
+
+/* Form attachments (the ones that are shown while creating and editing a post) */
+
+.form-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  color: gray;
+  font-size: .75em;
+  margin: 0 .3em;
+}
+
+.form-attachment {
+  border: 2px solid black;
+  border-radius: .6em;
+  margin-top: .2em;
+  margin-right: .2em;
+  padding: .2em;
+  display: flex;
+  align-items: center;
+}
+
+.form-attachment:last-child {
+  margin-right: 0;
+}
+
+.remove-form-attachment {
+  font-size: .9em;
+  color: var(--failure);
+  background-color: white;
+  border-radius: .2em;
+  margin: 0 .2em;
+  padding: .2em;
+}
+
+.remove-form-attachment:hover {
+  color: white;
+  background-color: var(--failure);
+  cursor: pointer;
+}
+
