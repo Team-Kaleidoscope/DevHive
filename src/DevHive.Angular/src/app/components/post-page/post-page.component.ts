@@ -66,6 +66,10 @@ export class PostPageComponent implements OnInit {
       this._cloudinaryService.getFileRequest(fileURL).subscribe(
         (result: object) => {
           const file = result as File;
+          const tmp = {
+            name: fileURL.match('(?<=\/)(?:.(?!\/))+$')?.pop() ?? 'Attachment'
+          };
+          Object.assign(file, tmp);
           this.files.push(file);
         }
       );
