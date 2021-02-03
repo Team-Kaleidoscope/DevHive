@@ -38,6 +38,8 @@ namespace DevHive.Data.Repositories
 				.Include(x => x.Languages)
 				.Include(x => x.Technologies)
 				.Include(x => x.Posts)
+				.Include(x => x.MyFriends)
+				.Include(x => x.FriendsOf)
 				.FirstOrDefaultAsync(x => x.Id == id);
 		}
 
@@ -48,6 +50,8 @@ namespace DevHive.Data.Repositories
 				.Include(x => x.Languages)
 				.Include(x => x.Technologies)
 				.Include(x => x.Posts)
+				.Include(x => x.MyFriends)
+				.Include(x => x.FriendsOf)
 				.FirstOrDefaultAsync(x => x.UserName == username);
 		}
 		#endregion

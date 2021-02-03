@@ -85,8 +85,8 @@ namespace DevHive.Services.Services
 		#region Read
 		public async Task<UserServiceModel> GetUserById(Guid id)
 		{
-			User user = await this._userRepository.GetByIdAsync(id)
-				?? throw new ArgumentException("User does not exist!");
+			User user = await this._userRepository.GetByIdAsync(id) ??
+				throw new ArgumentException("User does not exist!");
 
 			return this._userMapper.Map<UserServiceModel>(user);
 		}
@@ -116,8 +116,8 @@ namespace DevHive.Services.Services
 			if (!successful)
 				throw new InvalidOperationException("Unable to edit user!");
 
-			return this._userMapper.Map<UserServiceModel>(
-				await this._userRepository.GetByIdAsync(user.Id));
+			User newUser = await this._userRepository.GetByIdAsync(user.Id);
+			return this._userMapper.Map<UserServiceModel>(newUser);
 		}
 		#endregion
 
