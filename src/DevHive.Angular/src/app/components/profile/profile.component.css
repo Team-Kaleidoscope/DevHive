@@ -64,6 +64,13 @@ hr {
   margin-bottom: auto;
 }
 
+#add-friend {
+  flex: 0 !important;
+  margin-top: .4em;
+  max-width: 9em;
+  font-size: .7em !important;
+}
+
 /* Languages and technologies */
 
 .secondary-info {

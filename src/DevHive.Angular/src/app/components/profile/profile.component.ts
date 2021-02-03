@@ -11,6 +11,7 @@ import { Post } from 'src/models/post';
 import { FeedService } from 'src/app/services/feed.service';
 import { TokenService } from 'src/app/services/token.service';
 import { Title } from '@angular/platform-browser';
+import { Friend } from 'src/models/identity/friend';
 
 @Component({
   selector: 'app-profile',
@@ -22,9 +23,11 @@ export class ProfileComponent implements OnInit {
   private _urlUsername: string;
   private _timeLoaded: string;
   private _currentPage: number;
-  public loggedInUser = false;
+  public isTheLoggedInUser = false;
+  public isUserLoggedIn = false;
   public isAdminUser = false;
   public dataArrived = false;
+  public friendOfUser = false;
   public user: User;
   public userPosts: Post[];
 
@@ -100,14 +103,18 @@ export class ProfileComponent implements OnInit {
 
   private finishUserLoading(): void {
     if (sessionStorage.getItem('UserCred')) {
+      this.isUserLoggedIn = true;
       const userFromToken: User = this._userService.getDefaultUser();
 
       this._userService.getUserFromSessionStorageRequest().subscribe(
         (tokenRes: object) => {
           Object.assign(userFromToken, tokenRes);
 
+          if (userFromToken.friends.map(x => x.userName).includes(this._urlUsername)) {
+            this.friendOfUser = true;
+          }
           if (userFromToken.userName === this._urlUsername) {
-            this.loggedInUser = true;
+            this.isTheLoggedInUser = true;
           }
           this.dataArrived = true;
           this.isAdminUser = this.user.roles.map(x => x.name).includes(AppConstants.ADMIN_ROLE_NAME);
@@ -143,10 +150,48 @@ export class ProfileComponent implements OnInit {
     this._router.navigate([this._router.url]);
   }
 
+  modifyFriend(): void {
+    this.dataArrived = false;
+    if (this.friendOfUser) {
+      this.removeFriend();
+    }
+    else {
+      this.addFriend();
+    }
+  }
+
+  removeFriend(): void {
+    this._userService.removeFriendFromUserFromSessionStorageRequest(this._urlUsername).subscribe(
+      (result: object) => {
+        this.reloadPage();
+      },
+      (err: HttpErrorResponse) => {
+        this._router.navigate(['/']);
+      }
+    );
+  }
+
+  addFriend(): void {
+    this._userService.addFriendToUserFromSessionStorageRequest(this._urlUsername).subscribe(
+      (result: object) => {
+        this.reloadPage();
+      },
+      (err: HttpErrorResponse) => {
+        this._router.navigate(['/']);
+      }
+    );
+  }
+
   onScroll(event: any): void {
     // Detects when the element has reached the bottom, thx https://stackoverflow.com/a/50038429/12036073
     if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight && this._currentPage > 0) {
       this.loadPosts();
     }
+  }
+
+  private reloadPage(): void {
+    this._router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this._router.onSameUrlNavigation = 'reload';
+    this._router.navigate([this._router.url]);
   }
 }

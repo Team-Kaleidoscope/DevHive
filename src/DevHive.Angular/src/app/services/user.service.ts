@@ -29,6 +29,13 @@ export class UserService {
     return this.getUserRequest(userId, token);
   }
 
+  addFriendToUserFromSessionStorageRequest(newFriendUserName: string): Observable<object> {
+    const userUserName = this._tokenService.getUsernameFromSessionStorageToken();
+    const token = this._tokenService.getTokenFromSessionStorage();
+
+    return this.addFriendToUserRequest(userUserName, token, newFriendUserName);
+  }
+
   putUserFromSessionStorageRequest(updateUserFormGroup: FormGroup, userRoles: Role[], userFriends: Friend[]): Observable<object> {
     const userId = this._tokenService.getUserIdFromSessionStorageToken();
     const token = this._tokenService.getTokenFromSessionStorage();
@@ -50,6 +57,14 @@ export class UserService {
     return this.deleteUserRequest(userId, token);
   }
 
+  removeFriendFromUserFromSessionStorageRequest(friendToRemoveUserName: string): Observable<object> {
+    const userUserName = this._tokenService.getUsernameFromSessionStorageToken();
+    const token = this._tokenService.getTokenFromSessionStorage();
+
+    return this.removeFriendFromUserRequest(userUserName, token, friendToRemoveUserName);
+  }
+
+
   /* User requests */
 
   loginUserRequest(loginUserFormGroup: FormGroup): Observable<object> {
@@ -69,6 +84,17 @@ export class UserService {
       Password: registerUserFormGroup.get('password')?.value
     };
     return this._http.post(AppConstants.API_USER_REGISTER_URL, body);
+  }
+
+  addFriendToUserRequest(userUserName: string, authToken: string, newFriendUserName: string): Observable<object> {
+    const body = {
+      newFriendUserName: newFriendUserName
+    };
+    const options = {
+      params: new HttpParams().set('UserName', userUserName),
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
+    };
+    return this._http.put(AppConstants.API_USER_URL + '/AddFriend', body, options);
   }
 
   getUserRequest(userId: Guid, authToken: string): Observable<object> {
@@ -105,6 +131,14 @@ export class UserService {
     return this._http.put(AppConstants.API_USER_URL, body, options);
   }
 
+  putBareUserRequest(userId: Guid, authToken: string, user: User): Observable<object> {
+    const options = {
+      params: new HttpParams().set('Id', userId.toString()),
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
+    };
+    return this._http.put(AppConstants.API_USER_URL, user, options);
+  }
+
   putProfilePictureRequest(userId: Guid, authToken: string, newPicture: File): Observable<object> {
     const form = new FormData();
     form.append('picture', newPicture);
@@ -121,5 +155,16 @@ export class UserService {
       headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
     };
     return this._http.delete(AppConstants.API_USER_URL, options);
+  }
+
+ removeFriendFromUserRequest(userUserName: string, authToken: string, friendToRemoveUserName: string): Observable<object> {
+    const body = {
+      friendUserNameToRemove: friendToRemoveUserName
+    };
+    const options = {
+      params: new HttpParams().set('UserName', userUserName),
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
+    };
+    return this._http.post(AppConstants.API_USER_URL + '/RemoveFriend', body, options);
   }
 }

@@ -3,9 +3,9 @@
 <div id="content" *ngIf="dataArrived">
 	<nav id="navigation">
 		<button class="submit-btn" (click)="goBack()">ᐊ Back</button>
-		<button class="submit-btn" (click)="navigateToSettings()" *ngIf="loggedInUser">Settings</button>
-		<button class="submit-btn" (click)="navigateToAdminPanel()" *ngIf="loggedInUser && isAdminUser">Panel</button>
-		<button class="submit-btn" (click)="logout()" *ngIf="loggedInUser">Logout</button>
+		<button class="submit-btn" (click)="navigateToSettings()" *ngIf="isTheLoggedInUser">Settings</button>
+		<button class="submit-btn" (click)="navigateToAdminPanel()" *ngIf="isTheLoggedInUser && isAdminUser">Panel</button>
+		<button class="submit-btn" (click)="logout()" *ngIf="isTheLoggedInUser">Logout</button>
 	</nav>
 	<hr>
 	<div class="scroll-standalone" (scroll)="onScroll($event)">
@@ -18,6 +18,7 @@
 				<div id="username">
 					@{{ user.userName }}
 				</div>
+				<button id="add-friend" class="submit-btn" *ngIf="!isTheLoggedInUser && isUserLoggedIn" (click)="modifyFriend()">{{ friendOfUser ? 'Unfriend' : 'Add friend' }}</button>
 			</div>
 		</div>
 		<div class="secondary-info rounded-border">
