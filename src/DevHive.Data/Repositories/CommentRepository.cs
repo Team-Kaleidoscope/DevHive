@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
@@ -30,6 +33,14 @@ namespace DevHive.Data.Repositories
 			return await this._context.Comments
 				.FirstOrDefaultAsync(p => p.Creator.Id == issuerId &&
 					p.TimeCreated == timeCreated);
+		}
+
+		public async Task<List<Comment>> GetPostComments(Guid postId)
+		{
+			return await this._context.Posts
+				.SelectMany(x => x.Comments)
+				.Where(x => x.Post.Id == postId)
+				.ToListAsync();
 		}
 		#endregion
 

@@ -105,6 +105,7 @@ namespace DevHive.Services.Services
 			}
 
 			post.Creator = await this._userRepository.GetByIdAsync(updatePostServiceModel.CreatorId);
+			post.Comments = await this._commentRepository.GetPostComments(updatePostServiceModel.PostId);
 			post.TimeCreated = DateTime.Now;
 
 			bool result = await this._postRepository.EditAsync(updatePostServiceModel.PostId, post);
