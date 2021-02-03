@@ -29,6 +29,8 @@ export class ProfileSettingsComponent implements OnInit {
   public showLanguages = false;
   public showTechnologies = false;
   public updateUserFormGroup: FormGroup;
+  public updateProfilePictureFormGroup: FormGroup;
+  public newProfilePicture: File;
   public user: User;
   public availableLanguages: Language[];
   public availableTechnologies: Technology[];
@@ -44,6 +46,7 @@ export class ProfileSettingsComponent implements OnInit {
     this.user = this._userService.getDefaultUser();
     this.availableLanguages = [];
     this.availableTechnologies = [];
+    this.newProfilePicture = new File([], '');
 
     this._userService.getUserByUsernameRequest(this._urlUsername).subscribe(
       (res: object) => {
@@ -76,7 +79,7 @@ export class ProfileSettingsComponent implements OnInit {
           Object.assign(userFromToken, tokenRes);
 
           if (userFromToken.userName === this._urlUsername) {
-            this.initForm();
+            this.initForms();
             this.dataArrived = true;
           }
           else {
@@ -93,7 +96,7 @@ export class ProfileSettingsComponent implements OnInit {
     }
   }
 
-  private initForm(): void {
+  private initForms(): void {
     this.updateUserFormGroup = this._fb.group({
       firstName: new FormControl(this.user.firstName, [
         Validators.required,
@@ -137,6 +140,10 @@ export class ProfileSettingsComponent implements OnInit {
       this.updateUserFormGroup.patchValue({ technologyInput : value });
     });
 
+    this.updateProfilePictureFormGroup = this._fb.group({
+      fileUpload: new FormControl('')
+    });
+
     this.updateUserFormGroup.valueChanges.subscribe(() => {
       this._successBar?.hideMsg();
       this._errorBar?.hideError();
@@ -161,6 +168,23 @@ export class ProfileSettingsComponent implements OnInit {
     });
   }
 
+  onFileUpload(event: any): void {
+    this.newProfilePicture = event.target.files[0];
+  }
+
+  updateProfilePicture(): void {
+    if (this.newProfilePicture.size === 0) {
+      return;
+    }
+
+    this._userService.putProfilePictureFromSessionStorageRequest(this.newProfilePicture).subscribe(
+      (result: object) => {
+        this.reloadPage();
+      }
+    );
+    this.dataArrived = false;
+  }
+
   onSubmit(): void {
     this._successBar.hideMsg();
     this._errorBar.hideError();
@@ -169,7 +193,7 @@ export class ProfileSettingsComponent implements OnInit {
     this.patchTechnologiesControl();
 
     this._userService.putUserFromSessionStorageRequest(this.updateUserFormGroup, this.user.roles, this.user.friends).subscribe(
-        res => {
+        (result: object) => {
           this._successBar.showMsg('Profile updated successfully!');
         },
         (err: HttpErrorResponse) => {
@@ -261,9 +285,16 @@ export class ProfileSettingsComponent implements OnInit {
           this._errorBar.showError(err);
         }
       );
+      this.dataArrived = false;
     }
     else {
       this.deleteAccountConfirm = true;
     }
+  }
+
+  private reloadPage(): void {
+    this._router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this._router.onSameUrlNavigation = 'reload';
+    this._router.navigate([this._router.url]);
   }
 }

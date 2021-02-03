@@ -40,6 +40,7 @@ namespace DevHive.Data.Repositories
 				.Include(x => x.Posts)
 				.Include(x => x.MyFriends)
 				.Include(x => x.FriendsOf)
+				.Include(x => x.ProfilePicture)
 				.FirstOrDefaultAsync(x => x.Id == id);
 		}
 
@@ -52,6 +53,7 @@ namespace DevHive.Data.Repositories
 				.Include(x => x.Posts)
 				.Include(x => x.MyFriends)
 				.Include(x => x.FriendsOf)
+				.Include(x => x.ProfilePicture)
 				.FirstOrDefaultAsync(x => x.UserName == username);
 		}
 		#endregion
@@ -94,6 +96,14 @@ namespace DevHive.Data.Repositories
 			user.Technologies = technologies;
 
 			this._context.Entry(user).State = EntityState.Modified;
+
+			return await this.SaveChangesAsync();
+		}
+
+		public async Task<bool> UpdateProfilePicture(Guid userId, string pictureUrl) {
+			User user = await this.GetByIdAsync(userId);
+
+			user.ProfilePicture.PictureURL = pictureUrl;
 
 			return await this.SaveChangesAsync();
 		}

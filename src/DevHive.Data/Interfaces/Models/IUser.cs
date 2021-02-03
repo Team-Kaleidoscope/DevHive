@@ -10,7 +10,7 @@ namespace DevHive.Data.Interfaces.Models
 
 		string LastName { get; set; }
 
-		string ProfilePictureUrl { get; set; }
+		ProfilePicture ProfilePicture { get; set; }
 
 		HashSet<Language> Languages { get; set; }
 

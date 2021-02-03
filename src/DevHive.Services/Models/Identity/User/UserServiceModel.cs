@@ -8,6 +8,8 @@ namespace DevHive.Services.Models.Identity.User
 {
 	public class UserServiceModel : BaseUserServiceModel
 	{
+		public string ProfilePictureURL { get; set; }
+
 		public HashSet<RoleServiceModel> Roles { get; set; } = new();
 
 		public HashSet<FriendServiceModel> Friends { get; set; } = new();

@@ -15,6 +15,7 @@ using DevHive.Data.Interfaces.Repositories;
 using System.Linq;
 using DevHive.Common.Models.Misc;
 using DevHive.Data.RelationModels;
+using Microsoft.AspNetCore.Http;
 
 namespace DevHive.Services.Services
 {
@@ -26,13 +27,15 @@ namespace DevHive.Services.Services
 		private readonly ITechnologyRepository _technologyRepository;
 		private readonly IMapper _userMapper;
 		private readonly JWTOptions _jwtOptions;
+		private readonly ICloudService _cloudService;
 
 		public UserService(IUserRepository userRepository,
 			ILanguageRepository languageRepository,
 			IRoleRepository roleRepository,
 			ITechnologyRepository technologyRepository,
 			IMapper mapper,
-			JWTOptions jwtOptions)
+			JWTOptions jwtOptions,
+			ICloudService cloudService)
 		{
 			this._userRepository = userRepository;
 			this._roleRepository = roleRepository;
@@ -40,6 +43,7 @@ namespace DevHive.Services.Services
 			this._jwtOptions = jwtOptions;
 			this._languageRepository = languageRepository;
 			this._technologyRepository = technologyRepository;
+			this._cloudService = cloudService;
 		}
 
 		#region Authentication
@@ -66,6 +70,7 @@ namespace DevHive.Services.Services
 
 			User user = this._userMapper.Map<User>(registerModel);
 			user.PasswordHash = PasswordModifications.GeneratePasswordHash(registerModel.Password);
+			user.ProfilePicture = new ProfilePicture() { PictureURL = String.Empty };
 
 			// Make sure the default role exists
 			//TODO: Move when project starts
@@ -118,6 +123,28 @@ namespace DevHive.Services.Services
 
 			User newUser = await this._userRepository.GetByIdAsync(user.Id);
 			return this._userMapper.Map<UserServiceModel>(newUser);
+		}
+
+		public async Task<ProfilePictureServiceModel> UpdateProfilePicture(UpdateProfilePictureServiceModel updateProfilePictureServiceModel)
+		{
+			User user = await this._userRepository.GetByIdAsync(updateProfilePictureServiceModel.UserId);
+
+			if (!String.IsNullOrEmpty(user.ProfilePicture.PictureURL))
+			{
+				bool success = await _cloudService.RemoveFilesFromCloud(new List<string> { user.ProfilePicture.PictureURL });
+				if (!success)
+					throw new InvalidCastException("Could not delete old profile picture!");
+			}
+
+			string fileUrl = (await this._cloudService.UploadFilesToCloud(new List<IFormFile> { updateProfilePictureServiceModel.Picture }))[0] ??
+				throw new ArgumentNullException("Unable to upload profile picture to cloud");
+
+			bool successful = await this._userRepository.UpdateProfilePicture(updateProfilePictureServiceModel.UserId, fileUrl);
+
+			if (!successful)
+				throw new InvalidOperationException("Unable to change profile picture!");
+
+			return new ProfilePictureServiceModel() { ProfilePictureURL = fileUrl };
 		}
 		#endregion
 

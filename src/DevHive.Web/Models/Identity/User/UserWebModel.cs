@@ -10,6 +10,8 @@ namespace DevHive.Web.Models.Identity.User
 {
 	public class UserWebModel : BaseUserWebModel
 	{
+		public string ProfilePictureURL { get; set; }
+
 		[NotNull]
 		[Required]
 		public HashSet<RoleWebModel> Roles { get; set; } = new();

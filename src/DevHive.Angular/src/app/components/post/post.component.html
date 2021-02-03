@@ -3,7 +3,7 @@
 <div class="post rounded-border" *ngIf="loaded">
 	<div class="content">
 		<div class="author" (click)="goToAuthorProfile()">
-			<img class="round-image" [src]="user.imageUrl">
+			<img class="round-image" [src]="user.profilePictureURL">
 			<div class="author-info">
 				<div class="name">
 					{{ user.firstName }} {{ user.lastName }}

@@ -27,6 +27,11 @@ namespace DevHive.Data
 				.HasIndex(x => x.UserName)
 				.IsUnique();
 
+			builder.Entity<User>()
+				.HasOne(x => x.ProfilePicture)
+				.WithOne(x => x.User)
+				.HasForeignKey<ProfilePicture>(x => x.UserId);
+
 			/* Roles */
 			builder.Entity<User>()
 				.HasMany(x => x.Roles)

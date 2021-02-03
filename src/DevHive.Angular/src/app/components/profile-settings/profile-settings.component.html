@@ -7,7 +7,17 @@
 	</nav>
 	<hr>
 	<div class="scroll-standalone">
-		<form [formGroup]="updateUserFormGroup" (ngSubmit)="onSubmit()">
+		<form id="update-profile-picture" [formGroup]="updateProfilePictureFormGroup" (ngSubmit)="updateProfilePicture()">
+			<img id="profile-picture" class="round-image" [src]="user.profilePictureURL">
+			<div id="submit-file">
+				<div id="upload-file" class="submit-btn">
+					<input type="file" formControlName="fileUpload" (change)="onFileUpload($event)">
+				</div>
+				<button class="submit-btn" type="submit">Update profile picture</button>
+			</div>
+		</form>
+		<hr>
+		<form id="update-user" [formGroup]="updateUserFormGroup" (ngSubmit)="onSubmit()">
 			<div class="input-selection">
 				<input type="text" class="input-field" formControlName="firstName" required>
 				<label class="input-field-label">First Name</label>

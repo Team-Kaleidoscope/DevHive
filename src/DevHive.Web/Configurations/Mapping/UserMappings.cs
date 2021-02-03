@@ -23,6 +23,9 @@ namespace DevHive.Web.Configurations.Mapping
 			CreateMap<UsernameWebModel, FriendServiceModel>();
 			CreateMap<UsernameWebModel, UpdateFriendServiceModel>();
 
+			CreateMap<UpdateProfilePictureWebModel, UpdateProfilePictureServiceModel>();
+			CreateMap<ProfilePictureServiceModel, ProfilePictureWebModel>();
+
 			CreateMap<UpdateUserServiceModel, UpdateUserWebModel>();
 			CreateMap<FriendServiceModel, UsernameWebModel>();
 		}

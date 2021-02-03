@@ -45,7 +45,12 @@ export class PostPageComponent implements OnInit {
         if (this.loggedIn) {
           this.editable = this.post.creatorUsername === this._tokenService.getUsernameFromSessionStorageToken();
         }
-        this.loadFiles();
+        if (this.post.fileURLs.length > 0) {
+          this.loadFiles();
+        }
+        else {
+          this.dataArrived = true;
+        }
       },
       (err: HttpErrorResponse) => {
         this._router.navigate(['/not-found']);
@@ -102,7 +107,6 @@ export class PostPageComponent implements OnInit {
   removeAttachment(fileName: string): void {
     this.files = this.files.filter(x => x.name !== fileName);
   }
-
 
   editPost(): void {
     if (this._tokenService.getTokenFromSessionStorage() === '') {

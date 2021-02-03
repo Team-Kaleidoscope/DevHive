@@ -12,6 +12,8 @@ namespace DevHive.Services.Models.Identity.User
 
 		public string Password { get; set; }
 
+		public string ProfilePictureURL { get; set; }
+
 		public HashSet<UpdateRoleServiceModel> Roles { get; set; } = new HashSet<UpdateRoleServiceModel>();
 
 		public HashSet<UpdateFriendServiceModel> Friends { get; set; } = new HashSet<UpdateFriendServiceModel>();
