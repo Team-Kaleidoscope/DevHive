@@ -12,7 +12,7 @@ export class AppConstants {
   public static API_FEED_URL = AppConstants.BASE_API_URL + '/Feed';
   public static API_COMMENT_URL = AppConstants.BASE_API_URL + '/Comment';
 
-  public static PAGE_SIZE = 5;
+  public static PAGE_SIZE = 10;
   public static FALLBACK_PROFILE_ICON = 'assets/images/feed/profile-pic.png';
 
   public static SESSION_TOKEN_KEY = 'UserCred';

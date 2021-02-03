@@ -39,7 +39,7 @@
 				</a>
 			</div>
 		</nav>
-		<div id="posts" class="scroll-standalone">
+		<div id="posts" class="scroll-standalone" (scroll)="onScroll($event)">
 			<div id="no-posts-msg" *ngIf="posts.length === 0">
 				None of your friends have posted anything yet!<br>
 				Try refreshing your page!

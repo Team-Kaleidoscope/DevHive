@@ -19,6 +19,7 @@ import { TokenService } from 'src/app/services/token.service';
 export class FeedComponent implements OnInit {
   private _title = 'Feed';
   private _timeLoaded: string; // we send the time to the api as a string
+  private _currentPage: number;
   public dataArrived = false;
   public user: User;
   public posts: Post[];
@@ -35,6 +36,7 @@ export class FeedComponent implements OnInit {
       return;
     }
 
+    this._currentPage = 1;
     this.posts = [];
     this.user = this._userService.getDefaultUser();
     this.files = [];
@@ -60,9 +62,9 @@ export class FeedComponent implements OnInit {
   }
 
   private loadFeed(): void {
-    this._feedService.getUserFeedFromSessionStorageRequest(1, this._timeLoaded, AppConstants.PAGE_SIZE).subscribe(
+    this._feedService.getUserFeedFromSessionStorageRequest(this._currentPage++, this._timeLoaded, AppConstants.PAGE_SIZE).subscribe(
       (result: object) => {
-        this.posts = Object.values(result)[0];
+        this.posts.push(...Object.values(result)[0]);
         this.finishUserLoading();
       },
       (err) => {
@@ -105,5 +107,12 @@ export class FeedComponent implements OnInit {
         this.goToProfile();
       }
     );
+  }
+
+  onScroll(event: any): void {
+    // Detects when the element has reached the bottom, thx https://stackoverflow.com/a/50038429/12036073
+    if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight && this._currentPage > 0) {
+      this.loadFeed();
+    }
   }
 }
