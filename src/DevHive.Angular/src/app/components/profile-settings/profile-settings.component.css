@@ -37,6 +37,41 @@ hr {
 
 /* Form */
 
+#update-profile-picture {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 .5em;
+}
+
+#profile-picture {
+  width: 5em;
+  height: 5em;
+}
+
+#submit-file {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1em;
+}
+
+#upload-file:hover {
+  cursor: inherit;
+}
+
+#upload-file > input:hover {
+  cursor: pointer;
+}
+
+#upload-file > input::-webkit-file-upload-button {
+  visibility: hidden;
+}
+
+#update-user {
+  margin-top: 1.1em;
+}
+
 .input-field {
   border-color: var(--focus-color) !important;
   caret-color: var(--focus-color);

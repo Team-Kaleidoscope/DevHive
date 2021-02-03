@@ -108,7 +108,6 @@ export class PostPageComponent implements OnInit {
     this.files = this.files.filter(x => x.name !== fileName);
   }
 
-
   editPost(): void {
     if (this._tokenService.getTokenFromSessionStorage() === '') {
       this.toLogin();
