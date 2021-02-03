@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
 using DevHive.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using NUnit.Framework;
 
 namespace DevHive.Data.Tests
@@ -13,9 +16,11 @@ namespace DevHive.Data.Tests
 	{
 		private const string POST_MESSAGE = "Post test message";
 
-		protected DevHiveContext Context { get; set; }
+		private DevHiveContext Context { get; set; }
 
-		protected PostRepository PostRepository { get; set; }
+		private Mock<IUserRepository> UserRepository { get; set; }
+
+		private PostRepository PostRepository { get; set; }
 
 		#region Setups
 		[SetUp]
@@ -26,13 +31,30 @@ namespace DevHive.Data.Tests
 
 			this.Context = new DevHiveContext(optionsBuilder.Options);
 
-			PostRepository = new PostRepository(Context);
+			this.UserRepository = new Mock<IUserRepository>();
+
+			PostRepository = new PostRepository(Context, this.UserRepository.Object);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
 			this.Context.Database.EnsureDeleted();
+		}
+		#endregion
+
+		#region AddNewPostToCreator
+		[Test]
+		public async Task AddNewPostToCreator_ReturnsTrue_WhenNewPostIsAddedToCreator()
+		{
+			Post post = await this.AddEntity();
+			User user = new User { Id = Guid.NewGuid() };
+
+			this.UserRepository.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
+
+			bool result = await this.PostRepository.AddNewPostToCreator(user.Id, post);
+
+			Assert.IsTrue(result, "AddNewPostToCreator does not return true when Post Is Added To Creator successfully");
 		}
 		#endregion
 
@@ -91,7 +113,7 @@ namespace DevHive.Data.Tests
 
 		[Test]
 		public async Task DoesPostExist_ReturnsFalse_WhenThePostDoesNotExist()
-		{ 
+		{
 			bool result = await this.PostRepository.DoesPostExist(Guid.Empty);
 
 			Assert.IsFalse(result, "DoesPostExist does not return false whenm the Post does not exist");
@@ -107,10 +129,12 @@ namespace DevHive.Data.Tests
 				Message = POST_MESSAGE,
 				Id = Guid.NewGuid(),
 				Creator = creator,
-				TimeCreated = DateTime.Now
+				TimeCreated = DateTime.Now,
+				FileUrls = new List<string>(),
+				Comments = new List<Comment>()
 			};
 
-			this.Context.Posts.Add(post);
+			await this.Context.Posts.AddAsync(post);
 			await this.Context.SaveChangesAsync();
 
 			return post;
