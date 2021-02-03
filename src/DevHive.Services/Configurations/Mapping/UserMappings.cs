@@ -22,10 +22,12 @@ namespace DevHive.Services.Configurations.Mapping
 			CreateMap<UpdateFriendServiceModel, User>();
 
 			CreateMap<User, UserServiceModel>()
-				.ForMember(dest => dest.Friends, src => src.MapFrom(p => p.MyFriends));
+				.ForMember(dest => dest.Friends, src => src.MapFrom(p => p.MyFriends))
+				.ForMember(dest => dest.ProfilePictureURL, src => src.MapFrom(p => p.ProfilePicture.PictureURL));
 				// .ForMember(dest => dest.Friends, src => src.MapFrom(p => p.Friends));
 			CreateMap<User, UpdateUserServiceModel>()
-				.ForMember(x => x.Password, opt => opt.Ignore());
+				.ForMember(x => x.Password, opt => opt.Ignore())
+				.ForMember(dest => dest.ProfilePictureURL, src => src.MapFrom(p => p.ProfilePicture.PictureURL));
 			CreateMap<User, FriendServiceModel>();
 
 			CreateMap<UserFriend, FriendServiceModel>()

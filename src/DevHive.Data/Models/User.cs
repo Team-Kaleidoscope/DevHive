@@ -14,7 +14,7 @@ namespace DevHive.Data.Models
 
 		public string LastName { get; set; }
 
-		public string ProfilePictureUrl { get; set; }
+		public ProfilePicture ProfilePicture { get; set; }
 
 		public HashSet<Language> Languages { get; set; } = new();
 

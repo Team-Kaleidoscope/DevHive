@@ -11,6 +11,7 @@ namespace DevHive.Data.Interfaces.Repositories
 		//Read
 		Task<User> GetByUsernameAsync(string username);
 		IEnumerable<User> QueryAll();
+		Task<bool> UpdateProfilePicture(Guid userId, string pictureUrl);
 
 		//Validations
 		Task<bool> DoesEmailExistAsync(string email);

@@ -14,6 +14,7 @@ namespace DevHive.Services.Interfaces
 		Task<UserServiceModel> GetUserById(Guid id);
 
 		Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateModel);
+		Task<ProfilePictureServiceModel> UpdateProfilePicture(UpdateProfilePictureServiceModel updateProfilePictureServiceModel);
 
 		Task<bool> DeleteUser(Guid id);
 
