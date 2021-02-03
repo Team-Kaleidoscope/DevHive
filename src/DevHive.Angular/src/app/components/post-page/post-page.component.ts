@@ -92,7 +92,7 @@ export class PostPageComponent implements OnInit {
   }
 
   backToProfile(): void {
-    this._router.navigate(['/profile/' + this.post.creatorUsername]);
+    this._router.navigate(['/profile/' + this._tokenService.getUsernameFromSessionStorageToken()]);
   }
 
   toLogin(): void {
