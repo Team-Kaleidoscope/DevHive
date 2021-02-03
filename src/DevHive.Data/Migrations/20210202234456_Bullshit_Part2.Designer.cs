@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using DevHive.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DevHive.Data.Migrations
 {
     [DbContext(typeof(DevHiveContext))]
-    partial class DevHiveContextModelSnapshot : ModelSnapshot
+    [Migration("20210202234456_Bullshit_Part2")]
+    partial class Bullshit_Part2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -459,13 +461,13 @@ namespace DevHive.Data.Migrations
             modelBuilder.Entity("DevHive.Data.RelationModels.UserFriend", b =>
                 {
                     b.HasOne("DevHive.Data.Models.User", "Friend")
-                        .WithMany("FriendsOf")
+                        .WithMany()
                         .HasForeignKey("FriendId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("DevHive.Data.Models.User", "User")
-                        .WithMany("MyFriends")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -588,10 +590,6 @@ namespace DevHive.Data.Migrations
             modelBuilder.Entity("DevHive.Data.Models.User", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("FriendsOf");
-
-                    b.Navigation("MyFriends");
 
                     b.Navigation("Posts");
                 });

@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using DevHive.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DevHive.Data.Migrations
 {
     [DbContext(typeof(DevHiveContext))]
-    partial class DevHiveContextModelSnapshot : ModelSnapshot
+    [Migration("20210202235051_Bullshit_Part3")]
+    partial class Bullshit_Part3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

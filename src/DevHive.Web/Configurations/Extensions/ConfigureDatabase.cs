@@ -18,7 +18,10 @@ namespace DevHive.Web.Configurations.Extensions
 		public static void DatabaseConfiguration(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.AddDbContext<DevHiveContext>(options =>
-				options.UseNpgsql(configuration.GetConnectionString("DEV")));
+			{
+				options.EnableSensitiveDataLogging(true);
+				options.UseNpgsql(configuration.GetConnectionString("DEV"));
+			});
 
 			services.AddIdentity<User, Role>()
 				.AddRoles<Role>()

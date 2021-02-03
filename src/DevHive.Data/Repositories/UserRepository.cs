@@ -34,7 +34,6 @@ namespace DevHive.Data.Repositories
 		public override async Task<User> GetByIdAsync(Guid id)
 		{
 			return await this._context.Users
-				.Include(x => x.Friends)
 				.Include(x => x.Roles)
 				.Include(x => x.Languages)
 				.Include(x => x.Technologies)
@@ -45,7 +44,6 @@ namespace DevHive.Data.Repositories
 		public async Task<User> GetByUsernameAsync(string username)
 		{
 			return await this._context.Users
-				.Include(x => x.Friends)
 				.Include(x => x.Roles)
 				.Include(x => x.Languages)
 				.Include(x => x.Technologies)
@@ -74,21 +72,17 @@ namespace DevHive.Data.Repositories
 				roles.Add(role);
 			user.Roles = roles;
 
-			// foreach (var friend in user.Friends)
-			// {
-			// 	friend.Friends.Remove(user);
-			// 	this._context.Entry(friend).State = EntityState.Modified;
-			// }
-			// user.Friends.Clear();
-			// foreach (var friend in newEntity.Friends)
-			// {
-			// 	friend.Friends.Add(user);
-			// 	user.Friends.Add(friend);
-			// }
-			this._context.UserFriends.RemoveRange(
-				this._context.UserFriends
-				.Where(x => x.FriendId == user.Id &&
-					x.UserId == user.Id));
+			foreach (var friend in newEntity.MyFriends)
+			{
+				user.MyFriends.Add(friend);
+				this._context.Entry(friend).State = EntityState.Modified;
+			}
+
+			foreach (var friend in newEntity.FriendsOf)
+			{
+				user.FriendsOf.Add(friend);
+				this._context.Entry(friend).State = EntityState.Modified;
+			}
 
 			HashSet<Technology> technologies = new();
 			foreach (var tech in newEntity.Technologies)
@@ -125,11 +119,12 @@ namespace DevHive.Data.Repositories
 
 		public async Task<bool> DoesUserHaveThisFriendAsync(Guid userId, Guid friendId)
 		{
-			User user = await this.GetByIdAsync(userId);
+			return true;
+			// User user = await this.GetByIdAsync(userId);
 
-			User friend = await this.GetByIdAsync(friendId);
+			// User friend = await this.GetByIdAsync(friendId);
 
-			return user.Friends.Any(x => x.Friend.Id == friendId);
+			// return user.Friends.Any(x => x.Friend.Id == friendId);
 		}
 
 		public bool DoesUserHaveThisUsername(Guid id, string username)

@@ -6,7 +6,7 @@ using DevHive.Data.Models;
 namespace DevHive.Data.RelationModels
 {
 	[Table("UserFriends")]
-	public class UserFriends
+	public class UserFriend
 	{
 		public Guid UserId { get; set; }
 		public User User { get; set; }

@@ -22,9 +22,11 @@ namespace DevHive.Data.Models
 
 		public HashSet<Role> Roles { get; set; } = new();
 
-		public HashSet<UserFriends> Friends { get; set; } = new();
-
 		public HashSet<Post> Posts { get; set; } = new();
+
+		public HashSet<UserFriend> MyFriends { get; set; } = new();
+
+		public HashSet<UserFriend> FriendsOf { get; set; } = new();
 
 		public HashSet<Comment> Comments { get; set; } = new();
 

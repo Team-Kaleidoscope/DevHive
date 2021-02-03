@@ -33,7 +33,8 @@ namespace DevHive.Services.Services
 					RawUploadParams rawUploadParams = new()
 					{
 						File = new FileDescription(formFileId, new MemoryStream(formBytes)),
-						PublicId = formFileId
+						PublicId = formFileId,
+						UseFilename = true
 					};
 
 					RawUploadResult rawUploadResult = await this._cloudinary.UploadAsync(rawUploadParams);

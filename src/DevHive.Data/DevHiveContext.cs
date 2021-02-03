@@ -15,7 +15,7 @@ namespace DevHive.Data
 		public DbSet<Language> Languages { get; set; }
 		public DbSet<Post> Posts { get; set; }
 		public DbSet<Comment> Comments { get; set; }
-		public DbSet<UserFriends> UserFriends { get; set; }
+		public DbSet<UserFriend> UserFriends { get; set; }
 		public DbSet<Rating> Rating { get; set; }
 		public DbSet<RatedPost> RatedPost { get; set; }
 		public DbSet<UserRate> UserRate { get; set; }
@@ -33,16 +33,18 @@ namespace DevHive.Data
 				.WithMany(x => x.Users);
 
 			/* Friends */
-			builder.Entity<UserFriends>()
+			builder.Entity<UserFriend>()
 				.HasKey(x => new { x.UserId, x.FriendId });
 
-			// builder.Entity<UserFriends>()
-			// 	.HasOne(x => x.Friend)
-			// 	.WithMany(x => x.Friends);
+			builder.Entity<UserFriend>()
+				.HasOne(x => x.User)
+				.WithMany(x => x.MyFriends)
+				.HasForeignKey(x => x.UserId);
 
-			builder.Entity<User>()
-				.HasMany(x => x.Friends)
-				.WithOne(x => x.User);
+			builder.Entity<UserFriend>()
+				.HasOne(x => x.Friend)
+				.WithMany(x => x.FriendsOf)
+				.HasForeignKey(x => x.FriendId);
 
 			/* Languages */
 			builder.Entity<User>()

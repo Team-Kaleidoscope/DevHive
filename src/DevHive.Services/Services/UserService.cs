@@ -109,12 +109,15 @@ namespace DevHive.Services.Services
 
 			User user = await this.PopulateModel(updateUserServiceModel);
 
+			await this.CreateRelationToFriends(user, updateUserServiceModel.Friends.ToList());
+
 			bool successful = await this._userRepository.EditAsync(updateUserServiceModel.Id, user);
 
 			if (!successful)
 				throw new InvalidOperationException("Unable to edit user!");
 
-			return this._userMapper.Map<UserServiceModel>(user);
+			return this._userMapper.Map<UserServiceModel>(
+				await this._userRepository.GetByIdAsync(user.Id));
 		}
 		#endregion
 
@@ -269,25 +272,6 @@ namespace DevHive.Services.Services
 			else
 				user.Roles = (await this._userRepository.GetByIdAsync(updateUserServiceModel.Id)).Roles;
 
-			/* Fetch Friends and replace model's*/
-			HashSet<UserFriends> friends = new();
-			int friendsCount = updateUserServiceModel.Friends.Count;
-			for (int i = 0; i < friendsCount; i++)
-			{
-				User friend = await this._userRepository.GetByUsernameAsync(updateUserServiceModel.Friends.ElementAt(i).UserName) ??
-					throw new ArgumentException("Invalid friend's username!");
-
-				UserFriends relation = new()
-				{
-					UserId = user.Id,
-					User = user,
-					FriendId = friend.Id,
-					Friend = friend
-				};
-				friends.Add(relation);
-			}
-			user.Friends = friends;
-
 			/* Fetch Languages and replace model's*/
 			HashSet<Language> languages = new();
 			int languagesCount = updateUserServiceModel.Languages.Count;
@@ -313,6 +297,35 @@ namespace DevHive.Services.Services
 			user.Technologies = technologies;
 
 			return user;
+		}
+
+		private async Task<bool> CreateRelationToFriends(User user, List<UpdateFriendServiceModel> friends)
+		{
+			foreach (var friend in friends)
+			{
+				User amigo = await this._userRepository.GetByUsernameAsync(friend.UserName) ??
+					throw new ArgumentException("No amigo, bro!");
+
+				UserFriend relation = new()
+				{
+					UserId = user.Id,
+					User = user,
+					FriendId = amigo.Id,
+					Friend = amigo
+				};
+
+				UserFriend theOtherRelation = new()
+				{
+					UserId = amigo.Id,
+					User = amigo,
+					FriendId = user.Id,
+					Friend = user
+				};
+
+				user.MyFriends.Add(relation);
+				user.FriendsOf.Add(theOtherRelation);
+			}
+			return true;
 		}
 		#endregion
 	}
