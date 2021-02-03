@@ -3,7 +3,7 @@
 <div id="feed-page" *ngIf="dataArrived">
 	<nav id="profile-bar" class="round-image rounded-border">
 		<div id="profile-info" (click)="goToProfile()">
-			<img id="profile-bar-profile-pic" [src]="user.imageUrl" alt=""/>
+			<img id="profile-bar-profile-pic" class="round-image" [src]="user.profilePictureURL" alt=""/>
 			<div id="profile-bar-name">
 				{{ user.firstName }} {{ user.lastName }}
 			</div>
@@ -17,7 +17,7 @@
 	<div id="feed-content">
 		<nav id="top-bar">
 			<div id="main-content">
-				<img id="top-bar-profile-pic" class="round-image" [src]="user.imageUrl" alt="" (click)="goToProfile()">
+				<img id="top-bar-profile-pic" class="round-image" [src]="user.profilePictureURL" alt="" (click)="goToProfile()">
 				<form id="create-post-form" class="rounded-border" [formGroup]="createPostFormGroup" (ngSubmit)="createPost()">
 					<div id="form-inputs">
 						<input id="top-bar-create-post" type="text" formControlName="newPostMessage" placeholder="What's on your mind?"/>

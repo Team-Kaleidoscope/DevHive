@@ -10,19 +10,19 @@ export class User {
   private _firstName : string;
   private _userName : string;
   private _email: string;
-  private _imageUrl : string;
+  private _profilePictureURL : string;
   private _languages: Language[];
   private _technologies: Technology[];
   private _roles: Role[];
   private _friends: Friend[];
 
-  constructor(id: Guid, userName: string, firstName: string, lastName: string, email: string, imageUrl: string, languages: Language[], technologies: Technology[], roles: Role[], friends: Friend[]) {
+  constructor(id: Guid, userName: string, firstName: string, lastName: string, email: string, profilePictureURL: string, languages: Language[], technologies: Technology[], roles: Role[], friends: Friend[]) {
     this.id = id;
     this.userName = userName;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
-    this.imageUrl = imageUrl;
+    this._profilePictureURL = profilePictureURL;
     this.languages = languages;
     this.technologies = technologies;
     this.roles = roles;
@@ -63,11 +63,11 @@ export class User {
     this._email = v;
   }
 
-  public get imageUrl(): string {
-    return this._imageUrl;
+  public get profilePictureURL(): string {
+    return this._profilePictureURL;
   }
-  public set imageUrl(v: string) {
-    this._imageUrl = v;
+  public set profilePictureURL(v: string) {
+    this._profilePictureURL = v;
   }
 
   public get languages(): Language[] {
