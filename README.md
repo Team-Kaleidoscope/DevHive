@@ -5,8 +5,8 @@ DevHive is the social network solution for programmers. In it you can make posts
 It's built with ASP.NET Core as a back-end and Angular as a front-end. For more technical information, you can refer to the [Wiki](https://github.com/Team-Kaleidoscope/DevHive/wiki).
 
 Contents:
-- [Setting up locally](https://github.com/Team-Kaleidoscope/DevHive/tree/dev#setting-up-locally)
-- [Screenshots](https://github.com/Team-Kaleidoscope/DevHive/tree/dev#screenshots)
+- [Setting up locally](#setting-up-locally)
+- [Screenshots](#screenshots)
 
 ## Setting up locally
 
