@@ -59,3 +59,18 @@ If nothing broke, you can now access the front-end from `http://localhost:4200`.
 You can change on what port the API is ran, by changing the `HTTP_PORT` constant in `src/DevHive.Web/Program.cs`. If you do so, you **must** also update the front-end, because by default it will try to send requests to port 5000. Go to `src/DevHive.Angular/src/app` and edit the `app-constants.module.ts` file, on the second row you're gonna see the variable `BASE_API_URL`, change it accoring to your API modifications.
 
 You can change on what port the Front-end is ran, by issueing the serve command with the `--port` parameter: `ng serve --port 5001`. But, **don't run it with the `--ssl` parameter!** SSL isn't supported yet, so it will throw errors! As an alternative, if you need ssl, is using a [reverse proxy](https://www.cloudflare.com/learning/cdn/glossary/reverse-proxy/).
+
+## Screenshots
+
+![](./screenshots/register.png)
+![](./screenshots/login.png)
+![](./screenshots/feed.png)
+![](./screenshots/creating-post.png)
+![](./screenshots/your-profile-page.png)
+![](./screenshots/your-settings-page.png)
+![](./screenshots/edit.png)
+![](./screenshots/post-page.png)
+![](./screenshots/post-page-with-comments.png)
+![](./screenshots/comment-page.png)
+![](./screenshots/another-user-logged-in.png)
+![](./screenshots/admin-panel.png)
