@@ -9,6 +9,7 @@ using DevHive.Common.Models.Identity;
 using DevHive.Common.Models.Misc;
 using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
+using DevHive.Services.Interfaces;
 using DevHive.Services.Models.Identity.User;
 using DevHive.Services.Options;
 using DevHive.Services.Services;
@@ -21,6 +22,7 @@ namespace DevHive.Services.Tests
 	[TestFixture]
 	public class UserServiceTests
 	{
+		private Mock<ICloudService> CloudServiceMock { get; set; }
 		private Mock<IUserRepository> UserRepositoryMock { get; set; }
 		private Mock<IRoleRepository> RoleRepositoryMock { get; set; }
 		private Mock<ILanguageRepository> LanguageRepositoryMock { get; set; }
@@ -35,11 +37,12 @@ namespace DevHive.Services.Tests
 		{
 			this.UserRepositoryMock = new Mock<IUserRepository>();
 			this.RoleRepositoryMock = new Mock<IRoleRepository>();
+			this.CloudServiceMock = new Mock<ICloudService>();
 			this.LanguageRepositoryMock = new Mock<ILanguageRepository>();
 			this.TechnologyRepositoryMock = new Mock<ITechnologyRepository>();
 			this.JWTOptions = new JWTOptions("gXfQlU6qpDleFWyimscjYcT3tgFsQg3yoFjcvSLxG56n1Vu2yptdIUq254wlJWjm");
 			this.MapperMock = new Mock<IMapper>();
-			this.UserService = new UserService(this.UserRepositoryMock.Object, this.LanguageRepositoryMock.Object, this.RoleRepositoryMock.Object, this.TechnologyRepositoryMock.Object, this.MapperMock.Object, JWTOptions);
+			this.UserService = new UserService(this.UserRepositoryMock.Object, this.LanguageRepositoryMock.Object, this.RoleRepositoryMock.Object, this.TechnologyRepositoryMock.Object, this.MapperMock.Object, JWTOptions, this.CloudServiceMock.Object);
 		}
 		#endregion
 
@@ -48,6 +51,7 @@ namespace DevHive.Services.Tests
 		public async Task LoginUser_ReturnsTokenModel_WhenLoggingUserIn()
 		{
 			string somePassword = "GoshoTrapovImaGolemChep";
+			const string name = "GoshoTrapov";
 			string hashedPassword = PasswordModifications.GeneratePasswordHash(somePassword);
 			LoginServiceModel loginServiceModel = new LoginServiceModel
 			{
@@ -56,13 +60,14 @@ namespace DevHive.Services.Tests
 			User user = new User
 			{
 				Id = Guid.NewGuid(),
-				PasswordHash = hashedPassword
+				PasswordHash = hashedPassword,
+				UserName = name
 			};
 
 			this.UserRepositoryMock.Setup(p => p.DoesUsernameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
 			this.UserRepositoryMock.Setup(p => p.GetByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(user));
 
-			string JWTSecurityToken = this.WriteJWTSecurityToken(user.Id, user.Roles);
+			string JWTSecurityToken = this.WriteJWTSecurityToken(user.Id, user.UserName, user.Roles);
 
 			TokenModel tokenModel = await this.UserService.LoginUser(loginServiceModel);
 
@@ -113,13 +118,15 @@ namespace DevHive.Services.Tests
 		public async Task RegisterUser_ReturnsTokenModel_WhenUserIsSuccessfull()
 		{
 			string somePassword = "GoshoTrapovImaGolemChep";
+			const string name = "GoshoTrapov";
 			RegisterServiceModel registerServiceModel = new RegisterServiceModel
 			{
 				Password = somePassword
 			};
 			User user = new User
 			{
-				Id = Guid.NewGuid()
+				Id = Guid.NewGuid(),
+				UserName = name
 			};
 			Role role = new Role { Name = Role.DefaultRole };
 			HashSet<Role> roles = new HashSet<Role> { role };
@@ -131,7 +138,7 @@ namespace DevHive.Services.Tests
 			this.MapperMock.Setup(p => p.Map<User>(It.IsAny<RegisterServiceModel>())).Returns(user);
 			this.UserRepositoryMock.Setup(p => p.AddAsync(It.IsAny<User>())).Verifiable();
 
-			string JWTSecurityToken = this.WriteJWTSecurityToken(user.Id, roles);
+			string JWTSecurityToken = this.WriteJWTSecurityToken(user.Id, user.UserName, roles);
 
 			TokenModel tokenModel = await this.UserService.RegisterUser(registerServiceModel);
 
@@ -353,13 +360,13 @@ namespace DevHive.Services.Tests
 		#endregion
 
 		#region HelperMethods
-		private string WriteJWTSecurityToken(Guid userId, HashSet<Role> roles)
+		private string WriteJWTSecurityToken(Guid userId, string username, HashSet<Role> roles)
 		{
 			byte[] signingKey = Encoding.ASCII.GetBytes(this.JWTOptions.Secret);
-
 			HashSet<Claim> claims = new()
 			{
 				new Claim("ID", $"{userId}"),
+				new Claim("Username", username),
 			};
 
 			foreach (var role in roles)

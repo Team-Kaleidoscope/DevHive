@@ -13,7 +13,7 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace DevHive.Services.Services
 {
-    public class PostService : IPostService
+	public class PostService : IPostService
 	{
 		private readonly ICloudService _cloudService;
 		private readonly IUserRepository _userRepository;

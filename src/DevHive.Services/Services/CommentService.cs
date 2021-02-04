@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace DevHive.Services.Services
 {
-    public class CommentService : ICommentService
+	public class CommentService : ICommentService
 	{
 		private readonly IUserRepository _userRepository;
 		private readonly IPostRepository _postRepository;

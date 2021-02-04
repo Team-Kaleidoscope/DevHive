@@ -124,13 +124,14 @@ namespace DevHive.Data.Tests
 		private async Task<Post> AddEntity(string name = POST_MESSAGE)
 		{
 			User creator = new User { Id = Guid.NewGuid() };
+			await this.Context.Users.AddAsync(creator);
 			Post post = new Post
 			{
 				Message = POST_MESSAGE,
 				Id = Guid.NewGuid(),
 				Creator = creator,
 				TimeCreated = DateTime.Now,
-				FileUrls = new List<string>(),
+				FileUrls = new List<string> { "kur", "za", "tva" },
 				Comments = new List<Comment>()
 			};
 
