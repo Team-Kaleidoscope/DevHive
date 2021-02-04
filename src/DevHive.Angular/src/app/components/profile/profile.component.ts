@@ -53,6 +53,7 @@ export class ProfileComponent implements OnInit {
     this._userService.getUserByUsernameRequest(this._urlUsername).subscribe(
       (res: object) => {
         Object.assign(this.user, res);
+        this.isAdminUser = this.user.roles.map(x => x.name).includes(AppConstants.ADMIN_ROLE_NAME);
         this.loadLanguages();
       },
       (err: HttpErrorResponse) => {
@@ -117,7 +118,6 @@ export class ProfileComponent implements OnInit {
             this.isTheLoggedInUser = true;
           }
           this.dataArrived = true;
-          this.isAdminUser = this.user.roles.map(x => x.name).includes(AppConstants.ADMIN_ROLE_NAME);
         },
         (err: HttpErrorResponse) => {
           this.logout();

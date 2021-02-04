@@ -13,6 +13,7 @@ import { Language } from 'src/models/language';
 import { Technology } from 'src/models/technology';
 import { TokenService } from 'src/app/services/token.service';
 import { Title } from '@angular/platform-browser';
+import { AppConstants } from 'src/app/app-constants.module';
 
 @Component({
   selector: 'app-profile-settings',
@@ -24,6 +25,7 @@ export class ProfileSettingsComponent implements OnInit {
   @ViewChild(ErrorBarComponent) private _errorBar: ErrorBarComponent;
   @ViewChild(SuccessBarComponent) private _successBar: SuccessBarComponent;
   private _urlUsername: string;
+  public isAdminUser = false;
   public dataArrived = false;
   public deleteAccountConfirm = false;
   public showLanguages = false;
@@ -51,6 +53,7 @@ export class ProfileSettingsComponent implements OnInit {
     this._userService.getUserByUsernameRequest(this._urlUsername).subscribe(
       (res: object) => {
         Object.assign(this.user, res);
+        this.isAdminUser = this.user.roles.map(x => x.name).includes(AppConstants.ADMIN_ROLE_NAME);
         this.finishUserLoading();
       },
       (err: HttpErrorResponse) => {
@@ -260,6 +263,10 @@ export class ProfileSettingsComponent implements OnInit {
 
   goToProfile(): void {
     this._router.navigate([this._router.url.substring(0, this._router.url.length - 9)]);
+  }
+
+  navigateToAdminPanel(): void {
+    this._router.navigate(['/admin-panel']);
   }
 
   logout(): void {
