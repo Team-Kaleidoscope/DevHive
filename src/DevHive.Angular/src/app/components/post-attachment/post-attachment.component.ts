@@ -7,6 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class PostAttachmentComponent implements OnInit {
   @Input() paramURL: string;
+  public isImage = false;
   public showFull = false;
   public fileName: string;
   public fileType: string;
@@ -15,7 +16,8 @@ export class PostAttachmentComponent implements OnInit {
   { }
 
   ngOnInit(): void {
-    this.fileType = this.paramURL.includes('image') ? 'img' : 'raw';
+    this.isImage = this.paramURL.includes('image') && !this.paramURL.endsWith('pdf');
+    this.fileType = this.isImage ? 'img' : 'raw';
     this.fileName = this.paramURL.match('(?<=\/)(?:.(?!\/))+$')?.pop() ?? 'Attachment';
   }
 
