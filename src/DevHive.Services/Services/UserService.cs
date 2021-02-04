@@ -191,9 +191,6 @@ namespace DevHive.Services.Services
 			/* Check if user is trying to do something to himself, unless he's an admin */
 
 			/* Check roles */
-			if (jwtRoleNames.Contains(Role.AdminRole))
-				return true;
-
 			if (!jwtRoleNames.Contains(Role.AdminRole))
 				if (user.Id != id)
 					return false;
