@@ -103,6 +103,9 @@ namespace DevHive.Services.Services
 		#endregion
 
 		#region Validations
+		/// <summary>
+        /// Checks whether the user Id in the token and the given user Id match
+        /// </summary>
 		public async Task<bool> ValidateJwtForCreating(Guid userId, string rawTokenData)
 		{
 			User user = await this.GetUserForValidation(rawTokenData);
@@ -110,6 +113,11 @@ namespace DevHive.Services.Services
 			return user.Id == userId;
 		}
 
+		/// <summary>
+        /// Checks whether the comment, gotten with the commentId,
+		/// is made by the user in the token
+		/// or if the user in the token is an admin
+        /// </summary>
 		public async Task<bool> ValidateJwtForComment(Guid commentId, string rawTokenData)
 		{
 			Comment comment = await this._commentRepository.GetByIdAsync(commentId) ??
@@ -126,6 +134,9 @@ namespace DevHive.Services.Services
 				return false;
 		}
 
+		/// <summary>
+        /// Returns the user, via their Id in the token
+        /// </summary>
 		private async Task<User> GetUserForValidation(string rawTokenData)
 		{
 			JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(rawTokenData.Remove(0, 7));
@@ -139,7 +150,9 @@ namespace DevHive.Services.Services
 			return user;
 		}
 
-
+		/// <summary>
+        /// Returns all values from a given claim type
+        /// </summary>
 		private List<string> GetClaimTypeValues(string type, IEnumerable<Claim> claims)
 		{
 			List<string> toReturn = new();

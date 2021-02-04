@@ -39,6 +39,9 @@ namespace DevHive.Data.Repositories
 					.FirstOrDefaultAsync(x => x.Id == id);
 		}
 
+		/// <summary>
+        /// This method returns the post that is made at exactly the given time and by the given creator
+        /// </summary>
 		public async Task<Post> GetPostByCreatorAndTimeCreatedAsync(Guid creatorId, DateTime timeCreated)
 		{
 			return await this._context.Posts

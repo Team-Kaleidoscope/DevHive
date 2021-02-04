@@ -25,6 +25,9 @@ namespace DevHive.Data.Repositories
 				.FirstOrDefaultAsync(x => x.Name == technologyName);
 		}
 
+		/// <summary>
+        /// Returns all technologies that exist in the database
+        /// </summary>
 		public HashSet<Technology> GetTechnologies()
 		{
 			return this._context.Technologies.ToHashSet();

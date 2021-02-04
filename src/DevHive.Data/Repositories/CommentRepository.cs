@@ -28,6 +28,9 @@ namespace DevHive.Data.Repositories
 				.FirstOrDefaultAsync(x => x.Id == id);
 		}
 
+		/// <summary>
+        /// This method returns the comment that is made at exactly the given time and by the given creator
+        /// </summary>
 		public async Task<Comment> GetCommentByIssuerAndTimeCreatedAsync(Guid issuerId, DateTime timeCreated)
 		{
 			return await this._context.Comments
