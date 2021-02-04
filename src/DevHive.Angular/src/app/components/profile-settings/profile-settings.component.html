@@ -12,7 +12,7 @@
 			<img id="profile-picture" class="round-image" [src]="user.profilePictureURL">
 			<div id="submit-file">
 				<div id="upload-file" class="submit-btn">
-					<input type="file" formControlName="fileUpload" (change)="onFileUpload($event)">
+					<input type="file" accept="image/*" formControlName="fileUpload" (change)="onFileUpload($event)">
 				</div>
 				<button class="submit-btn" type="submit">Update profile picture</button>
 			</div>
