@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using DevHive.Web.Models.Post;
 
-namespace DevHive.Web.Controllers
+namespace DevHive.Web.Models.Comment
 {
 	public class ReadPageWebModel
 	{

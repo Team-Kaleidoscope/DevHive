@@ -21,6 +21,7 @@ namespace DevHive.Web.Tests
 		private Mock<IMapper> MapperMock { get; set; }
 		private TechnologyController TechnologyController { get; set; }
 
+		#region SetUp
 		[SetUp]
 		public void SetUp()
 		{
@@ -28,6 +29,7 @@ namespace DevHive.Web.Tests
 			this.MapperMock = new Mock<IMapper>();
 			this.TechnologyController = new TechnologyController(this.TechnologyServiceMock.Object, this.MapperMock.Object);
 		}
+		#endregion
 
 		#region Create
 		[Test]
