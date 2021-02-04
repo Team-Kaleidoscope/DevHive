@@ -68,7 +68,7 @@ namespace DevHive.Web.Controllers
 			Guid id = await this._postService.UpdatePost(updatePostServiceModel);
 
 			return id == Guid.Empty ?
-				new BadRequestObjectResult("Unable to update post!") :
+				new BadRequestObjectResult("Could not update post!") :
 				new OkObjectResult(new { Id = id });
 		}
 		#endregion
@@ -82,7 +82,7 @@ namespace DevHive.Web.Controllers
 
 			return await this._postService.DeletePost(id) ?
 				new OkResult() :
-				new BadRequestObjectResult("Could not delete Comment");
+				new BadRequestObjectResult("Could not delete Post");
 		}
 		#endregion
 	}
