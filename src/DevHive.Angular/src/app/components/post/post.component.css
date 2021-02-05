@@ -76,6 +76,11 @@ hr {
 
 /* Rating */
 
+/* Temporary, until ratings are implemented fully */
+.rating {
+  display: none !important;
+}
+
 .rating {
   display: flex;
   flex-direction: column;
