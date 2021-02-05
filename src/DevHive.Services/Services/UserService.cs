@@ -128,7 +128,10 @@ namespace DevHive.Services.Services
 			User currentUser = await this._userRepository.GetByIdAsync(updateUserServiceModel.Id);
 			await this.PopulateUserModel(currentUser, updateUserServiceModel);
 
-			await this.CreateRelationToFriends(currentUser, updateUserServiceModel.Friends.ToList());
+			if (updateUserServiceModel.Friends.Count() > 0)
+				await this.CreateRelationToFriends(currentUser, updateUserServiceModel.Friends.ToList());
+			else
+				currentUser.Friends.Clear();
 
 			IdentityResult result = await this._userManager.UpdateAsync(currentUser);
 
