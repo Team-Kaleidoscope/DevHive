@@ -34,30 +34,30 @@ namespace DevHive.Data.Tests
 		#endregion
 
 		#region QueryAll
-		[Test]
-		public async Task QueryAll_ShouldReturnAllUsersFromDatabase_WhenTheyExist()
-		{
-			//Arrange
-			User dummyUserOne = CreateDummyUser();
-			User dummyUserTwo = CreateAnotherDummyUser();
+		// [Test]
+		// public async Task QueryAll_ShouldReturnAllUsersFromDatabase_WhenTheyExist()
+		// {
+		// 	//Arrange
+		// 	User dummyUserOne = CreateDummyUser();
+		// 	User dummyUserTwo = CreateAnotherDummyUser();
+        //
+		// 	await this._userRepository.AddAsync(dummyUserOne);
+		// 	await this._userRepository.AddAsync(dummyUserTwo);
+        //
+		// 	//Act
+		// 	IEnumerable<User> users = this._userRepository.QueryAll();
+        //
+		// 	//Assert
+		// 	Assert.AreEqual(2, users.Count(), "Method doesn't return all instances of user");
+		// }
 
-			await this._userRepository.AddAsync(dummyUserOne);
-			await this._userRepository.AddAsync(dummyUserTwo);
-
-			//Act
-			IEnumerable<User> users = this._userRepository.QueryAll();
-
-			//Assert
-			Assert.AreEqual(2, users.Count(), "Method doesn't return all instances of user");
-		}
-
-		[Test]
-		public void QueryAll_ReturnsNull_WhenNoUsersExist()
-		{
-			IEnumerable<User> users = this._userRepository.QueryAll();
-
-			Assert.AreEqual(0, users.Count(), "Method returns Users when there are non");
-		}
+		// [Test]
+		// public void QueryAll_ReturnsNull_WhenNoUsersExist()
+		// {
+		// 	IEnumerable<User> users = this._userRepository.QueryAll();
+        //
+		// 	Assert.AreEqual(0, users.Count(), "Method returns Users when there are non");
+		// }
 		#endregion
 
 		#region EditAsync
