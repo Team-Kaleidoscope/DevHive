@@ -83,7 +83,8 @@ namespace DevHive.Services.Services
 
 			User user = this._userMapper.Map<User>(registerModel);
 			user.PasswordHash = PasswordModifications.GeneratePasswordHash(registerModel.Password);
-			user.ProfilePicture = new ProfilePicture() { PictureURL = string.Empty };
+			user.ProfilePicture = new ProfilePicture() { PictureURL = "/assets/images/feed/profile-pic.png":w
+		   	};
 
 			// Make sure the default role exists
 			//TODO: Move when project starts
