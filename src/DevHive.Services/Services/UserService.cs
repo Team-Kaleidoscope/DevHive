@@ -83,8 +83,7 @@ namespace DevHive.Services.Services
 
 			User user = this._userMapper.Map<User>(registerModel);
 			user.PasswordHash = PasswordModifications.GeneratePasswordHash(registerModel.Password);
-			user.ProfilePicture = new ProfilePicture() { PictureURL = "/assets/images/feed/profile-pic.png":w
-		   	};
+			user.ProfilePicture = new ProfilePicture() { PictureURL = "/assets/images/feed/profile-pic.png" };
 
 			// Make sure the default role exists
 			//TODO: Move when project starts
@@ -266,7 +265,7 @@ namespace DevHive.Services.Services
 			HashSet<Claim> claims = new()
 			{
 				new Claim("ID", $"{userId}"),
-				new Claim("Username", username),
+				new Claim("Username", username)
 			};
 
 			foreach (var role in roles)
@@ -318,6 +317,11 @@ namespace DevHive.Services.Services
 
 		private async Task PopulateUserModel(User user, UpdateUserServiceModel updateUserServiceModel)
 		{
+			user.UserName = updateUserServiceModel.UserName;
+			user.FirstName = updateUserServiceModel.FirstName;
+			user.LastName = updateUserServiceModel.LastName;
+			user.Email = updateUserServiceModel.Email;
+
 			//Do NOT allow a user to change his roles, unless he is an Admin
 			bool isAdmin = await this._userManager.IsInRoleAsync(user, Role.AdminRole);
 
