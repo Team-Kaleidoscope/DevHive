@@ -18,7 +18,11 @@
 				<div id="username">
 					@{{ user.userName }}
 				</div>
-				<button id="add-friend" class="submit-btn" *ngIf="!isTheLoggedInUser && isUserLoggedIn" (click)="modifyFriend()">{{ friendOfUser ? 'Unfriend' : 'Add friend' }}</button>
+				<form [formGroup]="updateFrienship" (ngSubmit)="modifyFriend()" *ngIf="!isTheLoggedInUser && isUserLoggedIn">
+					<button id="add-friend" type="submit" class="submit-btn">{{ friendOfUser ? 'Unfriend' : 'Add friend' }}</button>
+					<br>
+					<input id="loggedin-password" type="password" formControlName="password" class="input-field" *ngIf="updatingFriendship" placeholder="Type in password to confirm">
+				</form>
 			</div>
 		</div>
 		<div class="secondary-info rounded-border">

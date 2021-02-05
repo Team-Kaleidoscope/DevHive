@@ -13,6 +13,10 @@ hr {
   border: 1px solid black;
 }
 
+form {
+  width: 100%;
+}
+
 /* Navigation bar (for loggedin user) */
 
 #navigation {
@@ -27,7 +31,7 @@ hr {
   font-size: inherit;
 }
 
-#navigation > .submit-btn:nth-of-type(1) {
+#navigation > .submit-btn:first-child {
   margin-left: 0;
 }
 
@@ -64,11 +68,15 @@ hr {
   margin-bottom: auto;
 }
 
-#add-friend {
+#add-friend, #loggedin-password {
   flex: 0 !important;
   margin-top: .4em;
-  max-width: 9em;
-  font-size: .7em !important;
+  max-width: 8em;
+  font-size: .6em !important;
+}
+
+#loggedin-password {
+  max-width: 100%;
 }
 
 /* Languages and technologies */

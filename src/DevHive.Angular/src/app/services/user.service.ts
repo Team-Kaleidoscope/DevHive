@@ -50,6 +50,13 @@ export class UserService {
     return this.putProfilePictureRequest(userId, token, newPicture);
   }
 
+  putBareUserFromSessionStorageRequest(user: User, password: string): Observable<object> {
+    const userId = this._tokenService.getUserIdFromSessionStorageToken();
+    const token = this._tokenService.getTokenFromSessionStorage();
+
+    return this.putBareUserRequest(userId, token, user, password);
+  }
+
   deleteUserFromSessionStorageRequest(): Observable<object> {
     const userId = this._tokenService.getUserIdFromSessionStorageToken();
     const token = this._tokenService.getTokenFromSessionStorage();
@@ -131,12 +138,14 @@ export class UserService {
     return this._http.put(AppConstants.API_USER_URL, body, options);
   }
 
-  putBareUserRequest(userId: Guid, authToken: string, user: User): Observable<object> {
+  putBareUserRequest(userId: Guid, authToken: string, user: User, password: string): Observable<object> {
+    const body: object = user;
+    Object.assign(body, { password: password });
     const options = {
       params: new HttpParams().set('Id', userId.toString()),
       headers: new HttpHeaders().set('Authorization', 'Bearer ' + authToken)
     };
-    return this._http.put(AppConstants.API_USER_URL, user, options);
+    return this._http.put(AppConstants.API_USER_URL, body, options);
   }
 
   putProfilePictureRequest(userId: Guid, authToken: string, newPicture: File): Observable<object> {
