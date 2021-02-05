@@ -8,6 +8,12 @@ form {
   width: 100%;
 }
 
+@media screen and (max-height: 630px) {
+  #content {
+    height: fit-content !important;
+  }
+}
+
 #content hr {
   width: 100%;
   border: 1px solid black;
