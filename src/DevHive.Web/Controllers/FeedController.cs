@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Services.Interfaces;
 using DevHive.Services.Models;
+using DevHive.Web.Models.Comment;
 using DevHive.Web.Models.Feed;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

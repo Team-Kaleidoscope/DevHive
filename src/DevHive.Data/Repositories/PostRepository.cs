@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DevHive.Data.Interfaces.Models;
 using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
+using DevHive.Data.RelationModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-	public class PostRepository : BaseRepository<Post>, IPostRepository
+    public class PostRepository : BaseRepository<Post>, IPostRepository
 	{
 		private readonly DevHiveContext _context;
 		private readonly IUserRepository _userRepository;
@@ -35,10 +35,14 @@ namespace DevHive.Data.Repositories
 			return await this._context.Posts
 					.Include(x => x.Comments)
 					.Include(x => x.Creator)
+					.Include(x => x.Attachments)
 					// .Include(x => x.Rating)
 					.FirstOrDefaultAsync(x => x.Id == id);
 		}
 
+		/// <summary>
+        /// This method returns the post that is made at exactly the given time and by the given creator
+        /// </summary>
 		public async Task<Post> GetPostByCreatorAndTimeCreatedAsync(Guid creatorId, DateTime timeCreated)
 		{
 			return await this._context.Posts
@@ -48,7 +52,7 @@ namespace DevHive.Data.Repositories
 
 		public async Task<List<string>> GetFileUrls(Guid postId)
 		{
-			return (await this.GetByIdAsync(postId)).FileUrls;
+			return (await this.GetByIdAsync(postId)).Attachments.Select(x => x.FileUrl).ToList();
 		}
 		#endregion
 
@@ -63,10 +67,10 @@ namespace DevHive.Data.Repositories
 				.CurrentValues
 				.SetValues(newEntity);
 
-			List<string> fileUrls = new();
-			foreach(var fileUrl in newEntity.FileUrls)
-				fileUrls.Add(fileUrl);
-			post.FileUrls = fileUrls;
+			List<PostAttachments> postAttachments = new();
+			foreach(var attachment in newEntity.Attachments)
+				postAttachments.Add(attachment);
+			post.Attachments = postAttachments;
 
 			post.Comments.Clear();
 			foreach(var comment in newEntity.Comments)
@@ -93,7 +97,7 @@ namespace DevHive.Data.Repositories
 			return await this._context.Posts
 				.AsNoTracking()
 				.Where(x => x.Id == postId)
-				.Select(x => x.FileUrls)
+				.Select(x => x.Attachments)
 				.AnyAsync();
 		}
 		#endregion

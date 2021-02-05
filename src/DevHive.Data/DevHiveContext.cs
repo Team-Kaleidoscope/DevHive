@@ -14,6 +14,7 @@ namespace DevHive.Data
 		public DbSet<Technology> Technologies { get; set; }
 		public DbSet<Language> Languages { get; set; }
 		public DbSet<Post> Posts { get; set; }
+		public DbSet<PostAttachments> PostAttachments { get; set; }
 		public DbSet<Comment> Comments { get; set; }
 		public DbSet<UserFriend> UserFriends { get; set; }
 		public DbSet<Rating> Rating { get; set; }
@@ -82,6 +83,11 @@ namespace DevHive.Data
 				.HasMany(x => x.Comments)
 				.WithOne(x => x.Post);
 
+			/* Post attachments */
+			builder.Entity<PostAttachments>()
+				.HasOne(x => x.Post)
+				.WithMany(x => x.Attachments);
+
 			/* Comment */
 			builder.Entity<Comment>()
 				.HasOne(x => x.Post)
@@ -95,31 +101,28 @@ namespace DevHive.Data
 			builder.Entity<Rating>()
 				.HasKey(x => x.Id);
 
-			// builder.Entity<Rating>()
-			// 	.HasOne(x => x.Post)
-			// 	.WithOne(x => x.Rating)
-			// 	.HasForeignKey<Post>(x => x.RatingId);
+			builder.Entity<Rating>()
+			 	.HasOne(x => x.Post)
+			 	.WithOne(x => x.Rating)
+			 	.HasForeignKey<Rating>(x => x.PostId);
 
-			// builder.Entity<Post>()
-			// 	.HasOne(x => x.Rating)
-			// 	.WithOne(x => x.Post);
+			builder.Entity<Post>()
+			 	.HasOne(x => x.Rating)
+			 	.WithOne(x => x.Post);
 
-			// builder.Entity<Rating>()
-			// 	.HasMany(x => x.UsersThatRated);
-
-			// /* User Rated Posts */
+			/* User Rated Posts */
 			builder.Entity<RatedPost>()
 				.HasKey(x => new { x.UserId, x.PostId });
 
-			// builder.Entity<RatedPost>()
-			// 	.HasOne(x => x.User)
-			// 	.WithMany(x => x.RatedPosts);
+			builder.Entity<RatedPost>()
+			 	.HasOne(x => x.User)
+				.WithMany(x => x.RatedPosts);
 
-			// builder.Entity<RatedPost>()
-			// 	.HasOne(x => x.Post);
+			builder.Entity<RatedPost>()
+				.HasOne(x => x.Post);
 
-			// builder.Entity<User>()
-			// 	.HasMany(x => x.RatedPosts);
+			builder.Entity<User>()
+				.HasMany(x => x.RatedPosts);
 
 			base.OnModelCreating(builder);
 		}

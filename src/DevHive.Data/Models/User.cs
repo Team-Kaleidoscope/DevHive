@@ -30,6 +30,6 @@ namespace DevHive.Data.Models
 
 		public HashSet<Comment> Comments { get; set; } = new();
 
-		// public HashSet<RatedPost> RatedPosts { get; set; } = new();
+		public HashSet<RatedPost> RatedPosts { get; set; } = new();
 	}
 }

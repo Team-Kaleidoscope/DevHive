@@ -9,7 +9,7 @@ using System.Security.Claims;
 using DevHive.Services.Interfaces;
 using DevHive.Data.Interfaces.Repositories;
 using System.Linq;
-using Microsoft.CodeAnalysis.CSharp;
+using DevHive.Data.RelationModels;
 
 namespace DevHive.Services.Services
 {
@@ -39,7 +39,10 @@ namespace DevHive.Services.Services
 			Post post = this._postMapper.Map<Post>(createPostServiceModel);
 
 			if (createPostServiceModel.Files.Count != 0)
-				post.FileUrls = await _cloudService.UploadFilesToCloud(createPostServiceModel.Files);
+			{
+				List<string> fileUrls = await _cloudService.UploadFilesToCloud(createPostServiceModel.Files);
+				post.Attachments = this.GetPostAttachmentsFromUrls(post, fileUrls);
+			}
 
 			post.Creator = await this._userRepository.GetByIdAsync(createPostServiceModel.CreatorId);
 			post.TimeCreated = DateTime.Now;
@@ -77,6 +80,7 @@ namespace DevHive.Services.Services
 			readPostServiceModel.CreatorFirstName = user.FirstName;
 			readPostServiceModel.CreatorLastName = user.LastName;
 			readPostServiceModel.CreatorUsername = user.UserName;
+			readPostServiceModel.FileUrls = post.Attachments.Select(x => x.FileUrl).ToList();
 
 			return readPostServiceModel;
 		}
@@ -94,14 +98,15 @@ namespace DevHive.Services.Services
 			{
 				if (await this._postRepository.DoesPostHaveFiles(updatePostServiceModel.PostId))
 				{
-					List<string> fileUrls = await this._postRepository.GetFileUrls(updatePostServiceModel.PostId);
-					bool success = await _cloudService.RemoveFilesFromCloud(fileUrls);
+					List<string> fileUrlsToRemove = await this._postRepository.GetFileUrls(updatePostServiceModel.PostId);
+					bool success = await _cloudService.RemoveFilesFromCloud(fileUrlsToRemove);
 					if (!success)
 						throw new InvalidCastException("Could not delete files from the post!");
 				}
 
-				post.FileUrls = await _cloudService.UploadFilesToCloud(updatePostServiceModel.Files) ??
+				List<string> fileUrls = await _cloudService.UploadFilesToCloud(updatePostServiceModel.Files) ??
 					throw new ArgumentNullException("Unable to upload images to cloud");
+				post.Attachments = this.GetPostAttachmentsFromUrls(post, fileUrls);
 			}
 
 			post.Creator = await this._userRepository.GetByIdAsync(updatePostServiceModel.CreatorId);
@@ -138,6 +143,9 @@ namespace DevHive.Services.Services
 		#endregion
 
 		#region Validations
+		/// <summary>
+        /// Checks whether the user Id in the token and the given user Id match
+        /// </summary>
 		public async Task<bool> ValidateJwtForCreating(Guid userId, string rawTokenData)
 		{
 			User user = await this.GetUserForValidation(rawTokenData);
@@ -145,6 +153,11 @@ namespace DevHive.Services.Services
 			return user.Id == userId;
 		}
 
+		/// <summary>
+        /// Checks whether the post, gotten with the postId,
+		/// is made by the user in the token
+		/// or if the user in the token is an admin
+        /// </summary>
 		public async Task<bool> ValidateJwtForPost(Guid postId, string rawTokenData)
 		{
 			Post post = await this._postRepository.GetByIdAsync(postId) ??
@@ -161,6 +174,11 @@ namespace DevHive.Services.Services
 				return false;
 		}
 
+		/// <summary>
+        /// Checks whether the comment, gotten with the commentId,
+		/// is made by the user in the token
+		/// or if the user in the token is an admin
+        /// </summary>
 		public async Task<bool> ValidateJwtForComment(Guid commentId, string rawTokenData)
 		{
 			Comment comment = await this._commentRepository.GetByIdAsync(commentId) ??
@@ -177,6 +195,9 @@ namespace DevHive.Services.Services
 				return false;
 		}
 
+		/// <summary>
+        /// Returns the user, via their Id in the token
+        /// </summary>
 		private async Task<User> GetUserForValidation(string rawTokenData)
 		{
 			JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(rawTokenData.Remove(0, 7));
@@ -190,6 +211,9 @@ namespace DevHive.Services.Services
 			return user;
 		}
 
+		/// <summary>
+        /// Returns all values from a given claim type
+        /// </summary>
 		private List<string> GetClaimTypeValues(string type, IEnumerable<Claim> claims)
 		{
 			List<string> toReturn = new();
@@ -199,6 +223,16 @@ namespace DevHive.Services.Services
 					toReturn.Add(claim.Value);
 
 			return toReturn;
+		}
+		#endregion
+
+		#region Misc
+		private List<PostAttachments> GetPostAttachmentsFromUrls(Post post, List<string> fileUrls)
+		{
+			List<PostAttachments> postAttachments = new List<PostAttachments>();
+			foreach (string url in fileUrls)
+				postAttachments.Add(new PostAttachments { Post = post, FileUrl = url });
+			return postAttachments;
 		}
 		#endregion
 	}

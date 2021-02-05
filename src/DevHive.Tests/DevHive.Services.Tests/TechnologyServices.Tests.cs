@@ -110,15 +110,15 @@ namespace DevHive.Services.Tests
 			{
 				Name = name
 			};
-			CreateTechnologyServiceModel createTechnologyServiceModel = new()
+			ReadTechnologyServiceModel readTechnologyServiceModel = new()
 			{
 				Name = name
 			};
 
 			this.TechnologyRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(technology));
-			this.MapperMock.Setup(p => p.Map<CreateTechnologyServiceModel>(It.IsAny<Technology>())).Returns(createTechnologyServiceModel);
+			this.MapperMock.Setup(p => p.Map<ReadTechnologyServiceModel>(It.IsAny<Technology>())).Returns(readTechnologyServiceModel);
 
-			CreateTechnologyServiceModel result = await this.TechnologyService.GetTechnologyById(id);
+			ReadTechnologyServiceModel result = await this.TechnologyService.GetTechnologyById(id);
 
 			Assert.AreEqual(name, result.Name);
 		}

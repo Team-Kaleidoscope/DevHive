@@ -21,6 +21,7 @@ namespace DevHive.Web.Tests
 		private Mock<IMapper> MapperMock { get; set; }
 		private TechnologyController TechnologyController { get; set; }
 
+		#region SetUp
 		[SetUp]
 		public void SetUp()
 		{
@@ -28,6 +29,7 @@ namespace DevHive.Web.Tests
 			this.MapperMock = new Mock<IMapper>();
 			this.TechnologyController = new TechnologyController(this.TechnologyServiceMock.Object, this.MapperMock.Object);
 		}
+		#endregion
 
 		#region Create
 		[Test]
@@ -95,24 +97,24 @@ namespace DevHive.Web.Tests
 		{
 			Guid id = Guid.NewGuid();
 
-			CreateTechnologyServiceModel createTechnologyServiceModel = new CreateTechnologyServiceModel
+			ReadTechnologyWebModel readTechnologyWebModel = new ReadTechnologyWebModel
 			{
 				Name = NAME
 			};
-			CreateTechnologyWebModel createTechnologyWebModel = new CreateTechnologyWebModel
+			ReadTechnologyServiceModel readTechnologyServiceModel = new ReadTechnologyServiceModel
 			{
 				Name = NAME
 			};
 
-			this.TechnologyServiceMock.Setup(p => p.GetTechnologyById(It.IsAny<Guid>())).Returns(Task.FromResult(createTechnologyServiceModel));
-			this.MapperMock.Setup(p => p.Map<CreateTechnologyWebModel>(It.IsAny<CreateTechnologyServiceModel>())).Returns(createTechnologyWebModel);
+			this.TechnologyServiceMock.Setup(p => p.GetTechnologyById(It.IsAny<Guid>())).Returns(Task.FromResult(readTechnologyServiceModel));
+			this.MapperMock.Setup(p => p.Map<ReadTechnologyWebModel>(It.IsAny<ReadTechnologyServiceModel>())).Returns(readTechnologyWebModel);
 
 			IActionResult result = this.TechnologyController.GetById(id).Result;
 
 			Assert.IsInstanceOf<OkObjectResult>(result);
 
 			OkObjectResult okObjectResult = result as OkObjectResult;
-			CreateTechnologyWebModel resultModel = okObjectResult.Value as Models.Technology.CreateTechnologyWebModel;
+			ReadTechnologyWebModel resultModel = okObjectResult.Value as Models.Technology.ReadTechnologyWebModel;
 
 			Assert.AreEqual(NAME, resultModel.Name);
 		}

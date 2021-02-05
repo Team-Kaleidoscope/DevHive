@@ -101,10 +101,14 @@ export class FeedComponent implements OnInit {
 
   createPost(): void {
     const postMessage = this.createPostFormGroup.get('newPostMessage')?.value;
+    this.dataArrived = false;
 
     this._postService.createPostWithSessionStorageRequest(postMessage, this.files).subscribe(
       (result: object) => {
         this.goToProfile();
+      },
+      (err: HttpErrorResponse) => {
+        this.dataArrived = true;
       }
     );
   }

@@ -218,20 +218,20 @@ namespace DevHive.Data.Tests
 		//	Assert.IsTrue(result, "DoesUserHaveThisFriendAsync does not return true when user has the given friend");
 		//}
 
-		[Test]
-		public async Task DoesUserHaveThisFriendAsync_ReturnsFalse_WhenUserDoesNotHaveTheGivenFriend()
-		{
-			User dummyUser = this.CreateDummyUser();
-			User anotherDummyUser = this.CreateAnotherDummyUser();
-
-			this._context.Users.Add(dummyUser);
-			this._context.Users.Add(anotherDummyUser);
-			await this._context.SaveChangesAsync();
-
-			bool result = await this._userRepository.DoesUserHaveThisFriendAsync(dummyUser.Id, anotherDummyUser.Id);
-
-			Assert.IsFalse(result, "DoesUserHaveThisFriendAsync does not return false when user des not have the given friend");
-		}
+		// [Test]
+		// public async Task DoesUserHaveThisFriendAsync_ReturnsFalse_WhenUserDoesNotHaveTheGivenFriend()
+		// {
+		// 	User dummyUser = this.CreateDummyUser();
+		// 	User anotherDummyUser = this.CreateAnotherDummyUser();
+        //
+		// 	this._context.Users.Add(dummyUser);
+		// 	this._context.Users.Add(anotherDummyUser);
+		// 	await this._context.SaveChangesAsync();
+        //
+		// 	bool result = await this._userRepository.DoesUserHaveThisFriendAsync(dummyUser.Id, anotherDummyUser.Id);
+        //
+		// 	Assert.IsFalse(result, "DoesUserHaveThisFriendAsync does not return false when user des not have the given friend");
+		// }
 		#endregion
 
 		#region DoesUserHaveThisUsername

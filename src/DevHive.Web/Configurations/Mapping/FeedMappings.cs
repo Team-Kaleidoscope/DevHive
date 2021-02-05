@@ -1,6 +1,6 @@
 using AutoMapper;
 using DevHive.Services.Models;
-using DevHive.Web.Controllers;
+using DevHive.Web.Models.Comment;
 using DevHive.Web.Models.Feed;
 
 namespace DevHive.Web.Configurations.Mapping

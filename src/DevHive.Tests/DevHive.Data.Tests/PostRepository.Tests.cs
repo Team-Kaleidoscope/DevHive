@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
+using DevHive.Data.RelationModels;
 using DevHive.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 namespace DevHive.Data.Tests
 {
-	[TestFixture]
+    [TestFixture]
 	public class PostRepositoryTests
 	{
 		private const string POST_MESSAGE = "Post test message";
@@ -44,18 +44,18 @@ namespace DevHive.Data.Tests
 		#endregion
 
 		#region AddNewPostToCreator
-		[Test]
-		public async Task AddNewPostToCreator_ReturnsTrue_WhenNewPostIsAddedToCreator()
-		{
-			Post post = await this.AddEntity();
-			User user = new User { Id = Guid.NewGuid() };
-
-			this.UserRepository.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
-
-			bool result = await this.PostRepository.AddNewPostToCreator(user.Id, post);
-
-			Assert.IsTrue(result, "AddNewPostToCreator does not return true when Post Is Added To Creator successfully");
-		}
+		// [Test]
+		// public async Task AddNewPostToCreator_ReturnsTrue_WhenNewPostIsAddedToCreator()
+		// {
+		// 	Post post = await this.AddEntity();
+		// 	User user = new User { Id = Guid.NewGuid() };
+        //
+		// 	this.UserRepository.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
+        //
+		// 	bool result = await this.PostRepository.AddNewPostToCreator(user.Id, post);
+        //
+		// 	Assert.IsTrue(result, "AddNewPostToCreator does not return true when Post Is Added To Creator successfully");
+		// }
 		#endregion
 
 		#region GetByIdAsync
@@ -124,13 +124,14 @@ namespace DevHive.Data.Tests
 		private async Task<Post> AddEntity(string name = POST_MESSAGE)
 		{
 			User creator = new User { Id = Guid.NewGuid() };
+			await this.Context.Users.AddAsync(creator);
 			Post post = new Post
 			{
 				Message = POST_MESSAGE,
 				Id = Guid.NewGuid(),
 				Creator = creator,
 				TimeCreated = DateTime.Now,
-				FileUrls = new List<string>(),
+				Attachments = new List<PostAttachments> { new PostAttachments { FileUrl = "kur" }, new PostAttachments { FileUrl = "za" }, new PostAttachments { FileUrl = "tva" } },
 				Comments = new List<Comment>()
 			};
 

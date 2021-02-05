@@ -4,15 +4,13 @@ using DevHive.Data.Models;
 
 namespace DevHive.Data.RelationModels
 {
-	[Table("UserRates")]
-	public class UserRate
+	[Table("PostAttachments")]
+	public class PostAttachments
 	{
 		public Guid Id { get; set; }
 
-		public User User { get; set; }
-
-		public bool Liked { get; set; }
-
 		public Post Post { get; set; }
+
+		public string FileUrl { get; set; }
 	}
 }

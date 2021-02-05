@@ -25,6 +25,9 @@ namespace DevHive.Data.Repositories
 				.FirstOrDefaultAsync(x => x.Name == languageName);
 		}
 
+		/// <summary>
+        /// Returns all technologies that exist in the database
+        /// </summary>
 		public HashSet<Language> GetLanguages()
 		{
 			return this._context.Languages.ToHashSet();
