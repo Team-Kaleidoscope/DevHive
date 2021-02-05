@@ -7,7 +7,7 @@ namespace DevHive.Data.Interfaces.Repositories
 {
 	public interface IRatingRepository : IRepository<Rating>
 	{
-		Task<Rating> GetByPostId(Guid postId);
-		Task<int> GetRating(Guid postId);
+		Task<Rating> GetRatingByPostId(Guid postId);
+		Task<bool> UserRatedPost(Guid userId, Guid postId);
 	}
 }

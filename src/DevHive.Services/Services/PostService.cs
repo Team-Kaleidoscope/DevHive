@@ -9,11 +9,11 @@ using System.Security.Claims;
 using DevHive.Services.Interfaces;
 using DevHive.Data.Interfaces.Repositories;
 using System.Linq;
-using Microsoft.CodeAnalysis.CSharp;
+using DevHive.Data.RelationModels;
 
 namespace DevHive.Services.Services
 {
-	public class PostService : IPostService
+    public class PostService : IPostService
 	{
 		private readonly ICloudService _cloudService;
 		private readonly IUserRepository _userRepository;
@@ -39,7 +39,10 @@ namespace DevHive.Services.Services
 			Post post = this._postMapper.Map<Post>(createPostServiceModel);
 
 			if (createPostServiceModel.Files.Count != 0)
-				post.FileUrls = await _cloudService.UploadFilesToCloud(createPostServiceModel.Files);
+			{
+				List<string> fileUrls = await _cloudService.UploadFilesToCloud(createPostServiceModel.Files);
+				post.Attachments = this.GetPostAttachmentsFromUrls(post, fileUrls);
+			}
 
 			post.Creator = await this._userRepository.GetByIdAsync(createPostServiceModel.CreatorId);
 			post.TimeCreated = DateTime.Now;
@@ -77,6 +80,7 @@ namespace DevHive.Services.Services
 			readPostServiceModel.CreatorFirstName = user.FirstName;
 			readPostServiceModel.CreatorLastName = user.LastName;
 			readPostServiceModel.CreatorUsername = user.UserName;
+			readPostServiceModel.FileUrls = post.Attachments.Select(x => x.FileUrl).ToList();
 
 			return readPostServiceModel;
 		}
@@ -94,14 +98,15 @@ namespace DevHive.Services.Services
 			{
 				if (await this._postRepository.DoesPostHaveFiles(updatePostServiceModel.PostId))
 				{
-					List<string> fileUrls = await this._postRepository.GetFileUrls(updatePostServiceModel.PostId);
-					bool success = await _cloudService.RemoveFilesFromCloud(fileUrls);
+					List<string> fileUrlsToRemove = await this._postRepository.GetFileUrls(updatePostServiceModel.PostId);
+					bool success = await _cloudService.RemoveFilesFromCloud(fileUrlsToRemove);
 					if (!success)
 						throw new InvalidCastException("Could not delete files from the post!");
 				}
 
-				post.FileUrls = await _cloudService.UploadFilesToCloud(updatePostServiceModel.Files) ??
+				List<string> fileUrls = await _cloudService.UploadFilesToCloud(updatePostServiceModel.Files) ??
 					throw new ArgumentNullException("Unable to upload images to cloud");
+				post.Attachments = this.GetPostAttachmentsFromUrls(post, fileUrls);
 			}
 
 			post.Creator = await this._userRepository.GetByIdAsync(updatePostServiceModel.CreatorId);
@@ -218,6 +223,16 @@ namespace DevHive.Services.Services
 					toReturn.Add(claim.Value);
 
 			return toReturn;
+		}
+		#endregion
+
+		#region Misc
+		private List<PostAttachments> GetPostAttachmentsFromUrls(Post post, List<string> fileUrls)
+		{
+			List<PostAttachments> postAttachments = new List<PostAttachments>();
+			foreach (string url in fileUrls)
+				postAttachments.Add(new PostAttachments { Post = post, FileUrl = url });
+			return postAttachments;
 		}
 		#endregion
 	}

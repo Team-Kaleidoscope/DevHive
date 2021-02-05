@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DevHive.Data.Models;
+using DevHive.Data.RelationModels;
 
 namespace DevHive.Data.Interfaces.Models
 {
@@ -16,6 +17,6 @@ namespace DevHive.Data.Interfaces.Models
 
 		// Rating Rating { get; set; }
 
-		List<string> FileUrls { get; set; }
+		List<PostAttachments> Attachments { get; set; }
 	}
 }

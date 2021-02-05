@@ -14,6 +14,7 @@ namespace DevHive.Data
 		public DbSet<Technology> Technologies { get; set; }
 		public DbSet<Language> Languages { get; set; }
 		public DbSet<Post> Posts { get; set; }
+		public DbSet<PostAttachments> PostAttachments { get; set; }
 		public DbSet<Comment> Comments { get; set; }
 		public DbSet<UserFriend> UserFriends { get; set; }
 		public DbSet<Rating> Rating { get; set; }
@@ -81,6 +82,11 @@ namespace DevHive.Data
 			builder.Entity<Post>()
 				.HasMany(x => x.Comments)
 				.WithOne(x => x.Post);
+
+			/* Post attachments */
+			builder.Entity<PostAttachments>()
+				.HasOne(x => x.Post)
+				.WithMany(x => x.Attachments);
 
 			/* Comment */
 			builder.Entity<Comment>()

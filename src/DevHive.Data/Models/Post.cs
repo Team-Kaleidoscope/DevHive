@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using DevHive.Data.Interfaces.Models;
+using DevHive.Data.RelationModels;
 
 namespace DevHive.Data.Models
 {
@@ -20,6 +21,6 @@ namespace DevHive.Data.Models
 
 		public Rating Rating { get; set; } = new();
 
-		public List<string> FileUrls { get; set; } = new();
+		public List<PostAttachments> Attachments { get; set; } = new();
 	}
 }
