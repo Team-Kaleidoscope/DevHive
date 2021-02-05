@@ -112,10 +112,16 @@ namespace DevHive.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("Rate")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PostId")
+                        .IsUnique();
 
                     b.ToTable("Rating");
                 });
@@ -271,13 +277,18 @@ namespace DevHive.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<bool>("Rate")
+                    b.Property<bool>("Liked")
                         .HasColumnType("boolean");
+
+                    b.Property<Guid?>("PostId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PostId");
 
                     b.HasIndex("UserId");
 
@@ -465,6 +476,17 @@ namespace DevHive.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("DevHive.Data.Models.Rating", b =>
+                {
+                    b.HasOne("DevHive.Data.Models.Post", "Post")
+                        .WithOne("Rating")
+                        .HasForeignKey("DevHive.Data.Models.Rating", "PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("DevHive.Data.RelationModels.RatedPost", b =>
                 {
                     b.HasOne("DevHive.Data.Models.Post", "Post")
@@ -474,7 +496,7 @@ namespace DevHive.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("DevHive.Data.Models.User", "User")
-                        .WithMany()
+                        .WithMany("RatedPosts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -505,9 +527,15 @@ namespace DevHive.Data.Migrations
 
             modelBuilder.Entity("DevHive.Data.RelationModels.UserRate", b =>
                 {
+                    b.HasOne("DevHive.Data.Models.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId");
+
                     b.HasOne("DevHive.Data.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("Post");
 
                     b.Navigation("User");
                 });
@@ -611,6 +639,8 @@ namespace DevHive.Data.Migrations
             modelBuilder.Entity("DevHive.Data.Models.Post", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Rating");
                 });
 
             modelBuilder.Entity("DevHive.Data.Models.User", b =>
@@ -624,6 +654,8 @@ namespace DevHive.Data.Migrations
                     b.Navigation("Posts");
 
                     b.Navigation("ProfilePicture");
+
+                    b.Navigation("RatedPosts");
                 });
 #pragma warning restore 612, 618
         }

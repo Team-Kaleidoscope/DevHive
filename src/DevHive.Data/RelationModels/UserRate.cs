@@ -11,6 +11,8 @@ namespace DevHive.Data.RelationModels
 
 		public User User { get; set; }
 
-		public bool Rate { get; set; }
+		public bool Liked { get; set; }
+
+		public Post Post { get; set; }
 	}
 }

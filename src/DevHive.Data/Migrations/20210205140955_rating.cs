@@ -5,7 +5,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DevHive.Data.Migrations
 {
-    public partial class Database_Creation : Migration
+    public partial class rating : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,7 +30,6 @@ namespace DevHive.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     FirstName = table.Column<string>(type: "text", nullable: true),
                     LastName = table.Column<string>(type: "text", nullable: true),
-                    ProfilePictureUrl = table.Column<string>(type: "text", nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -61,19 +60,6 @@ namespace DevHive.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Languages", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Rating",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Likes = table.Column<int>(type: "integer", nullable: false),
-                    Dislikes = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Rating", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -195,6 +181,46 @@ namespace DevHive.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Posts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uuid", nullable: true),
+                    Message = table.Column<string>(type: "text", nullable: true),
+                    TimeCreated = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    FileUrls = table.Column<List<string>>(type: "text[]", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Posts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Posts_AspNetUsers_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProfilePicture",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PictureURL = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProfilePicture", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProfilePicture_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RoleUser",
                 columns: table => new
                 {
@@ -267,34 +293,6 @@ namespace DevHive.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Posts",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "uuid", nullable: true),
-                    Message = table.Column<string>(type: "text", nullable: true),
-                    TimeCreated = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    RatingId = table.Column<Guid>(type: "uuid", nullable: false),
-                    FileUrls = table.Column<List<string>>(type: "text[]", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Posts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Posts_AspNetUsers_CreatorId",
-                        column: x => x.CreatorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Posts_Rating_RatingId",
-                        column: x => x.RatingId,
-                        principalTable: "Rating",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TechnologyUser",
                 columns: table => new
                 {
@@ -339,6 +337,75 @@ namespace DevHive.Data.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Comments_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RatedPosts",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PostId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RatedPosts", x => new { x.UserId, x.PostId });
+                    table.ForeignKey(
+                        name: "FK_RatedPosts_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RatedPosts_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Rating",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    PostId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Rate = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Rating", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Rating_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserRates",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
+                    Liked = table.Column<bool>(type: "boolean", nullable: false),
+                    PostId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRates", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserRates_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserRates_Posts_PostId",
                         column: x => x.PostId,
                         principalTable: "Posts",
                         principalColumn: "Id",
@@ -409,9 +476,20 @@ namespace DevHive.Data.Migrations
                 column: "CreatorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Posts_RatingId",
-                table: "Posts",
-                column: "RatingId",
+                name: "IX_ProfilePicture_UserId",
+                table: "ProfilePicture",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RatedPosts_PostId",
+                table: "RatedPosts",
+                column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Rating_PostId",
+                table: "Rating",
+                column: "PostId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -428,6 +506,16 @@ namespace DevHive.Data.Migrations
                 name: "IX_UserFriends_FriendId",
                 table: "UserFriends",
                 column: "FriendId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRates_PostId",
+                table: "UserRates",
+                column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRates_UserId",
+                table: "UserRates",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -454,6 +542,15 @@ namespace DevHive.Data.Migrations
                 name: "LanguageUser");
 
             migrationBuilder.DropTable(
+                name: "ProfilePicture");
+
+            migrationBuilder.DropTable(
+                name: "RatedPosts");
+
+            migrationBuilder.DropTable(
+                name: "Rating");
+
+            migrationBuilder.DropTable(
                 name: "RoleUser");
 
             migrationBuilder.DropTable(
@@ -463,7 +560,7 @@ namespace DevHive.Data.Migrations
                 name: "UserFriends");
 
             migrationBuilder.DropTable(
-                name: "Posts");
+                name: "UserRates");
 
             migrationBuilder.DropTable(
                 name: "Languages");
@@ -475,10 +572,10 @@ namespace DevHive.Data.Migrations
                 name: "Technologies");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Posts");
 
             migrationBuilder.DropTable(
-                name: "Rating");
+                name: "AspNetUsers");
         }
     }
 }

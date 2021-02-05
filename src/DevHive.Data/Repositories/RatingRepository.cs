@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
@@ -18,17 +19,17 @@ namespace DevHive.Data.Repositories
 			this._postRepository = postRepository;
 		}
 
-		public async Task<Rating> GetByPostId(Guid postId)
+		public async Task<Rating> GetRatingByPostId(Guid postId)
 		{
-			throw new NotImplementedException();
-			// return await this._context.Rating
-			// 	.FirstOrDefaultAsync(x => x.Post.Id == postId);
+			return await this._context.Rating
+				.FirstOrDefaultAsync(x => x.Post.Id == postId);
 		}
 
-		public async Task<int> GetRating(Guid postId)
+		public async Task<bool> UserRatedPost(Guid userId, Guid postId)
 		{
-			throw new NotImplementedException();
-			// return (await this.GetByPostId(postId)).Rate;
+			return await this._context.UserRate
+				.Where(x => x.Post.Id == postId)
+				.AnyAsync(x => x.User.Id == userId);
 		}
 	}
 }

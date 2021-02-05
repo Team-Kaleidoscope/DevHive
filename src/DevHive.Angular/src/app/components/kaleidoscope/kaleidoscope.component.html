@@ -1,0 +1,8 @@
+<div class="kaleidoscope">
+	<ng-container *ngComponentOutlet="component"></ng-container>
+	<app-login *ngIf="logged!"></app-login> 
+	<app-register *ngIf="!logged!"></app-register>
+	<!-- <app-feed></app-feed> -->
+	<script>var logged = false;</script>	
+	<!-- to be fixed tomorow -->
+</div>
