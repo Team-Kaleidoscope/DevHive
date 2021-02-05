@@ -43,6 +43,7 @@ namespace DevHive.Data.Tests
 			friendsList.Add(dummyUser);
 
 			DateTime dateTime = new DateTime(3000, 05, 09, 9, 15, 0);
+			Console.WriteLine(dateTime.ToFileTime());
 
 			Post dummyPost = this.CreateDummyPost(dummyUser);
 			Post anotherDummnyPost = this.CreateDummyPost(dummyUser);
@@ -104,7 +105,8 @@ namespace DevHive.Data.Tests
 			{
 				Id = id,
 				Message = POST_MESSAGE,
-				Creator = poster
+				Creator = poster,
+				TimeCreated = new DateTime(2000, 05, 09, 9, 15, 0)
 			};
 
 			this.Context.Posts.Add(post);
