@@ -23,14 +23,6 @@ namespace DevHive.Data.Repositories
 		}
 
 		#region Read
-		public IEnumerable<User> QueryAll()
-		{
-			return this._context.Users
-				.Include(x => x.Roles)
-				.AsNoTracking()
-				.AsEnumerable();
-		}
-
 		public override async Task<User> GetByIdAsync(Guid id)
 		{
 			return await this._context.Users
@@ -38,8 +30,7 @@ namespace DevHive.Data.Repositories
 				.Include(x => x.Languages)
 				.Include(x => x.Technologies)
 				.Include(x => x.Posts)
-				.Include(x => x.MyFriends)
-				.Include(x => x.FriendsOf)
+				.Include(x => x.Friends)
 				.Include(x => x.ProfilePicture)
 				.FirstOrDefaultAsync(x => x.Id == id);
 		}
@@ -51,56 +42,15 @@ namespace DevHive.Data.Repositories
 				.Include(x => x.Languages)
 				.Include(x => x.Technologies)
 				.Include(x => x.Posts)
-				.Include(x => x.MyFriends)
-				.Include(x => x.FriendsOf)
+				.Include(x => x.Friends)
 				.Include(x => x.ProfilePicture)
 				.FirstOrDefaultAsync(x => x.UserName == username);
 		}
 		#endregion
 
 		#region Update
-		public override async Task<bool> EditAsync(Guid id, User newEntity)
+		public async Task<bool> UpdateProfilePicture(Guid userId, string pictureUrl)
 		{
-			User user = await this.GetByIdAsync(id);
-
-			this._context
-				.Entry(user)
-				.CurrentValues
-				.SetValues(newEntity);
-
-			HashSet<Language> languages = new();
-			foreach (var lang in newEntity.Languages)
-				languages.Add(lang);
-			user.Languages = languages;
-
-			HashSet<Role> roles = new();
-			foreach (var role in newEntity.Roles)
-				roles.Add(role);
-			user.Roles = roles;
-
-			foreach (var friend in newEntity.MyFriends)
-			{
-				user.MyFriends.Add(friend);
-				this._context.Entry(friend).State = EntityState.Modified;
-			}
-
-			foreach (var friend in newEntity.FriendsOf)
-			{
-				user.FriendsOf.Add(friend);
-				this._context.Entry(friend).State = EntityState.Modified;
-			}
-
-			HashSet<Technology> technologies = new();
-			foreach (var tech in newEntity.Technologies)
-				technologies.Add(tech);
-			user.Technologies = technologies;
-
-			this._context.Entry(user).State = EntityState.Modified;
-
-			return await this.SaveChangesAsync();
-		}
-
-		public async Task<bool> UpdateProfilePicture(Guid userId, string pictureUrl) {
 			User user = await this.GetByIdAsync(userId);
 
 			user.ProfilePicture.PictureURL = pictureUrl;
@@ -131,14 +81,19 @@ namespace DevHive.Data.Repositories
 				.AnyAsync(u => u.Email == email);
 		}
 
-		public async Task<bool> DoesUserHaveThisFriendAsync(Guid userId, Guid friendId)
+		public async Task<bool> ValidateFriendsCollectionAsync(List<string> usernames)
 		{
-			return true;
-			// User user = await this.GetByIdAsync(userId);
+			bool valid = true;
 
-			// User friend = await this.GetByIdAsync(friendId);
-
-			// return user.Friends.Any(x => x.Friend.Id == friendId);
+			foreach (var username in usernames)
+			{
+				if (!await this._context.Users.AnyAsync(x => x.UserName == username))
+				{
+					valid = false;
+					break;
+				}
+			}
+			return valid;
 		}
 
 		public bool DoesUserHaveThisUsername(Guid id, string username)

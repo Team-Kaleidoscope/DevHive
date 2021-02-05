@@ -14,8 +14,8 @@ using DevHive.Services.Interfaces;
 using DevHive.Data.Interfaces.Repositories;
 using System.Linq;
 using DevHive.Common.Models.Misc;
-using DevHive.Data.RelationModels;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 
 namespace DevHive.Services.Services
 {
@@ -25,6 +25,8 @@ namespace DevHive.Services.Services
 		private readonly IRoleRepository _roleRepository;
 		private readonly ILanguageRepository _languageRepository;
 		private readonly ITechnologyRepository _technologyRepository;
+		private readonly UserManager<User> _userManager;
+		private readonly RoleManager<Role> _roleManager;
 		private readonly IMapper _userMapper;
 		private readonly JWTOptions _jwtOptions;
 		private readonly ICloudService _cloudService;
@@ -33,6 +35,8 @@ namespace DevHive.Services.Services
 			ILanguageRepository languageRepository,
 			IRoleRepository roleRepository,
 			ITechnologyRepository technologyRepository,
+			UserManager<User> userManager,
+			RoleManager<Role> roleManager,
 			IMapper mapper,
 			JWTOptions jwtOptions,
 			ICloudService cloudService)
@@ -43,6 +47,8 @@ namespace DevHive.Services.Services
 			this._jwtOptions = jwtOptions;
 			this._languageRepository = languageRepository;
 			this._technologyRepository = technologyRepository;
+			this._userManager = userManager;
+			this._roleManager = roleManager;
 			this._cloudService = cloudService;
 		}
 
@@ -77,20 +83,22 @@ namespace DevHive.Services.Services
 
 			User user = this._userMapper.Map<User>(registerModel);
 			user.PasswordHash = PasswordModifications.GeneratePasswordHash(registerModel.Password);
-			user.ProfilePicture = new ProfilePicture() { PictureURL = "/assets/images/feed/profile-pic.png" };
+			user.ProfilePicture = new ProfilePicture() { PictureURL = string.Empty };
 
 			// Make sure the default role exists
 			//TODO: Move when project starts
 			if (!await this._roleRepository.DoesNameExist(Role.DefaultRole))
 				await this._roleRepository.AddAsync(new Role { Name = Role.DefaultRole });
 
-			// Set the default role to the user
-			Role defaultRole = await this._roleRepository.GetByNameAsync(Role.DefaultRole);
-			user.Roles.Add(defaultRole);
+			user.Roles.Add(await this._roleRepository.GetByNameAsync(Role.DefaultRole));
 
-			await this._userRepository.AddAsync(user);
+			IdentityResult userResult = await this._userManager.CreateAsync(user);
+			User createdUser = await this._userRepository.GetByUsernameAsync(registerModel.UserName);
 
-			return new TokenModel(WriteJWTSecurityToken(user.Id, user.UserName, user.Roles));
+			if (!userResult.Succeeded)
+				throw new ArgumentException("Unable to create a user");
+
+			return new TokenModel(WriteJWTSecurityToken(createdUser.Id, createdUser.UserName, createdUser.Roles));
 		}
 		#endregion
 
@@ -105,9 +113,7 @@ namespace DevHive.Services.Services
 
 		public async Task<UserServiceModel> GetUserByUsername(string username)
 		{
-			User user = await this._userRepository.GetByUsernameAsync(username);
-
-			if (user == null)
+			User user = await this._userRepository.GetByUsernameAsync(username) ??
 				throw new ArgumentException("User does not exist!");
 
 			return this._userMapper.Map<UserServiceModel>(user);
@@ -119,16 +125,17 @@ namespace DevHive.Services.Services
 		{
 			await this.ValidateUserOnUpdate(updateUserServiceModel);
 
-			User user = await this.PopulateModel(updateUserServiceModel);
+			User currentUser = await this._userRepository.GetByIdAsync(updateUserServiceModel.Id);
+			await this.PopulateUserModel(currentUser, updateUserServiceModel);
 
-			await this.CreateRelationToFriends(user, updateUserServiceModel.Friends.ToList());
+			await this.CreateRelationToFriends(currentUser, updateUserServiceModel.Friends.ToList());
 
-			bool successful = await this._userRepository.EditAsync(updateUserServiceModel.Id, user);
+			IdentityResult result = await this._userManager.UpdateAsync(currentUser);
 
-			if (!successful)
+			if (!result.Succeeded)
 				throw new InvalidOperationException("Unable to edit user!");
 
-			User newUser = await this._userRepository.GetByIdAsync(user.Id);
+			User newUser = await this._userRepository.GetByIdAsync(currentUser.Id);
 			return this._userMapper.Map<UserServiceModel>(newUser);
 		}
 
@@ -139,7 +146,7 @@ namespace DevHive.Services.Services
 		{
 			User user = await this._userRepository.GetByIdAsync(updateProfilePictureServiceModel.UserId);
 
-			if (!String.IsNullOrEmpty(user.ProfilePicture.PictureURL))
+			if (!string.IsNullOrEmpty(user.ProfilePicture.PictureURL))
 			{
 				bool success = await _cloudService.RemoveFilesFromCloud(new List<string> { user.ProfilePicture.PictureURL });
 				if (!success)
@@ -165,9 +172,9 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("User does not exist!");
 
 			User user = await this._userRepository.GetByIdAsync(id);
-			bool result = await this._userRepository.DeleteAsync(user);
+			IdentityResult result = await this._userManager.DeleteAsync(user);
 
-			return result;
+			return result.Succeeded;
 		}
 		#endregion
 
@@ -233,9 +240,19 @@ namespace DevHive.Services.Services
 			if (!await this._userRepository.DoesUserExistAsync(updateUserServiceModel.Id))
 				throw new ArgumentException("User does not exist!");
 
+			if (updateUserServiceModel.Friends.Any(x => x.UserName == updateUserServiceModel.UserName))
+				throw new ArgumentException("You cant add yourself as a friend(sry, bro)!");
+
 			if (!this._userRepository.DoesUserHaveThisUsername(updateUserServiceModel.Id, updateUserServiceModel.UserName)
 					&& await this._userRepository.DoesUsernameExistAsync(updateUserServiceModel.UserName))
 				throw new ArgumentException("Username already exists!");
+
+			List<string> usernames = new();
+			foreach (var friend in updateUserServiceModel.Friends)
+				usernames.Add(friend.UserName);
+
+			if (!await this._userRepository.ValidateFriendsCollectionAsync(usernames))
+				throw new ArgumentException("One or more friends do not exist!");
 		}
 
 		/// <summary>
@@ -288,29 +305,20 @@ namespace DevHive.Services.Services
 				await this._roleRepository.AddAsync(adminRole);
 			}
 
-			Role admin = await this._roleRepository.GetByNameAsync(Role.AdminRole);
+			Role admin = await this._roleManager.FindByNameAsync(Role.AdminRole);
 
 			user.Roles.Add(admin);
-			await this._userRepository.EditAsync(user.Id, user);
+			await this._userManager.UpdateAsync(user);
 
 			User newUser = await this._userRepository.GetByIdAsync(userId);
 
 			return new TokenModel(WriteJWTSecurityToken(newUser.Id, newUser.UserName, newUser.Roles));
 		}
 
-		/// <summary>
-        /// Returns the user with the Id in the model, adding to him the roles, languages and technologies, specified by the parameter model.
-		/// This practically maps HashSet<UpdateRoleServiceModel> to HashSet<Role> (and the equvalent HashSets for Languages and Technologies)
-		/// and assigns the latter to the returned user.
-        /// </summary>
-		private async Task<User> PopulateModel(UpdateUserServiceModel updateUserServiceModel)
+		private async Task PopulateUserModel(User user, UpdateUserServiceModel updateUserServiceModel)
 		{
-			User user = this._userMapper.Map<User>(updateUserServiceModel);
-
-			/* Fetch Roles and replace model's*/
 			//Do NOT allow a user to change his roles, unless he is an Admin
-			bool isAdmin = (await this._userRepository.GetByIdAsync(updateUserServiceModel.Id))
-				.Roles.Any(r => r.Name == Role.AdminRole);
+			bool isAdmin = await this._userManager.IsInRoleAsync(user, Role.AdminRole);
 
 			if (isAdmin)
 			{
@@ -324,11 +332,7 @@ namespace DevHive.Services.Services
 				}
 				user.Roles = roles;
 			}
-			//Preserve original user roles
-			else
-				user.Roles = (await this._userRepository.GetByIdAsync(updateUserServiceModel.Id)).Roles;
 
-			/* Fetch Languages and replace model's*/
 			HashSet<Language> languages = new();
 			int languagesCount = updateUserServiceModel.Languages.Count;
 			for (int i = 0; i < languagesCount; i++)
@@ -351,37 +355,19 @@ namespace DevHive.Services.Services
 				technologies.Add(technology);
 			}
 			user.Technologies = technologies;
-
-			return user;
 		}
 
-		private async Task<bool> CreateRelationToFriends(User user, List<UpdateFriendServiceModel> friends)
+		private async Task CreateRelationToFriends(User user, List<UpdateFriendServiceModel> friends)
 		{
 			foreach (var friend in friends)
 			{
-				User amigo = await this._userRepository.GetByUsernameAsync(friend.UserName) ??
-					throw new ArgumentException("No amigo, bro!");
+				User amigo = await this._userRepository.GetByUsernameAsync(friend.UserName);
 
-				UserFriend relation = new()
-				{
-					UserId = user.Id,
-					User = user,
-					FriendId = amigo.Id,
-					Friend = amigo
-				};
+				user.Friends.Add(amigo);
+				amigo.Friends.Add(user);
 
-				UserFriend theOtherRelation = new()
-				{
-					UserId = amigo.Id,
-					User = amigo,
-					FriendId = user.Id,
-					Friend = user
-				};
-
-				user.MyFriends.Add(relation);
-				user.FriendsOf.Add(theOtherRelation);
+				await this._userManager.UpdateAsync(amigo);
 			}
-			return true;
 		}
 		#endregion
 	}

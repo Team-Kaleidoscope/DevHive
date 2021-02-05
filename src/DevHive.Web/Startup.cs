@@ -33,7 +33,6 @@ namespace DevHive.Web
 			services.JWTConfiguration(Configuration);
 			services.AutoMapperConfiguration();
 			services.DependencyInjectionConfiguration(this.Configuration);
-			services.ExceptionHandlerMiddlewareConfiguration();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

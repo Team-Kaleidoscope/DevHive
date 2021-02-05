@@ -12,27 +12,20 @@ namespace DevHive.Services.Configurations.Mapping
 		{
 			CreateMap<UserServiceModel, User>();
 			CreateMap<RegisterServiceModel, User>();
-			CreateMap<FriendServiceModel, User>();
-				// .ForMember(dest => dest.Friends, src => src.Ignore());
-			CreateMap<UserFriend, FriendServiceModel>()
-				.ForMember(dest => dest.UserName, src => src.MapFrom(p => p.Friend.UserName));
+			CreateMap<FriendServiceModel, User>()
+				.ForMember(dest => dest.Friends, src => src.Ignore());
 			CreateMap<UpdateUserServiceModel, User>()
-				// .ForMember(dest => dest.Friends, src => src.Ignore())
+				.ForMember(dest => dest.Friends, src => src.Ignore())
 				.AfterMap((src, dest) => dest.PasswordHash = PasswordModifications.GeneratePasswordHash(src.Password));
 			CreateMap<UpdateFriendServiceModel, User>();
 
 			CreateMap<User, UserServiceModel>()
-				.ForMember(dest => dest.Friends, src => src.MapFrom(p => p.MyFriends))
-				.ForMember(dest => dest.ProfilePictureURL, src => src.MapFrom(p => p.ProfilePicture.PictureURL));
-				// .ForMember(dest => dest.Friends, src => src.MapFrom(p => p.Friends));
+				.ForMember(dest => dest.ProfilePictureURL, src => src.MapFrom(p => p.ProfilePicture.PictureURL))
+				.ForMember(dest => dest.Friends, src => src.MapFrom(p => p.Friends));
 			CreateMap<User, UpdateUserServiceModel>()
 				.ForMember(x => x.Password, opt => opt.Ignore())
 				.ForMember(dest => dest.ProfilePictureURL, src => src.MapFrom(p => p.ProfilePicture.PictureURL));
 			CreateMap<User, FriendServiceModel>();
-
-			CreateMap<UserFriend, FriendServiceModel>()
-				.ForMember(dest => dest.UserName, src => src.MapFrom(p => p.Friend.UserName))
-				.ForMember(dest => dest.Id, src => src.MapFrom(p => p.FriendId));
 		}
 	}
 }

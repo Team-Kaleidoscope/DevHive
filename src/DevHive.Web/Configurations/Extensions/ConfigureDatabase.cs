@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using DevHive.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using DevHive.Data.Models;
@@ -8,8 +7,6 @@ using Microsoft.AspNetCore.Builder;
 using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using DevHive.Data;
-using Microsoft.AspNetCore.Authorization;
-using System.Collections.Generic;
 
 namespace DevHive.Web.Configurations.Extensions
 {
