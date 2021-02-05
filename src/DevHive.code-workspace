@@ -12,6 +12,18 @@
 			"name": "DevHive.Data",
 			"path": "./DevHive.Data"
 		},
+		{
+			"name": "DevHive.Common",
+			"path": "./DevHive.Common"
+		},
+		{
+			"name": "DevHive.Tests",
+			"path": "./DevHive.Tests"
+		},
+		{
+			"name": "DevHive.Angular",
+			"path": "./DevHive.Angular"
+		},
 	],
 	"settings": {
 		"files.exclude": {
@@ -20,6 +32,76 @@
 
 			"**/obj": true,
 			".gitignore" : true,
-		}
-	}
+
+			"**/node_modules" : true,
+			"e2e" : true,
+		},
+		"code-runner.fileDirectoryAsCwd": true,
+		"dotnet-test-explorer.runInParallel": true,
+		"dotnet-test-explorer.testProjectPath": "**/*.Tests.csproj",
+		"omnisharp.enableEditorConfigSupport": true,
+		"omnisharp.enableRoslynAnalyzers": true,
+		"prettier.useEditorConfig": true,
+	},
+	"launch": {
+		"configurations": [
+			{
+				"name": "Launch API",
+				"type": "coreclr",
+				"request": "launch",
+				"preLaunchTask": "workspace-build",
+				"program": "${workspaceFolder:DevHive.Web}/bin/Debug/net5.0/DevHive.Web.dll",
+				"args": [],
+				"cwd": "${workspaceFolder:DevHive.Web}",
+				"stopAtEntry": false,
+				"env": {
+					"ASPNETCORE_ENVIRONMENT": "Development"
+				},
+			},
+			{
+				"name": "Launch Data Tests",
+				"type": "coreclr",
+				"request": "launch",
+				"preLaunchTask": "workspace-build",
+				"program": "${workspaceFolder:DevHive.Tests}/DevHive.Data.Tests/bin/Debug/net5.0/DevHive.Data.Tests.dll",
+				"args": [],
+				"cwd": "${workspaceFolder:DevHive.Tests}/DevHive.Data.Tests",
+				"console": "internalConsole",
+				"stopAtEntry": false
+			},
+		],
+		"compounds": []
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "workspace-build",
+				"command": "dotnet",
+				"type": "shell",
+				"args": [
+					"build",
+					"/property:GenerateFullPaths=true",
+					"/consoleloggerparameters:NoSummary"
+				],
+				"group": {
+					"kind": "build",
+					"isDefault": true
+				},
+				"presentation": {
+					"reveal": "silent"
+				},
+				"problemMatcher": "$msCompile"
+			}
+		]
+	},
+	"extensions": {
+		"recommendations": [
+			"esbenp.prettier-vscode"
+		]
+	},
+	"recommendations": [
+		"esbenp.prettier-vscode",
+		"editorconfig.editorconfig"
+	]
 }

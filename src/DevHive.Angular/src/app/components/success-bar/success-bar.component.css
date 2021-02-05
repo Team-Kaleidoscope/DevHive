@@ -1,0 +1,11 @@
+#success-bar {
+  width: 100%;
+  background-color: var(--success);
+  color: white;
+  padding: .2em;
+  text-align: center;
+}
+
+#success-bar:empty {
+  display: none;
+}

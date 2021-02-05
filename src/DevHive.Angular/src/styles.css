@@ -1,0 +1,262 @@
+/* You can add global styles to this file, and also import other style files */
+@import "./reset.css";
+
+:root {
+  --bg-color: white;
+  --focus-color: forestgreen;
+  --card-bg: white;
+  --success: forestgreen;
+  --failure: indianred;
+}
+
+html, body {
+	height: 100%;
+	margin: 0;
+}
+body {
+  font: 21px sans-serif !important;
+  background-color: var(--bg-color);
+}
+
+input:focus, button:focus {
+  outline: 0;
+}
+
+#content { /* Used for the login and register pages */
+  height: 100%;
+  max-width: 20em;
+  box-sizing: border-box;
+  border: .5em solid var(--bg-color);
+
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.rounded-border {
+  border: 2px solid black;
+  border-radius: .6em;
+  padding: .4em;
+}
+
+.round-image {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.title {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.error {
+  color: red;
+}
+
+.scroll-standalone {
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+.scroll-standalone::-webkit-scrollbar {
+  display: none;
+}
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+.scroll-standalone {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.user-language, .user-technology {
+  border-radius: .4em;
+  background-color: lightgrey;
+  padding: .26em;
+  margin: .1em .2em;
+  width: fit-content;
+}
+
+/* Inputs, the type found in login and register */
+
+.input-selection {
+  position: relative;
+  margin-top: .7em;
+}
+
+  /* Don't show the placeholder when the label is on top
+   */
+.input-selection .input-field::-webkit-input-placeholder {
+  opacity: 0;
+}
+
+.input-field {
+  width: 100%;
+  background-color: var(--bg-color);
+
+  border: 0;
+  border-bottom: 1px solid grey;
+  box-sizing: border-box;
+
+  margin-bottom: .5em;
+  padding: .4em;
+  padding-left: 0;
+
+  font-size: inherit;
+}
+
+.input-field-label {
+  width: inherit;
+  height: inherit;
+  position: absolute;
+  left: 0;
+
+  margin-top: .4em;
+  color: grey;
+}
+
+  /* When hovering, typing or having typed something in an input,
+   * make the label smaller, color it and then move it up
+   */
+.input-selection:hover > .input-field-label ,
+.input-selection > input:not(:placeholder-shown) + .input-field-label ,
+.input-selection > input:focus + .input-field-label {
+  font-size: .7em;
+  color: var(--focus-color);
+  transform: translate(0, -1.2em);
+}
+
+  /* Show the placeholder, when you've hovered or
+   * focused (typing in) on the input-field
+   */
+.input-selection:hover > .input-field::-webkit-input-placeholder,
+.input-selection > .input-field:focus::-webkit-input-placeholder {
+  opacity: 1;
+}
+
+  /* Make the underline thicker and change it's and the cursors's
+   * color when hovered or focused (typing in) on the input-field
+   */
+.input-selection:hover > .input-field,
+.input-field:focus {
+  border-color: var(--focus-color) !important;
+  caret-color: var(--focus-color);
+  border-width: 2px !important;
+  margin-top: -1px !important;
+}
+
+
+/* Input errors */
+
+.input-errors {
+  margin-top: -.8em;
+  font-size: .7em;
+
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+  /* Move the errors above the input when
+   * using the site on a small screen and
+   * add some space for them above the input
+   */
+@media screen and (max-width: 350px) {
+  .input-errors {
+    margin-top: -1.8em;
+  }
+  .input-selection {
+    margin-top: 1.6em;
+  }
+}
+
+.input-errors > .error {
+  margin-left: .3em;
+}
+
+.input-field:focus ~ .input-errors > .error {
+  opacity: 1 !important;
+}
+
+.input-field:placeholder-shown ~ .input-errors > .error {
+  opacity: 0;
+}
+
+/* Submit button */
+
+.submit-btn {
+  width: 100%;
+  color: white;
+  background-color: black;
+
+  border: 2px solid black;
+  border-radius: .4em;
+  box-sizing: border-box;
+
+  font-size: .8em;
+  text-align: center;
+
+  margin-top: .5em;
+  padding: .3em;
+}
+
+.submit-btn:hover {
+  cursor: pointer;
+  color: var(--focus-color);
+  background-color: white;
+  border-color: var(--focus-color) !important;
+}
+
+.submit-btn:active {
+  transition: 0s;
+  transform: scale(.9);
+}
+
+.delete-btn:hover {
+  color: indianred;
+  border-color: indianred !important;
+}
+
+/* Form attachments (the ones that are shown while creating and editing a post) */
+
+.form-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  color: gray;
+  font-size: .75em;
+  margin: 0 .3em;
+}
+
+.form-attachment {
+  border: 2px solid black;
+  border-radius: .6em;
+  margin-top: .2em;
+  margin-right: .2em;
+  padding: .2em;
+  display: flex;
+  align-items: center;
+}
+
+.form-attachment:last-child {
+  margin-right: 0;
+}
+
+.remove-form-attachment {
+  font-size: .9em;
+  color: var(--failure);
+  background-color: white;
+  border-radius: .2em;
+  margin: 0 .2em;
+  padding: .2em;
+}
+
+.remove-form-attachment:hover {
+  color: white;
+  background-color: var(--failure);
+  cursor: pointer;
+}
+

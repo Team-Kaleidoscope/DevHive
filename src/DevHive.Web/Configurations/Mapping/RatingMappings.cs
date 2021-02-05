@@ -1,0 +1,16 @@
+using AutoMapper;
+using DevHive.Services.Models.Post.Rating;
+using DevHive.Web.Models.Post.Rating;
+
+namespace DevHive.Web.Configurations.Mapping
+{
+	public class RatingMappings : Profile
+	{
+		public RatingMappings()
+		{
+			CreateMap<RatePostWebModel, RatePostServiceModel>();
+
+			CreateMap<ReadPostRatingServiceModel, ReadPostRatingWebModel>();
+		}
+	}
+}

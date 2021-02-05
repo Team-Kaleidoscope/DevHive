@@ -1,0 +1,23 @@
+<app-loading *ngIf="!loaded"></app-loading>
+
+<div class="comment rounded-border" *ngIf="loaded">
+	<div class="content">
+		<div class="author" (click)="goToAuthorProfile()">
+			<img class="round-image" [src]="user.profilePictureURL">
+			<div class="author-info">
+				<div class="name">
+					{{ user.firstName }} {{ user.lastName }}
+				</div>
+				<div class="handle">
+					@{{ user.userName }}
+				</div>
+			</div>
+		</div>
+		<div class="message" (click)="goToCommentPage()">
+			{{ comment.message }}
+		</div>
+		<div class="timestamp" (click)="goToCommentPage()">
+			{{ timeCreated }}
+		</div>
+	</div>
+</div>

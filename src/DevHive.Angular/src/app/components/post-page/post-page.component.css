@@ -1,0 +1,62 @@
+#content {
+  justify-content: flex-start !important;
+}
+
+#content > * {
+  width: 100%;
+}
+
+.many-buttons {
+  width: 100%;
+  display: flex;
+}
+
+.many-buttons > * {
+  flex: 1;
+  margin-right: .3em;
+}
+
+.many-buttons > *:last-of-type {
+  margin-right: 0;
+}
+
+#editPost {
+  display: flex;
+  position: relative;
+}
+
+#new-message-input {
+  flex: 1;
+  box-sizing: border-box;
+}
+
+#file-upload {
+  font-size: inherit;
+  color: transparent;
+  width: 1.99em;
+  height: 1.99em;
+  margin-left: .3em;
+}
+
+#file-upload:hover {
+  cursor: pointer;
+}
+
+#file-upload::-webkit-file-upload-button {
+  visibility: hidden;
+}
+
+#attachment-img {
+  height: 1.99em;
+  width: 1.99em;
+  position: absolute;
+  right: 0;
+  pointer-events: none;
+}
+
+
+.submit-btn {
+  max-width: 98%;
+  margin: 0 auto;
+  margin-bottom: .5em;
+}

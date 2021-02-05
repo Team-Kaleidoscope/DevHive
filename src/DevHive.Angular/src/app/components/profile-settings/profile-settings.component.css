@@ -1,0 +1,124 @@
+* {
+  box-sizing: border-box;
+}
+
+#content {
+  max-width: 22em;
+  justify-content: start;
+}
+
+form {
+  width: 100%;
+}
+
+hr {
+  width: calc(100% - 1em);
+  color: black;
+  border: 1px solid black;
+}
+
+/* Navigation bar (for loggedin user) */
+
+#navigation {
+  display: flex;
+  width: 100%;
+}
+
+#navigation > .submit-btn {
+  flex: 1;
+  margin-top: 0;
+  margin-left: .5em;
+  font-size: inherit;
+}
+
+#navigation > .submit-btn:nth-of-type(1) {
+  margin-left: 0;
+}
+
+/* Form */
+
+#update-profile-picture {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 .5em;
+  flex-wrap: wrap;
+}
+
+#profile-picture {
+  width: 5em;
+  height: 5em;
+}
+
+#submit-file {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1em;
+}
+
+#upload-file:hover {
+  cursor: inherit;
+}
+
+#upload-file > input:hover {
+  cursor: pointer;
+}
+
+#upload-file > input::-webkit-file-upload-button {
+  visibility: hidden;
+}
+
+#update-user {
+  margin-top: 1.1em;
+}
+
+.input-field {
+  border-color: var(--focus-color) !important;
+  caret-color: var(--focus-color);
+  border-width: 2px !important;
+  margin-top: -1px !important;
+}
+
+.input-field-label {
+  font-size: .7em;
+  color: var(--focus-color);
+  transform: translate(0, -1.2em);
+}
+
+#all-languages, #all-technologies {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+
+.edit-btn {
+  border-radius: 0 !important;
+  color: var(--focus-color);
+  background-color: white;
+  border-color: var(--focus-color);
+}
+
+.edit-btn:hover {
+  color: white;
+  background-color: black;
+  border-color: black !important;
+}
+
+.submit-btn {
+  margin-bottom: .5em;
+}
+
+#update-profile-btn {
+  margin-top: 1em;
+}
+
+#confirm-delete {
+  box-sizing: border-box;
+  width: 100%;
+  background-color: var(--failure);
+  color: white;
+  padding: .2em;
+  text-align: center;
+}

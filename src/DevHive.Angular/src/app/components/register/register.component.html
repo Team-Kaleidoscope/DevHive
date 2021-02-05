@@ -1,0 +1,65 @@
+<div id="content">
+	<div class="title">Register</div>
+
+	<form [formGroup]="registerUserFormGroup" (ngSubmit)="onSubmit()">
+		<hr>
+		<!-- Value: {{ registerUserFormGroup.value | json }}
+		<hr> -->
+
+		<div class="input-selection">
+			<input type="text" placeholder="Goshko, is that u?" class="input-field" formControlName="firstName" required>
+			<label class="input-field-label">First Name</label>
+
+			<div class="input-errors">
+				<label *ngIf="registerUserFormGroup.get('firstName')?.errors?.required" class="error">*Required</label>
+				<label *ngIf="registerUserFormGroup.get('firstName')?.errors?.minlength" class="error">*Minimum 3 characters</label>
+			</div>
+		</div>
+
+		<div class="input-selection">
+			<input type="text" placeholder="Trapov? Really??" class="input-field" formControlName="lastName" required>
+			<label class="input-field-label">Last Name</label>
+
+			<div class="input-errors">
+				<label *ngIf="registerUserFormGroup.get('lastName')?.errors?.required" class="error">*Required</label>
+				<label *ngIf="registerUserFormGroup.get('lastName')?.errors?.minlength" class="error">*Minimum 3 characters</label>
+			</div>
+		</div>
+
+		<div class="input-selection">
+			<input type="text" placeholder="Think of something cool to flex on other kids" class="input-field" formControlName="username" required>
+			<label class="input-field-label">Username</label>
+
+			<div class="input-errors">
+				<label *ngIf="registerUserFormGroup.get('username')?.errors?.required" class="error">*Required</label>
+				<label *ngIf="registerUserFormGroup.get('username')?.errors?.minlength" class="error">*Minimum 3 characters</label>
+			</div>
+		</div>
+
+		<div class="input-selection">
+			<input type="text" placeholder="You expect an email joke? I have none, mail me one" class="input-field" formControlName="email" required>
+			<label class="input-field-label">Email</label>
+
+			<div class="input-errors">
+				<label *ngIf="registerUserFormGroup.get('email')?.errors?.required" class="error">*Required</label>
+				<label *ngIf="registerUserFormGroup.get('email')?.errors?.email" class="error">*Invalid email</label>
+			</div>
+		</div>
+
+		<div class="input-selection">
+			<input type="password" placeholder="Make sure it's long & strong (just like my d***)" class="input-field" formControlName="password" required>
+			<label class="input-field-label">Password</label>
+
+			<div class="input-errors">
+				<label *ngIf="registerUserFormGroup.get('password')?.errors?.required" class="error">*Required</label>
+				<label *ngIf="registerUserFormGroup.get('password')?.errors?.minlength" class="error">*Minimum 3 characters</label>
+				<label *ngIf="registerUserFormGroup.get('password')?.errors?.pattern" class="error">*At least 1 number</label>
+			</div>
+		</div>
+
+		<hr>
+		<button class="submit-btn" type="submit">Submit</button>
+		<app-error-bar></app-error-bar>
+	</form>
+	<button class="submit-btn redirect-to-login" (click)="onRedirectLogin()">Already have an account? Login here</button>
+</div>

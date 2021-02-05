@@ -1,0 +1,49 @@
+<app-loading *ngIf="!loaded"></app-loading>
+
+<div class="post rounded-border" *ngIf="loaded">
+	<div class="content">
+		<div class="author" (click)="goToAuthorProfile()">
+			<img class="round-image" [src]="user.profilePictureURL">
+			<div class="author-info">
+				<div class="name">
+					{{ user.firstName }} {{ user.lastName }}
+				</div>
+				<div class="handle">
+					@{{ user.userName }}
+				</div>
+			</div>
+		</div>
+		<div class="message" (click)="goToPostPage()">
+			{{ post.message }}
+		</div>
+		<div class="bottom-post" (click)="goToPostPage()">
+			<div class="timestamp">
+				{{ timeCreated }}
+			</div>
+			<div class="separator">
+				║
+			</div>
+			<div class="comment-count">
+				{{ post.comments.length }}
+				<img src="assets/images/comment.png">
+			</div>
+		</div>
+
+	</div>
+	<div class="rating">
+		<button class="vote">
+			ᐃ
+		</button>
+		<div class="score">
+			{{ votesNumber }}
+		</div>
+		<button class="vote">
+			ᐁ
+		</button>
+	</div>
+</div>
+<div class="attachments">
+	<div *ngFor="let fileURL of post.fileURLs">
+		<app-post-attachment class="no-events" [paramURL]="fileURL"></app-post-attachment>
+	</div>
+</div>

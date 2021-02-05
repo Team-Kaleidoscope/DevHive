@@ -1,0 +1,40 @@
+/* A lot of stuff are moved to the global styles! */
+
+* {
+  transition: 0.2s;
+}
+
+form {
+  width: 100%;
+}
+
+@media screen and (max-height: 630px) {
+  #content {
+    height: fit-content !important;
+  }
+}
+
+#content hr {
+  width: 100%;
+  border: 1px solid black;
+  box-sizing: border-box;
+}
+
+.input-selection:nth-of-type(1) {
+  margin-top: 1.2em;
+}
+
+.submit-btn {
+  margin-bottom: .2em;
+}
+
+.redirect-to-login {
+  color: var(--focus-color);
+  background-color: var(--bg-color);
+  border-color: var(--focus-color);
+}
+
+.redirect-to-login:hover {
+  border-color: black !important;
+  color: black;
+}
