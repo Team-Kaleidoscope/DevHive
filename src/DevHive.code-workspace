@@ -19,11 +19,7 @@
 		{
 			"name": "DevHive.Tests",
 			"path": "./DevHive.Tests"
-		},
-		{
-			"name": "DevHive.Angular",
-			"path": "./DevHive.Angular"
-		},
+		}
 	],
 	"settings": {
 		"files.exclude": {
@@ -32,9 +28,6 @@
 
 			"**/obj": true,
 			".gitignore" : true,
-
-			"**/node_modules" : true,
-			"e2e" : true,
 		},
 		"code-runner.fileDirectoryAsCwd": true,
 		"dotnet-test-explorer.runInParallel": true,
@@ -97,11 +90,8 @@
 	},
 	"extensions": {
 		"recommendations": [
-			"esbenp.prettier-vscode"
+			"esbenp.prettier-vscode",
+			"editorconfig.editorconfig"
 		]
-	},
-	"recommendations": [
-		"esbenp.prettier-vscode",
-		"editorconfig.editorconfig"
-	]
+	}
 }
