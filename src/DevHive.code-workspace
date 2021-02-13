@@ -31,6 +31,7 @@
 		"omnisharp.enableEditorConfigSupport": true,
 		"omnisharp.enableRoslynAnalyzers": true,
 		"prettier.useEditorConfig": true,
+		"workbench.editor.labelFormat": "short"
 	},
 	"launch": {
 		"configurations": [
@@ -39,9 +40,9 @@
 				"type": "coreclr",
 				"request": "launch",
 				"preLaunchTask": "workspace-build",
-				"program": "${workspaceFolder:Web}DevHive.Web/bin/Debug/net5.0/DevHive.Web.dll",
+				"program": "${workspaceFolder:Web}/DevHive.Web/bin/Debug/net5.0/DevHive.Web.dll",
 				"args": [],
-				"cwd": "${workspaceFolder:DevHive.Web}",
+				"cwd": "${workspaceFolder:Web}/DevHive.Web",
 				"stopAtEntry": false,
 				"env": {
 					"ASPNETCORE_ENVIRONMENT": "Development"
@@ -68,6 +69,9 @@
 				"label": "workspace-build",
 				"command": "dotnet",
 				"type": "shell",
+				"options": {
+					"cwd": "${workspaceFolder:Web}/DevHive.Web"
+				},
 				"args": [
 					"build",
 					"/property:GenerateFullPaths=true",
