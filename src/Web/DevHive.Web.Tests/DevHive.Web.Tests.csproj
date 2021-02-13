@@ -14,7 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\DevHive.Web\DevHive.Web.csproj" />
+    <ProjectReference Include="..\DevHive.Web\DevHive.Web.csproj" />
+    <ProjectReference Include="..\DevHive.Web.Models\DevHive.Web.Models.csproj" />
+
+    <ProjectReference Include="..\..\Common\DevHive.Common.Models\DevHive.Common.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
