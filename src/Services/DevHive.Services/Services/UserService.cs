@@ -1,6 +1,6 @@
 using AutoMapper;
 using DevHive.Services.Options;
-using DevHive.Services.Models.Identity.User;
+using DevHive.Services.Models.User;
 using System.Threading.Tasks;
 using DevHive.Data.Models;
 using System;

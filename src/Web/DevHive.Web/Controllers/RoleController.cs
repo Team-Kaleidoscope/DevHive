@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using DevHive.Web.Models.Identity.Role;
+using DevHive.Web.Models.Role;
 using AutoMapper;
 using System;
 using DevHive.Services.Interfaces;
-using DevHive.Services.Models.Identity.Role;
+using DevHive.Services.Models.Role;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DevHive.Web.Controllers

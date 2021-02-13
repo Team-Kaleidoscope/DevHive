@@ -1,6 +1,6 @@
 using AutoMapper;
-using DevHive.Web.Models.Identity.Role;
-using DevHive.Services.Models.Identity.Role;
+using DevHive.Web.Models.Role;
+using DevHive.Services.Models.Role;
 
 namespace DevHive.Web.Configurations.Mapping
 {

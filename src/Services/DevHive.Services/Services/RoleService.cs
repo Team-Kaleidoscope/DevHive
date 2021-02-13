@@ -4,7 +4,7 @@ using AutoMapper;
 using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
 using DevHive.Services.Interfaces;
-using DevHive.Services.Models.Identity.Role;
+using DevHive.Services.Models.Role;
 using DevHive.Services.Models.Language;
 
 namespace DevHive.Services.Services

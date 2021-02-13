@@ -1,6 +1,6 @@
 using DevHive.Data.Models;
 using AutoMapper;
-using DevHive.Services.Models.Identity.User;
+using DevHive.Services.Models.User;
 using DevHive.Common.Models.Misc;
 using DevHive.Data.RelationModels;
 

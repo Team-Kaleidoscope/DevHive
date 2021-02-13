@@ -10,7 +10,7 @@ using DevHive.Common.Models.Misc;
 using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
 using DevHive.Services.Interfaces;
-using DevHive.Services.Models.Identity.User;
+using DevHive.Services.Models.User;
 using DevHive.Services.Options;
 using DevHive.Services.Services;
 using Microsoft.AspNetCore.Identity;

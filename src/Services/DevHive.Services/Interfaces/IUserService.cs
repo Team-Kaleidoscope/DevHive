@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using DevHive.Common.Models.Identity;
-using DevHive.Services.Models.Identity.User;
+using DevHive.Services.Models.User;
 
 namespace DevHive.Services.Interfaces
 {

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DevHive.Data.Interfaces.Models;
+using DevHive.Data.Models.Interfaces;
 
 namespace DevHive.Data.Models
 {

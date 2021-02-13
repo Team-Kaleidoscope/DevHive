@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using DevHive.Services.Models.Identity.Role;
+using DevHive.Services.Models.Role;
 
 namespace DevHive.Services.Interfaces
 {

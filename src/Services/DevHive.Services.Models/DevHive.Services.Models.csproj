@@ -1,11 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\DevHive.Common.Models\DevHive.Common.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2"/>
   </ItemGroup>
-
 </Project>

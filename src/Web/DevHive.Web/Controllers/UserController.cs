@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using DevHive.Services.Models.Identity.User;
-using DevHive.Web.Models.Identity.User;
+using DevHive.Services.Models.User;
+using DevHive.Web.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DevHive.Common.Models.Identity;

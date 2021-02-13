@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Data.Interfaces.Repositories;
 using DevHive.Data.Models;
-using DevHive.Services.Models.Identity.Role;
+using DevHive.Services.Models.Role;
 using DevHive.Services.Services;
 using Moq;
 using NUnit.Framework;

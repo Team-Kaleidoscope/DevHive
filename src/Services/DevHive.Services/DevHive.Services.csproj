@@ -18,12 +18,6 @@
     <PackageReference Include="CloudinaryDotNet" Version="1.14.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DevHive.Common\DevHive.Common.csproj" />
-    <ProjectReference Include="..\DevHive.Services.Models\DevHive.Services.Models.csproj" />
-    <ProjectReference Include="..\..\Common\DevHive.Common.Models\DevHive.Common.csproj" />
-  </ItemGroup>
-
   <PropertyGroup>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>

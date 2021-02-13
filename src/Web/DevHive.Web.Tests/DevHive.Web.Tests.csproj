@@ -13,13 +13,6 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DevHive.Web\DevHive.Web.csproj" />
-    <ProjectReference Include="..\DevHive.Web.Models\DevHive.Web.Models.csproj" />
-
-    <ProjectReference Include="..\..\Common\DevHive.Common.Models\DevHive.Common.csproj" />
-  </ItemGroup>
-
   <PropertyGroup>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
