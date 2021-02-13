@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DevHive.Data.Interfaces.Repositories;
+using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
-using DevHive.Data.RelationModels;
+using DevHive.Data.Models.Relational;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories

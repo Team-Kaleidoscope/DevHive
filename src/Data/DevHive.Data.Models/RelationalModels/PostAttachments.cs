@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using DevHive.Data.Models;
 
-namespace DevHive.Data.RelationModels
+namespace DevHive.Data.Models.Relational
 {
 	[Table("PostAttachments")]
 	public class PostAttachments

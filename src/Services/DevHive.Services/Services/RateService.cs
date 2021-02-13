@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using DevHive.Data.Interfaces.Repositories;
+using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
 using DevHive.Services.Interfaces;
 using DevHive.Services.Models.Post.Rating;

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DevHive.Data.Models;
-using DevHive.Data.RelationModels;
+using DevHive.Data.Models.Relational;
 
 namespace DevHive.Data.Models.Interfaces
 {

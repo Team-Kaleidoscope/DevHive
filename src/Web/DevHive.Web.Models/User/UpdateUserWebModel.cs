@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
-using DevHive.Web.Attributes;
+using DevHive.Web.Models.Attributes;
 using DevHive.Web.Models.Role;
 using DevHive.Web.Models.Language;
 using DevHive.Web.Models.Technology;

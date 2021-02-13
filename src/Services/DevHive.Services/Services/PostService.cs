@@ -7,9 +7,9 @@ using DevHive.Services.Models.Post;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using DevHive.Services.Interfaces;
-using DevHive.Data.Interfaces.Repositories;
+using DevHive.Data.Interfaces;
 using System.Linq;
-using DevHive.Data.RelationModels;
+using DevHive.Data.Models.Relational;
 
 namespace DevHive.Services.Services
 {

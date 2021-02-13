@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace DevHive.Web.Attributes
+namespace DevHive.Web.Models.Attributes
 {
 	public class GoodPassword : ValidationAttribute
 	{

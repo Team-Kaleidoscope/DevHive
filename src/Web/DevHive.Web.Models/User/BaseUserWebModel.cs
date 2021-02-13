@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
-using DevHive.Web.Attributes;
+using DevHive.Web.Models.Attributes;
 
 namespace DevHive.Web.Models.User
 {

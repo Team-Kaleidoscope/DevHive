@@ -2,7 +2,7 @@ using DevHive.Data.Models;
 using AutoMapper;
 using DevHive.Services.Models.User;
 using DevHive.Common.Models.Misc;
-using DevHive.Data.RelationModels;
+using DevHive.Data.Models.Relational;
 
 namespace DevHive.Services.Configurations.Mapping
 {

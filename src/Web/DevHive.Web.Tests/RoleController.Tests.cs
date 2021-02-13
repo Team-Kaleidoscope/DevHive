@@ -111,7 +111,7 @@ namespace DevHive.Web.Tests
 			Assert.IsInstanceOf<OkObjectResult>(result);
 
 			OkObjectResult okObjectResult = result as OkObjectResult;
-			RoleWebModel resultModel = okObjectResult.Value as Models.Identity.Role.RoleWebModel;
+			RoleWebModel resultModel = okObjectResult.Value as RoleWebModel;
 
 			Assert.AreEqual(NAME, resultModel.Name);
 		}

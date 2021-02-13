@@ -4,7 +4,7 @@ using System.Reflection.Metadata.Ecma335;
 using DevHive.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DevHive.Data.RelationModels
+namespace DevHive.Data.Models.Relational
 {
 	[Table("RatedPosts")]
 	public class RatedPost

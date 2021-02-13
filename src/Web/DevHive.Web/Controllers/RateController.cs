@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Services.Interfaces;
 using DevHive.Services.Models.Post.Rating;
-using DevHive.Web.Models.Post.Rating;
+using DevHive.Web.Models.Rating;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

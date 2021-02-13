@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DevHive.Data.Interfaces.Repositories;
+using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
-using DevHive.Data.RelationModels;
+using DevHive.Data.Models.Relational;
 using DevHive.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Moq;

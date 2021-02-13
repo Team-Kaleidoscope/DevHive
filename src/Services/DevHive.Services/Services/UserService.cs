@@ -11,7 +11,7 @@ using System.Text;
 using System.Collections.Generic;
 using DevHive.Common.Models.Identity;
 using DevHive.Services.Interfaces;
-using DevHive.Data.Interfaces.Repositories;
+using DevHive.Data.Interfaces;
 using System.Linq;
 using DevHive.Common.Models.Misc;
 using Microsoft.AspNetCore.Http;

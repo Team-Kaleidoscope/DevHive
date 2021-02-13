@@ -1,6 +1,6 @@
 using System;
 using DevHive.Data.Models;
-using DevHive.Data.RelationModels;
+using DevHive.Data.Models.Relational;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

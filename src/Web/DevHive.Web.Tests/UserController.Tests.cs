@@ -113,7 +113,7 @@ namespace DevHive.Web.Tests
 			Assert.IsInstanceOf<OkObjectResult>(result);
 
 			OkObjectResult okObjectResult = result as OkObjectResult;
-			UserWebModel resultModel = okObjectResult.Value as Models.Identity.User.UserWebModel;
+			UserWebModel resultModel = okObjectResult.Value as UserWebModel;
 
 			Assert.AreEqual(USERNAME, resultModel.UserName);
 		}
@@ -155,7 +155,7 @@ namespace DevHive.Web.Tests
 			Assert.IsInstanceOf<OkObjectResult>(result);
 
 			OkObjectResult okObjectResult = result as OkObjectResult;
-			UserWebModel resultModel = okObjectResult.Value as Models.Identity.User.UserWebModel;
+			UserWebModel resultModel = okObjectResult.Value as UserWebModel;
 
 			Assert.AreEqual(USERNAME, resultModel.UserName);
 		}
@@ -214,7 +214,7 @@ namespace DevHive.Web.Tests
 			Assert.IsInstanceOf<AcceptedResult>(result);
 
 			AcceptedResult acceptedResult = result as AcceptedResult;
-			ProfilePictureWebModel resultModel = acceptedResult.Value as Models.Identity.User.ProfilePictureWebModel;
+			ProfilePictureWebModel resultModel = acceptedResult.Value as ProfilePictureWebModel;
 
 			Assert.AreEqual(profilePictureURL, resultModel.ProfilePictureURL);
 		}

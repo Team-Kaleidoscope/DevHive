@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using DevHive.Data.Models.Interfaces;
-using DevHive.Data.RelationModels;
+using DevHive.Data.Models.Relational;
 
 namespace DevHive.Data.Models
 {

@@ -1,4 +1,4 @@
-using DevHive.Data.Interfaces.Repositories;
+using DevHive.Data.Interfaces;
 using DevHive.Data.Repositories;
 using DevHive.Services.Interfaces;
 using DevHive.Services.Services;

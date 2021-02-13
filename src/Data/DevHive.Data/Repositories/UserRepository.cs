@@ -4,9 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper.Mappers;
-using DevHive.Data.Interfaces.Repositories;
+using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
-using DevHive.Data.RelationModels;
+using DevHive.Data.Models.Relational;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

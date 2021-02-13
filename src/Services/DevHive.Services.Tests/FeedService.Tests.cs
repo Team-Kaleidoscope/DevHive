@@ -2,7 +2,7 @@
 //using System.Collections.Generic;
 //using System.Threading.Tasks;
 //using AutoMapper;
-//using DevHive.Data.Interfaces.Repositories;
+//using DevHive.Data.Interfaces;
 //using DevHive.Data.Models;
 //using DevHive.Services.Models;
 //using DevHive.Services.Models.Post;
