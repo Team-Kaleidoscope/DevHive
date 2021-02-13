@@ -4,7 +4,7 @@ using DevHive.Services.Models.Post;
 
 namespace DevHive.Services.Interfaces
 {
-    public interface IPostService
+	public interface IPostService
 	{
 		Task<Guid> CreatePost(CreatePostServiceModel createPostServiceModel);
 

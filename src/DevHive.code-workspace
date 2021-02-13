@@ -31,7 +31,6 @@
 		"omnisharp.enableEditorConfigSupport": true,
 		"omnisharp.enableRoslynAnalyzers": true,
 		"prettier.useEditorConfig": true,
-		"workbench.editor.labelFormat": "short"
 	},
 	"launch": {
 		"configurations": [

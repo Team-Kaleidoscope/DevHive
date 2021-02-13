@@ -19,14 +19,14 @@ namespace DevHive.Data.Repositories
 		}
 
 		/// <summary>
-        /// This returns a given amount of posts of all given friends, created before "firstRequestIssued",
+		/// This returns a given amount of posts of all given friends, created before "firstRequestIssued",
 		/// ordered from latest to oldest (time created).
 		/// PageSize specifies how many posts to get, and pageNumber specifices how many posts to skip (pageNumber * pageSize).
 		///
 		/// This method is used in the feed page.
 		/// Posts from friends are meant to be gotten in chunks, meaning you get X posts, and then get another amount of posts,
 		/// that are after the first X posts.
-        /// </summary>
+		/// </summary>
 		public async Task<List<Post>> GetFriendsPosts(List<User> friendsList, DateTime firstRequestIssued, int pageNumber, int pageSize)
 		{
 			List<Guid> friendsIds = friendsList.Select(f => f.Id).ToList();
@@ -49,14 +49,14 @@ namespace DevHive.Data.Repositories
 		}
 
 		/// <summary>
-        /// This returns a given amount of posts, that a user has made, created before "firstRequestIssued",
+		/// This returns a given amount of posts, that a user has made, created before "firstRequestIssued",
 		/// ordered from latest to oldest (time created).
 		/// PageSize specifies how many posts to get, and pageNumber specifices how many posts to skip (pageNumber * pageSize).
 		///
 		/// This method is used in the profile page.
 		/// Posts from friends are meant to be gotten in chunks, meaning you get X posts, and then get another amount of posts,
 		/// that are after the first X posts.
-        /// </summary>
+		/// </summary>
 		public async Task<List<Post>> GetUsersPosts(User user, DateTime firstRequestIssued, int pageNumber, int pageSize)
 		{
 			List<Post> posts = await this._context.Posts

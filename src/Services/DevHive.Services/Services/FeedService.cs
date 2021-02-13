@@ -27,7 +27,7 @@ namespace DevHive.Services.Services
 		/// <summary>
 		/// This method is used in the feed page.
 		/// See the FeedRepository "GetFriendsPosts" menthod for more information on how it works.
-        /// </summary>
+		/// </summary>
 		public async Task<ReadPageServiceModel> GetPage(GetPageServiceModel model)
 		{
 			User user = null;
@@ -58,7 +58,7 @@ namespace DevHive.Services.Services
 		/// <summary>
 		/// This method is used in the profile pages.
 		/// See the FeedRepository "GetUsersPosts" menthod for more information on how it works.
-        /// </summary>
+		/// </summary>
 		public async Task<ReadPageServiceModel> GetUserPage(GetPageServiceModel model)
 		{
 			User user = null;

@@ -12,7 +12,7 @@ using NUnit.Framework;
 
 namespace DevHive.Web.Tests
 {
-    [TestFixture]
+	[TestFixture]
 	public class PostControllerTests
 	{
 		const string MESSAGE = "Gosho Trapov";

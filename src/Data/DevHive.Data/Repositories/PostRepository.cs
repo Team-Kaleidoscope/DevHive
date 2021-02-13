@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
-    public class PostRepository : BaseRepository<Post>, IPostRepository
+	public class PostRepository : BaseRepository<Post>, IPostRepository
 	{
 		private readonly DevHiveContext _context;
 		private readonly IUserRepository _userRepository;
@@ -41,8 +41,8 @@ namespace DevHive.Data.Repositories
 		}
 
 		/// <summary>
-        /// This method returns the post that is made at exactly the given time and by the given creator
-        /// </summary>
+		/// This method returns the post that is made at exactly the given time and by the given creator
+		/// </summary>
 		public async Task<Post> GetPostByCreatorAndTimeCreatedAsync(Guid creatorId, DateTime timeCreated)
 		{
 			return await this._context.Posts
@@ -68,12 +68,12 @@ namespace DevHive.Data.Repositories
 				.SetValues(newEntity);
 
 			List<PostAttachments> postAttachments = new();
-			foreach(var attachment in newEntity.Attachments)
+			foreach (var attachment in newEntity.Attachments)
 				postAttachments.Add(attachment);
 			post.Attachments = postAttachments;
 
 			post.Comments.Clear();
-			foreach(var comment in newEntity.Comments)
+			foreach (var comment in newEntity.Comments)
 				post.Comments.Add(comment);
 
 			// post.Rating.Id = ratingId;

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using DevHive.Data.Interfaces;
@@ -29,8 +28,8 @@ namespace DevHive.Data.Repositories
 		}
 
 		/// <summary>
-        /// This method returns the comment that is made at exactly the given time and by the given creator
-        /// </summary>
+		/// This method returns the comment that is made at exactly the given time and by the given creator
+		/// </summary>
 		public async Task<Comment> GetCommentByIssuerAndTimeCreatedAsync(Guid issuerId, DateTime timeCreated)
 		{
 			return await this._context.Comments

@@ -54,9 +54,9 @@ namespace DevHive.Services.Services
 
 		#region Authentication
 		/// <summary>
-        /// Adds a new user to the database with the values from the given model.
+		/// Adds a new user to the database with the values from the given model.
 		/// Returns a JSON Web Token (that can be used for authorization)
-        /// </summary>
+		/// </summary>
 		public async Task<TokenModel> LoginUser(LoginServiceModel loginModel)
 		{
 			if (!await this._userRepository.DoesUsernameExistAsync(loginModel.UserName))
@@ -71,8 +71,8 @@ namespace DevHive.Services.Services
 		}
 
 		/// <summary>
-        /// Returns a new JSON Web Token (that can be used for authorization) for the given user
-        /// </summary>
+		/// Returns a new JSON Web Token (that can be used for authorization) for the given user
+		/// </summary>
 		public async Task<TokenModel> RegisterUser(RegisterServiceModel registerModel)
 		{
 			if (await this._userRepository.DoesUsernameExistAsync(registerModel.UserName))
@@ -143,8 +143,8 @@ namespace DevHive.Services.Services
 		}
 
 		/// <summary>
-        /// Uploads the given picture and assigns it's link to the user in the database
-        /// </summary>
+		/// Uploads the given picture and assigns it's link to the user in the database
+		/// </summary>
 		public async Task<ProfilePictureServiceModel> UpdateProfilePicture(UpdateProfilePictureServiceModel updateProfilePictureServiceModel)
 		{
 			User user = await this._userRepository.GetByIdAsync(updateProfilePictureServiceModel.UserId);
@@ -183,10 +183,10 @@ namespace DevHive.Services.Services
 
 		#region Validations
 		/// <summary>
-        /// Checks whether the given user, gotten by the "id" property,
+		/// Checks whether the given user, gotten by the "id" property,
 		/// is the same user as the one in the token (uness the user in the token has the admin role)
 		/// and the roles in the token are the same as those in the user, gotten by the id in the token
-        /// </summary>
+		/// </summary>
 		public async Task<bool> ValidJWT(Guid id, string rawTokenData)
 		{
 			// There is authorization name in the beginning, i.e. "Bearer eyJh..."
@@ -220,8 +220,8 @@ namespace DevHive.Services.Services
 		}
 
 		/// <summary>
-        /// Returns all values from a given claim type
-        /// </summary>
+		/// Returns all values from a given claim type
+		/// </summary>
 		private List<string> GetClaimTypeValues(string type, IEnumerable<Claim> claims)
 		{
 			List<string> toReturn = new();
@@ -234,10 +234,10 @@ namespace DevHive.Services.Services
 		}
 
 		/// <summary>
-        /// Checks whether the user in the model exists
+		/// Checks whether the user in the model exists
 		/// and whether the username in the model is already taken.
 		/// If the check fails (is false), it throws an exception, otherwise nothing happens
-        /// </summary>
+		/// </summary>
 		private async Task ValidateUserOnUpdate(UpdateUserServiceModel updateUserServiceModel)
 		{
 			if (!await this._userRepository.DoesUserExistAsync(updateUserServiceModel.Id))
@@ -259,9 +259,9 @@ namespace DevHive.Services.Services
 		}
 
 		/// <summary>
-        /// Return a new JSON Web Token, containing the user id, username and roles.
+		/// Return a new JSON Web Token, containing the user id, username and roles.
 		/// Tokens have an expiration time of 7 days.
-        /// </summary>
+		/// </summary>
 		private string WriteJWTSecurityToken(Guid userId, string username, HashSet<Role> roles)
 		{
 			byte[] signingKey = Encoding.ASCII.GetBytes(_jwtOptions.Secret);

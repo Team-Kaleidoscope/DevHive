@@ -12,7 +12,7 @@ using NUnit.Framework;
 
 namespace DevHive.Web.Tests
 {
-    [TestFixture]
+	[TestFixture]
 	public class RoleControllerTests
 	{
 		const string NAME = "Gosho Trapov";
