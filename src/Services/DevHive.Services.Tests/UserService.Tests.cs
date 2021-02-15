@@ -29,7 +29,7 @@ namespace DevHive.Services.Tests
 		private Mock<ILanguageRepository> LanguageRepositoryMock { get; set; }
 		private Mock<ITechnologyRepository> TechnologyRepositoryMock { get; set; }
 		private Mock<IMapper> MapperMock { get; set; }
-		private JWTOptions JWTOptions { get; set; }
+		private JwtOptions JwtOptions { get; set; }
 		private UserService UserService { get; set; }
 
 		#region SetUps
@@ -41,10 +41,10 @@ namespace DevHive.Services.Tests
 			this.CloudServiceMock = new Mock<ICloudService>();
 			this.LanguageRepositoryMock = new Mock<ILanguageRepository>();
 			this.TechnologyRepositoryMock = new Mock<ITechnologyRepository>();
-			this.JWTOptions = new JWTOptions("gXfQlU6qpDleFWyimscjYcT3tgFsQg3yoFjcvSLxG56n1Vu2yptdIUq254wlJWjm");
+			this.JwtOptions = new JwtOptions("gXfQlU6qpDleFWyimscjYcT3tgFsQg3yoFjcvSLxG56n1Vu2yptdIUq254wlJWjm");
 			this.MapperMock = new Mock<IMapper>();
 			// TODO: give actual UserManager and RoleManager to UserService
-			this.UserService = new UserService(this.UserRepositoryMock.Object, this.LanguageRepositoryMock.Object, this.RoleRepositoryMock.Object, this.TechnologyRepositoryMock.Object, null, null, this.MapperMock.Object, this.JWTOptions, this.CloudServiceMock.Object);
+			this.UserService = new UserService(this.UserRepositoryMock.Object, this.LanguageRepositoryMock.Object, this.RoleRepositoryMock.Object, this.TechnologyRepositoryMock.Object, null, null, this.MapperMock.Object, this.JwtOptions, this.CloudServiceMock.Object);
 		}
 		#endregion
 
@@ -364,7 +364,7 @@ namespace DevHive.Services.Tests
 		#region HelperMethods
 		private string WriteJWTSecurityToken(Guid userId, string username, HashSet<Role> roles)
 		{
-			byte[] signingKey = Encoding.ASCII.GetBytes(this.JWTOptions.Secret);
+			byte[] signingKey = Encoding.ASCII.GetBytes(this.JwtOptions.Secret);
 			HashSet<Claim> claims = new()
 			{
 				new Claim("ID", $"{userId}"),

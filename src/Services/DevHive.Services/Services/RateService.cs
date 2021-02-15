@@ -28,7 +28,7 @@ namespace DevHive.Services.Services
 		{
 			throw new NotImplementedException();
 			// if (!await this._postRepository.DoesPostExist(ratePostServiceModel.PostId))
-			// 	throw new ArgumentException("Post does not exist!");
+				// throw new ArgumentException("Post does not exist!");
 
 			// if (!await this._userRepository.DoesUserExistAsync(ratePostServiceModel.UserId))
 			// 	throw new ArgumentException("User does not exist!");

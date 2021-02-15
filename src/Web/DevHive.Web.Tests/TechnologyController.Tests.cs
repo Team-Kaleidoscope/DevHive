@@ -84,8 +84,8 @@ namespace DevHive.Web.Tests
 
 			Assert.IsInstanceOf<BadRequestObjectResult>(result);
 
-			BadRequestObjectResult badRequsetObjectResult = result as BadRequestObjectResult;
-			string resultMessage = badRequsetObjectResult.Value.ToString();
+			BadRequestObjectResult badRequestObjectResult = result as BadRequestObjectResult;
+			string resultMessage = badRequestObjectResult.Value.ToString();
 
 			Assert.AreEqual(errorMessage, resultMessage);
 		}

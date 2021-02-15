@@ -57,7 +57,7 @@ namespace DevHive.Services.Services
 
 		/// <summary>
 		/// This method is used in the profile pages.
-		/// See the FeedRepository "GetUsersPosts" menthod for more information on how it works.
+		/// See the FeedRepository "GetUsersPosts" method for more information on how it works.
 		/// </summary>
 		public async Task<ReadPageServiceModel> GetUserPage(GetPageServiceModel model)
 		{

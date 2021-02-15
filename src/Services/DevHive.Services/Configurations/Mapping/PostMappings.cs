@@ -12,7 +12,6 @@ namespace DevHive.Services.Configurations.Mapping
 		public PostMappings()
 		{
 			CreateMap<CreatePostServiceModel, Post>();
-			// .ForMember(dest => dest.Files, src => src.Ignore());
 			CreateMap<UpdatePostServiceModel, Post>()
 				.ForMember(dest => dest.Id, src => src.MapFrom(p => p.PostId))
 				// .ForMember(dest => dest.Files, src => src.Ignore())

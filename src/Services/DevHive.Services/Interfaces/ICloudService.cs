@@ -9,8 +9,6 @@ namespace DevHive.Services.Interfaces
 	{
 		Task<List<string>> UploadFilesToCloud(List<IFormFile> formFiles);
 
-		// Task<List<FileContentResult>> GetFilesFromCloud(List<string> fileUrls);
-
 		Task<bool> RemoveFilesFromCloud(List<string> fileUrls);
 	}
 }

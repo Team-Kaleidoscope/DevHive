@@ -33,17 +33,17 @@ namespace DevHive.Web.Tests
 		public void LoginUser_ReturnsOkObjectResult_WhenUserIsSuccessfullyLoggedIn()
 		{
 			Guid id = Guid.NewGuid();
-			LoginWebModel loginWebModel = new LoginWebModel
+			LoginWebModel loginWebModel = new()
 			{
 				UserName = USERNAME
 			};
-			LoginServiceModel loginServiceModel = new LoginServiceModel
+			LoginServiceModel loginServiceModel = new()
 			{
 				UserName = USERNAME
 			};
 			string token = "goshotrapov";
-			TokenModel tokenModel = new TokenModel(token);
-			TokenWebModel tokenWebModel = new TokenWebModel(token);
+			TokenModel tokenModel = new(token);
+			TokenWebModel tokenWebModel = new(token);
 
 			this.MapperMock.Setup(p => p.Map<LoginServiceModel>(It.IsAny<LoginWebModel>())).Returns(loginServiceModel);
 			this.MapperMock.Setup(p => p.Map<TokenWebModel>(It.IsAny<TokenModel>())).Returns(tokenWebModel);
@@ -61,18 +61,17 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void RegisterUser_ReturnsOkObjectResult_WhenUserIsSuccessfullyRegistered()
 		{
-			Guid id = Guid.NewGuid();
-			RegisterWebModel registerWebModel = new RegisterWebModel
+			RegisterWebModel registerWebModel = new()
 			{
 				UserName = USERNAME
 			};
-			RegisterServiceModel registerServiceModel = new RegisterServiceModel
+			RegisterServiceModel registerServiceModel = new()
 			{
 				UserName = USERNAME
 			};
 			string token = "goshotrapov";
-			TokenModel tokenModel = new TokenModel(token);
-			TokenWebModel tokenWebModel = new TokenWebModel(token);
+			TokenModel tokenModel = new(token);
+			TokenWebModel tokenWebModel = new(token);
 
 			this.MapperMock.Setup(p => p.Map<RegisterServiceModel>(It.IsAny<RegisterWebModel>())).Returns(registerServiceModel);
 			this.MapperMock.Setup(p => p.Map<TokenWebModel>(It.IsAny<TokenModel>())).Returns(tokenWebModel);
@@ -95,11 +94,11 @@ namespace DevHive.Web.Tests
 		{
 			Guid id = Guid.NewGuid();
 
-			UserServiceModel userServiceModel = new UserServiceModel
+			UserServiceModel userServiceModel = new()
 			{
 				UserName = USERNAME
 			};
-			UserWebModel userWebModel = new UserWebModel
+			UserWebModel userWebModel = new()
 			{
 				UserName = USERNAME
 			};
@@ -121,12 +120,6 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void GetById_ReturnsUnauthorizedResult_WhenUserIsNotAuthorized()
 		{
-			Guid id = Guid.NewGuid();
-			UserWebModel userWebModel = new UserWebModel
-			{
-				UserName = USERNAME
-			};
-
 			this.UserServiceMock.Setup(p => p.ValidJWT(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(false));
 
 			IActionResult result = this.UserController.GetById(Guid.NewGuid(), null).Result;
@@ -137,12 +130,11 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void GetUser_ReturnsTheUser_WhenItExists()
 		{
-			Guid id = Guid.NewGuid();
-			UserWebModel userWebModel = new UserWebModel
+			UserWebModel userWebModel = new()
 			{
 				UserName = USERNAME
 			};
-			UserServiceModel userServiceModel = new UserServiceModel
+			UserServiceModel userServiceModel = new()
 			{
 				UserName = USERNAME
 			};
@@ -166,15 +158,15 @@ namespace DevHive.Web.Tests
 		public void Update_ShouldReturnOkResult_WhenUserIsUpdatedSuccessfully()
 		{
 			Guid id = Guid.NewGuid();
-			UpdateUserWebModel updateUserWebModel = new UpdateUserWebModel
+			UpdateUserWebModel updateUserWebModel = new()
 			{
 				UserName = USERNAME
 			};
-			UpdateUserServiceModel updateUserServiceModel = new UpdateUserServiceModel
+			UpdateUserServiceModel updateUserServiceModel = new()
 			{
 				UserName = USERNAME
 			};
-			UserServiceModel userServiceModel = new UserServiceModel
+			UserServiceModel userServiceModel = new()
 			{
 				UserName = USERNAME
 			};
@@ -192,13 +184,13 @@ namespace DevHive.Web.Tests
 		public void UpdateProfilePicture_ShouldReturnOkObjectResult_WhenProfilePictureIsUpdatedSuccessfully()
 		{
 			string profilePictureURL = "goshotrapov";
-			UpdateProfilePictureWebModel updateProfilePictureWebModel = new UpdateProfilePictureWebModel();
-			UpdateProfilePictureServiceModel updateProfilePictureServiceModel = new UpdateProfilePictureServiceModel();
-			ProfilePictureServiceModel profilePictureServiceModel = new ProfilePictureServiceModel
+			UpdateProfilePictureWebModel updateProfilePictureWebModel = new();
+			UpdateProfilePictureServiceModel updateProfilePictureServiceModel = new();
+			ProfilePictureServiceModel profilePictureServiceModel = new()
 			{
 				ProfilePictureURL = profilePictureURL
 			};
-			ProfilePictureWebModel profilePictureWebModel = new ProfilePictureWebModel
+			ProfilePictureWebModel profilePictureWebModel = new()
 			{
 				ProfilePictureURL = profilePictureURL
 			};

@@ -8,11 +8,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DevHive.Web.Configurations.Extensions
 {
-	public static class JWTExtensions
+	public static class ConfigureJwt
 	{
 		public static void JWTConfiguration(this IServiceCollection services, IConfiguration configuration)
 		{
-			services.AddSingleton(new JWTOptions(configuration
+			services.AddSingleton(new JwtOptions(configuration
 						.GetSection("AppSettings")
 						.GetSection("Secret")
 						.Value));

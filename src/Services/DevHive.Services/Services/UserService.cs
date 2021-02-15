@@ -28,7 +28,7 @@ namespace DevHive.Services.Services
 		private readonly UserManager<User> _userManager;
 		private readonly RoleManager<Role> _roleManager;
 		private readonly IMapper _userMapper;
-		private readonly JWTOptions _jwtOptions;
+		private readonly JwtOptions _jwtOptions;
 		private readonly ICloudService _cloudService;
 
 		public UserService(IUserRepository userRepository,
@@ -38,7 +38,7 @@ namespace DevHive.Services.Services
 			UserManager<User> userManager,
 			RoleManager<Role> roleManager,
 			IMapper mapper,
-			JWTOptions jwtOptions,
+			JwtOptions jwtOptions,
 			ICloudService cloudService)
 		{
 			this._userRepository = userRepository;
@@ -128,7 +128,7 @@ namespace DevHive.Services.Services
 			User currentUser = await this._userRepository.GetByIdAsync(updateUserServiceModel.Id);
 			await this.PopulateUserModel(currentUser, updateUserServiceModel);
 
-			if (updateUserServiceModel.Friends.Count() > 0)
+			if (updateUserServiceModel.Friends.Count > 0)
 				await this.CreateRelationToFriends(currentUser, updateUserServiceModel.Friends.ToList());
 			else
 				currentUser.Friends.Clear();
@@ -157,7 +157,7 @@ namespace DevHive.Services.Services
 			}
 
 			string fileUrl = (await this._cloudService.UploadFilesToCloud(new List<IFormFile> { updateProfilePictureServiceModel.Picture }))[0] ??
-				throw new ArgumentNullException("Unable to upload profile picture to cloud");
+				throw new ArgumentException("Unable to upload profile picture to cloud");
 
 			bool successful = await this._userRepository.UpdateProfilePicture(updateProfilePictureServiceModel.UserId, fileUrl);
 
@@ -201,16 +201,13 @@ namespace DevHive.Services.Services
 			/* Check if user is trying to do something to himself, unless he's an admin */
 
 			/* Check roles */
-			if (!jwtRoleNames.Contains(Role.AdminRole))
-				if (user.Id != id)
-					return false;
+			if (!jwtRoleNames.Contains(Role.AdminRole) && user.Id != id)
+				return false;
 
 			// Check if jwt contains all user roles (if it doesn't, jwt is either old or tampered with)
 			foreach (var role in user.Roles)
-			{
 				if (!jwtRoleNames.Contains(role.Name))
 					return false;
-			}
 
 			// Check if jwt contains only roles of user
 			if (jwtRoleNames.Count != user.Roles.Count)

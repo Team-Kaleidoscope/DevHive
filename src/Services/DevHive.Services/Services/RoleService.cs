@@ -5,7 +5,6 @@ using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
 using DevHive.Services.Interfaces;
 using DevHive.Services.Models.Role;
-using DevHive.Services.Models.Language;
 
 namespace DevHive.Services.Services
 {
@@ -20,17 +19,17 @@ namespace DevHive.Services.Services
 			this._roleMapper = mapper;
 		}
 
-		public async Task<Guid> CreateRole(CreateRoleServiceModel roleServiceModel)
+		public async Task<Guid> CreateRole(CreateRoleServiceModel createRoleServiceModel)
 		{
-			if (await this._roleRepository.DoesNameExist(roleServiceModel.Name))
+			if (await this._roleRepository.DoesNameExist(createRoleServiceModel.Name))
 				throw new ArgumentException("Role already exists!");
 
-			Role role = this._roleMapper.Map<Role>(roleServiceModel);
+			Role role = this._roleMapper.Map<Role>(createRoleServiceModel);
 			bool success = await this._roleRepository.AddAsync(role);
 
 			if (success)
 			{
-				Role newRole = await this._roleRepository.GetByNameAsync(roleServiceModel.Name);
+				Role newRole = await this._roleRepository.GetByNameAsync(createRoleServiceModel.Name);
 				return newRole.Id;
 			}
 			else

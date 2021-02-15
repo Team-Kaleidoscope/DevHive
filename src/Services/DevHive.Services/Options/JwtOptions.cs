@@ -2,9 +2,9 @@ using Microsoft.Extensions.Options;
 
 namespace DevHive.Services.Options
 {
-	public class JWTOptions
+	public class JwtOptions
 	{
-		public JWTOptions(string secret)
+		public JwtOptions(string secret)
 		{
 			this.Secret = secret;
 		}

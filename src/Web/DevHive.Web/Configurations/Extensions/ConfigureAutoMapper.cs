@@ -1,6 +1,5 @@
 using System;
 using AutoMapper;
-//using AutoMapper.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,7 +14,7 @@ namespace DevHive.Web.Configurations.Extensions
 
 		public static void UseAutoMapperConfiguration(this IApplicationBuilder app)
 		{
-			var config = new MapperConfiguration(cfg =>
+			_ = new MapperConfiguration(cfg =>
 			{
 				cfg.AllowNullCollections = true;
 			});

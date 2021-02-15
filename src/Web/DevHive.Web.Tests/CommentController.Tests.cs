@@ -35,11 +35,11 @@ namespace DevHive.Web.Tests
 		public void AddComment_ReturnsOkObjectResult_WhenCommentIsSuccessfullyCreated()
 		{
 			Guid id = Guid.NewGuid();
-			CreateCommentWebModel createCommentWebModel = new CreateCommentWebModel
+			CreateCommentWebModel createCommentWebModel = new()
 			{
 				Message = MESSAGE
 			};
-			CreateCommentServiceModel createCommentServiceModel = new CreateCommentServiceModel
+			CreateCommentServiceModel createCommentServiceModel = new()
 			{
 				Message = MESSAGE
 			};
@@ -67,11 +67,11 @@ namespace DevHive.Web.Tests
 		public void AddComment_ReturnsBadRequestObjectResult_WhenCommentIsNotCreatedSuccessfully()
 		{
 			Guid id = Guid.NewGuid();
-			CreateCommentWebModel createCommentWebModel = new CreateCommentWebModel
+			CreateCommentWebModel createCommentWebModel = new()
 			{
 				Message = MESSAGE
 			};
-			CreateCommentServiceModel createCommentServiceModel = new CreateCommentServiceModel
+			CreateCommentServiceModel createCommentServiceModel = new()
 			{
 				Message = MESSAGE
 			};
@@ -86,8 +86,8 @@ namespace DevHive.Web.Tests
 
 			Assert.IsInstanceOf<BadRequestObjectResult>(result);
 
-			BadRequestObjectResult badRequsetObjectResult = result as BadRequestObjectResult;
-			string resultMessage = badRequsetObjectResult.Value.ToString();
+			BadRequestObjectResult badRequestObjectResult = result as BadRequestObjectResult;
+			string resultMessage = badRequestObjectResult.Value.ToString();
 
 			Assert.AreEqual(errorMessage, resultMessage);
 		}
@@ -95,8 +95,7 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void AddComment_ReturnsUnauthorizedResult_WhenUserIsNotAuthorized()
 		{
-			Guid id = Guid.NewGuid();
-			CreateCommentWebModel createCommentWebModel = new CreateCommentWebModel
+			CreateCommentWebModel createCommentWebModel = new()
 			{
 				Message = MESSAGE
 			};
@@ -115,11 +114,11 @@ namespace DevHive.Web.Tests
 		{
 			Guid id = Guid.NewGuid();
 
-			ReadCommentServiceModel readCommentServiceModel = new ReadCommentServiceModel
+			ReadCommentServiceModel readCommentServiceModel = new()
 			{
 				Message = MESSAGE
 			};
-			ReadCommentWebModel readCommentWebModel = new ReadCommentWebModel
+			ReadCommentWebModel readCommentWebModel = new()
 			{
 				Message = MESSAGE
 			};
@@ -132,7 +131,7 @@ namespace DevHive.Web.Tests
 			Assert.IsInstanceOf<OkObjectResult>(result);
 
 			OkObjectResult okObjectResult = result as OkObjectResult;
-			ReadCommentWebModel resultModel = okObjectResult.Value as Models.Comment.ReadCommentWebModel;
+			ReadCommentWebModel resultModel = okObjectResult.Value as ReadCommentWebModel;
 
 			Assert.AreEqual(MESSAGE, resultModel.Message);
 		}
@@ -143,11 +142,11 @@ namespace DevHive.Web.Tests
 		public void Update_ShouldReturnOkResult_WhenCommentIsUpdatedSuccessfully()
 		{
 			Guid id = Guid.NewGuid();
-			UpdateCommentWebModel updateCommentWebModel = new UpdateCommentWebModel
+			UpdateCommentWebModel updateCommentWebModel = new()
 			{
 				NewMessage = MESSAGE
 			};
-			UpdateCommentServiceModel updateCommentServiceModel = new UpdateCommentServiceModel
+			UpdateCommentServiceModel updateCommentServiceModel = new()
 			{
 				NewMessage = MESSAGE
 			};
@@ -171,11 +170,11 @@ namespace DevHive.Web.Tests
 		public void Update_ShouldReturnBadObjectResult_WhenCommentIsNotUpdatedSuccessfully()
 		{
 			string message = "Unable to update comment!";
-			UpdateCommentWebModel updateCommentWebModel = new UpdateCommentWebModel
+			UpdateCommentWebModel updateCommentWebModel = new()
 			{
 				NewMessage = MESSAGE
 			};
-			UpdateCommentServiceModel updateCommentServiceModel = new UpdateCommentServiceModel
+			UpdateCommentServiceModel updateCommentServiceModel = new()
 			{
 				NewMessage = MESSAGE
 			};
@@ -196,7 +195,7 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void Update_ShouldReturnUnauthorizedResult_WhenUserIsNotAuthorized()
 		{
-			UpdateCommentWebModel updateCommentWebModel = new UpdateCommentWebModel
+			UpdateCommentWebModel updateCommentWebModel = new()
 			{
 				NewMessage = MESSAGE
 			};
@@ -224,7 +223,7 @@ namespace DevHive.Web.Tests
 		}
 
 		[Test]
-		public void DeletComment_ReturnsBadRequestObjectResult_WhenCommentIsNotDeletedSuccessfully()
+		public void DeleteComment_ReturnsBadRequestObjectResult_WhenCommentIsNotDeletedSuccessfully()
 		{
 			string message = "Could not delete Comment";
 			Guid id = Guid.NewGuid();
@@ -243,7 +242,7 @@ namespace DevHive.Web.Tests
 		}
 
 		[Test]
-		public void DeletComment_ReturnsUnauthorizedResult_WhenUserIsNotAuthorized()
+		public void DeleteComment_ReturnsUnauthorizedResult_WhenUserIsNotAuthorized()
 		{
 			this.CommentServiceMock.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(false));
 

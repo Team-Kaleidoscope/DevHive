@@ -3,19 +3,20 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
-    <PackageReference Include="AutoMapper" Version="10.1.1" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-    <PackageReference Include="CloudinaryDotNet" Version="1.14.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0"/>
+    <PackageReference Include="AutoMapper" Version="10.1.1"/>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1"/>
+    <PackageReference Include="CloudinaryDotNet" Version="1.14.0"/>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.18.0.27296"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Data\DevHive.Data\DevHive.Data.csproj" />
-    <ProjectReference Include="..\DevHive.Services.Models\DevHive.Services.Models.csproj" />
+    <ProjectReference Include="..\..\Data\DevHive.Data\DevHive.Data.csproj"/>
+    <ProjectReference Include="..\DevHive.Services.Models\DevHive.Services.Models.csproj"/>
   </ItemGroup>
   <PropertyGroup>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>

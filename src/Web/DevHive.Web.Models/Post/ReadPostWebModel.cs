@@ -21,6 +21,5 @@ namespace DevHive.Web.Models.Post
 		public List<IdModel> Comments { get; set; }
 
 		public List<string> FileUrls { get; set; }
-		// public List<FileContentResult> Files { get; set; }
 	}
 }

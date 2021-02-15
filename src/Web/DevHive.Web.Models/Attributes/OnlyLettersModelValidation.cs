@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DevHive.Web.Models.Attributes
 {
-	public class OnlyLetters : ValidationAttribute
+	public class OnlyLettersAttribute : ValidationAttribute
 	{
 		public override bool IsValid(object value)
 		{
@@ -11,7 +11,7 @@ namespace DevHive.Web.Models.Attributes
 
 			foreach (char ch in stringValue)
 			{
-				if (!Char.IsLetter(ch))
+				if (!char.IsLetter(ch))
 					return false;
 			}
 			return true;

@@ -41,7 +41,7 @@ namespace DevHive.Services.Services
 			if (createPostServiceModel.Files.Count != 0)
 			{
 				List<string> fileUrls = await _cloudService.UploadFilesToCloud(createPostServiceModel.Files);
-				post.Attachments = this.GetPostAttachmentsFromUrls(post, fileUrls);
+				post.Attachments = GetPostAttachmentsFromUrls(post, fileUrls);
 			}
 
 			post.Creator = await this._userRepository.GetByIdAsync(createPostServiceModel.CreatorId);
@@ -105,8 +105,8 @@ namespace DevHive.Services.Services
 				}
 
 				List<string> fileUrls = await _cloudService.UploadFilesToCloud(updatePostServiceModel.Files) ??
-					throw new ArgumentNullException("Unable to upload images to cloud");
-				post.Attachments = this.GetPostAttachmentsFromUrls(post, fileUrls);
+					throw new ArgumentException("Unable to upload images to cloud!");
+				post.Attachments = GetPostAttachmentsFromUrls(post, fileUrls);
 			}
 
 			post.Creator = await this._userRepository.GetByIdAsync(updatePostServiceModel.CreatorId);
@@ -202,8 +202,7 @@ namespace DevHive.Services.Services
 		{
 			JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(rawTokenData.Remove(0, 7));
 
-			Guid jwtUserId = Guid.Parse(this.GetClaimTypeValues("ID", jwt.Claims).First());
-			//HashSet<string> jwtRoleNames = this.GetClaimTypeValues("role", jwt.Claims);
+			Guid jwtUserId = Guid.Parse(GetClaimTypeValues("ID", jwt.Claims).First());
 
 			User user = await this._userRepository.GetByIdAsync(jwtUserId) ??
 				throw new ArgumentException("User does not exist!");
@@ -214,7 +213,7 @@ namespace DevHive.Services.Services
 		/// <summary>
 		/// Returns all values from a given claim type
 		/// </summary>
-		private List<string> GetClaimTypeValues(string type, IEnumerable<Claim> claims)
+		private static List<string> GetClaimTypeValues(string type, IEnumerable<Claim> claims)
 		{
 			List<string> toReturn = new();
 
@@ -227,9 +226,9 @@ namespace DevHive.Services.Services
 		#endregion
 
 		#region Misc
-		private List<PostAttachments> GetPostAttachmentsFromUrls(Post post, List<string> fileUrls)
+		private static List<PostAttachments> GetPostAttachmentsFromUrls(Post post, List<string> fileUrls)
 		{
-			List<PostAttachments> postAttachments = new List<PostAttachments>();
+			List<PostAttachments> postAttachments = new();
 			foreach (string url in fileUrls)
 				postAttachments.Add(new PostAttachments { Post = post, FileUrl = url });
 			return postAttachments;

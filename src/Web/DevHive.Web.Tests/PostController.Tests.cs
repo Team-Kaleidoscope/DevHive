@@ -32,11 +32,11 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void CreatePost_ReturnsOkObjectResult_WhenPostIsSuccessfullyCreated()
 		{
-			CreatePostWebModel createPostWebModel = new CreatePostWebModel
+			CreatePostWebModel createPostWebModel = new()
 			{
 				Message = MESSAGE
 			};
-			CreatePostServiceModel createPostServiceModel = new CreatePostServiceModel
+			CreatePostServiceModel createPostServiceModel = new()
 			{
 				Message = MESSAGE
 			};
@@ -64,11 +64,11 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void CreatePost_ReturnsBadRequestObjectResult_WhenPostIsNotCreatedSuccessfully()
 		{
-			CreatePostWebModel createTechnologyWebModel = new CreatePostWebModel
+			CreatePostWebModel createTechnologyWebModel = new()
 			{
 				Message = MESSAGE
 			};
-			CreatePostServiceModel createTechnologyServiceModel = new CreatePostServiceModel
+			CreatePostServiceModel createTechnologyServiceModel = new()
 			{
 				Message = MESSAGE
 			};
@@ -83,8 +83,8 @@ namespace DevHive.Web.Tests
 
 			Assert.IsInstanceOf<BadRequestObjectResult>(result);
 
-			BadRequestObjectResult badRequsetObjectResult = result as BadRequestObjectResult;
-			string resultMessage = badRequsetObjectResult.Value.ToString();
+			BadRequestObjectResult badRequestObjectResult = result as BadRequestObjectResult;
+			string resultMessage = badRequestObjectResult.Value.ToString();
 
 			Assert.AreEqual(errorMessage, resultMessage);
 		}
@@ -92,8 +92,7 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void CreatePost_ReturnsUnauthorizedResult_WhenUserIsNotAuthorized()
 		{
-			Guid id = Guid.NewGuid();
-			CreatePostWebModel createPostWebModel = new CreatePostWebModel
+			CreatePostWebModel createPostWebModel = new()
 			{
 				Message = MESSAGE
 			};
@@ -112,11 +111,11 @@ namespace DevHive.Web.Tests
 		{
 			Guid id = Guid.NewGuid();
 
-			ReadPostServiceModel readPostServiceModel = new ReadPostServiceModel
+			ReadPostServiceModel readPostServiceModel = new()
 			{
 				Message = MESSAGE
 			};
-			ReadPostWebModel readPostWebModel = new ReadPostWebModel
+			ReadPostWebModel readPostWebModel = new()
 			{
 				Message = MESSAGE
 			};
@@ -140,11 +139,11 @@ namespace DevHive.Web.Tests
 		public void Update_ShouldReturnOkResult_WhenPostIsUpdatedSuccessfully()
 		{
 			Guid id = Guid.NewGuid();
-			UpdatePostWebModel updatePostWebModel = new UpdatePostWebModel
+			UpdatePostWebModel updatePostWebModel = new()
 			{
 				NewMessage = MESSAGE
 			};
-			UpdatePostServiceModel updatePostServiceModel = new UpdatePostServiceModel
+			UpdatePostServiceModel updatePostServiceModel = new()
 			{
 				NewMessage = MESSAGE
 			};
@@ -163,11 +162,11 @@ namespace DevHive.Web.Tests
 		{
 			Guid id = Guid.NewGuid();
 			string message = "Could not update post!";
-			UpdatePostWebModel updatePostWebModel = new UpdatePostWebModel
+			UpdatePostWebModel updatePostWebModel = new()
 			{
 				NewMessage = MESSAGE
 			};
-			UpdatePostServiceModel updatePostServiceModel = new UpdatePostServiceModel
+			UpdatePostServiceModel updatePostServiceModel = new()
 			{
 				NewMessage = MESSAGE
 			};
@@ -188,7 +187,7 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void Update_ShouldReturnUnauthorizedResult_WhenUserIsNotAuthorized()
 		{
-			UpdatePostWebModel updatePostWebModel = new UpdatePostWebModel
+			UpdatePostWebModel updatePostWebModel = new()
 			{
 				NewMessage = MESSAGE
 			};

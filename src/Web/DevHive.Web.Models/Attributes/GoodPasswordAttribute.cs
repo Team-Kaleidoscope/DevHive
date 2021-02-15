@@ -1,9 +1,8 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace DevHive.Web.Models.Attributes
 {
-	public class GoodPassword : ValidationAttribute
+	public class GoodPasswordAttribute : ValidationAttribute
 	{
 		public override bool IsValid(object value)
 		{
@@ -11,7 +10,7 @@ namespace DevHive.Web.Models.Attributes
 
 			for (int i = 0; i < stringValue.Length; i++)
 			{
-				if (Char.IsDigit(stringValue[i]))
+				if (char.IsDigit(stringValue[i]))
 				{
 					base.ErrorMessage = "Password must be atleast 5 characters long!";
 					return stringValue.Length >= 5;

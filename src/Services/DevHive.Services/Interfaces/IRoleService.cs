@@ -6,7 +6,7 @@ namespace DevHive.Services.Interfaces
 {
 	public interface IRoleService
 	{
-		Task<Guid> CreateRole(CreateRoleServiceModel roleServiceModel);
+		Task<Guid> CreateRole(CreateRoleServiceModel createRoleServiceModel);
 
 		Task<RoleServiceModel> GetRoleById(Guid id);
 
