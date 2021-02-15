@@ -142,7 +142,6 @@ namespace DevHive.Services.Services
 			JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(rawTokenData.Remove(0, 7));
 
 			Guid jwtUserId = Guid.Parse(this.GetClaimTypeValues("ID", jwt.Claims).First());
-			//HashSet<string> jwtRoleNames = this.GetClaimTypeValues("role", jwt.Claims);
 
 			User user = await this._userRepository.GetByIdAsync(jwtUserId) ??
 				throw new ArgumentException("User does not exist!");

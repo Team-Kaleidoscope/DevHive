@@ -13,7 +13,7 @@ namespace DevHive.Services.Interfaces
 		Task<UserServiceModel> GetUserByUsername(string username);
 		Task<UserServiceModel> GetUserById(Guid id);
 
-		Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateModel);
+		Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateUserServiceModel);
 		Task<ProfilePictureServiceModel> UpdateProfilePicture(UpdateProfilePictureServiceModel updateProfilePictureServiceModel);
 
 		Task<bool> DeleteUser(Guid id);

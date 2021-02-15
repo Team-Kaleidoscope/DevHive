@@ -8,7 +8,7 @@ namespace DevHive.Data.Interfaces
 {
 	public interface ITechnologyRepository : IRepository<Technology>
 	{
-		Task<Technology> GetByNameAsync(string name);
+		Task<Technology> GetByNameAsync(string technologyName);
 		HashSet<Technology> GetTechnologies();
 
 		Task<bool> DoesTechnologyExistAsync(Guid id);

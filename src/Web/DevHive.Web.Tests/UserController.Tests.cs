@@ -32,7 +32,6 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void LoginUser_ReturnsOkObjectResult_WhenUserIsSuccessfullyLoggedIn()
 		{
-			Guid id = Guid.NewGuid();
 			LoginWebModel loginWebModel = new()
 			{
 				UserName = USERNAME

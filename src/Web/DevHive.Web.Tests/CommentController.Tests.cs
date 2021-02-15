@@ -66,7 +66,6 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void AddComment_ReturnsBadRequestObjectResult_WhenCommentIsNotCreatedSuccessfully()
 		{
-			Guid id = Guid.NewGuid();
 			CreateCommentWebModel createCommentWebModel = new()
 			{
 				Message = MESSAGE
@@ -113,7 +112,6 @@ namespace DevHive.Web.Tests
 		public void GetById_ReturnsTheComment_WhenItExists()
 		{
 			Guid id = Guid.NewGuid();
-
 			ReadCommentServiceModel readCommentServiceModel = new()
 			{
 				Message = MESSAGE

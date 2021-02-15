@@ -28,14 +28,14 @@ namespace DevHive.Services.Services
 		/// This method is used in the feed page.
 		/// See the FeedRepository "GetFriendsPosts" menthod for more information on how it works.
 		/// </summary>
-		public async Task<ReadPageServiceModel> GetPage(GetPageServiceModel model)
+		public async Task<ReadPageServiceModel> GetPage(GetPageServiceModel getPageServiceModel)
 		{
 			User user = null;
 
-			if (model.UserId != Guid.Empty)
-				user = await this._userRepository.GetByIdAsync(model.UserId);
-			else if (!string.IsNullOrEmpty(model.Username))
-				user = await this._userRepository.GetByUsernameAsync(model.Username);
+			if (getPageServiceModel.UserId != Guid.Empty)
+				user = await this._userRepository.GetByIdAsync(getPageServiceModel.UserId);
+			else if (!string.IsNullOrEmpty(getPageServiceModel.Username))
+				user = await this._userRepository.GetByUsernameAsync(getPageServiceModel.Username);
 			else
 				throw new ArgumentException("Invalid given data!");
 
@@ -46,7 +46,7 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("User has no friends to get feed from!");
 
 			List<Post> posts = await this._feedRepository
-				.GetFriendsPosts(user.Friends.ToList(), model.FirstRequestIssued, model.PageNumber, model.PageSize);
+				.GetFriendsPosts(user.Friends.ToList(), getPageServiceModel.FirstRequestIssued, getPageServiceModel.PageNumber, getPageServiceModel.PageSize);
 
 			ReadPageServiceModel readPageServiceModel = new();
 			foreach (Post post in posts)

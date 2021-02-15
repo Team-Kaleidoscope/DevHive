@@ -6,7 +6,7 @@ namespace DevHive.Services.Interfaces
 {
 	public interface ICommentService
 	{
-		Task<Guid> AddComment(CreateCommentServiceModel createPostServiceModel);
+		Task<Guid> AddComment(CreateCommentServiceModel createCommentServiceModel);
 
 		Task<ReadCommentServiceModel> GetCommentById(Guid id);
 

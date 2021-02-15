@@ -10,7 +10,7 @@ namespace DevHive.Data.Interfaces
 	{
 		Task<bool> AddNewPostToCreator(Guid userId, Post post);
 
-		Task<Post> GetPostByCreatorAndTimeCreatedAsync(Guid issuerId, DateTime timeCreated);
+		Task<Post> GetPostByCreatorAndTimeCreatedAsync(Guid creatorId, DateTime timeCreated);
 		Task<List<string>> GetFileUrls(Guid postId);
 
 		Task<bool> DoesPostExist(Guid postId);

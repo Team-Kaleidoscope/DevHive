@@ -35,7 +35,6 @@ namespace DevHive.Web.Configurations.Extensions
 				{
 					OnTokenValidated = context =>
 					{
-						// TODO: add more authentication
 						return Task.CompletedTask;
 					}
 				};
@@ -43,7 +42,6 @@ namespace DevHive.Web.Configurations.Extensions
 				x.SaveToken = true;
 				x.TokenValidationParameters = new TokenValidationParameters
 				{
-					//ValidateIssuerSigningKey = false,
 					IssuerSigningKey = new SymmetricSecurityKey(key),
 					ValidateIssuer = false,
 					ValidateAudience = false

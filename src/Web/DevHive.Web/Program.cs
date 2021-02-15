@@ -3,6 +3,8 @@ using Microsoft.Extensions.Hosting;
 
 namespace DevHive.Web
 {
+	#pragma warning disable IDE0055, S1118
+
 	public class Program
 	{
 		private const int HTTP_PORT = 5000;
