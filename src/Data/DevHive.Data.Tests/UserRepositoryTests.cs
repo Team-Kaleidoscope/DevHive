@@ -234,7 +234,7 @@ namespace DevHive.Data.Tests
 		// }
 		#endregion
 
-		#region DoesUserHaveThisUsername
+		#region DoesUserHaveThisUsernameAsync
 		[Test]
 		public async Task DoesUserHaveThisUsername_ReturnsTrue_WhenUserHasTheGivenUsername()
 		{
@@ -242,9 +242,9 @@ namespace DevHive.Data.Tests
 			this._context.Users.Add(dummyUser);
 			await this._context.SaveChangesAsync();
 
-			bool result = this._userRepository.DoesUserHaveThisUsername(dummyUser.Id, dummyUser.UserName);
+			bool result = this._userRepository.DoesUserHaveThisUsernameAsync(dummyUser.Id, dummyUser.UserName);
 
-			Assert.IsTrue(result, "DoesUserHaveThisUsername does not return true when the user has the given name");
+			Assert.IsTrue(result, "DoesUserHaveThisUsernameAsync does not return true when the user has the given name");
 		}
 
 		[Test]
@@ -255,7 +255,7 @@ namespace DevHive.Data.Tests
 			this._context.Users.Add(dummyUser);
 			await this._context.SaveChangesAsync();
 
-			bool result = this._userRepository.DoesUserHaveThisUsername(dummyUser.Id, username);
+			bool result = this._userRepository.DoesUserHaveThisUsernameAsync(dummyUser.Id, username);
 
 			Assert.IsFalse(result, "DoesUserNameExistAsync does not return false when user doesnt have the given name");
 		}

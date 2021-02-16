@@ -60,7 +60,7 @@ namespace DevHive.Web.Configurations.Extensions
 			});
 		}
 
-		public static async Task UseDatabaseConfiguration(this IApplicationBuilder app)
+		public static void UseDatabaseConfiguration(this IApplicationBuilder app)
 		{
 			app.UseHttpsRedirection();
 			app.UseRouting();
@@ -75,21 +75,21 @@ namespace DevHive.Web.Configurations.Extensions
 
 			var roleManager = (RoleManager<Role>)serviceScope.ServiceProvider.GetService(typeof(RoleManager<Role>));
 
-			if (!await dbContext.Roles.AnyAsync(x => x.Name == Role.DefaultRole))
+			if (!dbContext.Roles.Any(x => x.Name == Role.DefaultRole))
 			{
 				Role defaultRole = new() { Name = Role.DefaultRole };
 
-				await roleManager.CreateAsync(defaultRole);
+				roleManager.CreateAsync(defaultRole).Wait();
 			}
 
-			if (!await dbContext.Roles.AnyAsync(x => x.Name == Role.AdminRole))
+			if (!dbContext.Roles.Any(x => x.Name == Role.AdminRole))
 			{
 				Role adminRole = new() { Name = Role.AdminRole };
 
-				await roleManager.CreateAsync(adminRole);
+				roleManager.CreateAsync(adminRole).Wait();
 			}
 
-			await dbContext.SaveChangesAsync();
+			dbContext.SaveChanges();
 		}
 	}
 }

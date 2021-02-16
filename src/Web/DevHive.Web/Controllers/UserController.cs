@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DevHive.Common.Models.Identity;
 using DevHive.Services.Interfaces;
-using Microsoft.Extensions.Hosting;
 
 namespace DevHive.Web.Controllers
 {
@@ -32,8 +31,8 @@ namespace DevHive.Web.Controllers
 		{
 			LoginServiceModel loginServiceModel = this._userMapper.Map<LoginServiceModel>(loginModel);
 
-			TokenModel TokenModel = await this._userService.LoginUser(loginServiceModel);
-			TokenWebModel tokenWebModel = this._userMapper.Map<TokenWebModel>(TokenModel);
+			TokenModel tokenModel = await this._userService.LoginUser(loginServiceModel);
+			TokenWebModel tokenWebModel = this._userMapper.Map<TokenWebModel>(tokenModel);
 
 			return new OkObjectResult(tokenWebModel);
 		}
@@ -45,8 +44,8 @@ namespace DevHive.Web.Controllers
 		{
 			RegisterServiceModel registerServiceModel = this._userMapper.Map<RegisterServiceModel>(registerModel);
 
-			TokenModel TokenModel = await this._userService.RegisterUser(registerServiceModel);
-			TokenWebModel tokenWebModel = this._userMapper.Map<TokenWebModel>(TokenModel);
+			TokenModel tokenModel = await this._userService.RegisterUser(registerServiceModel);
+			TokenWebModel tokenWebModel = this._userMapper.Map<TokenWebModel>(tokenModel);
 
 			return new CreatedResult("Register", tokenWebModel);
 		}

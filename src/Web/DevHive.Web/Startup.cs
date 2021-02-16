@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using DevHive.Web.Configurations.Extensions;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace DevHive.Web
 {

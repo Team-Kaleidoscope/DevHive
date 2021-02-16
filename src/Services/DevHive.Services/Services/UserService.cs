@@ -15,7 +15,7 @@ using DevHive.Data.Interfaces;
 using System.Linq;
 using DevHive.Common.Models.Misc;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 
 namespace DevHive.Services.Services
 {
@@ -25,8 +25,6 @@ namespace DevHive.Services.Services
 		private readonly IRoleRepository _roleRepository;
 		private readonly ILanguageRepository _languageRepository;
 		private readonly ITechnologyRepository _technologyRepository;
-		private readonly UserManager<User> _userManager;
-		private readonly RoleManager<Role> _roleManager;
 		private readonly IMapper _userMapper;
 		private readonly JwtOptions _jwtOptions;
 		private readonly ICloudService _cloudService;
@@ -35,8 +33,6 @@ namespace DevHive.Services.Services
 			ILanguageRepository languageRepository,
 			IRoleRepository roleRepository,
 			ITechnologyRepository technologyRepository,
-			UserManager<User> userManager,
-			RoleManager<Role> roleManager,
 			IMapper mapper,
 			JwtOptions jwtOptions,
 			ICloudService cloudService)
@@ -47,8 +43,6 @@ namespace DevHive.Services.Services
 			this._jwtOptions = jwtOptions;
 			this._languageRepository = languageRepository;
 			this._technologyRepository = technologyRepository;
-			this._userManager = userManager;
-			this._roleManager = roleManager;
 			this._cloudService = cloudService;
 		}
 
@@ -64,7 +58,7 @@ namespace DevHive.Services.Services
 
 			User user = await this._userRepository.GetByUsernameAsync(loginModel.UserName);
 
-			if (user.PasswordHash != PasswordModifications.GeneratePasswordHash(loginModel.Password))
+			if (!await this._userRepository.VerifyPassword(user, loginModel.Password))
 				throw new ArgumentException("Incorrect password!");
 
 			return new TokenModel(WriteJWTSecurityToken(user.Id, user.UserName, user.Roles));
@@ -82,22 +76,16 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("Email already exists!");
 
 			User user = this._userMapper.Map<User>(registerModel);
-			user.PasswordHash = PasswordModifications.GeneratePasswordHash(registerModel.Password);
-			user.ProfilePicture = new ProfilePicture() { PictureURL = "/assets/images/feed/profile-pic.png" };
 
-			// Make sure the default role exists
-			//TODO: Move when project starts
-			if (!await this._roleRepository.DoesNameExist(Role.DefaultRole))
-				await this._roleRepository.AddAsync(new Role { Name = Role.DefaultRole });
+			bool userResult = await this._userRepository.AddAsync(user);
+			bool roleResult = await this._userRepository.AddRoleToUser(user, Role.DefaultRole);
 
-			user.Roles.Add(await this._roleRepository.GetByNameAsync(Role.DefaultRole));
-
-			IdentityResult userResult = await this._userManager.CreateAsync(user);
-			User createdUser = await this._userRepository.GetByUsernameAsync(registerModel.UserName);
-
-			if (!userResult.Succeeded)
+			if (!userResult)
 				throw new ArgumentException("Unable to create a user");
+			if (!roleResult)
+				throw new ArgumentException("Unable to add role to user");
 
+			User createdUser = await this._userRepository.GetByUsernameAsync(registerModel.UserName);
 			return new TokenModel(WriteJWTSecurityToken(createdUser.Id, createdUser.UserName, createdUser.Roles));
 		}
 		#endregion
@@ -125,20 +113,20 @@ namespace DevHive.Services.Services
 		{
 			await this.ValidateUserOnUpdate(updateUserServiceModel);
 
-			User currentUser = await this._userRepository.GetByIdAsync(updateUserServiceModel.Id);
-			await this.PopulateUserModel(currentUser, updateUserServiceModel);
+			User user = await this._userRepository.GetByIdAsync(updateUserServiceModel.Id);
+			await this.PopulateUserModel(user, updateUserServiceModel);
 
 			if (updateUserServiceModel.Friends.Count > 0)
-				await this.CreateRelationToFriends(currentUser, updateUserServiceModel.Friends.ToList());
+				await this.CreateRelationToFriends(user, updateUserServiceModel.Friends.ToList());
 			else
-				currentUser.Friends.Clear();
+				user.Friends.Clear();
 
-			IdentityResult result = await this._userManager.UpdateAsync(currentUser);
+			bool result = await this._userRepository.EditAsync(user.Id, user);
 
-			if (!result.Succeeded)
+			if (!result)
 				throw new InvalidOperationException("Unable to edit user!");
 
-			User newUser = await this._userRepository.GetByIdAsync(currentUser.Id);
+			User newUser = await this._userRepository.GetByIdAsync(user.Id);
 			return this._userMapper.Map<UserServiceModel>(newUser);
 		}
 
@@ -175,16 +163,14 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("User does not exist!");
 
 			User user = await this._userRepository.GetByIdAsync(id);
-			IdentityResult result = await this._userManager.DeleteAsync(user);
-
-			return result.Succeeded;
+			return await this._userRepository.DeleteAsync(user);
 		}
 		#endregion
 
 		#region Validations
 		/// <summary>
 		/// Checks whether the given user, gotten by the "id" property,
-		/// is the same user as the one in the token (uness the user in the token has the admin role)
+		/// is the same user as the one in the token (unless the user in the token has the admin role)
 		/// and the roles in the token are the same as those in the user, gotten by the id in the token
 		/// </summary>
 		public async Task<bool> ValidJWT(Guid id, string rawTokenData)
@@ -192,15 +178,16 @@ namespace DevHive.Services.Services
 			// There is authorization name in the beginning, i.e. "Bearer eyJh..."
 			var jwt = new JwtSecurityTokenHandler().ReadJwtToken(rawTokenData.Remove(0, 7));
 
-			Guid jwtUserID = new Guid(this.GetClaimTypeValues("ID", jwt.Claims).First());
-			List<string> jwtRoleNames = this.GetClaimTypeValues("role", jwt.Claims);
+			Guid jwtUserID = new(UserService.GetClaimTypeValues("ID", jwt.Claims).First());
+			List<string> jwtRoleNames = UserService.GetClaimTypeValues("role", jwt.Claims);
 
 			User user = await this._userRepository.GetByIdAsync(jwtUserID)
 				?? throw new ArgumentException("User does not exist!");
 
-			/* Check if user is trying to do something to himself, unless he's an admin */
+			/* Check if he is an admin */
+			if (user.Roles.Any(x => x.Name == Role.AdminRole))
+				return true;
 
-			/* Check roles */
 			if (!jwtRoleNames.Contains(Role.AdminRole) && user.Id != id)
 				return false;
 
@@ -219,7 +206,7 @@ namespace DevHive.Services.Services
 		/// <summary>
 		/// Returns all values from a given claim type
 		/// </summary>
-		private List<string> GetClaimTypeValues(string type, IEnumerable<Claim> claims)
+		private static List<string> GetClaimTypeValues(string type, IEnumerable<Claim> claims)
 		{
 			List<string> toReturn = new();
 
@@ -243,7 +230,7 @@ namespace DevHive.Services.Services
 			if (updateUserServiceModel.Friends.Any(x => x.UserName == updateUserServiceModel.UserName))
 				throw new ArgumentException("You cant add yourself as a friend(sry, bro)!");
 
-			if (!this._userRepository.DoesUserHaveThisUsername(updateUserServiceModel.Id, updateUserServiceModel.UserName)
+			if (!await this._userRepository.DoesUserHaveThisUsernameAsync(updateUserServiceModel.Id, updateUserServiceModel.UserName)
 					&& await this._userRepository.DoesUsernameExistAsync(updateUserServiceModel.UserName))
 				throw new ArgumentException("Username already exists!");
 
@@ -296,19 +283,16 @@ namespace DevHive.Services.Services
 
 			if (!await this._roleRepository.DoesNameExist(Role.AdminRole))
 			{
-				Role adminRole = new()
-				{
-					Name = Role.AdminRole
-				};
+				Role adminRole = new() { Name = Role.AdminRole };
 				adminRole.Users.Add(user);
 
 				await this._roleRepository.AddAsync(adminRole);
 			}
 
-			Role admin = await this._roleManager.FindByNameAsync(Role.AdminRole);
+			Role admin = await this._roleRepository.GetByNameAsync(Role.AdminRole);
 
 			user.Roles.Add(admin);
-			await this._userManager.UpdateAsync(user);
+			await this._userRepository.EditAsync(user.Id, user);
 
 			User newUser = await this._userRepository.GetByIdAsync(userId);
 
@@ -323,7 +307,7 @@ namespace DevHive.Services.Services
 			user.Email = updateUserServiceModel.Email;
 
 			//Do NOT allow a user to change his roles, unless he is an Admin
-			bool isAdmin = await this._userManager.IsInRoleAsync(user, Role.AdminRole);
+			bool isAdmin = await this._userRepository.IsInRoleAsync(user, Role.AdminRole);
 
 			if (isAdmin)
 			{
@@ -371,7 +355,7 @@ namespace DevHive.Services.Services
 				user.Friends.Add(amigo);
 				amigo.Friends.Add(user);
 
-				await this._userManager.UpdateAsync(amigo);
+				await this._userRepository.EditAsync(amigo.Id, amigo);
 			}
 		}
 		#endregion

@@ -8,15 +8,17 @@ namespace DevHive.Data.Interfaces
 {
 	public interface IUserRepository : IRepository<User>
 	{
-		//Read
+		Task<bool> AddRoleToUser(User user, string roleName);
+
 		Task<User> GetByUsernameAsync(string username);
 		Task<bool> UpdateProfilePicture(Guid userId, string pictureUrl);
 
-		//Validations
+		Task<bool> VerifyPassword(User user, string password);
+		Task<bool> IsInRoleAsync(User user, string roleName);
 		Task<bool> ValidateFriendsCollectionAsync(List<string> usernames);
 		Task<bool> DoesEmailExistAsync(string email);
 		Task<bool> DoesUserExistAsync(Guid id);
 		Task<bool> DoesUsernameExistAsync(string username);
-		bool DoesUserHaveThisUsername(Guid id, string username);
+		Task<bool> DoesUserHaveThisUsernameAsync(Guid id, string username);
 	}
 }

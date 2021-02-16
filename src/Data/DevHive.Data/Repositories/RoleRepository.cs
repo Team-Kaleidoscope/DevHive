@@ -2,53 +2,54 @@ using System;
 using System.Threading.Tasks;
 using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
 	public class RoleRepository : BaseRepository<Role>, IRoleRepository
 	{
-		private readonly DevHiveContext _context;
+		private readonly RoleManager<Role> _roleManager;
 
-		public RoleRepository(DevHiveContext context)
+		public RoleRepository(DevHiveContext context, RoleManager<Role> roleManager)
 			: base(context)
 		{
-			this._context = context;
+			this._roleManager = roleManager;
 		}
+
+		#region Create
+		public override async Task<bool> AddAsync(Role entity)
+		{
+			IdentityResult result = await this._roleManager.CreateAsync(entity);
+
+			return result.Succeeded;
+		}
+		#endregion
 
 		#region Read
 		public async Task<Role> GetByNameAsync(string name)
 		{
-			return await this._context.Roles
-				.FirstOrDefaultAsync(x => x.Name == name);
+			return await this._roleManager.FindByNameAsync(name);
 		}
 		#endregion
 
 		public override async Task<bool> EditAsync(Guid id, Role newEntity)
 		{
-			Role role = await this.GetByIdAsync(id);
+			newEntity.Id = id;
+			IdentityResult result = await this._roleManager.UpdateAsync(newEntity);
 
-			this._context
-				.Entry(role)
-				.CurrentValues
-				.SetValues(newEntity);
-
-			return await this.SaveChangesAsync();
+			return result.Succeeded;
 		}
 
 		#region Validations
 		public async Task<bool> DoesNameExist(string name)
 		{
-			return await this._context.Roles
-				.AsNoTracking()
-				.AnyAsync(r => r.Name == name);
+			return await this._roleManager.RoleExistsAsync(name);
 		}
 
 		public async Task<bool> DoesRoleExist(Guid id)
 		{
-			return await this._context.Roles
-				.AsNoTracking()
-				.AnyAsync(r => r.Id == id);
+			return await this._roleManager.Roles.AnyAsync(r => r.Id == id);
 		}
 		#endregion
 	}

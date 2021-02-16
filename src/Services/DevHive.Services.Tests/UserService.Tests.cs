@@ -274,7 +274,7 @@ namespace DevHive.Services.Tests
         //
 		// 	this.UserRepositoryMock.Setup(p => p.DoesUserExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
 		// 	this.UserRepositoryMock.Setup(p => p.DoesUsernameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
-		// 	this.UserRepositoryMock.Setup(p => p.DoesUserHaveThisUsername(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
+		// 	this.UserRepositoryMock.Setup(p => p.DoesUserHaveThisUsernameAsync(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
 		// 	this.UserRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<User>())).Returns(Task.FromResult(shouldPass));
 		// 	this.UserRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
 		// 	this.MapperMock.Setup(p => p.Map<User>(It.IsAny<UpdateUserServiceModel>())).Returns(user);

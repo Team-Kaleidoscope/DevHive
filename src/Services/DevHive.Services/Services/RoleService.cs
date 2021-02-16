@@ -39,8 +39,8 @@ namespace DevHive.Services.Services
 
 		public async Task<RoleServiceModel> GetRoleById(Guid id)
 		{
-			Role role = await this._roleRepository.GetByIdAsync(id)
-				?? throw new ArgumentException("Role does not exist!");
+			Role role = await this._roleRepository.GetByIdAsync(id) ??
+				throw new ArgumentException("Role does not exist!");
 
 			return this._roleMapper.Map<RoleServiceModel>(role);
 		}
