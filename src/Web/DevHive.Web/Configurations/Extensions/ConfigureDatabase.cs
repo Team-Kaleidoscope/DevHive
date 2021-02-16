@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Builder;
 using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using DevHive.Data;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevHive.Web.Configurations.Extensions
 {
@@ -58,13 +60,36 @@ namespace DevHive.Web.Configurations.Extensions
 			});
 		}
 
-		public static void UseDatabaseConfiguration(this IApplicationBuilder app)
+		public static async Task UseDatabaseConfiguration(this IApplicationBuilder app)
 		{
 			app.UseHttpsRedirection();
 			app.UseRouting();
 
 			app.UseAuthentication();
 			app.UseAuthorization();
+
+			using var serviceScope = app.ApplicationServices.CreateScope();
+			using var dbContext = serviceScope.ServiceProvider.GetRequiredService<DevHiveContext>();
+
+			dbContext.Database.Migrate();
+
+			var roleManager = (RoleManager<Role>)serviceScope.ServiceProvider.GetService(typeof(RoleManager<Role>));
+
+			if (!await dbContext.Roles.AnyAsync(x => x.Name == Role.DefaultRole))
+			{
+				Role defaultRole = new() { Name = Role.DefaultRole };
+
+				await roleManager.CreateAsync(defaultRole);
+			}
+
+			if (!await dbContext.Roles.AnyAsync(x => x.Name == Role.AdminRole))
+			{
+				Role adminRole = new() { Name = Role.AdminRole };
+
+				await roleManager.CreateAsync(adminRole);
+			}
+
+			await dbContext.SaveChangesAsync();
 		}
 	}
 }
