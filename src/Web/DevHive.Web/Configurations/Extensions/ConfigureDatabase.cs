@@ -19,7 +19,10 @@ namespace DevHive.Web.Configurations.Extensions
 			services.AddDbContext<DevHiveContext>(options =>
 			{
 				options.EnableSensitiveDataLogging(true);
-				options.UseNpgsql(configuration.GetConnectionString("DEV"));
+				options.UseNpgsql(configuration.GetConnectionString("DEV"), options =>
+					{
+						options.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+					});
 			});
 
 			services.AddIdentity<User, Role>()
