@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using DevHive.Data.Models;
 using DevHive.Data.Repositories;
 using DevHive.Services.Interfaces;
@@ -15,21 +16,50 @@ namespace DevHive.Services.Services
 	{
 		private readonly MessageRepository _messageRepository;
 		private readonly UserRepository _userRepository;
+		private readonly ChatRepository _chatRepository;
+		private readonly IMapper _messageMapper;
 
-		public MessageService(MessageRepository messageRepository, UserRepository userRepository)
+		public MessageService(MessageRepository messageRepository, UserRepository userRepository, ChatRepository chatRepository, IMapper messageMapper)
 		{
 			this._messageRepository = messageRepository;
 			this._userRepository = userRepository;
+			this._chatRepository = chatRepository;
+			this._messageMapper = messageMapper;
 		}
 
-		public Task<Guid> CreateMessage(CreateMessageServiceModel createMessageServiceModel)
+		public async Task<Guid> CreateMessage(CreateMessageServiceModel createMessageServiceModel)
 		{
-			throw new NotImplementedException();
+			//if you think of any validations add them here
+
+			Message message = this._messageMapper.Map<Message>(createMessageServiceModel);
+
+			message.TimeCreated = DateTime.Now;
+			message.Chat = await this._chatRepository.GetByIdAsync(createMessageServiceModel.ChatId);
+			message.Creator = await this._userRepository.GetByIdAsync(createMessageServiceModel.CreatorId);
+
+			bool result = await this._messageRepository.AddAsync(message);
+
+			if (result)
+			{
+				Message newMessage = await this._messageRepository.GetMessageByCreatorAndTimeCreatedAsync(createMessageServiceModel.CreatorId, message.TimeCreated);
+
+				return newMessage.Id;
+			}
+
+			return Guid.Empty;
 		}
 
-		public Task<ReadMessageServiceModel> GetMessageById(Guid id)
+		public async Task<ReadMessageServiceModel> GetMessageById(Guid id)
 		{
-			throw new NotImplementedException();
+			Message message = await this._messageRepository.GetByIdAsync(id) ??
+				throw new ArgumentException("The message does not exist");
+
+			User user = await this._userRepository.GetByIdAsync(message.Creator.Id) ??
+				throw new ArgumentException("The user does not exist");
+
+			ReadMessageServiceModel readMessageServiceModel = this._messageMapper.Map<ReadMessageServiceModel>(message);
+
+			return readMessageServiceModel;
 		}
 
 		#region Validations

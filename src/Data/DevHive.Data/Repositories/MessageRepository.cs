@@ -1,5 +1,8 @@
+using System;
+using System.Threading.Tasks;
 using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
 {
@@ -11,6 +14,13 @@ namespace DevHive.Data.Repositories
 			: base(context)
 		{
 			this._context = context;
+		}
+
+		public async Task<Message> GetMessageByCreatorAndTimeCreatedAsync(Guid creatorId, DateTime timeCreated)
+		{
+			return await this._context.Message
+				.FirstOrDefaultAsync(p => p.Creator.Id == creatorId &&
+					p.TimeCreated == timeCreated);
 		}
 	}
 }

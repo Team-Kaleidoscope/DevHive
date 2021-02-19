@@ -40,6 +40,7 @@ namespace DevHive.Services.Services
 			comment.Post = await this._postRepository.GetByIdAsync(createCommentServiceModel.PostId);
 
 			bool success = await this._commentRepository.AddAsync(comment);
+
 			if (success)
 			{
 				Comment newComment = await this._commentRepository
