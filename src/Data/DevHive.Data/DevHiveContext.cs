@@ -19,7 +19,6 @@ namespace DevHive.Data
 		public DbSet<Rating> Rating { get; set; }
 		public DbSet<RatedPost> RatedPost { get; set; }
 		public DbSet<UserRate> UserRate { get; set; }
-		public DbSet<Message> Message { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
