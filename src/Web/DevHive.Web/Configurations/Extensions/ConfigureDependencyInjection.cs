@@ -19,6 +19,8 @@ namespace DevHive.Web.Configurations.Extensions
 			services.AddTransient<ICommentRepository, CommentRepository>();
 			services.AddTransient<IFeedRepository, FeedRepository>();
 			services.AddTransient<IRatingRepository, RatingRepository>();
+			services.AddTransient<IMessageRepository, MessageRepository>();
+			//services.AddTransient<IChatRepository, ChatRepository>();
 
 			services.AddTransient<ILanguageService, LanguageService>();
 			services.AddTransient<IRoleService, RoleService>();
@@ -33,6 +35,8 @@ namespace DevHive.Web.Configurations.Extensions
 					apiKey: configuration.GetSection("Cloud").GetSection("apiKey").Value,
 					apiSecret: configuration.GetSection("Cloud").GetSection("apiSecret").Value));
 			services.AddTransient<IRateService, RateService>();
+			services.AddTransient<IMessageService, MessageService>();
+			//services.AddTransient<IChatService, ChatService>();
 		}
 	}
 }
