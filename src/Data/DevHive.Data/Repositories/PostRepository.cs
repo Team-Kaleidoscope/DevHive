@@ -36,7 +36,7 @@ namespace DevHive.Data.Repositories
 					.Include(x => x.Comments)
 					.Include(x => x.Creator)
 					.Include(x => x.Attachments)
-					// .Include(x => x.Rating)
+					.Include(x => x.CurrentRating)
 					.FirstOrDefaultAsync(x => x.Id == id);
 		}
 

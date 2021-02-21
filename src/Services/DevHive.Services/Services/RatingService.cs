@@ -9,14 +9,14 @@ using DevHive.Services.Models.Post.Rating;
 
 namespace DevHive.Services.Services
 {
-	public class RateService : IRateService
+	public class RatingService : IRatingService
 	{
 		private readonly IPostRepository _postRepository;
 		private readonly IUserRepository _userRepository;
 		private readonly IRatingRepository _ratingRepository;
 		private readonly IMapper _mapper;
 
-		public RateService(IPostRepository postRepository, IRatingRepository ratingRepository, IUserRepository userRepository, IMapper mapper)
+		public RatingService(IPostRepository postRepository, IRatingRepository ratingRepository, IUserRepository userRepository, IMapper mapper)
 		{
 			this._postRepository = postRepository;
 			this._ratingRepository = ratingRepository;
@@ -24,7 +24,7 @@ namespace DevHive.Services.Services
 			this._mapper = mapper;
 		}
 
-		public async Task<ReadPostRatingServiceModel> RatePost(RatePostServiceModel ratePostServiceModel)
+		public async Task<ReadRatingServiceModel> RatePost(CreateRatingServiceModel ratePostServiceModel)
 		{
 			throw new NotImplementedException();
 			// if (!await this._postRepository.DoesPostExist(ratePostServiceModel.PostId))
@@ -49,7 +49,7 @@ namespace DevHive.Services.Services
 			// return this._mapper.Map<ReadPostRatingServiceModel>(newRating);
 		}
 
-		public async Task<ReadPostRatingServiceModel> RemoveUserRateFromPost(Guid userId, Guid postId)
+		public async Task<ReadRatingServiceModel> RemoveUserRateFromPost(Guid userId, Guid postId)
 		{
 			throw new NotImplementedException();
 			// Post post = await this._postRepository.GetByIdAsync(postId);

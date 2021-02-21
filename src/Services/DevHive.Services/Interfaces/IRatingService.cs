@@ -5,9 +5,9 @@ using DevHive.Services.Models.Post.Rating;
 
 namespace DevHive.Services.Interfaces
 {
-	public interface IRateService
+	public interface IRatingService
 	{
-		Task<ReadPostRatingServiceModel> RatePost(RatePostServiceModel ratePostServiceModel);
+		Task<ReadRatingServiceModel> RatePost(CreateRatingServiceModel ratePostServiceModel);
 
 		bool HasUserRatedThisPost(User user, Post post);
 	}

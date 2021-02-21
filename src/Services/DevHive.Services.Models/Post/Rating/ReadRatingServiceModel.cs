@@ -2,7 +2,7 @@ using System;
 
 namespace DevHive.Services.Models.Post.Rating
 {
-	public class ReadPostRatingServiceModel
+	public class ReadRatingServiceModel
 	{
 		public Guid Id { get; set; }
 

@@ -21,6 +21,7 @@ namespace DevHive.Services.Models.Post
 		public List<IdModel> Comments { get; set; } = new();
 
 		public List<string> FileUrls { get; set; }
-		// public List<FileContentResult> Files { get; set; } = new();
+
+		public int CurrentRating { get; set; }
 	}
 }

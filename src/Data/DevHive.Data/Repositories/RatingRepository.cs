@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DevHive.Data.Interfaces;
@@ -19,10 +20,10 @@ namespace DevHive.Data.Repositories
 			this._postRepository = postRepository;
 		}
 
-		public async Task<Rating> GetRatingByPostId(Guid postId)
+		public async Task<List<Rating>> GetRatingsByPostId(Guid postId)
 		{
 			return await this._context.Rating
-				.FirstOrDefaultAsync(x => x.Post.Id == postId);
+				.Where(x => x.Post.Id == postId).ToListAsync();
 		}
 
 		public async Task<bool> UserRatedPost(Guid userId, Guid postId)

@@ -2,12 +2,12 @@ using System;
 
 namespace DevHive.Services.Models.Post.Rating
 {
-	public class RatePostServiceModel
+	public class CreateRatingServiceModel
 	{
 		public Guid UserId { get; set; }
 
 		public Guid PostId { get; set; }
 
-		public bool Liked { get; set; }
+		public bool IsLike { get; set; }
 	}
 }

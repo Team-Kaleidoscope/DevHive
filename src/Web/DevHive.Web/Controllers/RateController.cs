@@ -13,11 +13,11 @@ namespace DevHive.Web.Controllers
 	[Route("api/[controller]")]
 	public class RateController
 	{
-		private readonly IRateService _rateService;
+		private readonly IRatingService _rateService;
 		private readonly IUserService _userService;
 		private readonly IMapper _mapper;
 
-		public RateController(IRateService rateService, IUserService userService, IMapper mapper)
+		public RateController(IRatingService rateService, IUserService userService, IMapper mapper)
 		{
 			this._rateService = rateService;
 			this._userService = userService;
@@ -28,10 +28,10 @@ namespace DevHive.Web.Controllers
 		[Authorize(Roles = "Admin,User")]
 		public async Task<IActionResult> RatePost(Guid userId, [FromBody] RatePostWebModel ratePostWebModel, [FromHeader] string authorization)
 		{
-			RatePostServiceModel ratePostServiceModel = this._mapper.Map<RatePostServiceModel>(ratePostWebModel);
+			CreateRatingServiceModel ratePostServiceModel = this._mapper.Map<CreateRatingServiceModel>(ratePostWebModel);
 			ratePostServiceModel.UserId = userId;
 
-			ReadPostRatingServiceModel readPostRatingServiceModel = await this._rateService.RatePost(ratePostServiceModel);
+			ReadRatingServiceModel readPostRatingServiceModel = await this._rateService.RatePost(ratePostServiceModel);
 			ReadPostRatingWebModel readPostRatingWebModel = this._mapper.Map<ReadPostRatingWebModel>(readPostRatingServiceModel);
 
 			return new OkObjectResult(readPostRatingWebModel);
