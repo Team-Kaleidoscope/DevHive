@@ -3,7 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using DevHive.Data.Models;
 using DevHive.Data.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using NUnit.Framework;
 
 namespace DevHive.Data.Tests
@@ -12,27 +14,26 @@ namespace DevHive.Data.Tests
 	public class RoleRepositoryTests
 	{
 		private const string ROLE_NAME = "Role test name";
-
-		protected DevHiveContext Context { get; set; }
-
-		protected RoleRepository RoleRepository { get; set; }
+		private DevHiveContext _context;
+		private RoleRepository _roleRepository;
 
 		#region Setups
 		[SetUp]
 		public void Setup()
 		{
-			var optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
+			DbContextOptionsBuilder<DevHiveContext> optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
 				.UseInMemoryDatabase(databaseName: "DevHive_Test_Database");
 
-			this.Context = new DevHiveContext(optionsBuilder.Options);
+			this._context = new DevHiveContext(optionsBuilder.Options);
 
-			RoleRepository = new RoleRepository(Context);
+			Mock<RoleManager<Role>> roleManagerMock = new();
+			this._roleRepository = new(this._context, roleManagerMock.Object);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			this.Context.Database.EnsureDeleted();
+			_ = this._context.Database.EnsureDeleted();
 		}
 		#endregion
 
@@ -42,7 +43,7 @@ namespace DevHive.Data.Tests
 		{
 			Role role = await this.AddEntity();
 
-			Role resultRole = await this.RoleRepository.GetByNameAsync(role.Name);
+			Role resultRole = await this._roleRepository.GetByNameAsync(role.Name);
 
 			Assert.AreEqual(role.Id, resultRole.Id, "GetByNameAsync does not return the correct role");
 		}
@@ -50,7 +51,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetByNameAsync_ReturnsNull_WhenTheRoleDoesNotExist()
 		{
-			Role resultRole = await this.RoleRepository.GetByNameAsync(ROLE_NAME);
+			Role resultRole = await this._roleRepository.GetByNameAsync(ROLE_NAME);
 
 			Assert.IsNull(resultRole, "GetByNameAsync does not return when the role does not exist");
 		}
@@ -62,7 +63,7 @@ namespace DevHive.Data.Tests
 		{
 			Role role = await this.AddEntity();
 
-			bool result = await this.RoleRepository.DoesNameExist(role.Name);
+			bool result = await this._roleRepository.DoesNameExist(role.Name);
 
 			Assert.IsTrue(result, "DoesNameExist returns false when the role name exist");
 		}
@@ -70,7 +71,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task DoesNameExist_ReturnsFalse_WhenTheNameDoesNotExist()
 		{
-			bool result = await this.RoleRepository.DoesNameExist(ROLE_NAME);
+			bool result = await this._roleRepository.DoesNameExist(ROLE_NAME);
 
 			Assert.IsFalse(result, "DoesNameExist returns false when the role name exist");
 		}
@@ -80,11 +81,11 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task DoesRoleExist_ReturnsTrue_IfIdExists()
 		{
-			await AddEntity();
-			Role role = this.Context.Roles.Where(x => x.Name == ROLE_NAME).ToList().FirstOrDefault();
+			_ = await this.AddEntity();
+			Role role = this._context.Roles.Where(x => x.Name == ROLE_NAME).AsEnumerable().FirstOrDefault();
 			Guid id = role.Id;
 
-			bool result = await this.RoleRepository.DoesRoleExist(id);
+			bool result = await this._roleRepository.DoesRoleExist(id);
 
 			Assert.IsTrue(result, "DoesRoleExistAsync returns flase when role exists");
 		}
@@ -94,7 +95,7 @@ namespace DevHive.Data.Tests
 		{
 			Guid id = Guid.NewGuid();
 
-			bool result = await this.RoleRepository.DoesRoleExist(id);
+			bool result = await this._roleRepository.DoesRoleExist(id);
 
 			Assert.IsFalse(result, "DoesRoleExist returns true when role does not exist");
 		}
@@ -103,14 +104,14 @@ namespace DevHive.Data.Tests
 		#region HelperMethods
 		private async Task<Role> AddEntity(string name = ROLE_NAME)
 		{
-			Role role = new Role
+			Role role = new()
 			{
 				Id = Guid.NewGuid(),
 				Name = name
 			};
 
-			this.Context.Roles.Add(role);
-			await this.Context.SaveChangesAsync();
+			_ = this._context.Roles.Add(role);
+			_ = await this._context.SaveChangesAsync();
 
 			return role;
 		}

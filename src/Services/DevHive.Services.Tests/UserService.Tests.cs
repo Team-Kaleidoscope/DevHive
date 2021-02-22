@@ -20,31 +20,37 @@ using NUnit.Framework;
 
 namespace DevHive.Services.Tests
 {
-    [TestFixture]
+	[TestFixture]
 	public class UserServiceTests
 	{
-		private Mock<ICloudService> CloudServiceMock { get; set; }
-		private Mock<IUserRepository> UserRepositoryMock { get; set; }
-		private Mock<IRoleRepository> RoleRepositoryMock { get; set; }
-		private Mock<ILanguageRepository> LanguageRepositoryMock { get; set; }
-		private Mock<ITechnologyRepository> TechnologyRepositoryMock { get; set; }
-		private Mock<IMapper> MapperMock { get; set; }
-		private JwtOptions JwtOptions { get; set; }
-		private UserService UserService { get; set; }
+		private Mock<ICloudService> _cloudServiceMock;
+		private Mock<IUserRepository> _userRepositoryMock;
+		private Mock<IRoleRepository> _roleRepositoryMock;
+		private Mock<ILanguageRepository> _languageRepositoryMock;
+		private Mock<ITechnologyRepository> _technologyRepositoryMock;
+		private Mock<IMapper> _mapperMock;
+		private JwtOptions _jwtOptions;
+		private UserService _userService;
 
 		#region SetUps
 		[SetUp]
 		public void Setup()
 		{
-			this.UserRepositoryMock = new Mock<IUserRepository>();
-			this.RoleRepositoryMock = new Mock<IRoleRepository>();
-			this.CloudServiceMock = new Mock<ICloudService>();
-			this.LanguageRepositoryMock = new Mock<ILanguageRepository>();
-			this.TechnologyRepositoryMock = new Mock<ITechnologyRepository>();
-			this.JwtOptions = new JwtOptions("gXfQlU6qpDleFWyimscjYcT3tgFsQg3yoFjcvSLxG56n1Vu2yptdIUq254wlJWjm");
-			this.MapperMock = new Mock<IMapper>();
-			// TODO: give actual UserManager and RoleManager to UserService
-			this.UserService = new UserService(this.UserRepositoryMock.Object, this.LanguageRepositoryMock.Object, this.RoleRepositoryMock.Object, this.TechnologyRepositoryMock.Object, null, null, this.MapperMock.Object, this.JwtOptions, this.CloudServiceMock.Object);
+			this._userRepositoryMock = new Mock<IUserRepository>();
+			this._roleRepositoryMock = new Mock<IRoleRepository>();
+			this._cloudServiceMock = new Mock<ICloudService>();
+			this._languageRepositoryMock = new Mock<ILanguageRepository>();
+			this._technologyRepositoryMock = new Mock<ITechnologyRepository>();
+			this._jwtOptions = new JwtOptions("gXfQlU6qpDleFWyimscjYcT3tgFsQg3yoFjcvSLxG56n1Vu2yptdIUq254wlJWjm");
+			this._mapperMock = new Mock<IMapper>();
+			this._userService = new UserService(
+				this._userRepositoryMock.Object,
+				this._languageRepositoryMock.Object,
+				this._roleRepositoryMock.Object,
+				this._technologyRepositoryMock.Object,
+				this._mapperMock.Object,
+				this._jwtOptions,
+				this._cloudServiceMock.Object);
 		}
 		#endregion
 
@@ -52,132 +58,149 @@ namespace DevHive.Services.Tests
 		[Test]
 		public async Task LoginUser_ReturnsTokenModel_WhenLoggingUserIn()
 		{
-			string somePassword = "GoshoTrapovImaGolemChep";
-			const string name = "GoshoTrapov";
-			string hashedPassword = PasswordModifications.GeneratePasswordHash(somePassword);
-			LoginServiceModel loginServiceModel = new LoginServiceModel
+			string somePassword = "I'm_Nigga";
+
+			LoginServiceModel loginServiceModel = new()
 			{
 				Password = somePassword
 			};
-			User user = new User
+			User user = new()
 			{
 				Id = Guid.NewGuid(),
-				PasswordHash = hashedPassword,
-				UserName = name
+				PasswordHash = somePassword,
+				UserName = "g_trapov"
 			};
 
-			this.UserRepositoryMock.Setup(p => p.DoesUsernameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
-			this.UserRepositoryMock.Setup(p => p.GetByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(user));
+			this._userRepositoryMock.Setup(p =>
+				p.DoesUsernameExistAsync(It.IsAny<string>()))
+					.Returns(Task.FromResult(true));
+			this._userRepositoryMock.Setup(p =>
+				p.GetByUsernameAsync(It.IsAny<string>()))
+					.Returns(Task.FromResult(user));
 
-			string JWTSecurityToken = this.WriteJWTSecurityToken(user.Id, user.UserName, user.Roles);
+			string jwtSecurityToken = this.WriteJWTSecurityToken(user.Id, user.UserName, user.Roles);
+			TokenModel tokenModel = await this._userService.LoginUser(loginServiceModel);
 
-			TokenModel tokenModel = await this.UserService.LoginUser(loginServiceModel);
-
-			Assert.AreEqual(JWTSecurityToken, tokenModel.Token, "LoginUser does not return the correct token");
+			Assert.AreEqual(jwtSecurityToken, tokenModel.Token, "LoginUser does not return the correct token");
 		}
 
 		[Test]
 		public void LoginUser_ThrowsException_WhenUserNameDoesNotExist()
 		{
-			const string EXCEPTION_MESSAGE = "Invalid username!";
-			LoginServiceModel loginServiceModel = new LoginServiceModel
-			{
-			};
+			LoginServiceModel loginServiceModel = new();
 
-			this.UserRepositoryMock.Setup(p => p.DoesUsernameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
+			this._userRepositoryMock.Setup(p =>
+				p.DoesUsernameExistAsync(It.IsAny<string>()))
+					.Returns(Task.FromResult(false));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.UserService.LoginUser(loginServiceModel));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(
+				() => this._userService.LoginUser(loginServiceModel));
 
-			Assert.AreEqual(EXCEPTION_MESSAGE, ex.Message, "Incorect Exception message");
+			Assert.AreEqual("Invalid username!", ex.Message, "Incorrect Exception message");
 		}
 
 		[Test]
-		public void LoginUser_ThroiwsException_WhenPasswordIsIncorect()
+		public void LoginUser_ThrowsException_WhenPasswordIsIncorrect()
 		{
-			const string EXCEPTION_MESSAGE = "Incorrect password!";
-			string somePassword = "GoshoTrapovImaGolemChep";
-			LoginServiceModel loginServiceModel = new LoginServiceModel
+			string somePassword = "I'm_Nigga";
+
+			LoginServiceModel loginServiceModel = new()
 			{
 				Password = somePassword
 			};
-			User user = new User
+			User user = new()
 			{
 				Id = Guid.NewGuid(),
-				PasswordHash = "InvalidPasswordHas"
 			};
 
-			this.UserRepositoryMock.Setup(p => p.DoesUsernameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
-			this.UserRepositoryMock.Setup(p => p.GetByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(user));
+			this._userRepositoryMock.Setup(p =>
+				p.DoesUsernameExistAsync(It.IsAny<string>()))
+					.Returns(Task.FromResult(true));
+			this._userRepositoryMock.Setup(p =>
+				p.GetByUsernameAsync(It.IsAny<string>()))
+					.Returns(Task.FromResult(user));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.UserService.LoginUser(loginServiceModel));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._userService.LoginUser(loginServiceModel));
 
-			Assert.AreEqual(EXCEPTION_MESSAGE, ex.Message, "Incorect Exception message");
+			Assert.AreEqual("Incorrect password!", ex.Message, "Incorrect Exception message");
 		}
 		#endregion
 
 		#region RegisterUser
-		// [Test]
-		// public async Task RegisterUser_ReturnsTokenModel_WhenUserIsSuccessfull()
-		// {
-		// 	string somePassword = "GoshoTrapovImaGolemChep";
-		// 	const string name = "GoshoTrapov";
-		// 	RegisterServiceModel registerServiceModel = new RegisterServiceModel
-		// 	{
-		// 		Password = somePassword
-		// 	};
-		// 	User user = new User
-		// 	{
-		// 		Id = Guid.NewGuid(),
-		// 		UserName = name
-		// 	};
-		// 	Role role = new Role { Name = Role.DefaultRole };
-		// 	HashSet<Role> roles = new HashSet<Role> { role };
-        //
-		// 	this.UserRepositoryMock.Setup(p => p.DoesUsernameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
-		// 	this.UserRepositoryMock.Setup(p => p.DoesEmailExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
-		// 	this.RoleRepositoryMock.Setup(p => p.DoesNameExist(It.IsAny<string>())).Returns(Task.FromResult(true));
-		// 	this.RoleRepositoryMock.Setup(p => p.GetByNameAsync(It.IsAny<string>())).Returns(Task.FromResult(role));
-		// 	this.MapperMock.Setup(p => p.Map<User>(It.IsAny<RegisterServiceModel>())).Returns(user);
-		// 	this.UserRepositoryMock.Setup(p => p.AddAsync(It.IsAny<User>())).Verifiable();
-        //
-		// 	string JWTSecurityToken = this.WriteJWTSecurityToken(user.Id, user.UserName, roles);
-        //
-		// 	TokenModel tokenModel = await this.UserService.RegisterUser(registerServiceModel);
-        //
-		// 	Mock.Verify();
-		// 	Assert.AreEqual(JWTSecurityToken, tokenModel.Token, "RegisterUser does not return the correct token");
-		// }
+		[Test]
+		public async Task RegisterUser_ReturnsTokenModel_WhenUserIsSuccessfull()
+		{
+			Guid userId = Guid.NewGuid();
+			RegisterServiceModel registerServiceModel = new()
+			{
+				Password = "ImNigga"
+			};
+			User user = new()
+			{
+				Id = userId,
+				UserName = "g_trapov"
+			};
+			Role role = new() { Name = Role.DefaultRole };
+			HashSet<Role> roles = new() { role };
+
+			this._userRepositoryMock.Setup(p =>
+				p.DoesUsernameExistAsync(It.IsAny<string>()))
+					.Returns(Task.FromResult(false));
+			this._userRepositoryMock.Setup(p =>
+				p.DoesEmailExistAsync(It.IsAny<string>()))
+					.Returns(Task.FromResult(false));
+			this._userRepositoryMock.Setup(p =>
+				p.AddAsync(It.IsAny<User>()))
+					.ReturnsAsync(true);
+
+			this._roleRepositoryMock.Setup(p =>
+				p.DoesNameExist(It.IsAny<string>()))
+					.Returns(Task.FromResult(true));
+			this._roleRepositoryMock.Setup(p =>
+				p.GetByNameAsync(It.IsAny<string>()))
+					.Returns(Task.FromResult(role));
+
+			this._mapperMock.Setup(p =>
+				p.Map<User>(It.IsAny<RegisterServiceModel>()))
+					.Returns(user);
+
+			string jwtSecurityToken = this.WriteJWTSecurityToken(user.Id, user.UserName, roles);
+			TokenModel tokenModel = await this._userService.RegisterUser(registerServiceModel);
+
+			Assert.AreEqual(jwtSecurityToken, tokenModel.Token, "RegisterUser does not return the correct token");
+		}
 
 		[Test]
 		public void RegisterUser_ThrowsException_WhenUsernameAlreadyExists()
 		{
 			const string EXCEPTION_MESSAGE = "Username already exists!";
-			RegisterServiceModel registerServiceModel = new RegisterServiceModel
-			{
-			};
+			RegisterServiceModel registerServiceModel = new();
 
-			this.UserRepositoryMock.Setup(p => p.DoesUsernameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
+			this._userRepositoryMock.Setup(p =>
+				p.DoesUsernameExistAsync(It.IsAny<string>()))
+					.Returns(Task.FromResult(true));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.UserService.RegisterUser(registerServiceModel));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(
+				() => this._userService.RegisterUser(registerServiceModel));
 
-			Assert.AreEqual(EXCEPTION_MESSAGE, ex.Message, "Incorect Exception message");
+			Assert.AreEqual(EXCEPTION_MESSAGE, ex.Message, "Incorrect Exception message");
 		}
 
 		[Test]
 		public void RegisterUser_ThrowsException_WhenEmailAlreadyExists()
 		{
-			const string EXCEPTION_MESSAGE = "Email already exists!";
+			RegisterServiceModel registerServiceModel = new();
 
-			RegisterServiceModel registerServiceModel = new RegisterServiceModel
-			{
-			};
+			this._userRepositoryMock.Setup(p =>
+				p.DoesUsernameExistAsync(It.IsAny<string>()))
+					.Returns(Task.FromResult(false));
+			this._userRepositoryMock.Setup(p =>
+				p.DoesEmailExistAsync(It.IsAny<string>()))
+					.Returns(Task.FromResult(true));
 
-			this.UserRepositoryMock.Setup(p => p.DoesUsernameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
-			this.UserRepositoryMock.Setup(p => p.DoesEmailExistAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._userService.RegisterUser(registerServiceModel));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.UserService.RegisterUser(registerServiceModel));
-
-			Assert.AreEqual(EXCEPTION_MESSAGE, ex.Message, "Incorect Exception message");
+			Assert.AreEqual("Email already exists!", ex.Message, "Incorrect Exception message");
 		}
 		#endregion
 
@@ -185,34 +208,37 @@ namespace DevHive.Services.Tests
 		[Test]
 		public async Task GetUserById_ReturnsTheUser_WhenItExists()
 		{
-			Guid id = new Guid();
-			string name = "Gosho Trapov";
-			User user = new()
+			Guid id = new();
+			string username = "g_trapov";
+			User user = new();
+			UserServiceModel userServiceModel = new()
 			{
-			};
-			UserServiceModel userServiceModel = new UserServiceModel
-			{
-				UserName = name
+				UserName = username
 			};
 
-			this.UserRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
-			this.MapperMock.Setup(p => p.Map<UserServiceModel>(It.IsAny<User>())).Returns(userServiceModel);
+			this._userRepositoryMock.Setup(p =>
+				p.GetByIdAsync(It.IsAny<Guid>()))
+					.Returns(Task.FromResult(user));
+			this._mapperMock.Setup(p =>
+				p.Map<UserServiceModel>(It.IsAny<User>()))
+					.Returns(userServiceModel);
 
-			UserServiceModel result = await this.UserService.GetUserById(id);
+			UserServiceModel result = await this._userService.GetUserById(id);
 
-			Assert.AreEqual(name, result.UserName);
+			Assert.AreEqual(username, result.UserName);
 		}
 
 		[Test]
 		public void GetTechnologyById_ThrowsException_WhenTechnologyDoesNotExist()
 		{
-			const string EXCEPTION_MESSEGE = "User does not exist!";
-			Guid id = new Guid();
-			this.UserRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<User>(null));
+			Guid id = new();
+			this._userRepositoryMock.Setup(p =>
+				p.GetByIdAsync(It.IsAny<Guid>()))
+					.Returns(Task.FromResult<User>(null));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.UserService.GetUserById(id));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._userService.GetUserById(id));
 
-			Assert.AreEqual(EXCEPTION_MESSEGE, ex.Message, "Incorecct exception message");
+			Assert.AreEqual("User does not exist!", ex.Message, "Incorrect exception message");
 		}
 		#endregion
 
@@ -220,32 +246,37 @@ namespace DevHive.Services.Tests
 		[Test]
 		public async Task GetUserByUsername_ReturnsTheCorrectUser_IfItExists()
 		{
-			string username = "Gosho Trapov";
-			User user = new User();
-			UserServiceModel userServiceModel = new UserServiceModel
+			string username = "g_trapov";
+			User user = new();
+			UserServiceModel userServiceModel = new()
 			{
 				UserName = username
 			};
 
-			this.UserRepositoryMock.Setup(p => p.GetByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult(user));
-			this.MapperMock.Setup(p => p.Map<UserServiceModel>(It.IsAny<User>())).Returns(userServiceModel);
+			this._userRepositoryMock.Setup(p =>
+				p.GetByUsernameAsync(It.IsAny<string>()))
+					.Returns(Task.FromResult(user));
+			this._mapperMock.Setup(p =>
+				p.Map<UserServiceModel>(It.IsAny<User>()))
+					.Returns(userServiceModel);
 
-			UserServiceModel result = await this.UserService.GetUserByUsername(username);
+			UserServiceModel result = await this._userService.GetUserByUsername(username);
 
 			Assert.AreEqual(username, result.UserName, "GetUserByUsername does not return the correct user");
 		}
 
 		[Test]
-		public async Task GetUserByUsername_ThrowsException_IfUserDoesNotExist()
+		public void GetUserByUsername_ThrowsException_IfUserDoesNotExist()
 		{
-			string username = "Gosho Trapov";
-			const string EXCEPTION_MESSEGE = "User does not exist!";
+			string username = "g_trapov";
 
-			this.UserRepositoryMock.Setup(p => p.GetByUsernameAsync(It.IsAny<string>())).Returns(Task.FromResult<User>(null));
+			this._userRepositoryMock.Setup(p =>
+				p.GetByUsernameAsync(It.IsAny<string>()))
+					.Returns(Task.FromResult<User>(null));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.UserService.GetUserByUsername(username));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._userService.GetUserByUsername(username));
 
-			Assert.AreEqual(EXCEPTION_MESSEGE, ex.Message, "Incorecct exception message");
+			Assert.AreEqual("User does not exist!", ex.Message, "Incorrect exception message");
 		}
 		#endregion
 
@@ -255,76 +286,90 @@ namespace DevHive.Services.Tests
 		// [TestCase(false)]
 		// public async Task UpdateUser_ReturnsIfUpdateIsSuccessfull_WhenUserExistsy(bool shouldPass)
 		// {
-		// 	string name = "Gosho Trapov";
+		// 	string username = "g_trapov";
 		// 	Guid id = Guid.NewGuid();
 		// 	User user = new User
 		// 	{
-		// 		UserName = name,
+		// 		UserName = username,
 		// 		Id = id,
 		// 	};
 		// 	UpdateUserServiceModel updateUserServiceModel = new UpdateUserServiceModel
 		// 	{
-		// 		UserName = name,
+		// 		UserName = username,
 		// 	};
 		// 	UserServiceModel userServiceModel = new UserServiceModel
 		// 	{
-		// 		UserName = name,
+		// 		UserName = username,
 		// 	};
 		// 	Role role = new Role { };
-        //
-		// 	this.UserRepositoryMock.Setup(p => p.DoesUserExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-		// 	this.UserRepositoryMock.Setup(p => p.DoesUsernameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
-		// 	this.UserRepositoryMock.Setup(p => p.DoesUserHaveThisUsernameAsync(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-		// 	this.UserRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<User>())).Returns(Task.FromResult(shouldPass));
-		// 	this.UserRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
-		// 	this.MapperMock.Setup(p => p.Map<User>(It.IsAny<UpdateUserServiceModel>())).Returns(user);
-		// 	this.MapperMock.Setup(p => p.Map<UserServiceModel>(It.IsAny<User>())).Returns(userServiceModel);
-        //
+		//
+		// 	this._userRepositoryMock.Setup(p =>
+		// p.DoesUserExistAsync(It.IsAny<Guid>()))
+		// 	.Returns(Task.FromResult(true));
+		// 	this._userRepositoryMock.Setup(p =>
+		// p.DoesUsernameExistAsync(It.IsAny<string>()))
+		// 	.Returns(Task.FromResult(false));
+		// 	this._userRepositoryMock.Setup(p =>
+		// p.DoesUserHaveThisUsernameAsync(It.IsAny<Guid>(), It.IsAny<string>()))
+		// 	.Returns(true);
+		// 	this._userRepositoryMock.Setup(p =>
+		// p.EditAsync(It.IsAny<Guid>(), It.IsAny<User>()))
+		// 	.Returns(Task.FromResult(shouldPass));
+		// 	this._userRepositoryMock.Setup(p =>
+		// p.GetByIdAsync(It.IsAny<Guid>()))
+		// 	.Returns(Task.FromResult(user));
+		// 	this._mapperMock.Setup(p =>
+		// p.Map<User>(It.IsAny<UpdateUserServiceModel>()))
+		// 	.Returns(user);
+		// 	this._mapperMock.Setup(p =>
+		// p.Map<UserServiceModel>(It.IsAny<User>()))
+		// 	.Returns(userServiceModel);
+		//
 		// 	if (shouldPass)
 		// 	{
-		// 		UserServiceModel result = await this.UserService.UpdateUser(updateUserServiceModel);
-        //
+		// 		UserServiceModel result = await this._userService.UpdateUser(updateUserServiceModel);
+		//
 		// 		Assert.AreEqual(updateUserServiceModel.UserName, result.UserName);
 		// 	}
 		// 	else
 		// 	{
 		// 		const string EXCEPTION_MESSAGE = "Unable to edit user!";
-        //
-		// 		Exception ex = Assert.ThrowsAsync<InvalidOperationException>(() => this.UserService.UpdateUser(updateUserServiceModel));
-        //
-		// 		Assert.AreEqual(EXCEPTION_MESSAGE, ex.Message, "Incorecct exception message");
+		//
+		// 		Exception ex = Assert.ThrowsAsync<InvalidOperationException>(() => this._userService.UpdateUser(updateUserServiceModel));
+		//
+		// 		Assert.AreEqual(EXCEPTION_MESSAGE, ex.Message, "Incorrect exception message");
 		// 	}
 		// }
 
 		[Test]
 		public void UpdateUser_ThrowsException_WhenUserDoesNotExist()
 		{
-			const string EXCEPTION_MESSAGE = "User does not exist!";
-			UpdateUserServiceModel updateUserServiceModel = new UpdateUserServiceModel
-			{
-			};
+			UpdateUserServiceModel updateUserServiceModel = new();
 
-			this.UserRepositoryMock.Setup(p => p.DoesUserExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this._userRepositoryMock.Setup(p =>
+				p.DoesUserExistAsync(It.IsAny<Guid>()))
+					.Returns(Task.FromResult(false));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.UserService.UpdateUser(updateUserServiceModel));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._userService.UpdateUser(updateUserServiceModel));
 
-			Assert.AreEqual(EXCEPTION_MESSAGE, ex.Message, "Incorecct exception message");
+			Assert.AreEqual("User does not exist!", ex.Message, "Incorrect exception message");
 		}
 
 		[Test]
 		public void UpdateUser_ThrowsException_WhenUserNameAlreadyExists()
 		{
-			const string EXCEPTION_MESSAGE = "Username already exists!";
-			UpdateUserServiceModel updateUserServiceModel = new UpdateUserServiceModel
-			{
-			};
+			UpdateUserServiceModel updateUserServiceModel = new();
 
-			this.UserRepositoryMock.Setup(p => p.DoesUserExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this.UserRepositoryMock.Setup(p => p.DoesUsernameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
+			this._userRepositoryMock.Setup(p =>
+				p.DoesUserExistAsync(It.IsAny<Guid>()))
+					.Returns(Task.FromResult(true));
+			this._userRepositoryMock.Setup(p =>
+				p.DoesUsernameExistAsync(It.IsAny<string>()))
+					.Returns(Task.FromResult(true));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.UserService.UpdateUser(updateUserServiceModel));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._userService.UpdateUser(updateUserServiceModel));
 
-			Assert.AreEqual(EXCEPTION_MESSAGE, ex.Message, "Incorecct exception message");
+			Assert.AreEqual("Username already exists!", ex.Message, "Incorrect exception message");
 		}
 		#endregion
 
@@ -337,41 +382,49 @@ namespace DevHive.Services.Tests
 		// {
 		// 	Guid id = new Guid();
 		// 	User user = new User();
-        //
-		// 	this.UserRepositoryMock.Setup(p => p.DoesUserExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-		// 	this.UserRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
-		// 	this.UserRepositoryMock.Setup(p => p.DeleteAsync(It.IsAny<User>())).Returns(Task.FromResult(shouldPass));
-        //
-		// 	bool result = await this.UserService.DeleteUser(id);
-        //
+		//
+		// 	this._userRepositoryMock.Setup(p =>
+		// p.DoesUserExistAsync(It.IsAny<Guid>()))
+		// 			.Returns(Task.FromResult(true));
+		// 	this._userRepositoryMock.Setup(p =>
+		// p.GetByIdAsync(It.IsAny<Guid>()))
+		// 	.Returns(Task.FromResult(user));
+		// 	this._userRepositoryMock.Setup(p =>
+		// p.DeleteAsync(It.IsAny<User>()))
+		// 			.Returns(Task.FromResult(shouldPass));
+		//
+		// 	bool result = await this._userService.DeleteUser(id);
+		//
 		// 	Assert.AreEqual(shouldPass, result);
 		// }
-        //
+		//
 		[Test]
 		public void DeleteUser_ThrowsException_WhenUserDoesNotExist()
 		{
 			string exceptionMessage = "User does not exist!";
-			Guid id = new Guid();
+			Guid id = new();
 
-			this.UserRepositoryMock.Setup(p => p.DoesUserExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this._userRepositoryMock.Setup(p =>
+				p.DoesUserExistAsync(It.IsAny<Guid>()))
+					.Returns(Task.FromResult(false));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.UserService.DeleteUser(id));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._userService.DeleteUser(id));
 
-			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
+			Assert.AreEqual(exceptionMessage, ex.Message, "Incorrect exception message");
 		}
 		#endregion
 
 		#region HelperMethods
 		private string WriteJWTSecurityToken(Guid userId, string username, HashSet<Role> roles)
 		{
-			byte[] signingKey = Encoding.ASCII.GetBytes(this.JwtOptions.Secret);
+			byte[] signingKey = Encoding.ASCII.GetBytes(this._jwtOptions.Secret);
 			HashSet<Claim> claims = new()
 			{
 				new Claim("ID", $"{userId}"),
 				new Claim("Username", username),
 			};
 
-			foreach (var role in roles)
+			foreach (Role role in roles)
 			{
 				claims.Add(new Claim(ClaimTypes.Role, role.Name));
 			}

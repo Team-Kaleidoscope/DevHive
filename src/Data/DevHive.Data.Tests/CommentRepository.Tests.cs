@@ -20,18 +20,18 @@ namespace DevHive.Data.Tests
 		[SetUp]
 		public void Setup()
 		{
-			var optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
+			DbContextOptionsBuilder<DevHiveContext> optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
 				.UseInMemoryDatabase(databaseName: "DevHive_Test_Database");
 
 			this.Context = new DevHiveContext(optionsBuilder.Options);
 
-			CommentRepository = new CommentRepository(Context);
+			this.CommentRepository = new CommentRepository(this.Context);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			this.Context.Database.EnsureDeleted();
+			_ = this.Context.Database.EnsureDeleted();
 		}
 		#endregion
 
@@ -49,7 +49,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetPostByCreatorAndTimeCreatedAsync_ReturnsNull_IfThePostDoesNotExist()
 		{
-			Comment comment = await this.AddEntity();
+			_ = await this.AddEntity();
 
 			Comment resultComment = await this.CommentRepository.GetCommentByIssuerAndTimeCreatedAsync(Guid.Empty, DateTime.Now);
 
@@ -79,18 +79,18 @@ namespace DevHive.Data.Tests
 		#endregion
 
 		#region HelperMethods
-		private async Task<Comment> AddEntity(string name = COMMENT_MESSAGE)
+		private async Task<Comment> AddEntity()
 		{
-			User creator = new User { Id = Guid.NewGuid() };
-			Comment comment = new Comment
+			User creator = new() { Id = Guid.NewGuid() };
+			Comment comment = new()
 			{
 				Message = COMMENT_MESSAGE,
 				Creator = creator,
 				TimeCreated = DateTime.Now
 			};
 
-			this.Context.Comments.Add(comment);
-			await this.Context.SaveChangesAsync();
+			_ = this.Context.Comments.Add(comment);
+			_ = await this.Context.SaveChangesAsync();
 
 			return comment;
 		}

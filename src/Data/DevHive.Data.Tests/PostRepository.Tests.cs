@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 namespace DevHive.Data.Tests
 {
-    [TestFixture]
+	[TestFixture]
 	public class PostRepositoryTests
 	{
 		private const string POST_MESSAGE = "Post test message";
@@ -26,20 +26,20 @@ namespace DevHive.Data.Tests
 		[SetUp]
 		public void Setup()
 		{
-			var optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
+			DbContextOptionsBuilder<DevHiveContext> optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
 				.UseInMemoryDatabase(databaseName: "DevHive_Test_Database");
 
 			this.Context = new DevHiveContext(optionsBuilder.Options);
 
 			this.UserRepository = new Mock<IUserRepository>();
 
-			PostRepository = new PostRepository(Context, this.UserRepository.Object);
+			this.PostRepository = new PostRepository(this.Context, this.UserRepository.Object);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			this.Context.Database.EnsureDeleted();
+			_ = this.Context.Database.EnsureDeleted();
 		}
 		#endregion
 
@@ -49,11 +49,11 @@ namespace DevHive.Data.Tests
 		// {
 		// 	Post post = await this.AddEntity();
 		// 	User user = new User { Id = Guid.NewGuid() };
-        //
+		//
 		// 	this.UserRepository.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
-        //
+		//
 		// 	bool result = await this.PostRepository.AddNewPostToCreator(user.Id, post);
-        //
+		//
 		// 	Assert.IsTrue(result, "AddNewPostToCreator does not return true when Post Is Added To Creator successfully");
 		// }
 		#endregion
@@ -62,7 +62,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetByNameAsync_ReturnsTheCorrectPost_IfItExists()
 		{
-			Post post = await AddEntity();
+			Post post = await this.AddEntity();
 
 			Post resultTechnology = await this.PostRepository.GetByIdAsync(post.Id);
 
@@ -92,7 +92,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetPostByCreatorAndTimeCreatedAsync_ReturnsNull_IfThePostDoesNotExist()
 		{
-			Post post = await this.AddEntity();
+			_ = await this.AddEntity();
 
 			Post resutPost = await this.PostRepository.GetPostByCreatorAndTimeCreatedAsync(Guid.Empty, DateTime.Now);
 
@@ -121,11 +121,11 @@ namespace DevHive.Data.Tests
 		#endregion
 
 		#region HelperMethods
-		private async Task<Post> AddEntity(string name = POST_MESSAGE)
+		private async Task<Post> AddEntity()
 		{
-			User creator = new User { Id = Guid.NewGuid() };
-			await this.Context.Users.AddAsync(creator);
-			Post post = new Post
+			User creator = new() { Id = Guid.NewGuid() };
+			_ = await this.Context.Users.AddAsync(creator);
+			Post post = new()
 			{
 				Message = POST_MESSAGE,
 				Id = Guid.NewGuid(),
@@ -135,8 +135,8 @@ namespace DevHive.Data.Tests
 				Comments = new List<Comment>()
 			};
 
-			await this.Context.Posts.AddAsync(post);
-			await this.Context.SaveChangesAsync();
+			_ = await this.Context.Posts.AddAsync(post);
+			_ = await this.Context.SaveChangesAsync();
 
 			return post;
 		}

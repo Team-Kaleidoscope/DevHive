@@ -21,18 +21,18 @@ namespace DevHive.Data.Tests
 		[SetUp]
 		public void Setup()
 		{
-			var optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
+			DbContextOptionsBuilder<DevHiveContext> optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
 				.UseInMemoryDatabase(databaseName: "DevHive_Test_Database");
 
 			this.Context = new DevHiveContext(optionsBuilder.Options);
 
-			TechnologyRepository = new TechnologyRepository(Context);
+			this.TechnologyRepository = new TechnologyRepository(this.Context);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			this.Context.Database.EnsureDeleted();
+			_ = this.Context.Database.EnsureDeleted();
 		}
 		#endregion
 
@@ -40,9 +40,9 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetByNameAsync_ReturnsTheCorrectTechnology_IfItExists()
 		{
-			await AddEntity();
+			await this.AddEntity();
 
-			Technology technology = this.Context.Technologies.Where(x => x.Name == TECHNOLOGY_NAME).ToList().FirstOrDefault();
+			Technology technology = this.Context.Technologies.Where(x => x.Name == TECHNOLOGY_NAME).AsEnumerable().FirstOrDefault();
 
 			Technology resultTechnology = await this.TechnologyRepository.GetByNameAsync(TECHNOLOGY_NAME);
 
@@ -62,8 +62,8 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task DoesTechnologyExist_ReturnsTrue_IfIdExists()
 		{
-			await AddEntity();
-			Technology technology = this.Context.Technologies.Where(x => x.Name == TECHNOLOGY_NAME).ToList().FirstOrDefault();
+			await this.AddEntity();
+			Technology technology = this.Context.Technologies.Where(x => x.Name == TECHNOLOGY_NAME).AsEnumerable().FirstOrDefault();
 			Guid id = technology.Id;
 
 			bool result = await this.TechnologyRepository.DoesTechnologyExistAsync(id);
@@ -86,7 +86,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task DoesTechnologyNameExist_ReturnsTrue_IfTechnologyExists()
 		{
-			await AddEntity();
+			await this.AddEntity();
 
 			bool result = await this.TechnologyRepository.DoesTechnologyNameExistAsync(TECHNOLOGY_NAME);
 
@@ -105,13 +105,13 @@ namespace DevHive.Data.Tests
 		#region HelperMethods
 		private async Task AddEntity(string name = TECHNOLOGY_NAME)
 		{
-			Technology technology = new Technology
+			Technology technology = new()
 			{
 				Name = name
 			};
 
-			this.Context.Technologies.Add(technology);
-			await this.Context.SaveChangesAsync();
+			_ = this.Context.Technologies.Add(technology);
+			_ = await this.Context.SaveChangesAsync();
 		}
 		#endregion
 	}

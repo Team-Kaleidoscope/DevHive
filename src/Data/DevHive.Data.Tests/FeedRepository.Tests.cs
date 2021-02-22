@@ -19,18 +19,18 @@ namespace DevHive.Data.Tests
 		[SetUp]
 		public void Setup()
 		{
-			var optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
+			DbContextOptionsBuilder<DevHiveContext> optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
 				.UseInMemoryDatabase(databaseName: "DevHive_Test_Database");
 
 			this.Context = new DevHiveContext(optionsBuilder.Options);
 
-			FeedRepository = new FeedRepository(Context);
+			this.FeedRepository = new FeedRepository(this.Context);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			this.Context.Database.EnsureDeleted();
+			_ = this.Context.Database.EnsureDeleted();
 		}
 		#endregion
 
@@ -38,15 +38,14 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetFriendsPosts_ReturnsListOfPosts_WhenTheyExist()
 		{
-			User dummyUser = this.CreateDummyUser();
-			List<User> friendsList = new List<User>();
-			friendsList.Add(dummyUser);
+			User dummyUser = CreateDummyUser();
+			List<User> friendsList = new()
+			{
+				dummyUser
+			};
 
-			DateTime dateTime = new DateTime(3000, 05, 09, 9, 15, 0);
+			DateTime dateTime = new(3000, 05, 09, 9, 15, 0);
 			Console.WriteLine(dateTime.ToFileTime());
-
-			Post dummyPost = this.CreateDummyPost(dummyUser);
-			Post anotherDummnyPost = this.CreateDummyPost(dummyUser);
 
 			const int PAGE_NUMBER = 1;
 			const int PAGE_SIZE = 10;
@@ -59,11 +58,13 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetFriendsPosts_ReturnsNull_WhenNoSuitablePostsExist()
 		{
-			User dummyUser = this.CreateDummyUser();
-			List<User> friendsList = new List<User>();
-			friendsList.Add(dummyUser);
+			User dummyUser = CreateDummyUser();
+			List<User> friendsList = new()
+			{
+				dummyUser
+			};
 
-			DateTime dateTime = new DateTime(3000, 05, 09, 9, 15, 0);
+			DateTime dateTime = new(3000, 05, 09, 9, 15, 0);
 
 			const int PAGE_NUMBER = 1;
 			const int PAGE_SIZE = 10;
@@ -75,7 +76,7 @@ namespace DevHive.Data.Tests
 		#endregion
 
 		#region HelperMethods
-		private User CreateDummyUser()
+		private static User CreateDummyUser()
 		{
 			HashSet<Role> roles = new()
 			{
@@ -95,24 +96,6 @@ namespace DevHive.Data.Tests
 				Email = "abv@abv.bg",
 				Roles = roles
 			};
-		}
-
-		private Post CreateDummyPost(User poster)
-		{
-			const string POST_MESSAGE = "random message";
-			Guid id = Guid.NewGuid();
-			Post post = new Post
-			{
-				Id = id,
-				Message = POST_MESSAGE,
-				Creator = poster,
-				TimeCreated = new DateTime(2000, 05, 09, 9, 15, 0)
-			};
-
-			this.Context.Posts.Add(post);
-			this.Context.SaveChanges();
-
-			return post;
 		}
 		#endregion
 	}

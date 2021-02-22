@@ -19,18 +19,18 @@ namespace DevHive.Data.Tests
 		[SetUp]
 		public void Setup()
 		{
-			var optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
+			DbContextOptionsBuilder<DevHiveContext> optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
 				.UseInMemoryDatabase(databaseName: "DevHive_Test_Database");
 
 			this.Context = new DevHiveContext(optionsBuilder.Options);
 
-			LanguageRepository = new LanguageRepository(Context);
+			this.LanguageRepository = new LanguageRepository(this.Context);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			this.Context.Database.EnsureDeleted();
+			_ = this.Context.Database.EnsureDeleted();
 		}
 		#endregion
 
@@ -38,9 +38,9 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetByNameAsync_ReturnsTheCorrectLanguage_IfItExists()
 		{
-			await AddEntity();
+			await this.AddEntity();
 
-			Language language = this.Context.Languages.Where(x => x.Name == LANGUAGE_NAME).ToList().FirstOrDefault();
+			Language language = this.Context.Languages.Where(x => x.Name == LANGUAGE_NAME).AsEnumerable().FirstOrDefault();
 
 			Language languageResult = await this.LanguageRepository.GetByNameAsync(LANGUAGE_NAME);
 
@@ -60,8 +60,8 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task DoesLanguageExist_ReturnsTrue_IfIdExists()
 		{
-			await AddEntity();
-			Language language = this.Context.Languages.Where(x => x.Name == LANGUAGE_NAME).ToList().FirstOrDefault();
+			await this.AddEntity();
+			Language language = this.Context.Languages.Where(x => x.Name == LANGUAGE_NAME).AsEnumerable().FirstOrDefault();
 
 			Guid id = language.Id;
 
@@ -85,7 +85,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task DoesLanguageNameExist_ReturnsTrue_IfLanguageExists()
 		{
-			await AddEntity();
+			await this.AddEntity();
 
 			bool result = await this.LanguageRepository.DoesLanguageNameExistAsync(LANGUAGE_NAME);
 
@@ -104,12 +104,12 @@ namespace DevHive.Data.Tests
 		#region HelperMethods
 		private async Task AddEntity(string name = LANGUAGE_NAME)
 		{
-			Language language = new Language
+			Language language = new()
 			{
 				Name = name
 			};
 
-			await this.LanguageRepository.AddAsync(language);
+			_ = await this.LanguageRepository.AddAsync(language);
 		}
 		#endregion
 	}
