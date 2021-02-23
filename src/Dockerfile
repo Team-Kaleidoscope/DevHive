@@ -1,16 +1,11 @@
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-EXPOSE 80
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS sdk
 
-COPY . /app
-WORKDIR /app
+COPY . ./Build
+WORKDIR /Build
+RUN [ "dotnet", "publish", "-f", "net5.0", "-c", "Release", "Web/DevHive.Web/DevHive.Web.csproj", "-o", "/Out"]
 
-RUN dotnet restore
-RUN dotnet build -c Release -o /app/build
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
+COPY --from=sdk /Out /App
 
-FROM build AS publish
-RUN dotnet publish "DevHive.sln" -c Release -o /app/publish
-
-FROM base AS final
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "DevHive.Web.dll"]
+WORKDIR /App
+ENTRYPOINT [ "dotnet", "DevHive.Web.dll" ]
