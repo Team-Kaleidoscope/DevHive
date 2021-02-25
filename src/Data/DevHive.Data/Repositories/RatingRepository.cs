@@ -32,5 +32,12 @@ namespace DevHive.Data.Repositories
 				.Where(x => x.Post.Id == postId)
 				.AnyAsync(x => x.User.Id == userId);
 		}
+
+		public async Task<Rating> GetRatingByUserAndPostId(Guid userId, Guid postId)
+		{
+			return await this._context.Rating
+				.FirstOrDefaultAsync(x => x.Post.Id == postId && x.User.Id == userId);
+		}
 	}
 }
+

@@ -24,29 +24,31 @@ namespace DevHive.Services.Services
 			this._mapper = mapper;
 		}
 
-		public async Task<ReadRatingServiceModel> RatePost(CreateRatingServiceModel ratePostServiceModel)
+		public async Task<Guid> RatePost(CreateRatingServiceModel createRatingServiceModel)
 		{
-			throw new NotImplementedException();
-			// if (!await this._postRepository.DoesPostExist(ratePostServiceModel.PostId))
-			// throw new ArgumentException("Post does not exist!");
+			if (!await this._postRepository.DoesPostExist(createRatingServiceModel.PostId))
+				throw new ArgumentException("Post does not exist!");
 
-			// if (!await this._userRepository.DoesUserExistAsync(ratePostServiceModel.UserId))
-			// 	throw new ArgumentException("User does not exist!");
+			if (await this._ratingRepository.UserRatedPost(createRatingServiceModel.UserId, createRatingServiceModel.PostId))
+				throw new ArgumentException("User already rated the post!");
 
-			// Post post = await this._postRepository.GetByIdAsync(ratePostServiceModel.PostId);
-			// User user = await this._userRepository.GetByIdAsync(ratePostServiceModel.UserId);
+			Rating rating = this._mapper.Map<Rating>(createRatingServiceModel);
 
-			// if (this.HasUserRatedThisPost(user, post))
-			// 	throw new ArgumentException("You can't rate the same post more then one(duh, amigo)");
+			User user = await this._userRepository.GetByIdAsync(createRatingServiceModel.UserId);
+			Post post = await this._postRepository.GetByIdAsync(createRatingServiceModel.PostId);
+			rating.User = user;
+			rating.Post = post;
 
-			// this.Rate(user, post, ratePostServiceModel.Liked);
+			bool success = await this._ratingRepository.AddAsync(rating);
 
-			// bool success = await this._ratingRepository.EditAsync(post.Rating.Id, post.Rating);
-			// if (!success)
-			// 	throw new InvalidOperationException("Unable to rate the post!");
+			if (success)
+			{
+				Rating newRating = await this._ratingRepository.GetRatingByUserAndPostId(rating.User.Id, rating.Post.Id);
 
-			// Rating newRating = await this._ratingRepository.GetByIdAsync(post.Rating.Id);
-			// return this._mapper.Map<ReadPostRatingServiceModel>(newRating);
+				return newRating.Id;
+			}
+			else
+				return Guid.Empty;
 		}
 
 		public async Task<ReadRatingServiceModel> RemoveUserRateFromPost(Guid userId, Guid postId)
@@ -66,15 +68,5 @@ namespace DevHive.Services.Services
 			// 	.Any(x => x.Id == user.Id);
 		}
 
-		private void Rate(User user, Post post, bool liked)
-		{
-			throw new NotImplementedException();
-			// if (liked)
-			// 	post.Rating.Rate++;
-			// else
-			// 	post.Rating.Rate--;
-
-			// post.Rating.UsersThatRated.Add(user);
-		}
 	}
 }

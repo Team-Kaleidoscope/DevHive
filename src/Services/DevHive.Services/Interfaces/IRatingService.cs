@@ -7,7 +7,7 @@ namespace DevHive.Services.Interfaces
 {
 	public interface IRatingService
 	{
-		Task<ReadRatingServiceModel> RatePost(CreateRatingServiceModel ratePostServiceModel);
+		Task<Guid> RatePost(CreateRatingServiceModel ratePostServiceModel);
 
 		bool HasUserRatedThisPost(User user, Post post);
 	}

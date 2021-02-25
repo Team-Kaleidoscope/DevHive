@@ -11,13 +11,13 @@ namespace DevHive.Web.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	public class RateController
+	public class RatingController
 	{
 		private readonly IRatingService _rateService;
 		private readonly IUserService _userService;
 		private readonly IMapper _mapper;
 
-		public RateController(IRatingService rateService, IUserService userService, IMapper mapper)
+		public RatingController(IRatingService rateService, IUserService userService, IMapper mapper)
 		{
 			this._rateService = rateService;
 			this._userService = userService;
@@ -26,15 +26,17 @@ namespace DevHive.Web.Controllers
 
 		[HttpPost]
 		[Authorize(Roles = "Admin,User")]
-		public async Task<IActionResult> RatePost(Guid userId, [FromBody] RatePostWebModel ratePostWebModel, [FromHeader] string authorization)
+		public async Task<IActionResult> RatePost(Guid userId, [FromBody] CreateRatingWebModel createRatingWebModel, [FromHeader] string authorization)
 		{
-			CreateRatingServiceModel ratePostServiceModel = this._mapper.Map<CreateRatingServiceModel>(ratePostWebModel);
+			CreateRatingServiceModel ratePostServiceModel = this._mapper.Map<CreateRatingServiceModel>(createRatingWebModel);
 			ratePostServiceModel.UserId = userId;
 
-			ReadRatingServiceModel readPostRatingServiceModel = await this._rateService.RatePost(ratePostServiceModel);
-			ReadPostRatingWebModel readPostRatingWebModel = this._mapper.Map<ReadPostRatingWebModel>(readPostRatingServiceModel);
+			Guid id = await this._rateService.RatePost(ratePostServiceModel);
 
-			return new OkObjectResult(readPostRatingWebModel);
+			if (Guid.Empty == id)
+				return new BadRequestResult();
+
+			return new OkObjectResult(id);
 		}
 	}
 }
