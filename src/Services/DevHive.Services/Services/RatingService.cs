@@ -24,6 +24,7 @@ namespace DevHive.Services.Services
 			this._mapper = mapper;
 		}
 
+		#region Create
 		public async Task<Guid> RatePost(CreateRatingServiceModel createRatingServiceModel)
 		{
 			if (!await this._postRepository.DoesPostExist(createRatingServiceModel.PostId))
@@ -50,23 +51,47 @@ namespace DevHive.Services.Services
 			else
 				return Guid.Empty;
 		}
+		#endregion
+
+		#region Read
+		public async Task<ReadRatingServiceModel> GetRatingById(Guid ratingId)
+		{
+			Rating rating = await this._ratingRepository.GetByIdAsync(ratingId) ??
+				throw new ArgumentException("The rating does not exist");
+
+			User user = await this._userRepository.GetByIdAsync(rating.User.Id) ??
+				throw new ArgumentException("The user does not exist");
+
+			ReadRatingServiceModel readRatingServiceModel = this._mapper.Map<ReadRatingServiceModel>(rating);
+			readRatingServiceModel.UserId = user.Id;
+
+			return readRatingServiceModel;
+		}
+
+		public async Task<ReadRatingServiceModel> GetUserRateFromPost(Guid userId, Guid postId)
+		{
+			Rating rating = await this._ratingRepository.GetRatingByUserAndPostId(userId, postId) ??
+				throw new ArgumentException("The rating does not exist");
+
+			User user = await this._userRepository.GetByIdAsync(rating.User.Id) ??
+				throw new ArgumentException("The user does not exist");
+
+			ReadRatingServiceModel readRatingServiceModel = this._mapper.Map<ReadRatingServiceModel>(rating);
+			readRatingServiceModel.UserId = user.Id;
+
+			return readRatingServiceModel;
+		}
+
+		public async Task<bool> HasUserRatedThisPost(Guid userId, Guid postId)
+		{
+			return await this._ratingRepository
+				.UserRatedPost(userId, postId);
+		}
+		#endregion
 
 		public async Task<ReadRatingServiceModel> RemoveUserRateFromPost(Guid userId, Guid postId)
 		{
 			throw new NotImplementedException();
-			// Post post = await this._postRepository.GetByIdAsync(postId);
-			// User user = await this._userRepository.GetByIdAsync(userId);
-
-			// if (!this.HasUserRatedThisPost(user, post))
-			// 	throw new ArgumentException("You haven't rated this post, lmao!");
 		}
-
-		public bool HasUserRatedThisPost(User user, Post post)
-		{
-			throw new NotImplementedException();
-			// return post.Rating.UsersThatRated
-			// 	.Any(x => x.Id == user.Id);
-		}
-
 	}
 }

@@ -38,5 +38,14 @@ namespace DevHive.Web.Controllers
 
 			return new OkObjectResult(id);
 		}
+
+		[HttpGet]
+		public async Task<IActionResult> GetRatingById(Guid id)
+		{
+			ReadRatingServiceModel readRatingServiceModel = await this._rateService.GetRatingById(id);
+			ReadRatingWebModel readPostRatingWebModel = this._mapper.Map<ReadRatingWebModel>(readRatingServiceModel);
+
+			return new OkObjectResult(readPostRatingWebModel);
+		}
 	}
 }

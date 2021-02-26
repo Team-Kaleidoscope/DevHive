@@ -8,8 +8,8 @@ namespace DevHive.Services.Models.Post.Rating
 
 		public Guid PostId { get; set; }
 
-		public int Likes { get; set; }
+		public Guid UserId { get; set; }
 
-		public int Dislikes { get; set; }
+		public bool IsLike { get; set; }
 	}
 }

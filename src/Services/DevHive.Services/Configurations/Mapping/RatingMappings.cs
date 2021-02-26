@@ -9,6 +9,8 @@ namespace DevHive.Services.Configurations.Mapping
 		public RatingMappings()
 		{
 			CreateMap<CreateRatingServiceModel, Rating>();
+
+			CreateMap<Rating, ReadRatingServiceModel>();
 		}
 	}
 }

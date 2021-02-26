@@ -20,6 +20,13 @@ namespace DevHive.Data.Repositories
 			this._postRepository = postRepository;
 		}
 
+		public override async Task<Rating> GetByIdAsync(Guid id)
+		{
+			return await this._context.Rating
+				.Include(x => x.User)
+				.Include(x => x.Post)
+				.FirstOrDefaultAsync(x => x.Id == id);
+		}
 		public async Task<List<Rating>> GetRatingsByPostId(Guid postId)
 		{
 			return await this._context.Rating

@@ -7,8 +7,12 @@ namespace DevHive.Services.Interfaces
 {
 	public interface IRatingService
 	{
-		Task<Guid> RatePost(CreateRatingServiceModel ratePostServiceModel);
+		Task<Guid> RatePost(CreateRatingServiceModel createRatingServiceModel);
 
-		bool HasUserRatedThisPost(User user, Post post);
+		Task<ReadRatingServiceModel> GetRatingById(Guid ratingId);
+		Task<ReadRatingServiceModel> GetUserRateFromPost(Guid userId, Guid postId);
+		Task<bool> HasUserRatedThisPost(Guid userId, Guid postId);
+
+		Task<ReadRatingServiceModel> RemoveUserRateFromPost(Guid userId, Guid postId);
 	}
 }

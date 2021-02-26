@@ -10,7 +10,7 @@ namespace DevHive.Web.Configurations.Mapping
 		{
 			CreateMap<CreateRatingWebModel, CreateRatingServiceModel>();
 
-			CreateMap<ReadRatingServiceModel, ReadPostRatingWebModel>();
+			CreateMap<ReadRatingServiceModel, ReadRatingWebModel>();
 		}
 	}
 }
