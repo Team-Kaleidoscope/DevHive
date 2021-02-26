@@ -21,8 +21,6 @@ namespace DevHive.Data.Models
 
 		public List<Rating> Ratings { get; set; }
 
-		public int CurrentRating { get; set; }
-
 		public List<PostAttachments> Attachments { get; set; } = new();
 	}
 }

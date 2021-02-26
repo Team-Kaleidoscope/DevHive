@@ -10,9 +10,10 @@ namespace DevHive.Services.Interfaces
 		Task<Guid> RatePost(CreateRatingServiceModel createRatingServiceModel);
 
 		Task<ReadRatingServiceModel> GetRatingById(Guid ratingId);
-		Task<ReadRatingServiceModel> GetUserRateFromPost(Guid userId, Guid postId);
 		Task<bool> HasUserRatedThisPost(Guid userId, Guid postId);
 
-		Task<ReadRatingServiceModel> RemoveUserRateFromPost(Guid userId, Guid postId);
+		Task<ReadRatingServiceModel> UpdateRating(UpdateRatingServiceModel updateRatingServiceModel);
+
+		Task<bool> DeleteRating(Guid ratingId);
 	}
 }

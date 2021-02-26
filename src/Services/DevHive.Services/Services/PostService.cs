@@ -46,7 +46,6 @@ namespace DevHive.Services.Services
 
 			post.Creator = await this._userRepository.GetByIdAsync(createPostServiceModel.CreatorId);
 			post.TimeCreated = DateTime.Now;
-			post.CurrentRating = 0;
 
 			bool success = await this._postRepository.AddAsync(post);
 			if (success)

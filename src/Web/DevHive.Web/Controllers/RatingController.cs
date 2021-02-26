@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DevHive.Web.Controllers
 {
 	[ApiController]
+	//[Authorize(Roles = "Admin,User")]
 	[Route("api/[controller]")]
 	public class RatingController
 	{
@@ -25,7 +26,6 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPost]
-		[Authorize(Roles = "Admin,User")]
 		public async Task<IActionResult> RatePost(Guid userId, [FromBody] CreateRatingWebModel createRatingWebModel, [FromHeader] string authorization)
 		{
 			CreateRatingServiceModel ratePostServiceModel = this._mapper.Map<CreateRatingServiceModel>(createRatingWebModel);
@@ -36,7 +36,7 @@ namespace DevHive.Web.Controllers
 			if (Guid.Empty == id)
 				return new BadRequestResult();
 
-			return new OkObjectResult(id);
+			return new OkObjectResult(new { Id = id });
 		}
 
 		[HttpGet]
@@ -46,6 +46,24 @@ namespace DevHive.Web.Controllers
 			ReadRatingWebModel readPostRatingWebModel = this._mapper.Map<ReadRatingWebModel>(readRatingServiceModel);
 
 			return new OkObjectResult(readPostRatingWebModel);
+		}
+
+		[HttpPut]
+		public async Task<IActionResult> UpdateRating(Guid userId, [FromBody] UpdateRatingWebModel updateRatingWebModel, [FromHeader] string authorization)
+		{
+			UpdateRatingServiceModel updateRatingServiceModel =
+				this._mapper.Map<UpdateRatingServiceModel>(updateRatingWebModel);
+			updateRatingServiceModel.UserId = userId;
+
+			ReadRatingServiceModel readRatingServiceModel = await this._rateService.UpdateRating(updateRatingServiceModel);
+
+			if (readRatingServiceModel == null)
+				return new BadRequestResult();
+			else
+			{
+				ReadRatingWebModel readRatingWebModel = this._mapper.Map<ReadRatingWebModel>(readRatingServiceModel);
+				return new OkObjectResult(readRatingWebModel);
+			}
 		}
 	}
 }

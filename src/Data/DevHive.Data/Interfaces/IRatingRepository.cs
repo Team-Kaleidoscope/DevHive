@@ -11,5 +11,7 @@ namespace DevHive.Data.Interfaces
 		Task<List<Rating>> GetRatingsByPostId(Guid postId);
 		Task<bool> UserRatedPost(Guid userId, Guid postId);
 		Task<Rating> GetRatingByUserAndPostId(Guid userId, Guid postId);
+
+		Task<bool> DoesRatingExist(Guid id);
 	}
 }

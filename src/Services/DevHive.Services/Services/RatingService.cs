@@ -68,20 +68,6 @@ namespace DevHive.Services.Services
 			return readRatingServiceModel;
 		}
 
-		public async Task<ReadRatingServiceModel> GetUserRateFromPost(Guid userId, Guid postId)
-		{
-			Rating rating = await this._ratingRepository.GetRatingByUserAndPostId(userId, postId) ??
-				throw new ArgumentException("The rating does not exist");
-
-			User user = await this._userRepository.GetByIdAsync(rating.User.Id) ??
-				throw new ArgumentException("The user does not exist");
-
-			ReadRatingServiceModel readRatingServiceModel = this._mapper.Map<ReadRatingServiceModel>(rating);
-			readRatingServiceModel.UserId = user.Id;
-
-			return readRatingServiceModel;
-		}
-
 		public async Task<bool> HasUserRatedThisPost(Guid userId, Guid postId)
 		{
 			return await this._ratingRepository
@@ -89,9 +75,42 @@ namespace DevHive.Services.Services
 		}
 		#endregion
 
-		public async Task<ReadRatingServiceModel> RemoveUserRateFromPost(Guid userId, Guid postId)
+		#region Update
+		public async Task<ReadRatingServiceModel> UpdateRating(UpdateRatingServiceModel updateRatingServiceModel)
 		{
-			throw new NotImplementedException();
+			Rating rating = await this._ratingRepository.GetRatingByUserAndPostId(updateRatingServiceModel.UserId, updateRatingServiceModel.PostId) ??
+				throw new ArgumentException("Rating does not exist!");
+
+			User user = await this._userRepository.GetByIdAsync(updateRatingServiceModel.UserId) ??
+				throw new ArgumentException("User does not exist!");
+
+			if (!await this._ratingRepository.UserRatedPost(updateRatingServiceModel.UserId, updateRatingServiceModel.PostId))
+				throw new ArgumentException("User has not rated the post!");
+
+			rating.User = user;
+			rating.IsLike = updateRatingServiceModel.IsLike;
+
+			bool result = await this._ratingRepository.EditAsync(updateRatingServiceModel.Id, rating);
+
+			if (result)
+			{
+				ReadRatingServiceModel readRatingServiceModel = this._mapper.Map<ReadRatingServiceModel>(rating);
+				return readRatingServiceModel;
+			}
+			else
+				return null;
 		}
+		#endregion
+
+		#region Delete
+		public async Task<bool> DeleteRating(Guid ratingId)
+		{
+			if (!await this._ratingRepository.DoesRatingExist(ratingId))
+				throw new ArgumentException("Rating does not exist!");
+
+			Rating rating = await this._ratingRepository.GetByIdAsync(ratingId);
+			return await this._ratingRepository.DeleteAsync(rating);
+		}
+		#endregion
 	}
 }
