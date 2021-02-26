@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="..\DevHive.Common.Models\DevHive.Common.csproj"/>
+    <ProjectReference Include="..\DevHive.Common.Models\DevHive.Common.Models.csproj"/>
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
