@@ -77,7 +77,6 @@ namespace DevHive.Web.Controllers
 				new OkResult() :
 				new BadRequestObjectResult("Could not delete Comment");
 		}
-
 	}
 }
 

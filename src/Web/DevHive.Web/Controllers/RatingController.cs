@@ -71,5 +71,16 @@ namespace DevHive.Web.Controllers
 				return new OkObjectResult(readRatingWebModel);
 			}
 		}
+
+		[HttpDelete]
+		public async Task<IActionResult> DeleteTating(Guid id, [FromHeader] string authorization)
+		{
+			if (!await this._rateService.ValidateJwtForRating(id, authorization))
+				return new UnauthorizedResult();
+
+			return await this._rateService.DeleteRating(id) ?
+				new OkResult() :
+				new BadRequestObjectResult("Could not delete Rating");
+		}
 	}
 }
