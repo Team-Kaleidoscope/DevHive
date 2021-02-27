@@ -13,9 +13,9 @@ using DevHive.Common.Models.Identity;
 using DevHive.Services.Interfaces;
 using DevHive.Data.Interfaces;
 using System.Linq;
-using DevHive.Common.Models.Misc;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
+using DevHive.Common.Jwt;
+using DevHive.Common.Jwt.Interfaces;
 
 namespace DevHive.Services.Services
 {
@@ -28,6 +28,7 @@ namespace DevHive.Services.Services
 		private readonly IMapper _userMapper;
 		private readonly JwtOptions _jwtOptions;
 		private readonly ICloudService _cloudService;
+		private readonly IJwtService _jwtService;
 
 		public UserService(IUserRepository userRepository,
 			ILanguageRepository languageRepository,
@@ -35,7 +36,8 @@ namespace DevHive.Services.Services
 			ITechnologyRepository technologyRepository,
 			IMapper mapper,
 			JwtOptions jwtOptions,
-			ICloudService cloudService)
+			ICloudService cloudService,
+			IJwtService jwtService)
 		{
 			this._userRepository = userRepository;
 			this._roleRepository = roleRepository;
@@ -44,6 +46,7 @@ namespace DevHive.Services.Services
 			this._languageRepository = languageRepository;
 			this._technologyRepository = technologyRepository;
 			this._cloudService = cloudService;
+			this._jwtService = jwtService;
 		}
 
 		#region Authentication
@@ -65,8 +68,10 @@ namespace DevHive.Services.Services
 		}
 
 		/// <summary>
-		/// Returns a new JSON Web Token (that can be used for authorization) for the given user
+		/// Register a user in the database and return a
 		/// </summary>
+		/// <param name="registerModel">Register model, containing registration information</param>
+		/// <returns>A Token model, containing JWT Token for further verification</returns>
 		public async Task<TokenModel> RegisterUser(RegisterServiceModel registerModel)
 		{
 			if (await this._userRepository.DoesUsernameExistAsync(registerModel.UserName))
@@ -86,7 +91,12 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("Unable to add role to user");
 
 			User createdUser = await this._userRepository.GetByUsernameAsync(registerModel.UserName);
-			return new TokenModel(WriteJWTSecurityToken(createdUser.Id, createdUser.UserName, createdUser.Roles));
+			List<string> roleNames = createdUser
+						.Roles
+						.Select(x => x.Name)
+						.ToList();
+
+			return new TokenModel(this._jwtService.GenerateJwtToken(createdUser.Id, createdUser.UserName, roleNames));
 		}
 		#endregion
 
@@ -173,34 +183,38 @@ namespace DevHive.Services.Services
 		/// is the same user as the one in the token (unless the user in the token has the admin role)
 		/// and the roles in the token are the same as those in the user, gotten by the id in the token
 		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="rawTokenData"></param>
+		/// <returns></returns>
 		public async Task<bool> ValidJWT(Guid id, string rawTokenData)
 		{
+			return this._jwtService.ValidateToken(rawTokenData);
 			// There is authorization name in the beginning, i.e. "Bearer eyJh..."
-			var jwt = new JwtSecurityTokenHandler().ReadJwtToken(rawTokenData.Remove(0, 7));
+			// var jwt = new JwtSecurityTokenHandler().ReadJwtToken(rawTokenData.Remove(0, 7));
 
-			Guid jwtUserID = new(UserService.GetClaimTypeValues("ID", jwt.Claims).First());
-			List<string> jwtRoleNames = UserService.GetClaimTypeValues("role", jwt.Claims);
+			// Guid jwtUserID = new(UserService.GetClaimTypeValues("ID", jwt.Claims).First());
+			// List<string> jwtRoleNames = UserService.GetClaimTypeValues("role", jwt.Claims);
 
-			User user = await this._userRepository.GetByIdAsync(jwtUserID)
-				?? throw new ArgumentException("User does not exist!");
+			// User user = await this._userRepository.GetByIdAsync(jwtUserID)
+			// 	?? throw new ArgumentException("User does not exist!");
 
-			/* Check if he is an admin */
-			if (user.Roles.Any(x => x.Name == Role.AdminRole))
-				return true;
+			// /* Check if he is an admin */
+			// if (user.Roles.Any(x => x.Name == Role.AdminRole))
+			// 	return true;
 
-			if (!jwtRoleNames.Contains(Role.AdminRole) && user.Id != id)
-				return false;
+			// if (!jwtRoleNames.Contains(Role.AdminRole) && user.Id != id)
+			// 	return false;
 
-			// Check if jwt contains all user roles (if it doesn't, jwt is either old or tampered with)
-			foreach (var role in user.Roles)
-				if (!jwtRoleNames.Contains(role.Name))
-					return false;
+			// // Check if jwt contains all user roles (if it doesn't, jwt is either old or tampered with)
+			// foreach (var role in user.Roles)
+			// 	if (!jwtRoleNames.Contains(role.Name))
+			// 		return false;
 
-			// Check if jwt contains only roles of user
-			if (jwtRoleNames.Count != user.Roles.Count)
-				return false;
+			// // Check if jwt contains only roles of user
+			// if (jwtRoleNames.Count != user.Roles.Count)
+			// 	return false;
 
-			return true;
+			// return true;
 		}
 
 		/// <summary>
@@ -294,9 +308,13 @@ namespace DevHive.Services.Services
 			user.Roles.Add(admin);
 			await this._userRepository.EditAsync(user.Id, user);
 
-			User newUser = await this._userRepository.GetByIdAsync(userId);
+			User createdUser = await this._userRepository.GetByIdAsync(userId);
+			List<string> roleNames = createdUser
+						.Roles
+						.Select(x => x.Name)
+						.ToList();
 
-			return new TokenModel(WriteJWTSecurityToken(newUser.Id, newUser.UserName, newUser.Roles));
+			return new TokenModel(this._jwtService.GenerateJwtToken(createdUser.Id, createdUser.UserName, roleNames));
 		}
 
 		private async Task PopulateUserModel(User user, UpdateUserServiceModel updateUserServiceModel)
