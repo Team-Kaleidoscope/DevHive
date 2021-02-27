@@ -15,5 +15,9 @@ namespace DevHive.Services.Interfaces
 		Task<ReadRatingServiceModel> UpdateRating(UpdateRatingServiceModel updateRatingServiceModel);
 
 		Task<bool> DeleteRating(Guid ratingId);
+
+		Task<bool> ValidateJwtForCreating(Guid userId, string rawTokenData);
+
+		Task<bool> ValidateJwtForRating(Guid commentId, string rawTokenData);
 	}
 }

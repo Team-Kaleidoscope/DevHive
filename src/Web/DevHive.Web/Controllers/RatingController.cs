@@ -28,6 +28,9 @@ namespace DevHive.Web.Controllers
 		[HttpPost]
 		public async Task<IActionResult> RatePost(Guid userId, [FromBody] CreateRatingWebModel createRatingWebModel, [FromHeader] string authorization)
 		{
+			if (!await this._rateService.ValidateJwtForCreating(userId, authorization))
+				return new UnauthorizedResult();
+
 			CreateRatingServiceModel ratePostServiceModel = this._mapper.Map<CreateRatingServiceModel>(createRatingWebModel);
 			ratePostServiceModel.UserId = userId;
 
@@ -51,6 +54,9 @@ namespace DevHive.Web.Controllers
 		[HttpPut]
 		public async Task<IActionResult> UpdateRating(Guid userId, [FromBody] UpdateRatingWebModel updateRatingWebModel, [FromHeader] string authorization)
 		{
+			if (!await this._rateService.ValidateJwtForRating(updateRatingWebModel.Id, authorization))
+				return new UnauthorizedResult();
+
 			UpdateRatingServiceModel updateRatingServiceModel =
 				this._mapper.Map<UpdateRatingServiceModel>(updateRatingWebModel);
 			updateRatingServiceModel.UserId = userId;

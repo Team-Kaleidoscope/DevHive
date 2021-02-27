@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Data.Interfaces;
@@ -78,7 +81,7 @@ namespace DevHive.Services.Services
 		#region Update
 		public async Task<ReadRatingServiceModel> UpdateRating(UpdateRatingServiceModel updateRatingServiceModel)
 		{
-			Rating rating = await this._ratingRepository.GetRatingByUserAndPostId(updateRatingServiceModel.UserId, updateRatingServiceModel.PostId) ??
+			Rating rating = await this._ratingRepository.GetByIdAsync(updateRatingServiceModel.Id) ??
 				throw new ArgumentException("Rating does not exist!");
 
 			User user = await this._userRepository.GetByIdAsync(updateRatingServiceModel.UserId) ??
@@ -110,6 +113,68 @@ namespace DevHive.Services.Services
 
 			Rating rating = await this._ratingRepository.GetByIdAsync(ratingId);
 			return await this._ratingRepository.DeleteAsync(rating);
+		}
+		#endregion
+
+		#region Validations
+		/// <summary>
+		/// Checks whether the user Id in the token and the given user Id match
+		/// </summary>
+		public async Task<bool> ValidateJwtForCreating(Guid userId, string rawTokenData)
+		{
+			User user = await this.GetUserForValidation(rawTokenData);
+
+			return user.Id == userId;
+		}
+
+		/// <summary>
+		/// Checks whether the comment, gotten with the commentId,
+		/// is made by the user in the token
+		/// or if the user in the token is an admin
+		/// </summary>
+		public async Task<bool> ValidateJwtForRating(Guid commentId, string rawTokenData)
+		{
+			Rating rating = await this._ratingRepository.GetByIdAsync(commentId) ??
+				throw new ArgumentException("Rating does not exist!");
+			User user = await this.GetUserForValidation(rawTokenData);
+
+			//If user made the comment
+			if (rating.User.Id == user.Id)
+				return true;
+			//If user is admin
+			else if (user.Roles.Any(x => x.Name == Role.AdminRole))
+				return true;
+			else
+				return false;
+		}
+
+		/// <summary>
+		/// Returns the user, via their Id in the token
+		/// </summary>
+		private async Task<User> GetUserForValidation(string rawTokenData)
+		{
+			JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(rawTokenData.Remove(0, 7));
+
+			Guid jwtUserId = Guid.Parse(this.GetClaimTypeValues("ID", jwt.Claims).First());
+
+			User user = await this._userRepository.GetByIdAsync(jwtUserId) ??
+				throw new ArgumentException("User does not exist!");
+
+			return user;
+		}
+
+		/// <summary>
+		/// Returns all values from a given claim type
+		/// </summary>
+		private List<string> GetClaimTypeValues(string type, IEnumerable<Claim> claims)
+		{
+			List<string> toReturn = new();
+
+			foreach (var claim in claims)
+				if (claim.Type == type)
+					toReturn.Add(claim.Value);
+
+			return toReturn;
 		}
 		#endregion
 	}

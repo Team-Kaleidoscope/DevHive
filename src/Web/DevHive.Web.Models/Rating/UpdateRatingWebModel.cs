@@ -8,6 +8,8 @@ namespace DevHive.Web.Models.Rating
 {
 	public class UpdateRatingWebModel
 	{
+		public Guid Id { get; set; }
+
 		public Guid PostId { get; set; }
 
 		public bool IsLike { get; set; }
