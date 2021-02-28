@@ -6,6 +6,7 @@ using DevHive.Web.Models.Comment;
 using DevHive.Services.Models.Comment;
 using Microsoft.AspNetCore.Authorization;
 using DevHive.Services.Interfaces;
+using DevHive.Common.Jwt.Interfaces;
 
 namespace DevHive.Web.Controllers
 {
@@ -16,16 +17,21 @@ namespace DevHive.Web.Controllers
 	{
 		private readonly ICommentService _commentService;
 		private readonly IMapper _commentMapper;
+		private readonly IJwtService _jwtService;
 
-		public CommentController(ICommentService commentService, IMapper commentMapper)
+		public CommentController(ICommentService commentService, IMapper commentMapper, IJwtService jwtService)
 		{
 			this._commentService = commentService;
 			this._commentMapper = commentMapper;
+			this._jwtService = jwtService;
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> AddComment(Guid userId, [FromBody] CreateCommentWebModel createCommentWebModel, [FromHeader] string authorization)
 		{
+			if (!this._jwtService.ValidateToken(userId, authorization))
+				return new UnauthorizedResult();
+
 			if (!await this._commentService.ValidateJwtForCreating(userId, authorization))
 				return new UnauthorizedResult();
 
@@ -53,7 +59,7 @@ namespace DevHive.Web.Controllers
 		[HttpPut]
 		public async Task<IActionResult> UpdateComment(Guid userId, [FromBody] UpdateCommentWebModel updateCommentWebModel, [FromHeader] string authorization)
 		{
-			if (!await this._commentService.ValidateJwtForComment(updateCommentWebModel.CommentId, authorization))
+			if (!this._jwtService.ValidateToken(userId, authorization))
 				return new UnauthorizedResult();
 
 			UpdateCommentServiceModel updateCommentServiceModel =

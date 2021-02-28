@@ -6,6 +6,7 @@ using DevHive.Web.Models.Post;
 using DevHive.Services.Models.Post;
 using Microsoft.AspNetCore.Authorization;
 using DevHive.Services.Interfaces;
+using DevHive.Common.Jwt.Interfaces;
 
 namespace DevHive.Web.Controllers
 {
@@ -16,18 +17,20 @@ namespace DevHive.Web.Controllers
 	{
 		private readonly IPostService _postService;
 		private readonly IMapper _postMapper;
+		private readonly IJwtService _jwtService;
 
-		public PostController(IPostService postService, IMapper postMapper)
+		public PostController(IPostService postService, IMapper postMapper, IJwtService jwtService)
 		{
 			this._postService = postService;
 			this._postMapper = postMapper;
+			this._jwtService = jwtService;
 		}
 
 		#region Create
 		[HttpPost]
 		public async Task<IActionResult> Create(Guid userId, [FromForm] CreatePostWebModel createPostWebModel, [FromHeader] string authorization)
 		{
-			if (!await this._postService.ValidateJwtForCreating(userId, authorization))
+			if (!this._jwtService.ValidateToken(userId, authorization))
 				return new UnauthorizedResult();
 
 			CreatePostServiceModel createPostServiceModel =
@@ -58,6 +61,9 @@ namespace DevHive.Web.Controllers
 		[HttpPut]
 		public async Task<IActionResult> Update(Guid userId, [FromForm] UpdatePostWebModel updatePostWebModel, [FromHeader] string authorization)
 		{
+			if (!this._jwtService.ValidateToken(userId, authorization))
+				return new UnauthorizedResult();
+
 			if (!await this._postService.ValidateJwtForPost(updatePostWebModel.PostId, authorization))
 				return new UnauthorizedResult();
 

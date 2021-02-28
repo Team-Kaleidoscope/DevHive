@@ -1,11 +1,9 @@
 using System;
-using System.Buffers.Text;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
-using System.Text;
 using DevHive.Common.Jwt.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 

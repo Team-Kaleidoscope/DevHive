@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DevHive.Common.Models.Identity;
 using DevHive.Services.Interfaces;
+using DevHive.Common.Jwt.Interfaces;
+using DevHive.Web.Models.Attributes;
 
 namespace DevHive.Web.Controllers
 {
@@ -16,11 +18,13 @@ namespace DevHive.Web.Controllers
 	{
 		private readonly IUserService _userService;
 		private readonly IMapper _userMapper;
+		private readonly IJwtService _jwtService;
 
-		public UserController(IUserService userService, IMapper mapper)
+		public UserController(IUserService userService, IMapper mapper, IJwtService jwtService)
 		{
 			this._userService = userService;
 			this._userMapper = mapper;
+			this._jwtService = jwtService;
 		}
 
 		#region Authentication
@@ -56,7 +60,7 @@ namespace DevHive.Web.Controllers
 		[Authorize(Roles = "User,Admin")]
 		public async Task<IActionResult> GetById(Guid id, [FromHeader] string authorization)
 		{
-			if (!await this._userService.ValidJWT(id, authorization))
+			if (!this._jwtService.ValidateToken(id, authorization))
 				return new UnauthorizedResult();
 
 			UserServiceModel userServiceModel = await this._userService.GetUserById(id);
@@ -82,7 +86,7 @@ namespace DevHive.Web.Controllers
 		[Authorize(Roles = "User,Admin")]
 		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserWebModel updateUserWebModel, [FromHeader] string authorization)
 		{
-			if (!await this._userService.ValidJWT(id, authorization))
+			if (!this._jwtService.ValidateToken(id, authorization))
 				return new UnauthorizedResult();
 
 			UpdateUserServiceModel updateUserServiceModel = this._userMapper.Map<UpdateUserServiceModel>(updateUserWebModel);
@@ -100,7 +104,7 @@ namespace DevHive.Web.Controllers
 		[Authorize(Roles = "User,Admin")]
 		public async Task<IActionResult> Delete(Guid id, [FromHeader] string authorization)
 		{
-			if (!await this._userService.ValidJWT(id, authorization))
+			if (!this._jwtService.ValidateToken(id, authorization))
 				return new UnauthorizedResult();
 
 			bool result = await this._userService.DeleteUser(id);
