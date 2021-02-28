@@ -4,14 +4,16 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Moq" Version="4.16.0"/>
-    <PackageReference Include="NUnit" Version="3.13.1"/>
-    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0"/>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3"/>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.18.0.27296"/>
+    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="NUnit" Version="3.13.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.18.0.27296" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DevHive.Web\DevHive.Web.csproj"/>
+    <ProjectReference Include="..\DevHive.Web\DevHive.Web.csproj" />
+    <ProjectReference Include="..\..\Common\DevHive.Common\DevHive.Common.csproj" />
+    <ProjectReference Include="..\..\Common\DevHive.Common.Models\DevHive.Common.Models.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>

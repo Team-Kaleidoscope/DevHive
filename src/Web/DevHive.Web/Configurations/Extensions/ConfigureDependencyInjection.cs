@@ -1,3 +1,6 @@
+using System.Text;
+using DevHive.Common.Jwt;
+using DevHive.Common.Jwt.Interfaces;
 using DevHive.Data.Interfaces;
 using DevHive.Data.Repositories;
 using DevHive.Services.Interfaces;
@@ -27,11 +30,19 @@ namespace DevHive.Web.Configurations.Extensions
 			services.AddTransient<IPostService, PostService>();
 			services.AddTransient<ICommentService, CommentService>();
 			services.AddTransient<IFeedService, FeedService>();
+			services.AddTransient<IRateService, RateService>();
+
 			services.AddTransient<ICloudService, CloudinaryService>(options =>
 				new CloudinaryService(
 					cloudName: configuration.GetSection("Cloud").GetSection("cloudName").Value,
 					apiKey: configuration.GetSection("Cloud").GetSection("apiKey").Value,
 					apiSecret: configuration.GetSection("Cloud").GetSection("apiSecret").Value));
+
+			services.AddSingleton<IJwtService, JwtService>(options =>
+				new JwtService(
+					signingKey: Encoding.ASCII.GetBytes(configuration.GetSection("Jwt").GetSection("signingKey").Value),
+					validationIssuer: configuration.GetSection("Jwt").GetSection("validationIssuer").Value,
+					audience: configuration.GetSection("Jwt").GetSection("audience").Value));
 			services.AddTransient<IRatingService, RatingService>();
 		}
 	}

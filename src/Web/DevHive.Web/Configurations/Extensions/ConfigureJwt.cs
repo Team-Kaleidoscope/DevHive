@@ -1,6 +1,5 @@
 using System.Text;
 using System.Threading.Tasks;
-using DevHive.Services.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,15 +11,10 @@ namespace DevHive.Web.Configurations.Extensions
 	{
 		public static void JWTConfiguration(this IServiceCollection services, IConfiguration configuration)
 		{
-			services.AddSingleton(new JwtOptions(configuration
-						.GetSection("AppSettings")
-						.GetSection("Secret")
-						.Value));
-
 			// Get key from appsettings.json
-			var key = Encoding.ASCII.GetBytes(configuration
-						.GetSection("AppSettings")
-						.GetSection("Secret")
+			var signingKey = Encoding.ASCII.GetBytes(configuration
+						.GetSection("Jwt")
+						.GetSection("signingKey")
 						.Value);
 
 			// Setup Jwt Authentication
@@ -42,7 +36,7 @@ namespace DevHive.Web.Configurations.Extensions
 				x.SaveToken = true;
 				x.TokenValidationParameters = new TokenValidationParameters
 				{
-					IssuerSigningKey = new SymmetricSecurityKey(key),
+					IssuerSigningKey = new SymmetricSecurityKey(signingKey),
 					ValidateIssuer = false,
 					ValidateAudience = false
 				};
