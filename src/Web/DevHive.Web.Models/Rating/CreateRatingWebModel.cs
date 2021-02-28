@@ -6,6 +6,6 @@ namespace DevHive.Web.Models.Rating
 	{
 		public Guid PostId { get; set; }
 
-		public bool IsLiked { get; set; }
+		public bool IsLike { get; set; }
 	}
 }

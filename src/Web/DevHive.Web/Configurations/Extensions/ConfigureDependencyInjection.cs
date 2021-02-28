@@ -30,7 +30,7 @@ namespace DevHive.Web.Configurations.Extensions
 			services.AddTransient<IPostService, PostService>();
 			services.AddTransient<ICommentService, CommentService>();
 			services.AddTransient<IFeedService, FeedService>();
-			services.AddTransient<IRateService, RateService>();
+			services.AddTransient<IRatingService, RatingService>();
 
 			services.AddTransient<ICloudService, CloudinaryService>(options =>
 				new CloudinaryService(
