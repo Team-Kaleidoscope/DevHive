@@ -6,6 +6,6 @@ namespace DevHive.Common.Jwt.Interfaces
 	public interface IJwtService
 	{
 		string GenerateJwtToken(Guid userId, string username, List<string> roleNames);
-		bool ValidateToken(string authToken);
+		bool ValidateToken(Guid userId, string rawToken);
 	}
 }

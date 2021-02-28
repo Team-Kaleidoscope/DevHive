@@ -2,6 +2,7 @@ using System;
 using System.Buffers.Text;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
@@ -52,15 +53,23 @@ namespace DevHive.Common.Jwt
 			return tokenHandler.WriteToken(token);
 		}
 
-		public bool ValidateToken(string authToken)
+		public bool ValidateToken(Guid userId, string rawToken)
 		{
 			var tokenHandler = new JwtSecurityTokenHandler();
 			var validationParameters = GetValidationParameters();
+			string actualToken = rawToken.Remove(0, 7);
 
-			//Validate edge case where user can delete other users
+			IPrincipal principal = tokenHandler.ValidateToken(actualToken, validationParameters, out SecurityToken validatedToken);
+			JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(actualToken);
 
-			IPrincipal principal = tokenHandler.ValidateToken(authToken.Remove(0, 7), validationParameters, out _);
-			return principal.Identity.IsAuthenticated;
+			if (!principal.Identity.IsAuthenticated)
+				return false;
+			else if (principal.IsInRole("Admin"))
+				return true;
+			else if (jwtToken.Claims.FirstOrDefault(x => x.Type == "ID").Value != userId.ToString())
+				return false;
+			else
+				return true;
 		}
 
 		private TokenValidationParameters GetValidationParameters()
