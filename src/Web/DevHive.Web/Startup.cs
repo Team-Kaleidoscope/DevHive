@@ -29,11 +29,11 @@ namespace DevHive.Web
 					x.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 				});
 
+			services.DependencyInjectionConfiguration(this.Configuration);
 			services.DatabaseConfiguration(Configuration);
 			services.SwaggerConfiguration();
 			services.JWTConfiguration(Configuration);
 			services.AutoMapperConfiguration();
-			services.DependencyInjectionConfiguration(this.Configuration);
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
