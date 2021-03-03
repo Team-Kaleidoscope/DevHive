@@ -48,7 +48,6 @@ namespace DevHive.Web
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
-				app.UseSwaggerConfiguration();
 			}
 			else
 			{
@@ -56,6 +55,7 @@ namespace DevHive.Web
 				app.UseExceptionHandlerMiddlewareConfiguration();
 			}
 
+			app.UseSwaggerConfiguration();
 			app.UseDatabaseConfiguration();
 			app.UseAutoMapperConfiguration();
 
