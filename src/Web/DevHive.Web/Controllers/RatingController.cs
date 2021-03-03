@@ -16,14 +16,12 @@ namespace DevHive.Web.Controllers
 	public class RatingController
 	{
 		private readonly IRatingService _rateService;
-		private readonly IUserService _userService;
 		private readonly IMapper _mapper;
 		private readonly IJwtService _jwtService;
 
-		public RatingController(IRatingService rateService, IUserService userService, IMapper mapper, IJwtService jwtService)
+		public RatingController(IRatingService rateService, IMapper mapper, IJwtService jwtService)
 		{
 			this._rateService = rateService;
-			this._userService = userService;
 			this._mapper = mapper;
 			this._jwtService = jwtService;
 		}
