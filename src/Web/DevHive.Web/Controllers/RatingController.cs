@@ -65,7 +65,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpPut]
-		public async Task<IActionResult> UpdateRating(Guid userId, [FromBody] UpdateRatingWebModel updateRatingWebModel, [FromHeader] string authorization)
+		public async Task<IActionResult> UpdateRating(Guid userId, Guid postId, [FromBody] UpdateRatingWebModel updateRatingWebModel, [FromHeader] string authorization)
 		{
 			if (!this._jwtService.ValidateToken(userId, authorization))
 				return new UnauthorizedResult();
@@ -73,6 +73,7 @@ namespace DevHive.Web.Controllers
 			UpdateRatingServiceModel updateRatingServiceModel =
 				this._mapper.Map<UpdateRatingServiceModel>(updateRatingWebModel);
 			updateRatingServiceModel.UserId = userId;
+			updateRatingServiceModel.PostId = postId;
 
 			ReadRatingServiceModel readRatingServiceModel = await this._rateService.UpdateRating(updateRatingServiceModel);
 

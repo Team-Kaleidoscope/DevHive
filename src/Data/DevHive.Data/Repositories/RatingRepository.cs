@@ -30,6 +30,8 @@ namespace DevHive.Data.Repositories
 		public async Task<List<Rating>> GetRatingsByPostId(Guid postId)
 		{
 			return await this._context.Rating
+				.Include(x => x.User)
+				.Include(x => x.Post)
 				.Where(x => x.Post.Id == postId).ToListAsync();
 		}
 		public async Task<bool> UserRatedPost(Guid userId, Guid postId)
@@ -41,6 +43,8 @@ namespace DevHive.Data.Repositories
 		public async Task<Rating> GetRatingByUserAndPostId(Guid userId, Guid postId)
 		{
 			return await this._context.Rating
+				.Include(x => x.User)
+				.Include(x => x.Post)
 				.FirstOrDefaultAsync(x => x.Post.Id == postId && x.User.Id == userId);
 		}
 

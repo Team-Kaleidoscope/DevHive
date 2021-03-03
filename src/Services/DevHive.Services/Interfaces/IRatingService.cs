@@ -16,7 +16,5 @@ namespace DevHive.Services.Interfaces
 		Task<ReadRatingServiceModel> UpdateRating(UpdateRatingServiceModel updateRatingServiceModel);
 
 		Task<bool> DeleteRating(Guid ratingId);
-
-		Task<bool> HasUserRatedThisPost(Guid userId, Guid postId);
 	}
 }

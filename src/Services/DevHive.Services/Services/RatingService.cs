@@ -81,7 +81,7 @@ namespace DevHive.Services.Services
 		#region Update
 		public async Task<ReadRatingServiceModel> UpdateRating(UpdateRatingServiceModel updateRatingServiceModel)
 		{
-			Rating rating = await this._ratingRepository.GetByIdAsync(updateRatingServiceModel.Id) ??
+			Rating rating = await this._ratingRepository.GetRatingByUserAndPostId(updateRatingServiceModel.UserId, updateRatingServiceModel.PostId) ??
 				throw new ArgumentException("Rating does not exist!");
 
 			User user = await this._userRepository.GetByIdAsync(updateRatingServiceModel.UserId) ??
@@ -115,11 +115,5 @@ namespace DevHive.Services.Services
 			return await this._ratingRepository.DeleteAsync(rating);
 		}
 		#endregion
-
-		public async Task<bool> HasUserRatedThisPost(Guid userId, Guid postId)
-		{
-			return await this._ratingRepository
-				.UserRatedPost(userId, postId);
-		}
 	}
 }
