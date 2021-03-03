@@ -1,5 +1,5 @@
 using AutoMapper;
-using DevHive.Services.Models.Post.Rating;
+using DevHive.Services.Models.Rating;
 using DevHive.Web.Models.Rating;
 
 namespace DevHive.Web.Configurations.Mapping

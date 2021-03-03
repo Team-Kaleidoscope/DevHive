@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using DevHive.Data.Models;
-using DevHive.Services.Models.Post.Rating;
+using DevHive.Services.Models.Rating;
 
 namespace DevHive.Services.Interfaces
 {
