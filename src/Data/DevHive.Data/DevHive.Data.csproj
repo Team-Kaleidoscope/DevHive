@@ -12,7 +12,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0"/>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.2"/>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.18.0.27296"/>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.19.0.28253"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DevHive.Data.Models\DevHive.Data.Models.csproj"/>

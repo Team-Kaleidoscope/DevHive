@@ -1,12 +1,8 @@
-using System;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 
 namespace DevHive.Web.Configurations.Extensions
 {
@@ -20,33 +16,49 @@ namespace DevHive.Web.Configurations.Extensions
 
 		public static void SwaggerConfiguration(this IServiceCollection services)
 		{
-			services.AddSwaggerGen(c =>
+			services.AddOpenApiDocument(c =>
 			{
-				c.SwaggerDoc("v0.1", new OpenApiInfo
+				c.GenerateXmlObjects = true;
+				c.UseControllerSummaryAsTagDescription = true;
+
+				c.AllowNullableBodyParameters = false;
+				c.Description = "DevHive Social Media's API Endpoints";
+
+				c.PostProcess = doc =>
 				{
-					Version = "v0.1",
-					Title = "API",
-					Description = "DevHive Social Media's first official API release",
-					TermsOfService = new Uri(TermsOfServiceUri),
-					License = new OpenApiLicense
+					doc.Info.Version = "v0.1";
+					doc.Info.Title = "API";
+					doc.Info.Description = "DevHive Social Media's first official API release";
+					doc.Info.TermsOfService = TermsOfServiceUri;
+					doc.Info.License = new NSwag.OpenApiLicense
 					{
 						Name = LicenseName,
-						Url = new Uri(LicenseUri)
-					}
-				});
+						Url = LicenseUri
+					};
+				};
 
-				string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-				string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-				c.IncludeXmlComments(xmlPath);
+				c.AddSecurity("Bearer", Enumerable.Empty<string>(), new OpenApiSecurityScheme
+				{
+					Type = OpenApiSecuritySchemeType.ApiKey,
+					Name = "Authorization",
+					In = OpenApiSecurityApiKeyLocation.Header,
+					Description = "Type into the textbox: Bearer {your JWT token}."
+				});
+				c.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("Bearer"));
 			});
 		}
 
 		public static void UseSwaggerConfiguration(this IApplicationBuilder app)
 		{
-			app.UseSwagger();
-			app.UseSwaggerUI(c =>
+			app.UseOpenApi(c =>
 			{
-				c.SwaggerEndpoint("/swagger/v0.1/swagger.json", "v0.1");
+				c.DocumentName = "v0.1";
+			});
+			app.UseSwaggerUi3(c =>
+			{
+				c.DocumentTitle = "DevHive API";
+				c.EnableTryItOut = false;
+				c.DocExpansion = "list";
 			});
 		}
 	}
