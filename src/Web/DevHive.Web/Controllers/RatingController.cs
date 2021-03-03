@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DevHive.Web.Controllers
 {
 	[ApiController]
-	//[Authorize(Roles = "Admin,User")]
+	[Authorize(Roles = "Admin,User")]
 	[Route("api/[controller]")]
 	public class RatingController
 	{
