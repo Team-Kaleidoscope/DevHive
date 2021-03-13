@@ -1,26 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using DevHive.Common.Jwt.Interfaces;
 using DevHive.Common.Models.Identity;
-using DevHive.Common.Models.Misc;
 using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
 using DevHive.Services.Interfaces;
 using DevHive.Services.Models.User;
-using DevHive.Services.Options;
 using DevHive.Services.Services;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 using Moq;
 using NUnit.Framework;
 
 namespace DevHive.Services.Tests
 {
-	[TestFixture]
+    [TestFixture]
 	public class UserServiceTests
 	{
 		private Mock<ICloudService> _cloudServiceMock;
@@ -29,7 +23,7 @@ namespace DevHive.Services.Tests
 		private Mock<ILanguageRepository> _languageRepositoryMock;
 		private Mock<ITechnologyRepository> _technologyRepositoryMock;
 		private Mock<IMapper> _mapperMock;
-		private JwtOptions _jwtOptions;
+		private Mock<IJwtService> _jwtServiceMock;
 		private UserService _userService;
 
 		#region SetUps
@@ -41,7 +35,7 @@ namespace DevHive.Services.Tests
 			this._cloudServiceMock = new Mock<ICloudService>();
 			this._languageRepositoryMock = new Mock<ILanguageRepository>();
 			this._technologyRepositoryMock = new Mock<ITechnologyRepository>();
-			this._jwtOptions = new JwtOptions("gXfQlU6qpDleFWyimscjYcT3tgFsQg3yoFjcvSLxG56n1Vu2yptdIUq254wlJWjm");
+			this._jwtServiceMock = new Mock<IJwtService>();
 			this._mapperMock = new Mock<IMapper>();
 			this._userService = new UserService(
 				this._userRepositoryMock.Object,
@@ -49,8 +43,8 @@ namespace DevHive.Services.Tests
 				this._roleRepositoryMock.Object,
 				this._technologyRepositoryMock.Object,
 				this._mapperMock.Object,
-				this._jwtOptions,
-				this._cloudServiceMock.Object);
+				this._cloudServiceMock.Object,
+				this._jwtServiceMock.Object);
 		}
 		#endregion
 
@@ -75,10 +69,14 @@ namespace DevHive.Services.Tests
 				p.DoesUsernameExistAsync(It.IsAny<string>()))
 					.Returns(Task.FromResult(true));
 			this._userRepositoryMock.Setup(p =>
+				p.VerifyPassword(It.IsAny<User>(), It.IsAny<string>()))
+					.Returns(Task.FromResult(true));
+			this._userRepositoryMock.Setup(p =>
 				p.GetByUsernameAsync(It.IsAny<string>()))
 					.Returns(Task.FromResult(user));
 
-			string jwtSecurityToken = this.WriteJWTSecurityToken(user.Id, user.UserName, user.Roles);
+			string jwtSecurityToken = "akjdhfakndvlahdfkljahdlfkjhasldf";
+			this._jwtServiceMock.Setup(p => p.GenerateJwtToken(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<List<string>>())).Returns(jwtSecurityToken);
 			TokenModel tokenModel = await this._userService.LoginUser(loginServiceModel);
 
 			Assert.AreEqual(jwtSecurityToken, tokenModel.Token, "LoginUser does not return the correct token");
@@ -147,11 +145,20 @@ namespace DevHive.Services.Tests
 				p.DoesUsernameExistAsync(It.IsAny<string>()))
 					.Returns(Task.FromResult(false));
 			this._userRepositoryMock.Setup(p =>
+				p.VerifyPassword(It.IsAny<User>(), It.IsAny<string>()))
+					.Returns(Task.FromResult(true));
+			this._userRepositoryMock.Setup(p =>
 				p.DoesEmailExistAsync(It.IsAny<string>()))
 					.Returns(Task.FromResult(false));
 			this._userRepositoryMock.Setup(p =>
 				p.AddAsync(It.IsAny<User>()))
 					.ReturnsAsync(true);
+			this._userRepositoryMock.Setup(p =>
+				p.AddRoleToUser(It.IsAny<User>(), It.IsAny<string>()))
+					.ReturnsAsync(true);
+			this._userRepositoryMock.Setup(p =>
+				p.GetByUsernameAsync(It.IsAny<string>()))
+					.ReturnsAsync(user);
 
 			this._roleRepositoryMock.Setup(p =>
 				p.DoesNameExist(It.IsAny<string>()))
@@ -164,7 +171,8 @@ namespace DevHive.Services.Tests
 				p.Map<User>(It.IsAny<RegisterServiceModel>()))
 					.Returns(user);
 
-			string jwtSecurityToken = this.WriteJWTSecurityToken(user.Id, user.UserName, roles);
+			string jwtSecurityToken = "akjdhfakndvlahdfkljahdlfkjhasldf";
+			this._jwtServiceMock.Setup(p => p.GenerateJwtToken(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<List<string>>())).Returns(jwtSecurityToken);
 			TokenModel tokenModel = await this._userService.RegisterUser(registerServiceModel);
 
 			Assert.AreEqual(jwtSecurityToken, tokenModel.Token, "RegisterUser does not return the correct token");
@@ -411,36 +419,6 @@ namespace DevHive.Services.Tests
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._userService.DeleteUser(id));
 
 			Assert.AreEqual(exceptionMessage, ex.Message, "Incorrect exception message");
-		}
-		#endregion
-
-		#region HelperMethods
-		private string WriteJWTSecurityToken(Guid userId, string username, HashSet<Role> roles)
-		{
-			byte[] signingKey = Encoding.ASCII.GetBytes(this._jwtOptions.Secret);
-			HashSet<Claim> claims = new()
-			{
-				new Claim("ID", $"{userId}"),
-				new Claim("Username", username),
-			};
-
-			foreach (Role role in roles)
-			{
-				claims.Add(new Claim(ClaimTypes.Role, role.Name));
-			}
-
-			SecurityTokenDescriptor tokenDescriptor = new()
-			{
-				Subject = new ClaimsIdentity(claims),
-				Expires = DateTime.Today.AddDays(7),
-				SigningCredentials = new SigningCredentials(
-					new SymmetricSecurityKey(signingKey),
-					SecurityAlgorithms.HmacSha512Signature)
-			};
-
-			JwtSecurityTokenHandler tokenHandler = new();
-			SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
-			return tokenHandler.WriteToken(token);
 		}
 		#endregion
 	}
