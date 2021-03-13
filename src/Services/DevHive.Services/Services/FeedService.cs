@@ -42,9 +42,6 @@ namespace DevHive.Services.Services
 			if (user == null)
 				throw new ArgumentException("User doesn't exist!");
 
-			if (user.Friends.Count == 0)
-				throw new ArgumentException("User has no friends to get feed from!");
-
 			List<Post> posts = await this._feedRepository
 				.GetFriendsPosts(user.Friends.ToList(), getPageServiceModel.FirstRequestIssued, getPageServiceModel.PageNumber, getPageServiceModel.PageSize);
 
