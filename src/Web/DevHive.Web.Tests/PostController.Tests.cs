@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using DevHive.Common.Jwt.Interfaces;
 using DevHive.Services.Interfaces;
 using DevHive.Services.Models.Post;
 using DevHive.Web.Controllers;
@@ -18,6 +19,7 @@ namespace DevHive.Web.Tests
 		const string MESSAGE = "Gosho Trapov";
 		private Mock<IPostService> PostServiceMock { get; set; }
 		private Mock<IMapper> MapperMock { get; set; }
+		private Mock<IJwtService> JwtServiceMock { get; set; }
 		private PostController PostController { get; set; }
 
 		[SetUp]
@@ -25,7 +27,8 @@ namespace DevHive.Web.Tests
 		{
 			this.PostServiceMock = new Mock<IPostService>();
 			this.MapperMock = new Mock<IMapper>();
-			this.PostController = new PostController(this.PostServiceMock.Object, this.MapperMock.Object);
+			this.JwtServiceMock = new Mock<IJwtService>();
+			this.PostController = new PostController(this.PostServiceMock.Object, this.MapperMock.Object, this.JwtServiceMock.Object);
 		}
 
 		#region Create
@@ -44,6 +47,7 @@ namespace DevHive.Web.Tests
 
 			this.MapperMock.Setup(p => p.Map<CreatePostServiceModel>(It.IsAny<CreatePostWebModel>())).Returns(createPostServiceModel);
 			this.PostServiceMock.Setup(p => p.CreatePost(It.IsAny<CreatePostServiceModel>())).Returns(Task.FromResult(id));
+			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
 			this.PostServiceMock.Setup(p => p.ValidateJwtForCreating(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
 
 			IActionResult result = this.PostController.Create(Guid.Empty, createPostWebModel, null).Result;
@@ -77,6 +81,7 @@ namespace DevHive.Web.Tests
 
 			this.MapperMock.Setup(p => p.Map<CreatePostServiceModel>(It.IsAny<CreatePostWebModel>())).Returns(createTechnologyServiceModel);
 			this.PostServiceMock.Setup(p => p.CreatePost(It.IsAny<CreatePostServiceModel>())).Returns(Task.FromResult(id));
+			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
 			this.PostServiceMock.Setup(p => p.ValidateJwtForCreating(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
 
 			IActionResult result = this.PostController.Create(Guid.Empty, createTechnologyWebModel, null).Result;
@@ -150,6 +155,7 @@ namespace DevHive.Web.Tests
 
 			this.PostServiceMock.Setup(p => p.UpdatePost(It.IsAny<UpdatePostServiceModel>())).Returns(Task.FromResult(id));
 			this.MapperMock.Setup(p => p.Map<UpdatePostServiceModel>(It.IsAny<UpdatePostWebModel>())).Returns(updatePostServiceModel);
+			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
 			this.PostServiceMock.Setup(p => p.ValidateJwtForPost(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
 
 			IActionResult result = this.PostController.Update(id, updatePostWebModel, null).Result;
@@ -173,6 +179,7 @@ namespace DevHive.Web.Tests
 
 			this.PostServiceMock.Setup(p => p.UpdatePost(It.IsAny<UpdatePostServiceModel>())).Returns(Task.FromResult(Guid.Empty));
 			this.MapperMock.Setup(p => p.Map<UpdatePostServiceModel>(It.IsAny<UpdatePostWebModel>())).Returns(updatePostServiceModel);
+			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
 			this.PostServiceMock.Setup(p => p.ValidateJwtForPost(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
 
 			IActionResult result = this.PostController.Update(id, updatePostWebModel, null).Result;
@@ -207,6 +214,7 @@ namespace DevHive.Web.Tests
 			Guid id = Guid.NewGuid();
 
 			this.PostServiceMock.Setup(p => p.DeletePost(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
 			this.PostServiceMock.Setup(p => p.ValidateJwtForPost(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
 
 			IActionResult result = this.PostController.Delete(id, null).Result;
@@ -221,6 +229,7 @@ namespace DevHive.Web.Tests
 			Guid id = Guid.NewGuid();
 
 			this.PostServiceMock.Setup(p => p.DeletePost(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
 			this.PostServiceMock.Setup(p => p.ValidateJwtForPost(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
 
 			IActionResult result = this.PostController.Delete(id, null).Result;
