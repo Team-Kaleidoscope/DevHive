@@ -92,10 +92,6 @@ namespace DevHive.Services.Tests
 			CreatePostServiceModel createPostServiceModel = new CreatePostServiceModel
 			{
 			};
-			Post post = new Post
-			{
-				Message = MESSAGE,
-			};
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.PostService.CreatePost(createPostServiceModel), "CreatePost does not throw excpeion when the user does not exist");
 

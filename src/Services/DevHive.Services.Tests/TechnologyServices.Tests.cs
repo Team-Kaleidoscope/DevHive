@@ -87,10 +87,6 @@ namespace DevHive.Services.Tests
 			{
 				Name = technologyName
 			};
-			Technology technology = new()
-			{
-				Name = technologyName
-			};
 
 			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
 

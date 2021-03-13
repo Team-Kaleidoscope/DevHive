@@ -139,7 +139,6 @@ namespace DevHive.Services.Tests
 				UserName = "g_trapov"
 			};
 			Role role = new() { Name = Role.DefaultRole };
-			HashSet<Role> roles = new() { role };
 
 			this._userRepositoryMock.Setup(p =>
 				p.DoesUsernameExistAsync(It.IsAny<string>()))

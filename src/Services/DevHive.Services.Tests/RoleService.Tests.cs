@@ -86,10 +86,6 @@ namespace DevHive.Services.Tests
 			{
 				Name = roleName
 			};
-			Role role = new Role
-			{
-				Name = roleName
-			};
 
 			this.RoleRepositoryMock.Setup(p => p.DoesNameExist(It.IsAny<string>())).Returns(Task.FromResult(true));
 
