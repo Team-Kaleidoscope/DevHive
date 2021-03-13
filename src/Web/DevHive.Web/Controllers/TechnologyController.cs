@@ -23,6 +23,11 @@ namespace DevHive.Web.Controllers
 			this._technologyMapper = technologyMapper;
 		}
 
+		/// <summary>
+		/// Create a new technology, so users can have a choice. Admin only!
+		/// </summary>
+		/// <param name="createTechnologyWebModel">Data for the new technology</param>
+		/// <returns></returns>
 		[HttpPost]
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Create([FromBody] CreateTechnologyWebModel createTechnologyWebModel)
