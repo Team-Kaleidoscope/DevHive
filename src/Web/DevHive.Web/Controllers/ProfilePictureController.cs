@@ -1,16 +1,32 @@
 using System;
 using System.Threading.Tasks;
-using DevHive.Services.Models.User;
 using DevHive.Web.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevHive.Web.Controllers
 {
+	/// <summary>
+	/// All endpoints for interacting with the profile picture layer
+	/// </summary>
 	[ApiController]
 	[Route("api/[controller]")]
 	public class ProfilePictureController
 	{
+		// private readonly ProfilePictureService _profilePictureService;
+
+		// public ProfilePictureController(ProfilePictureService profilePictureService)
+		// {
+		// 	this._profilePictureService = profilePictureService;
+		// }
+
+		/// <summary>
+		/// Alter the profile picture of a user
+		/// </summary>
+		/// <param name="userId">The user's Id</param>
+		/// <param name="updateProfilePictureWebModel">The new profile picture</param>
+		/// <param name="authorization">JWT Bearer Token</param>
+		/// <returns>???</returns>
 		[HttpPut]
 		[Route("ProfilePicture")]
 		[Authorize(Roles = "User,Admin")]

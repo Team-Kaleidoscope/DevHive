@@ -75,7 +75,7 @@ namespace DevHive.Web.Controllers
 		/// <summary>
 		/// Get a User's information using the Guid
 		/// </summary>
-		/// <param name="id">User's Guid</param>
+		/// <param name="id">User's Id</param>
 		/// <param name="authorization">The JWT Token, contained in the header and used for validation</param>
 		/// <returns>A full User's read model</returns>
 		[HttpGet]
@@ -112,7 +112,7 @@ namespace DevHive.Web.Controllers
 		/// <summary>
 		/// Full update on User's data. A PUSTINQK can only edit his account
 		/// </summary>
-		/// <param name="id">The User's Guid</param>
+		/// <param name="id">The User's Id</param>
 		/// <param name="updateUserWebModel">A full User update model</param>
 		/// <param name="authorization">The JWT Token, contained in the header and used for validation</param>
 		/// <returns>A full User's read model</returns>
@@ -137,7 +137,7 @@ namespace DevHive.Web.Controllers
 		/// <summary>
 		/// Delete a User with his Id. A PUSTINQK can only delete his account. An Admin can delete all accounts
 		/// </summary>
-		/// <param name="id">The User's Guid</param>
+		/// <param name="id">The User's Id</param>
 		/// <param name="authorization">The JWT Token, contained in the header and used for validation</param>
 		/// <returns>Ok, BadRequest or Unauthorized</returns>
 		[HttpDelete]

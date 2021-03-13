@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevHive.Web.Controllers
 {
+	/// <summary>
+	/// All endpoints for interacting with the technology layer
+	/// </summary>
 	[ApiController]
 	[Route("/api/[controller]")]
 	public class TechnologyController
@@ -27,7 +30,7 @@ namespace DevHive.Web.Controllers
 		/// Create a new technology, so users can have a choice. Admin only!
 		/// </summary>
 		/// <param name="createTechnologyWebModel">Data for the new technology</param>
-		/// <returns></returns>
+		/// <returns>The new technology's Id</returns>
 		[HttpPost]
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Create([FromBody] CreateTechnologyWebModel createTechnologyWebModel)
@@ -41,6 +44,11 @@ namespace DevHive.Web.Controllers
 				new OkObjectResult(new { Id = id });
 		}
 
+		/// <summary>
+		/// Get technology's data by it's Id
+		/// </summary>
+		/// <param name="id">The technology's Id</param>
+		/// <returns>The technology's full data</returns>
 		[HttpGet]
 		[AllowAnonymous]
 		public async Task<IActionResult> GetById(Guid id)
@@ -51,6 +59,10 @@ namespace DevHive.Web.Controllers
 			return new OkObjectResult(readTechnologyWebModel);
 		}
 
+		/// <summary>
+		/// Get all technologies from our database
+		/// </summary>
+		/// <returns>All technologies</returns>
 		[HttpGet]
 		[Route("GetTechnologies")]
 		[Authorize(Roles = "User,Admin")]
@@ -62,6 +74,12 @@ namespace DevHive.Web.Controllers
 			return new OkObjectResult(languageWebModels);
 		}
 
+		/// <summary>
+		/// Alter a technology's parameters. Admin only!
+		/// </summary>
+		/// <param name="id">Technology's Id</param>
+		/// <param name="updateModel">The new parametars</param>
+		/// <returns>Ok result</returns>
 		[HttpPut]
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTechnologyWebModel updateModel)
@@ -77,6 +95,11 @@ namespace DevHive.Web.Controllers
 			return new OkResult();
 		}
 
+		/// <summary>
+		/// Delete a etchnology from the database. Admin only!
+		/// </summary>
+		/// <param name="id">The technology's Id</param>
+		/// <returns>Ok result</returns>
 		[HttpDelete]
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Delete(Guid id)
