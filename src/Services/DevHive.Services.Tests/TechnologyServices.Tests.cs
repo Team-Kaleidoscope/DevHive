@@ -104,7 +104,7 @@ namespace DevHive.Services.Tests
 		[Test]
 		public async Task GetTechnologyById_ReturnsTheTechnology_WhenItExists()
 		{
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 			string name = "Gosho Trapov";
 			Technology technology = new()
 			{
@@ -127,7 +127,7 @@ namespace DevHive.Services.Tests
 		public void GetTechnologyById_ThrowsException_WhenTechnologyDoesNotExist()
 		{
 			string exceptionMessage = "The technology does not exist";
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 			this.TechnologyRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<Technology>(null));
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.TechnologyService.GetTechnologyById(id));
@@ -233,7 +233,7 @@ namespace DevHive.Services.Tests
 		[TestCase(false)]
 		public async Task DeleteTechnology_ShouldReturnIfDeletionIsSuccessfull_WhenTechnologyExists(bool shouldPass)
 		{
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 			Technology technology = new Technology();
 
 			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
@@ -249,7 +249,7 @@ namespace DevHive.Services.Tests
 		public void DeleteTechnology_ThrowsException_WhenTechnologyDoesNotExist()
 		{
 			string exceptionMessage = "Technology does not exist!";
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 
 			this.TechnologyRepositoryMock.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(false));
 

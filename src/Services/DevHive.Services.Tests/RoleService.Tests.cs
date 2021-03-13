@@ -103,7 +103,7 @@ namespace DevHive.Services.Tests
 		[Test]
 		public async Task GetRoleById_ReturnsTheRole_WhenItExists()
 		{
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 			string name = "Gosho Trapov";
 			Role role = new Role
 			{
@@ -126,7 +126,7 @@ namespace DevHive.Services.Tests
 		public void GetRoleById_ThrowsException_WhenRoleDoesNotExist()
 		{
 			string exceptionMessage = "Role does not exist!";
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 			this.RoleRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<Role>(null));
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.RoleService.GetRoleById(id));
@@ -201,7 +201,7 @@ namespace DevHive.Services.Tests
 		[TestCase(false)]
 		public async Task DeleteRole_ShouldReturnIfDeletionIsSuccessfull_WhenRoleExists(bool shouldPass)
 		{
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 			Role role = new Role();
 
 			this.RoleRepositoryMock.Setup(p => p.DoesRoleExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
@@ -217,7 +217,7 @@ namespace DevHive.Services.Tests
 		public void DeleteRole_ThrowsException_WhenRoleDoesNotExist()
 		{
 			string exceptionMessage = "Role does not exist!";
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 
 			this.RoleRepositoryMock.Setup(p => p.DoesRoleExist(It.IsAny<Guid>())).Returns(Task.FromResult(false));
 

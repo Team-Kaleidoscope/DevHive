@@ -107,7 +107,7 @@ namespace DevHive.Services.Tests
 		[Test]
 		public async Task GetPostById_ReturnsThePost_WhenItExists()
 		{
-			Guid creatorId = new Guid();
+			Guid creatorId = Guid.NewGuid();
 			User creator = new User { Id = creatorId };
 			Post post = new Post
 			{
@@ -127,7 +127,7 @@ namespace DevHive.Services.Tests
 			this.UserRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
 			this.MapperMock.Setup(p => p.Map<ReadPostServiceModel>(It.IsAny<Post>())).Returns(readPostServiceModel);
 
-			ReadPostServiceModel result = await this.PostService.GetPostById(new Guid());
+			ReadPostServiceModel result = await this.PostService.GetPostById(Guid.NewGuid());
 
 			Assert.AreEqual(MESSAGE, result.Message);
 		}
@@ -136,7 +136,7 @@ namespace DevHive.Services.Tests
 		public void GetPostById_ThorwsException_WhenTheUserDoesNotExist()
 		{
 			const string EXCEPTION_MESSAGE = "The user does not exist!";
-			Guid creatorId = new Guid();
+			Guid creatorId = Guid.NewGuid();
 			User creator = new User { Id = creatorId };
 			Post post = new Post
 			{
@@ -146,7 +146,7 @@ namespace DevHive.Services.Tests
 
 			this.PostRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(post));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.PostService.GetPostById(new Guid()), "GetPostById does not throw exception when the user does not exist");
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.PostService.GetPostById(Guid.NewGuid()), "GetPostById does not throw exception when the user does not exist");
 
 			Assert.AreEqual(EXCEPTION_MESSAGE, ex.Message);
 		}
@@ -155,7 +155,7 @@ namespace DevHive.Services.Tests
 		public void GetPostById_ThrowsException_WhenCommentDoesNotExist()
 		{
 			string exceptionMessage = "The post does not exist!";
-			Guid creatorId = new Guid();
+			Guid creatorId = Guid.NewGuid();
 			User user = new User
 			{
 				Id = creatorId,
@@ -164,7 +164,7 @@ namespace DevHive.Services.Tests
 			this.PostRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<Post>(null));
 			this.UserRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.PostService.GetPostById(new Guid()));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.PostService.GetPostById(Guid.NewGuid()));
 
 			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}
@@ -242,7 +242,7 @@ namespace DevHive.Services.Tests
 		[TestCase(false)]
 		public async Task Deletepost_ShouldReturnIfDeletionIsSuccessfull_WhenPostExists(bool shouldPass)
 		{
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 			Post post = new Post();
 
 			this.PostRepositoryMock.Setup(p => p.DoesPostExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
@@ -258,7 +258,7 @@ namespace DevHive.Services.Tests
 		public void DeletePost_ThrowsException_WhenPostDoesNotExist()
 		{
 			string exceptionMessage = "Post does not exist!";
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 
 			this.PostRepositoryMock.Setup(p => p.DoesPostExist(It.IsAny<Guid>())).Returns(Task.FromResult(false));
 

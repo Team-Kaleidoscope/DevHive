@@ -105,7 +105,7 @@ namespace DevHive.Services.Tests
 		[Test]
 		public async Task GetLanguageById_ReturnsTheLanguage_WhenItExists()
 		{
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 			string name = "Gosho Trapov";
 			Language language = new Language
 			{
@@ -128,7 +128,7 @@ namespace DevHive.Services.Tests
 		public void GetLanguageById_ThrowsException_WhenLanguageDoesNotExist()
 		{
 			string exceptionMessage = "The language does not exist";
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 			this.LanguageRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<Language>(null));
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.LanguageService.GetLanguageById(id));
@@ -233,7 +233,7 @@ namespace DevHive.Services.Tests
 		[TestCase(false)]
 		public async Task DeleteLanguage_ShouldReturnIfDeletionIsSuccessfull_WhenLanguageExists(bool shouldPass)
 		{
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 			Language language = new Language();
 
 			this.LanguageRepositoryMock.Setup(p => p.DoesLanguageExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
@@ -249,7 +249,7 @@ namespace DevHive.Services.Tests
 		public void DeleteLanguage_ThrowsException_WhenLanguageDoesNotExist()
 		{
 			string exceptionMessage = "Language does not exist!";
-			Guid id = new Guid();
+			Guid id = Guid.NewGuid();
 
 			this.LanguageRepositoryMock.Setup(p => p.DoesLanguageExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(false));
 

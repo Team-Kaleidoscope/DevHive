@@ -388,7 +388,7 @@ namespace DevHive.Services.Tests
 		// [TestCase(false)]
 		// public async Task DeleteUser_ShouldReturnIfDeletionIsSuccessfull_WhenUserExists(bool shouldPass)
 		// {
-		// 	Guid id = new Guid();
+		// 	Guid id = Guid.NewGuid();
 		// 	User user = new User();
 		//
 		// 	this._userRepositoryMock.Setup(p =>
