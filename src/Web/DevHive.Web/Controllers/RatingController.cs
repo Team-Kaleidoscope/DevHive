@@ -85,7 +85,7 @@ namespace DevHive.Web.Controllers
 		}
 
 		[HttpDelete]
-		public async Task<IActionResult> DeleteTating(Guid userId, Guid ratingId, [FromHeader] string authorization)
+		public async Task<IActionResult> DeleteRating(Guid userId, Guid ratingId, [FromHeader] string authorization)
 		{
 			if (!this._jwtService.ValidateToken(userId, authorization))
 				return new UnauthorizedResult();
