@@ -19,7 +19,7 @@ namespace DevHive.Data.Models
 
 		public List<Comment> Comments { get; set; } = new();
 
-		public Rating Rating { get; set; } = new();
+		public List<Rating> Ratings { get; set; }
 
 		public List<PostAttachments> Attachments { get; set; } = new();
 	}

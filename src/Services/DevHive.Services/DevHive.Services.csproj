@@ -12,11 +12,13 @@
     <PackageReference Include="AutoMapper" Version="10.1.1"/>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1"/>
     <PackageReference Include="CloudinaryDotNet" Version="1.14.0"/>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.18.0.27296"/>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.19.0.28253"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Data\DevHive.Data\DevHive.Data.csproj"/>
     <ProjectReference Include="..\DevHive.Services.Models\DevHive.Services.Models.csproj"/>
+    <ProjectReference Include="..\..\Common\DevHive.Common\DevHive.Common.csproj"/>
+    <ProjectReference Include="..\..\Common\DevHive.Common.Models\DevHive.Common.Models.csproj"/>
   </ItemGroup>
   <PropertyGroup>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>

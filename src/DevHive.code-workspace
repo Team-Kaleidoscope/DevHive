@@ -15,7 +15,7 @@
 		{
 			"name": "Common",
 			"path": "./Common"
-		},
+		}
 	],
 	"settings": {
 		"files.exclude": {
@@ -23,14 +23,14 @@
 			"**/bin": true,
 
 			"**/obj": true,
-			".gitignore" : true,
+			".gitignore": true
 		},
 		"code-runner.fileDirectoryAsCwd": true,
 		"dotnet-test-explorer.runInParallel": true,
 		"dotnet-test-explorer.testProjectPath": "**/*.Tests.csproj",
 		"omnisharp.enableEditorConfigSupport": true,
 		"omnisharp.enableRoslynAnalyzers": true,
-		"prettier.useEditorConfig": true,
+		"prettier.useEditorConfig": true
 	},
 	"launch": {
 		"configurations": [
@@ -45,8 +45,8 @@
 				"stopAtEntry": false,
 				"env": {
 					"ASPNETCORE_ENVIRONMENT": "Development"
-				},
-			},
+				}
+			}
 			// {
 			// 	"name": "Launch Data Tests",
 			// 	"type": "coreclr",

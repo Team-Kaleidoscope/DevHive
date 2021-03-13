@@ -88,11 +88,10 @@ namespace DevHive.Data
 
 			builder.Entity<Rating>()
 			 	.HasOne(x => x.Post)
-			 	.WithOne(x => x.Rating)
-			 	.HasForeignKey<Rating>(x => x.PostId);
+			 	.WithMany(x => x.Ratings);
 
 			builder.Entity<Post>()
-			 	.HasOne(x => x.Rating)
+			 	.HasMany(x => x.Ratings)
 			 	.WithOne(x => x.Post);
 
 			/* User Rated Posts */

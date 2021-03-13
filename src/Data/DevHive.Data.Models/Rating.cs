@@ -6,12 +6,13 @@ namespace DevHive.Data.Models
 {
 	public class Rating : IRating
 	{
+		//if adding rating to comments change Post for intreface IRatable!
 		public Guid Id { get; set; }
 
-		public Guid PostId { get; set; }
+		public User User { get; set; }
 
 		public Post Post { get; set; }
 
-		public int Rate { get; set; }
+		public bool IsLike { get; set; }
 	}
 }

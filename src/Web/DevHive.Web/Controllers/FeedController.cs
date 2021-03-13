@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevHive.Web.Controllers
 {
+	/// <summary>
+	/// All endpoints for interacting with the feed layer
+	/// </summary>
 	[ApiController]
 	[Route("/api/[controller]")]
 	[Authorize(Roles = "User,Admin")]
@@ -24,6 +27,12 @@ namespace DevHive.Web.Controllers
 			this._mapper = mapper;
 		}
 
+		/// <summary>
+		/// Query posts for user's feed
+		/// </summary>
+		/// <param name="userId">The user's Id, whose feed is begin queried</param>
+		/// <param name="getPageWebModel">Page parametars</param>
+		/// <returns>A page of the feed</returns>
 		[HttpPost]
 		[Route("GetPosts")]
 		public async Task<IActionResult> GetPosts(Guid userId, [FromBody] GetPageWebModel getPageWebModel)
@@ -37,6 +46,12 @@ namespace DevHive.Web.Controllers
 			return new OkObjectResult(readPageWebModel);
 		}
 
+		/// <summary>
+		/// Query a user profile's posts
+		/// </summary>
+		/// <param name="username">The user's username, whose posts are being queried</param>
+		/// <param name="getPageWebModel">Page parametars</param>
+		/// <returns>A page of the user's posts</returns>
 		[HttpPost]
 		[Route("GetUserPosts")]
 		[AllowAnonymous]

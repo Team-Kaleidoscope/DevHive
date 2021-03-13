@@ -2,14 +2,14 @@ using System;
 
 namespace DevHive.Web.Models.Rating
 {
-	public class ReadPostRatingWebModel
+	public class ReadRatingWebModel
 	{
 		public Guid Id { get; set; }
 
 		public Guid PostId { get; set; }
 
-		public int Likes { get; set; }
+		public Guid UserId { get; set; }
 
-		public int Dislikes { get; set; }
+		public bool IsLike { get; set; }
 	}
 }

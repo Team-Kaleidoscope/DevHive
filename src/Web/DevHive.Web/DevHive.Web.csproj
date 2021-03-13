@@ -5,6 +5,8 @@
   <PropertyGroup>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AllowUntrustedCertificate>true</AllowUntrustedCertificate>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.3" NoWarn="NU1605"/>
@@ -14,15 +16,23 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.2"/>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.0.5"/>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1"/>
     <PackageReference Include="AutoMapper" Version="10.1.1"/>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3"/>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.3"/>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.18.0.27296"/>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.19.0.28253"/>
+    <PackageReference Include="NSwag.AspNetCore" Version="13.10.7"/>
+    <PackageReference Include="NSwag.Generation.AspNetCore" Version="13.10.7"/>
+    <PackageReference Include="NSwag.Annotations" Version="13.10.7"/>
+    <PackageReference Include="NSwag.Core" Version="13.10.7"/>
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.1.0"/>
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.1.0"/>
+    <PackageReference Include="NSwag.SwaggerGeneration.WebApi" Version="12.3.0"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DevHive.Web.Models\DevHive.Web.Models.csproj"/>
     <ProjectReference Include="..\..\Services\DevHive.Services\DevHive.Services.csproj"/>
+    <ProjectReference Include="..\..\Common\DevHive.Common.Models\DevHive.Common.Models.csproj"/>
+    <ProjectReference Include="..\..\Common\DevHive.Common\DevHive.Common.csproj"/>
   </ItemGroup>
 </Project>
