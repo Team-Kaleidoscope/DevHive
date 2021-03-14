@@ -11,27 +11,25 @@ namespace DevHive.Data.Tests
 	public class CommentRepositoryTests
 	{
 		private const string COMMENT_MESSAGE = "Comment message";
-
-		protected DevHiveContext Context { get; set; }
-
-		protected CommentRepository CommentRepository { get; set; }
+		private DevHiveContext _context;
+		private CommentRepository _commentRepository;
 
 		#region Setups
 		[SetUp]
 		public void Setup()
 		{
-			var optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
+			DbContextOptionsBuilder<DevHiveContext> optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
 				.UseInMemoryDatabase(databaseName: "DevHive_Test_Database");
 
-			this.Context = new DevHiveContext(optionsBuilder.Options);
+			this._context = new DevHiveContext(optionsBuilder.Options);
 
-			CommentRepository = new CommentRepository(Context);
+			this._commentRepository = new CommentRepository(this._context);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			this.Context.Database.EnsureDeleted();
+			this._context.Database.EnsureDeleted();
 		}
 		#endregion
 
@@ -41,7 +39,7 @@ namespace DevHive.Data.Tests
 		{
 			Comment comment = await this.AddEntity();
 
-			Comment resultComment = await this.CommentRepository.GetCommentByIssuerAndTimeCreatedAsync(comment.Creator.Id, comment.TimeCreated);
+			Comment resultComment = await this._commentRepository.GetCommentByIssuerAndTimeCreatedAsync(comment.Creator.Id, comment.TimeCreated);
 
 			Assert.AreEqual(comment.Id, resultComment.Id, "GetCommentByIssuerAndTimeCreatedAsync does not return the corect comment when it exists");
 		}
@@ -49,9 +47,9 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetPostByCreatorAndTimeCreatedAsync_ReturnsNull_IfThePostDoesNotExist()
 		{
-			Comment comment = await this.AddEntity();
+			await this.AddEntity();
 
-			Comment resultComment = await this.CommentRepository.GetCommentByIssuerAndTimeCreatedAsync(Guid.Empty, DateTime.Now);
+			Comment resultComment = await this._commentRepository.GetCommentByIssuerAndTimeCreatedAsync(Guid.Empty, DateTime.Now);
 
 			Assert.IsNull(resultComment, "GetCommentByIssuerAndTimeCreatedAsync does not return null when the comment does not exist");
 		}
@@ -63,7 +61,7 @@ namespace DevHive.Data.Tests
 		{
 			Comment comment = await this.AddEntity();
 
-			bool result = await this.CommentRepository.DoesCommentExist(comment.Id);
+			bool result = await this._commentRepository.DoesCommentExist(comment.Id);
 
 			Assert.IsTrue(result, "DoesCommentExist does not return true whenm the Comment exists");
 		}
@@ -71,7 +69,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task DoesCommentExist_ReturnsFalse_WhenTheCommentDoesNotExist()
 		{
-			bool result = await this.CommentRepository.DoesCommentExist(Guid.Empty);
+			bool result = await this._commentRepository.DoesCommentExist(Guid.Empty);
 
 			Assert.IsFalse(result, "DoesCommentExist does not return false whenm the Comment" +
 				" does not exist");
@@ -79,18 +77,18 @@ namespace DevHive.Data.Tests
 		#endregion
 
 		#region HelperMethods
-		private async Task<Comment> AddEntity(string name = COMMENT_MESSAGE)
+		private async Task<Comment> AddEntity()
 		{
-			User creator = new User { Id = Guid.NewGuid() };
-			Comment comment = new Comment
+			User creator = new() { Id = Guid.NewGuid() };
+			Comment comment = new()
 			{
 				Message = COMMENT_MESSAGE,
 				Creator = creator,
 				TimeCreated = DateTime.Now
 			};
 
-			this.Context.Comments.Add(comment);
-			await this.Context.SaveChangesAsync();
+			this._context.Comments.Add(comment);
+			await this._context.SaveChangesAsync();
 
 			return comment;
 		}

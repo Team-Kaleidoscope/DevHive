@@ -11,35 +11,32 @@ using NUnit.Framework;
 
 namespace DevHive.Data.Tests
 {
-    [TestFixture]
+	[TestFixture]
 	public class PostRepositoryTests
 	{
 		private const string POST_MESSAGE = "Post test message";
-
-		private DevHiveContext Context { get; set; }
-
-		private Mock<IUserRepository> UserRepository { get; set; }
-
-		private PostRepository PostRepository { get; set; }
+		private DevHiveContext _context;
+		private Mock<IUserRepository> _userRepository;
+		private PostRepository _postRepository;
 
 		#region Setups
 		[SetUp]
 		public void Setup()
 		{
-			var optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
+			DbContextOptionsBuilder<DevHiveContext> optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
 				.UseInMemoryDatabase(databaseName: "DevHive_Test_Database");
 
-			this.Context = new DevHiveContext(optionsBuilder.Options);
+			this._context = new DevHiveContext(optionsBuilder.Options);
 
-			this.UserRepository = new Mock<IUserRepository>();
+			this._userRepository = new Mock<IUserRepository>();
 
-			PostRepository = new PostRepository(Context, this.UserRepository.Object);
+			this._postRepository = new PostRepository(this._context, this._userRepository.Object);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			this.Context.Database.EnsureDeleted();
+			this._context.Database.EnsureDeleted();
 		}
 		#endregion
 
@@ -49,11 +46,11 @@ namespace DevHive.Data.Tests
 		// {
 		// 	Post post = await this.AddEntity();
 		// 	User user = new User { Id = Guid.NewGuid() };
-        //
+		//
 		// 	this.UserRepository.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
-        //
+		//
 		// 	bool result = await this.PostRepository.AddNewPostToCreator(user.Id, post);
-        //
+		//
 		// 	Assert.IsTrue(result, "AddNewPostToCreator does not return true when Post Is Added To Creator successfully");
 		// }
 		#endregion
@@ -62,9 +59,9 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetByNameAsync_ReturnsTheCorrectPost_IfItExists()
 		{
-			Post post = await AddEntity();
+			Post post = await this.AddEntity();
 
-			Post resultTechnology = await this.PostRepository.GetByIdAsync(post.Id);
+			Post resultTechnology = await this._postRepository.GetByIdAsync(post.Id);
 
 			Assert.AreEqual(post.Id, resultTechnology.Id, "GetByIdAsync does not return the correct post");
 		}
@@ -72,7 +69,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetByIdAsync_ReturnsNull_IfTechnologyDoesNotExists()
 		{
-			Post resultPost = await this.PostRepository.GetByIdAsync(Guid.NewGuid());
+			Post resultPost = await this._postRepository.GetByIdAsync(Guid.NewGuid());
 
 			Assert.IsNull(resultPost);
 		}
@@ -84,7 +81,7 @@ namespace DevHive.Data.Tests
 		{
 			Post post = await this.AddEntity();
 
-			Post resultPost = await this.PostRepository.GetPostByCreatorAndTimeCreatedAsync(post.Creator.Id, post.TimeCreated);
+			Post resultPost = await this._postRepository.GetPostByCreatorAndTimeCreatedAsync(post.Creator.Id, post.TimeCreated);
 
 			Assert.AreEqual(post.Id, resultPost.Id, "GetPostByCreatorAndTimeCreatedAsync does not return the corect post when it exists");
 		}
@@ -92,9 +89,9 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetPostByCreatorAndTimeCreatedAsync_ReturnsNull_IfThePostDoesNotExist()
 		{
-			Post post = await this.AddEntity();
+			await this.AddEntity();
 
-			Post resutPost = await this.PostRepository.GetPostByCreatorAndTimeCreatedAsync(Guid.Empty, DateTime.Now);
+			Post resutPost = await this._postRepository.GetPostByCreatorAndTimeCreatedAsync(Guid.Empty, DateTime.Now);
 
 			Assert.IsNull(resutPost, "GetPostByCreatorAndTimeCreatedAsync does not return null when the post does not exist");
 		}
@@ -106,7 +103,7 @@ namespace DevHive.Data.Tests
 		{
 			Post post = await this.AddEntity();
 
-			bool result = await this.PostRepository.DoesPostExist(post.Id);
+			bool result = await this._postRepository.DoesPostExist(post.Id);
 
 			Assert.IsTrue(result, "DoesPostExist does not return true whenm the Post exists");
 		}
@@ -114,18 +111,18 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task DoesPostExist_ReturnsFalse_WhenThePostDoesNotExist()
 		{
-			bool result = await this.PostRepository.DoesPostExist(Guid.Empty);
+			bool result = await this._postRepository.DoesPostExist(Guid.Empty);
 
 			Assert.IsFalse(result, "DoesPostExist does not return false whenm the Post does not exist");
 		}
 		#endregion
 
 		#region HelperMethods
-		private async Task<Post> AddEntity(string name = POST_MESSAGE)
+		private async Task<Post> AddEntity()
 		{
-			User creator = new User { Id = Guid.NewGuid() };
-			await this.Context.Users.AddAsync(creator);
-			Post post = new Post
+			User creator = new() { Id = Guid.NewGuid() };
+			await this._context.Users.AddAsync(creator);
+			Post post = new()
 			{
 				Message = POST_MESSAGE,
 				Id = Guid.NewGuid(),
@@ -135,8 +132,8 @@ namespace DevHive.Data.Tests
 				Comments = new List<Comment>()
 			};
 
-			await this.Context.Posts.AddAsync(post);
-			await this.Context.SaveChangesAsync();
+			await this._context.Posts.AddAsync(post);
+			await this._context.SaveChangesAsync();
 
 			return post;
 		}
