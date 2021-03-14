@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Common.Jwt.Interfaces;
 using DevHive.Common.Models.Identity;
@@ -13,7 +12,7 @@ using NUnit.Framework;
 
 namespace DevHive.Web.Tests
 {
-	[TestFixture]
+    [TestFixture]
 	public class UserControllerTests
 	{
 		const string USERNAME = "Gosho Trapov";
@@ -55,7 +54,7 @@ namespace DevHive.Web.Tests
 				.Returns(tokenWebModel);
 			this._userServiceMock
 				.Setup(p => p.LoginUser(It.IsAny<LoginServiceModel>()))
-				.Returns(Task.FromResult(tokenModel));
+				.ReturnsAsync(tokenModel);
 
 			IActionResult result = this._userController.Login(loginWebModel).Result;
 
@@ -89,7 +88,7 @@ namespace DevHive.Web.Tests
 				.Returns(tokenWebModel);
 			this._userServiceMock
 				.Setup(p => p.RegisterUser(It.IsAny<RegisterServiceModel>()))
-				.Returns(Task.FromResult(tokenModel));
+				.ReturnsAsync(tokenModel);
 
 			IActionResult result = this._userController.Register(registerWebModel).Result;
 
@@ -119,7 +118,7 @@ namespace DevHive.Web.Tests
 
 			this._userServiceMock
 				.Setup(p => p.GetUserById(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(userServiceModel));
+				.ReturnsAsync(userServiceModel);
 			this._jwtServiceMock
 				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
 				.Returns(true);
@@ -163,7 +162,7 @@ namespace DevHive.Web.Tests
 
 			this._userServiceMock
 				.Setup(p => p.GetUserByUsername(It.IsAny<string>()))
-				.Returns(Task.FromResult(userServiceModel));
+				.ReturnsAsync(userServiceModel);
 			this._mapperMock
 				.Setup(p => p.Map<UserWebModel>(It.IsAny<UserServiceModel>()))
 				.Returns(userWebModel);
@@ -199,7 +198,7 @@ namespace DevHive.Web.Tests
 
 			this._userServiceMock
 				.Setup(p => p.UpdateUser(It.IsAny<UpdateUserServiceModel>()))
-				.Returns(Task.FromResult(userServiceModel));
+				.ReturnsAsync(userServiceModel);
 			this._jwtServiceMock
 				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
 				.Returns(true);
@@ -224,7 +223,7 @@ namespace DevHive.Web.Tests
 				.Returns(true);
 			this._userServiceMock
 				.Setup(p => p.DeleteUser(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 
 			IActionResult result = this._userController.Delete(id, null).Result;
 
@@ -242,7 +241,7 @@ namespace DevHive.Web.Tests
 				.Returns(true);
 			this._userServiceMock
 				.Setup(p => p.DeleteUser(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 
 			IActionResult result = this._userController.Delete(id, null).Result;
 

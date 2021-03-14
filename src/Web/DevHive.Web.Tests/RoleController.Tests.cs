@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using DevHive.Services.Interfaces;
 using DevHive.Services.Models.Role;
@@ -12,7 +11,7 @@ using NUnit.Framework;
 
 namespace DevHive.Web.Tests
 {
-	[TestFixture]
+    [TestFixture]
 	public class RoleControllerTests
 	{
 		const string NAME = "Gosho Trapov";
@@ -47,7 +46,7 @@ namespace DevHive.Web.Tests
 				.Returns(createRoleServiceModel);
 			this._roleServiceMock
 				.Setup(p => p.CreateRole(It.IsAny<CreateRoleServiceModel>()))
-				.Returns(Task.FromResult(id));
+				.ReturnsAsync(id);
 
 			IActionResult result = this._roleController.Create(createRoleWebModel).Result;
 
@@ -83,7 +82,7 @@ namespace DevHive.Web.Tests
 				.Returns(createTechnologyServiceModel);
 			this._roleServiceMock
 				.Setup(p => p.CreateRole(It.IsAny<CreateRoleServiceModel>()))
-				.Returns(Task.FromResult(id));
+				.ReturnsAsync(id);
 
 			IActionResult result = this._roleController.Create(createTechnologyWebModel).Result;
 
@@ -113,7 +112,7 @@ namespace DevHive.Web.Tests
 
 			this._roleServiceMock
 				.Setup(p => p.GetRoleById(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(roleServiceModel));
+				.ReturnsAsync(roleServiceModel);
 			this._mapperMock
 				.Setup(p => p.Map<RoleWebModel>(It.IsAny<RoleServiceModel>()))
 				.Returns(roleWebModel);
@@ -145,7 +144,7 @@ namespace DevHive.Web.Tests
 
 			this._roleServiceMock
 				.Setup(p => p.UpdateRole(It.IsAny<UpdateRoleServiceModel>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._mapperMock
 				.Setup(p => p.Map<UpdateRoleServiceModel>(It.IsAny<UpdateRoleWebModel>()))
 				.Returns(updateRoleServiceModel);
@@ -171,7 +170,7 @@ namespace DevHive.Web.Tests
 
 			this._roleServiceMock
 				.Setup(p => p.UpdateRole(It.IsAny<UpdateRoleServiceModel>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 			this._mapperMock
 				.Setup(p => p.Map<UpdateRoleServiceModel>(It.IsAny<UpdateRoleWebModel>()))
 				.Returns(updateRoleServiceModel);
@@ -194,7 +193,7 @@ namespace DevHive.Web.Tests
 
 			this._roleServiceMock
 				.Setup(p => p.DeleteRole(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 
 			IActionResult result = this._roleController.Delete(id).Result;
 
@@ -209,7 +208,7 @@ namespace DevHive.Web.Tests
 
 			this._roleServiceMock
 				.Setup(p => p.DeleteRole(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 
 			IActionResult result = this._roleController.Delete(id).Result;
 

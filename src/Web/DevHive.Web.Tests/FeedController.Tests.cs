@@ -50,7 +50,7 @@ namespace DevHive.Web.Tests
 
 			this._feedServiceMock
 				.Setup(p => p.GetPage(It.IsAny<GetPageServiceModel>()))
-				.Returns(Task.FromResult(readPageServiceModel));
+				.ReturnsAsync(readPageServiceModel);
 			this._mapperMock
 				.Setup(p => p.Map<GetPageServiceModel>(It.IsAny<GetPageWebModel>()))
 				.Returns(getPageServiceModel);
@@ -88,7 +88,7 @@ namespace DevHive.Web.Tests
 
 			this._feedServiceMock
 				.Setup(p => p.GetUserPage(It.IsAny<GetPageServiceModel>()))
-				.Returns(Task.FromResult(readPageServiceModel));
+				.ReturnsAsync(readPageServiceModel);
 			this._mapperMock
 				.Setup(p => p.Map<GetPageServiceModel>(It.IsAny<GetPageWebModel>()))
 				.Returns(getPageServiceModel);

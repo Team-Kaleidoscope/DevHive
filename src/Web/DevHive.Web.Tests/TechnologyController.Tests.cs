@@ -8,11 +8,10 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DevHive.Web.Tests
 {
-	[TestFixture]
+    [TestFixture]
 	public class TechnologyControllerTests
 	{
 		const string NAME = "Gosho Trapov";
@@ -49,7 +48,7 @@ namespace DevHive.Web.Tests
 				.Returns(createTechnologyServiceModel);
 			this._technologyServiceMock
 				.Setup(p => p.CreateTechnology(It.IsAny<CreateTechnologyServiceModel>()))
-				.Returns(Task.FromResult(id));
+				.ReturnsAsync(id);
 
 			IActionResult result = this._technologyController.Create(createTechnologyWebModel).Result;
 
@@ -85,7 +84,7 @@ namespace DevHive.Web.Tests
 				.Returns(createTechnologyServiceModel);
 			this._technologyServiceMock
 				.Setup(p => p.CreateTechnology(It.IsAny<CreateTechnologyServiceModel>()))
-				.Returns(Task.FromResult(id));
+				.ReturnsAsync(id);
 
 			IActionResult result = this._technologyController.Create(createTechnologyWebModel).Result;
 
@@ -115,7 +114,7 @@ namespace DevHive.Web.Tests
 
 			this._technologyServiceMock
 				.Setup(p => p.GetTechnologyById(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(readTechnologyServiceModel));
+				.ReturnsAsync(readTechnologyServiceModel);
 			this._mapperMock
 				.Setup(p => p.Map<ReadTechnologyWebModel>(It.IsAny<ReadTechnologyServiceModel>()))
 				.Returns(readTechnologyWebModel);
@@ -147,7 +146,7 @@ namespace DevHive.Web.Tests
 
 			this._technologyServiceMock
 				.Setup(p => p.UpdateTechnology(It.IsAny<UpdateTechnologyServiceModel>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._mapperMock
 				.Setup(p => p.Map<UpdateTechnologyServiceModel>(It.IsAny<UpdateTechnologyWebModel>()))
 				.Returns(updateTechnologyServiceModel);
@@ -173,7 +172,7 @@ namespace DevHive.Web.Tests
 
 			this._technologyServiceMock
 				.Setup(p => p.UpdateTechnology(It.IsAny<UpdateTechnologyServiceModel>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 			this._mapperMock
 				.Setup(p => p.Map<UpdateTechnologyServiceModel>(It.IsAny<UpdateTechnologyWebModel>()))
 				.Returns(updateTechnologyServiceModel);
@@ -196,7 +195,7 @@ namespace DevHive.Web.Tests
 
 			this._technologyServiceMock
 				.Setup(p => p.DeleteTechnology(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 
 			IActionResult result = this._technologyController.Delete(id).Result;
 
@@ -211,7 +210,7 @@ namespace DevHive.Web.Tests
 
 			this._technologyServiceMock
 				.Setup(p => p.DeleteTechnology(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 
 			IActionResult result = this._technologyController.Delete(id).Result;
 
