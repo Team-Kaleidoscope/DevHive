@@ -48,9 +48,15 @@ namespace DevHive.Web.Tests
 				}
 			};
 
-			this._feedServiceMock.Setup(p => p.GetPage(It.IsAny<GetPageServiceModel>())).Returns(Task.FromResult(readPageServiceModel));
-			this._mapperMock.Setup(p => p.Map<GetPageServiceModel>(It.IsAny<GetPageWebModel>())).Returns(getPageServiceModel);
-			this._mapperMock.Setup(p => p.Map<ReadPageWebModel>(It.IsAny<ReadPageServiceModel>())).Returns(readPageWebModel);
+			this._feedServiceMock
+				.Setup(p => p.GetPage(It.IsAny<GetPageServiceModel>()))
+				.Returns(Task.FromResult(readPageServiceModel));
+			this._mapperMock
+				.Setup(p => p.Map<GetPageServiceModel>(It.IsAny<GetPageWebModel>()))
+				.Returns(getPageServiceModel);
+			this._mapperMock
+				.Setup(p => p.Map<ReadPageWebModel>(It.IsAny<ReadPageServiceModel>()))
+				.Returns(readPageWebModel);
 
 			IActionResult result = await this._feedController.GetPosts(Guid.Empty, getPageWebModel);
 
@@ -80,9 +86,15 @@ namespace DevHive.Web.Tests
 				}
 			};
 
-			this._feedServiceMock.Setup(p => p.GetUserPage(It.IsAny<GetPageServiceModel>())).Returns(Task.FromResult(readPageServiceModel));
-			this._mapperMock.Setup(p => p.Map<GetPageServiceModel>(It.IsAny<GetPageWebModel>())).Returns(getPageServiceModel);
-			this._mapperMock.Setup(p => p.Map<ReadPageWebModel>(It.IsAny<ReadPageServiceModel>())).Returns(readPageWebModel);
+			this._feedServiceMock
+				.Setup(p => p.GetUserPage(It.IsAny<GetPageServiceModel>()))
+				.Returns(Task.FromResult(readPageServiceModel));
+			this._mapperMock
+				.Setup(p => p.Map<GetPageServiceModel>(It.IsAny<GetPageWebModel>()))
+				.Returns(getPageServiceModel);
+			this._mapperMock
+				.Setup(p => p.Map<ReadPageWebModel>(It.IsAny<ReadPageServiceModel>()))
+				.Returns(readPageWebModel);
 
 			IActionResult result = await this._feedController.GetUserPosts(null, getPageWebModel);
 

@@ -47,9 +47,15 @@ namespace DevHive.Web.Tests
 			TokenModel tokenModel = new(token);
 			TokenWebModel tokenWebModel = new(token);
 
-			this._mapperMock.Setup(p => p.Map<LoginServiceModel>(It.IsAny<LoginWebModel>())).Returns(loginServiceModel);
-			this._mapperMock.Setup(p => p.Map<TokenWebModel>(It.IsAny<TokenModel>())).Returns(tokenWebModel);
-			this._userServiceMock.Setup(p => p.LoginUser(It.IsAny<LoginServiceModel>())).Returns(Task.FromResult(tokenModel));
+			this._mapperMock
+				.Setup(p => p.Map<LoginServiceModel>(It.IsAny<LoginWebModel>()))
+				.Returns(loginServiceModel);
+			this._mapperMock
+				.Setup(p => p.Map<TokenWebModel>(It.IsAny<TokenModel>()))
+				.Returns(tokenWebModel);
+			this._userServiceMock
+				.Setup(p => p.LoginUser(It.IsAny<LoginServiceModel>()))
+				.Returns(Task.FromResult(tokenModel));
 
 			IActionResult result = this._userController.Login(loginWebModel).Result;
 
@@ -75,9 +81,15 @@ namespace DevHive.Web.Tests
 			TokenModel tokenModel = new(token);
 			TokenWebModel tokenWebModel = new(token);
 
-			this._mapperMock.Setup(p => p.Map<RegisterServiceModel>(It.IsAny<RegisterWebModel>())).Returns(registerServiceModel);
-			this._mapperMock.Setup(p => p.Map<TokenWebModel>(It.IsAny<TokenModel>())).Returns(tokenWebModel);
-			this._userServiceMock.Setup(p => p.RegisterUser(It.IsAny<RegisterServiceModel>())).Returns(Task.FromResult(tokenModel));
+			this._mapperMock
+				.Setup(p => p.Map<RegisterServiceModel>(It.IsAny<RegisterWebModel>()))
+				.Returns(registerServiceModel);
+			this._mapperMock
+				.Setup(p => p.Map<TokenWebModel>(It.IsAny<TokenModel>()))
+				.Returns(tokenWebModel);
+			this._userServiceMock
+				.Setup(p => p.RegisterUser(It.IsAny<RegisterServiceModel>()))
+				.Returns(Task.FromResult(tokenModel));
 
 			IActionResult result = this._userController.Register(registerWebModel).Result;
 
@@ -105,9 +117,15 @@ namespace DevHive.Web.Tests
 				UserName = USERNAME
 			};
 
-			this._userServiceMock.Setup(p => p.GetUserById(It.IsAny<Guid>())).Returns(Task.FromResult(userServiceModel));
-			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this._mapperMock.Setup(p => p.Map<UserWebModel>(It.IsAny<UserServiceModel>())).Returns(userWebModel);
+			this._userServiceMock
+				.Setup(p => p.GetUserById(It.IsAny<Guid>()))
+				.Returns(Task.FromResult(userServiceModel));
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._mapperMock
+				.Setup(p => p.Map<UserWebModel>(It.IsAny<UserServiceModel>()))
+				.Returns(userWebModel);
 
 			IActionResult result = this._userController.GetById(id, null).Result;
 
@@ -122,7 +140,9 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void GetById_ReturnsUnauthorizedResult_WhenUserIsNotAuthorized()
 		{
-			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(false);
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(false);
 
 			IActionResult result = this._userController.GetById(Guid.NewGuid(), null).Result;
 
@@ -141,8 +161,12 @@ namespace DevHive.Web.Tests
 				UserName = USERNAME
 			};
 
-			this._userServiceMock.Setup(p => p.GetUserByUsername(It.IsAny<string>())).Returns(Task.FromResult(userServiceModel));
-			this._mapperMock.Setup(p => p.Map<UserWebModel>(It.IsAny<UserServiceModel>())).Returns(userWebModel);
+			this._userServiceMock
+				.Setup(p => p.GetUserByUsername(It.IsAny<string>()))
+				.Returns(Task.FromResult(userServiceModel));
+			this._mapperMock
+				.Setup(p => p.Map<UserWebModel>(It.IsAny<UserServiceModel>()))
+				.Returns(userWebModel);
 
 			IActionResult result = this._userController.GetUser(null).Result;
 
@@ -173,9 +197,15 @@ namespace DevHive.Web.Tests
 				UserName = USERNAME
 			};
 
-			this._userServiceMock.Setup(p => p.UpdateUser(It.IsAny<UpdateUserServiceModel>())).Returns(Task.FromResult(userServiceModel));
-			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this._mapperMock.Setup(p => p.Map<UpdateUserServiceModel>(It.IsAny<UpdateUserWebModel>())).Returns(updateUserServiceModel);
+			this._userServiceMock
+				.Setup(p => p.UpdateUser(It.IsAny<UpdateUserServiceModel>()))
+				.Returns(Task.FromResult(userServiceModel));
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._mapperMock
+				.Setup(p => p.Map<UpdateUserServiceModel>(It.IsAny<UpdateUserWebModel>()))
+				.Returns(updateUserServiceModel);
 
 			IActionResult result = this._userController.Update(id, updateUserWebModel, null).Result;
 
@@ -189,8 +219,12 @@ namespace DevHive.Web.Tests
 		{
 			Guid id = Guid.NewGuid();
 
-			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this._userServiceMock.Setup(p => p.DeleteUser(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._userServiceMock
+				.Setup(p => p.DeleteUser(It.IsAny<Guid>()))
+				.Returns(Task.FromResult(true));
 
 			IActionResult result = this._userController.Delete(id, null).Result;
 
@@ -203,8 +237,12 @@ namespace DevHive.Web.Tests
 			string message = "Could not delete User";
 			Guid id = Guid.NewGuid();
 
-			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this._userServiceMock.Setup(p => p.DeleteUser(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._userServiceMock
+				.Setup(p => p.DeleteUser(It.IsAny<Guid>()))
+				.Returns(Task.FromResult(false));
 
 			IActionResult result = this._userController.Delete(id, null).Result;
 

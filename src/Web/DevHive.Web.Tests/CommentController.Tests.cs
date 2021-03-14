@@ -47,10 +47,18 @@ namespace DevHive.Web.Tests
 				Message = MESSAGE
 			};
 
-			this._mapperMock.Setup(p => p.Map<CreateCommentServiceModel>(It.IsAny<CreateCommentWebModel>())).Returns(createCommentServiceModel);
-			this._commentServiceMock.Setup(p => p.AddComment(It.IsAny<CreateCommentServiceModel>())).Returns(Task.FromResult(id));
-			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this._commentServiceMock.Setup(p => p.ValidateJwtForCreating(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
+			this._mapperMock
+				.Setup(p => p.Map<CreateCommentServiceModel>(It.IsAny<CreateCommentWebModel>()))
+				.Returns(createCommentServiceModel);
+			this._commentServiceMock
+				.Setup(p => p.AddComment(It.IsAny<CreateCommentServiceModel>()))
+				.Returns(Task.FromResult(id));
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._commentServiceMock
+				.Setup(p => p.ValidateJwtForCreating(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(Task.FromResult(true));
 
 			IActionResult result = this._commentController.AddComment(Guid.NewGuid(), createCommentWebModel, null).Result;
 
@@ -81,10 +89,18 @@ namespace DevHive.Web.Tests
 			string errorMessage = $"Could not create comment!";
 
 
-			this._mapperMock.Setup(p => p.Map<CreateCommentServiceModel>(It.IsAny<CreateCommentWebModel>())).Returns(createCommentServiceModel);
-			this._commentServiceMock.Setup(p => p.AddComment(It.IsAny<CreateCommentServiceModel>())).Returns(Task.FromResult(Guid.Empty));
-			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this._commentServiceMock.Setup(p => p.ValidateJwtForCreating(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
+			this._mapperMock
+				.Setup(p => p.Map<CreateCommentServiceModel>(It.IsAny<CreateCommentWebModel>()))
+				.Returns(createCommentServiceModel);
+			this._commentServiceMock
+				.Setup(p => p.AddComment(It.IsAny<CreateCommentServiceModel>()))
+				.Returns(Task.FromResult(Guid.Empty));
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._commentServiceMock
+				.Setup(p => p.ValidateJwtForCreating(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(Task.FromResult(true));
 
 			IActionResult result = this._commentController.AddComment(Guid.NewGuid(), createCommentWebModel, null).Result;
 
@@ -104,8 +120,12 @@ namespace DevHive.Web.Tests
 				Message = MESSAGE
 			};
 
-			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this._commentServiceMock.Setup(p => p.ValidateJwtForCreating(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(false));
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._commentServiceMock
+				.Setup(p => p.ValidateJwtForCreating(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(Task.FromResult(false));
 
 			IActionResult result = this._commentController.AddComment(Guid.NewGuid(), createCommentWebModel, null).Result;
 
@@ -127,9 +147,15 @@ namespace DevHive.Web.Tests
 				Message = MESSAGE
 			};
 
-			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this._commentServiceMock.Setup(p => p.GetCommentById(It.IsAny<Guid>())).Returns(Task.FromResult(readCommentServiceModel));
-			this._mapperMock.Setup(p => p.Map<ReadCommentWebModel>(It.IsAny<ReadCommentServiceModel>())).Returns(readCommentWebModel);
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._commentServiceMock
+				.Setup(p => p.GetCommentById(It.IsAny<Guid>()))
+				.Returns(Task.FromResult(readCommentServiceModel));
+			this._mapperMock
+				.Setup(p => p.Map<ReadCommentWebModel>(It.IsAny<ReadCommentServiceModel>()))
+				.Returns(readCommentWebModel);
 
 			IActionResult result = this._commentController.GetCommentById(id).Result;
 
@@ -156,10 +182,18 @@ namespace DevHive.Web.Tests
 				NewMessage = MESSAGE
 			};
 
-			this._commentServiceMock.Setup(p => p.UpdateComment(It.IsAny<UpdateCommentServiceModel>())).Returns(Task.FromResult(id));
-			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this._commentServiceMock.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
-			this._mapperMock.Setup(p => p.Map<UpdateCommentServiceModel>(It.IsAny<UpdateCommentWebModel>())).Returns(updateCommentServiceModel);
+			this._commentServiceMock
+				.Setup(p => p.UpdateComment(It.IsAny<UpdateCommentServiceModel>()))
+				.Returns(Task.FromResult(id));
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._commentServiceMock
+				.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(Task.FromResult(true));
+			this._mapperMock
+				.Setup(p => p.Map<UpdateCommentServiceModel>(It.IsAny<UpdateCommentWebModel>()))
+				.Returns(updateCommentServiceModel);
 
 			IActionResult result = this._commentController.UpdateComment(Guid.Empty, updateCommentWebModel, null).Result;
 
@@ -185,10 +219,18 @@ namespace DevHive.Web.Tests
 				NewMessage = MESSAGE
 			};
 
-			this._commentServiceMock.Setup(p => p.UpdateComment(It.IsAny<UpdateCommentServiceModel>())).Returns(Task.FromResult(Guid.Empty));
-			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this._commentServiceMock.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
-			this._mapperMock.Setup(p => p.Map<UpdateCommentServiceModel>(It.IsAny<UpdateCommentWebModel>())).Returns(updateCommentServiceModel);
+			this._commentServiceMock
+				.Setup(p => p.UpdateComment(It.IsAny<UpdateCommentServiceModel>()))
+				.Returns(Task.FromResult(Guid.Empty));
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._commentServiceMock
+				.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(Task.FromResult(true));
+			this._mapperMock
+				.Setup(p => p.Map<UpdateCommentServiceModel>(It.IsAny<UpdateCommentWebModel>()))
+				.Returns(updateCommentServiceModel);
 
 			IActionResult result = this._commentController.UpdateComment(Guid.Empty, updateCommentWebModel, null).Result;
 			Assert.IsInstanceOf<BadRequestObjectResult>(result);
@@ -207,7 +249,9 @@ namespace DevHive.Web.Tests
 				NewMessage = MESSAGE
 			};
 
-			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(false);
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(false);
 			// this.CommentServiceMock.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(false));
 
 			IActionResult result = this._commentController.UpdateComment(Guid.Empty, updateCommentWebModel, null).Result;
@@ -222,9 +266,15 @@ namespace DevHive.Web.Tests
 		{
 			Guid id = Guid.NewGuid();
 
-			this._commentServiceMock.Setup(p => p.DeleteComment(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this._commentServiceMock.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
+			this._commentServiceMock
+				.Setup(p => p.DeleteComment(It.IsAny<Guid>()))
+				.Returns(Task.FromResult(true));
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._commentServiceMock
+				.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(Task.FromResult(true));
 
 			IActionResult result = this._commentController.DeleteComment(id, null).Result;
 
@@ -237,9 +287,15 @@ namespace DevHive.Web.Tests
 			string message = "Could not delete Comment";
 			Guid id = Guid.NewGuid();
 
-			this._commentServiceMock.Setup(p => p.DeleteComment(It.IsAny<Guid>())).Returns(Task.FromResult(false));
-			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this._commentServiceMock.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
+			this._commentServiceMock
+				.Setup(p => p.DeleteComment(It.IsAny<Guid>()))
+				.Returns(Task.FromResult(false));
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._commentServiceMock
+				.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(Task.FromResult(true));
 
 			IActionResult result = this._commentController.DeleteComment(id, null).Result;
 
@@ -254,8 +310,12 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void DeleteComment_ReturnsUnauthorizedResult_WhenUserIsNotAuthorized()
 		{
-			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this._commentServiceMock.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(false));
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._commentServiceMock
+				.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(Task.FromResult(false));
 
 			IActionResult result = this._commentController.DeleteComment(Guid.Empty, null).Result;
 

@@ -44,8 +44,12 @@ namespace DevHive.Web.Tests
 			};
 			Guid id = Guid.NewGuid();
 
-			this._mapperMock.Setup(p => p.Map<CreateTechnologyServiceModel>(It.IsAny<CreateTechnologyWebModel>())).Returns(createTechnologyServiceModel);
-			this._technologyServiceMock.Setup(p => p.CreateTechnology(It.IsAny<CreateTechnologyServiceModel>())).Returns(Task.FromResult(id));
+			this._mapperMock
+				.Setup(p => p.Map<CreateTechnologyServiceModel>(It.IsAny<CreateTechnologyWebModel>()))
+				.Returns(createTechnologyServiceModel);
+			this._technologyServiceMock
+				.Setup(p => p.CreateTechnology(It.IsAny<CreateTechnologyServiceModel>()))
+				.Returns(Task.FromResult(id));
 
 			IActionResult result = this._technologyController.Create(createTechnologyWebModel).Result;
 
@@ -76,8 +80,12 @@ namespace DevHive.Web.Tests
 			Guid id = Guid.Empty;
 			string errorMessage = $"Could not create technology {NAME}";
 
-			this._mapperMock.Setup(p => p.Map<CreateTechnologyServiceModel>(It.IsAny<CreateTechnologyWebModel>())).Returns(createTechnologyServiceModel);
-			this._technologyServiceMock.Setup(p => p.CreateTechnology(It.IsAny<CreateTechnologyServiceModel>())).Returns(Task.FromResult(id));
+			this._mapperMock
+				.Setup(p => p.Map<CreateTechnologyServiceModel>(It.IsAny<CreateTechnologyWebModel>()))
+				.Returns(createTechnologyServiceModel);
+			this._technologyServiceMock
+				.Setup(p => p.CreateTechnology(It.IsAny<CreateTechnologyServiceModel>()))
+				.Returns(Task.FromResult(id));
 
 			IActionResult result = this._technologyController.Create(createTechnologyWebModel).Result;
 
@@ -105,8 +113,12 @@ namespace DevHive.Web.Tests
 				Name = NAME
 			};
 
-			this._technologyServiceMock.Setup(p => p.GetTechnologyById(It.IsAny<Guid>())).Returns(Task.FromResult(readTechnologyServiceModel));
-			this._mapperMock.Setup(p => p.Map<ReadTechnologyWebModel>(It.IsAny<ReadTechnologyServiceModel>())).Returns(readTechnologyWebModel);
+			this._technologyServiceMock
+				.Setup(p => p.GetTechnologyById(It.IsAny<Guid>()))
+				.Returns(Task.FromResult(readTechnologyServiceModel));
+			this._mapperMock
+				.Setup(p => p.Map<ReadTechnologyWebModel>(It.IsAny<ReadTechnologyServiceModel>()))
+				.Returns(readTechnologyWebModel);
 
 			IActionResult result = this._technologyController.GetById(id).Result;
 
@@ -133,8 +145,12 @@ namespace DevHive.Web.Tests
 				Name = NAME
 			};
 
-			this._technologyServiceMock.Setup(p => p.UpdateTechnology(It.IsAny<UpdateTechnologyServiceModel>())).Returns(Task.FromResult(true));
-			this._mapperMock.Setup(p => p.Map<UpdateTechnologyServiceModel>(It.IsAny<UpdateTechnologyWebModel>())).Returns(updateTechnologyServiceModel);
+			this._technologyServiceMock
+				.Setup(p => p.UpdateTechnology(It.IsAny<UpdateTechnologyServiceModel>()))
+				.Returns(Task.FromResult(true));
+			this._mapperMock
+				.Setup(p => p.Map<UpdateTechnologyServiceModel>(It.IsAny<UpdateTechnologyWebModel>()))
+				.Returns(updateTechnologyServiceModel);
 
 			IActionResult result = this._technologyController.Update(id, updateTechnologyWebModel).Result;
 
@@ -155,8 +171,12 @@ namespace DevHive.Web.Tests
 				Name = NAME
 			};
 
-			this._technologyServiceMock.Setup(p => p.UpdateTechnology(It.IsAny<UpdateTechnologyServiceModel>())).Returns(Task.FromResult(false));
-			this._mapperMock.Setup(p => p.Map<UpdateTechnologyServiceModel>(It.IsAny<UpdateTechnologyWebModel>())).Returns(updateTechnologyServiceModel);
+			this._technologyServiceMock
+				.Setup(p => p.UpdateTechnology(It.IsAny<UpdateTechnologyServiceModel>()))
+				.Returns(Task.FromResult(false));
+			this._mapperMock
+				.Setup(p => p.Map<UpdateTechnologyServiceModel>(It.IsAny<UpdateTechnologyWebModel>()))
+				.Returns(updateTechnologyServiceModel);
 
 			IActionResult result = this._technologyController.Update(id, updateTechnologyWebModel).Result;
 			Assert.IsInstanceOf<BadRequestObjectResult>(result);
@@ -174,7 +194,9 @@ namespace DevHive.Web.Tests
 		{
 			Guid id = Guid.NewGuid();
 
-			this._technologyServiceMock.Setup(p => p.DeleteTechnology(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this._technologyServiceMock
+				.Setup(p => p.DeleteTechnology(It.IsAny<Guid>()))
+				.Returns(Task.FromResult(true));
 
 			IActionResult result = this._technologyController.Delete(id).Result;
 
@@ -187,7 +209,9 @@ namespace DevHive.Web.Tests
 			string message = "Could not delete Technology";
 			Guid id = Guid.NewGuid();
 
-			this._technologyServiceMock.Setup(p => p.DeleteTechnology(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this._technologyServiceMock
+				.Setup(p => p.DeleteTechnology(It.IsAny<Guid>()))
+				.Returns(Task.FromResult(false));
 
 			IActionResult result = this._technologyController.Delete(id).Result;
 
