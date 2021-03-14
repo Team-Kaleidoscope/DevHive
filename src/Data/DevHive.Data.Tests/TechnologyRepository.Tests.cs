@@ -30,7 +30,7 @@ namespace DevHive.Data.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			_ = this._context.Database.EnsureDeleted();
+			this._context.Database.EnsureDeleted();
 		}
 		#endregion
 
@@ -108,8 +108,8 @@ namespace DevHive.Data.Tests
 				Name = name
 			};
 
-			_ = this._context.Technologies.Add(technology);
-			_ = await this._context.SaveChangesAsync();
+			this._context.Technologies.Add(technology);
+			await this._context.SaveChangesAsync();
 		}
 		#endregion
 	}

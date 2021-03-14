@@ -29,7 +29,7 @@ namespace DevHive.Data.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			_ = this._context.Database.EnsureDeleted();
+			this._context.Database.EnsureDeleted();
 		}
 		#endregion
 

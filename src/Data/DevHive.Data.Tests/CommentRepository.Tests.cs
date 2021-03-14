@@ -29,7 +29,7 @@ namespace DevHive.Data.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			_ = this._context.Database.EnsureDeleted();
+			this._context.Database.EnsureDeleted();
 		}
 		#endregion
 
@@ -47,7 +47,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetPostByCreatorAndTimeCreatedAsync_ReturnsNull_IfThePostDoesNotExist()
 		{
-			_ = await this.AddEntity();
+			await this.AddEntity();
 
 			Comment resultComment = await this._commentRepository.GetCommentByIssuerAndTimeCreatedAsync(Guid.Empty, DateTime.Now);
 
@@ -87,8 +87,8 @@ namespace DevHive.Data.Tests
 				TimeCreated = DateTime.Now
 			};
 
-			_ = this._context.Comments.Add(comment);
-			_ = await this._context.SaveChangesAsync();
+			this._context.Comments.Add(comment);
+			await this._context.SaveChangesAsync();
 
 			return comment;
 		}

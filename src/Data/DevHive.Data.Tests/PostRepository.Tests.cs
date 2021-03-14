@@ -36,7 +36,7 @@ namespace DevHive.Data.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			_ = this._context.Database.EnsureDeleted();
+			this._context.Database.EnsureDeleted();
 		}
 		#endregion
 
@@ -89,7 +89,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetPostByCreatorAndTimeCreatedAsync_ReturnsNull_IfThePostDoesNotExist()
 		{
-			_ = await this.AddEntity();
+			await this.AddEntity();
 
 			Post resutPost = await this._postRepository.GetPostByCreatorAndTimeCreatedAsync(Guid.Empty, DateTime.Now);
 
@@ -121,7 +121,7 @@ namespace DevHive.Data.Tests
 		private async Task<Post> AddEntity()
 		{
 			User creator = new() { Id = Guid.NewGuid() };
-			_ = await this._context.Users.AddAsync(creator);
+			await this._context.Users.AddAsync(creator);
 			Post post = new()
 			{
 				Message = POST_MESSAGE,
@@ -132,8 +132,8 @@ namespace DevHive.Data.Tests
 				Comments = new List<Comment>()
 			};
 
-			_ = await this._context.Posts.AddAsync(post);
-			_ = await this._context.SaveChangesAsync();
+			await this._context.Posts.AddAsync(post);
+			await this._context.SaveChangesAsync();
 
 			return post;
 		}
