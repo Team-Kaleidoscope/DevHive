@@ -13,17 +13,17 @@ namespace DevHive.Services.Tests
 	[TestFixture]
 	public class RoleServiceTests
 	{
-		private Mock<IRoleRepository> RoleRepositoryMock { get; set; }
-		private Mock<IMapper> MapperMock { get; set; }
-		private RoleService RoleService { get; set; }
+		private Mock<IRoleRepository> _roleRepositoryMock;
+		private Mock<IMapper> _mapperMock;
+		private RoleService _roleService;
 
 		#region SetUps
 		[SetUp]
 		public void Setup()
 		{
-			this.RoleRepositoryMock = new Mock<IRoleRepository>();
-			this.MapperMock = new Mock<IMapper>();
-			this.RoleService = new RoleService(this.RoleRepositoryMock.Object, this.MapperMock.Object);
+			this._roleRepositoryMock = new Mock<IRoleRepository>();
+			this._mapperMock = new Mock<IMapper>();
+			this._roleService = new RoleService(this._roleRepositoryMock.Object, this._mapperMock.Object);
 		}
 		#endregion
 
@@ -43,12 +43,12 @@ namespace DevHive.Services.Tests
 				Id = id
 			};
 
-			this.RoleRepositoryMock.Setup(p => p.DoesNameExist(It.IsAny<string>())).Returns(Task.FromResult(false));
-			this.RoleRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Role>())).Returns(Task.FromResult(true));
-			this.RoleRepositoryMock.Setup(p => p.GetByNameAsync(It.IsAny<string>())).Returns(Task.FromResult(role));
-			this.MapperMock.Setup(p => p.Map<Role>(It.IsAny<CreateRoleServiceModel>())).Returns(role);
+			this._roleRepositoryMock.Setup(p => p.DoesNameExist(It.IsAny<string>())).Returns(Task.FromResult(false));
+			this._roleRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Role>())).Returns(Task.FromResult(true));
+			this._roleRepositoryMock.Setup(p => p.GetByNameAsync(It.IsAny<string>())).Returns(Task.FromResult(role));
+			this._mapperMock.Setup(p => p.Map<Role>(It.IsAny<CreateRoleServiceModel>())).Returns(role);
 
-			Guid result = await this.RoleService.CreateRole(createRoleServiceModel);
+			Guid result = await this._roleService.CreateRole(createRoleServiceModel);
 
 			Assert.AreEqual(id, result);
 		}
@@ -67,11 +67,11 @@ namespace DevHive.Services.Tests
 				Name = roleName
 			};
 
-			this.RoleRepositoryMock.Setup(p => p.DoesNameExist(It.IsAny<string>())).Returns(Task.FromResult(false));
-			this.RoleRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Role>())).Returns(Task.FromResult(false));
-			this.MapperMock.Setup(p => p.Map<Role>(It.IsAny<CreateRoleServiceModel>())).Returns(role);
+			this._roleRepositoryMock.Setup(p => p.DoesNameExist(It.IsAny<string>())).Returns(Task.FromResult(false));
+			this._roleRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Role>())).Returns(Task.FromResult(false));
+			this._mapperMock.Setup(p => p.Map<Role>(It.IsAny<CreateRoleServiceModel>())).Returns(role);
 
-			Guid result = await this.RoleService.CreateRole(createRoleServiceModel);
+			Guid result = await this._roleService.CreateRole(createRoleServiceModel);
 
 			Assert.IsTrue(result == Guid.Empty);
 		}
@@ -87,9 +87,9 @@ namespace DevHive.Services.Tests
 				Name = roleName
 			};
 
-			this.RoleRepositoryMock.Setup(p => p.DoesNameExist(It.IsAny<string>())).Returns(Task.FromResult(true));
+			this._roleRepositoryMock.Setup(p => p.DoesNameExist(It.IsAny<string>())).Returns(Task.FromResult(true));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.RoleService.CreateRole(createRoleServiceModel));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._roleService.CreateRole(createRoleServiceModel));
 
 			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}
@@ -110,10 +110,10 @@ namespace DevHive.Services.Tests
 				Name = name
 			};
 
-			this.RoleRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(role));
-			this.MapperMock.Setup(p => p.Map<RoleServiceModel>(It.IsAny<Role>())).Returns(roleServiceModel);
+			this._roleRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(role));
+			this._mapperMock.Setup(p => p.Map<RoleServiceModel>(It.IsAny<Role>())).Returns(roleServiceModel);
 
-			RoleServiceModel result = await this.RoleService.GetRoleById(id);
+			RoleServiceModel result = await this._roleService.GetRoleById(id);
 
 			Assert.AreEqual(name, result.Name);
 		}
@@ -123,9 +123,9 @@ namespace DevHive.Services.Tests
 		{
 			string exceptionMessage = "Role does not exist!";
 			Guid id = Guid.NewGuid();
-			this.RoleRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<Role>(null));
+			this._roleRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<Role>(null));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.RoleService.GetRoleById(id));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._roleService.GetRoleById(id));
 
 			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}
@@ -149,12 +149,12 @@ namespace DevHive.Services.Tests
 				Name = name,
 			};
 
-			this.RoleRepositoryMock.Setup(p => p.DoesRoleExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this.RoleRepositoryMock.Setup(p => p.DoesNameExist(It.IsAny<string>())).Returns(Task.FromResult(false));
-			this.RoleRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<Role>())).Returns(Task.FromResult(shouldPass));
-			this.MapperMock.Setup(p => p.Map<Role>(It.IsAny<UpdateRoleServiceModel>())).Returns(role);
+			this._roleRepositoryMock.Setup(p => p.DoesRoleExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this._roleRepositoryMock.Setup(p => p.DoesNameExist(It.IsAny<string>())).Returns(Task.FromResult(false));
+			this._roleRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<Role>())).Returns(Task.FromResult(shouldPass));
+			this._mapperMock.Setup(p => p.Map<Role>(It.IsAny<UpdateRoleServiceModel>())).Returns(role);
 
-			bool result = await this.RoleService.UpdateRole(updateRoleServiceModel);
+			bool result = await this._roleService.UpdateRole(updateRoleServiceModel);
 
 			Assert.AreEqual(shouldPass, result);
 		}
@@ -167,9 +167,9 @@ namespace DevHive.Services.Tests
 			{
 			};
 
-			this.RoleRepositoryMock.Setup(p => p.DoesRoleExist(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this._roleRepositoryMock.Setup(p => p.DoesRoleExist(It.IsAny<Guid>())).Returns(Task.FromResult(false));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.RoleService.UpdateRole(updateRoleServiceModel));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._roleService.UpdateRole(updateRoleServiceModel));
 
 			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}
@@ -182,10 +182,10 @@ namespace DevHive.Services.Tests
 			{
 			};
 
-			this.RoleRepositoryMock.Setup(p => p.DoesRoleExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this.RoleRepositoryMock.Setup(p => p.DoesNameExist(It.IsAny<string>())).Returns(Task.FromResult(true));
+			this._roleRepositoryMock.Setup(p => p.DoesRoleExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this._roleRepositoryMock.Setup(p => p.DoesNameExist(It.IsAny<string>())).Returns(Task.FromResult(true));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.RoleService.UpdateRole(updateRoleServiceModel));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._roleService.UpdateRole(updateRoleServiceModel));
 
 			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}
@@ -200,11 +200,11 @@ namespace DevHive.Services.Tests
 			Guid id = Guid.NewGuid();
 			Role role = new Role();
 
-			this.RoleRepositoryMock.Setup(p => p.DoesRoleExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this.RoleRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(role));
-			this.RoleRepositoryMock.Setup(p => p.DeleteAsync(It.IsAny<Role>())).Returns(Task.FromResult(shouldPass));
+			this._roleRepositoryMock.Setup(p => p.DoesRoleExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this._roleRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(role));
+			this._roleRepositoryMock.Setup(p => p.DeleteAsync(It.IsAny<Role>())).Returns(Task.FromResult(shouldPass));
 
-			bool result = await this.RoleService.DeleteRole(id);
+			bool result = await this._roleService.DeleteRole(id);
 
 			Assert.AreEqual(shouldPass, result);
 		}
@@ -215,9 +215,9 @@ namespace DevHive.Services.Tests
 			string exceptionMessage = "Role does not exist!";
 			Guid id = Guid.NewGuid();
 
-			this.RoleRepositoryMock.Setup(p => p.DoesRoleExist(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this._roleRepositoryMock.Setup(p => p.DoesRoleExist(It.IsAny<Guid>())).Returns(Task.FromResult(false));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.RoleService.DeleteRole(id));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._roleService.DeleteRole(id));
 
 			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}

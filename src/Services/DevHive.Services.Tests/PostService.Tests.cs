@@ -17,23 +17,23 @@ namespace DevHive.Services.Tests
 	public class PostServiceTests
 	{
 		private const string MESSAGE = "Gosho Trapov";
-		private Mock<ICloudService> CloudServiceMock { get; set; }
-		private Mock<IPostRepository> PostRepositoryMock { get; set; }
-		private Mock<ICommentRepository> CommentRepositoryMock { get; set; }
-		private Mock<IUserRepository> UserRepositoryMock { get; set; }
-		private Mock<IMapper> MapperMock { get; set; }
-		private PostService PostService { get; set; }
+		private Mock<ICloudService> _cloudServiceMock;
+		private Mock<IPostRepository> _postRepositoryMock;
+		private Mock<ICommentRepository> _commentRepositoryMock;
+		private Mock<IUserRepository> _userRepositoryMock;
+		private Mock<IMapper> _mapperMock;
+		private PostService _postService;
 
 		#region SetUps
 		[SetUp]
 		public void Setup()
 		{
-			this.PostRepositoryMock = new Mock<IPostRepository>();
-			this.CloudServiceMock = new Mock<ICloudService>();
-			this.UserRepositoryMock = new Mock<IUserRepository>();
-			this.CommentRepositoryMock = new Mock<ICommentRepository>();
-			this.MapperMock = new Mock<IMapper>();
-			this.PostService = new PostService(this.CloudServiceMock.Object, this.UserRepositoryMock.Object, this.PostRepositoryMock.Object, this.CommentRepositoryMock.Object, this.MapperMock.Object);
+			this._postRepositoryMock = new Mock<IPostRepository>();
+			this._cloudServiceMock = new Mock<ICloudService>();
+			this._userRepositoryMock = new Mock<IUserRepository>();
+			this._commentRepositoryMock = new Mock<ICommentRepository>();
+			this._mapperMock = new Mock<IMapper>();
+			this._postService = new PostService(this._cloudServiceMock.Object, this._userRepositoryMock.Object, this._postRepositoryMock.Object, this._commentRepositoryMock.Object, this._mapperMock.Object);
 		}
 		#endregion
 
@@ -53,13 +53,13 @@ namespace DevHive.Services.Tests
 				Id = postId,
 			};
 
-			this.PostRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Post>())).Returns(Task.FromResult(true));
-			this.PostRepositoryMock.Setup(p => p.GetPostByCreatorAndTimeCreatedAsync(It.IsAny<Guid>(), It.IsAny<DateTime>())).Returns(Task.FromResult(post));
-			this.UserRepositoryMock.Setup(p => p.DoesUserExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this.UserRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(creator));
-			this.MapperMock.Setup(p => p.Map<Post>(It.IsAny<CreatePostServiceModel>())).Returns(post);
+			this._postRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Post>())).Returns(Task.FromResult(true));
+			this._postRepositoryMock.Setup(p => p.GetPostByCreatorAndTimeCreatedAsync(It.IsAny<Guid>(), It.IsAny<DateTime>())).Returns(Task.FromResult(post));
+			this._userRepositoryMock.Setup(p => p.DoesUserExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this._userRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(creator));
+			this._mapperMock.Setup(p => p.Map<Post>(It.IsAny<CreatePostServiceModel>())).Returns(post);
 
-			Guid result = await this.PostService.CreatePost(createPostServiceModel);
+			Guid result = await this._postService.CreatePost(createPostServiceModel);
 
 			Assert.AreEqual(postId, result, "CreatePost does not return the correct id");
 		}
@@ -76,11 +76,11 @@ namespace DevHive.Services.Tests
 				Message = MESSAGE,
 			};
 
-			this.PostRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Post>())).Returns(Task.FromResult(false));
-			this.UserRepositoryMock.Setup(p => p.DoesUserExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this.MapperMock.Setup(p => p.Map<Post>(It.IsAny<CreatePostServiceModel>())).Returns(post);
+			this._postRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Post>())).Returns(Task.FromResult(false));
+			this._userRepositoryMock.Setup(p => p.DoesUserExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this._mapperMock.Setup(p => p.Map<Post>(It.IsAny<CreatePostServiceModel>())).Returns(post);
 
-			Guid result = await this.PostService.CreatePost(createPostServiceModel);
+			Guid result = await this._postService.CreatePost(createPostServiceModel);
 
 			Assert.AreEqual(Guid.Empty, result, "CreatePost does not return empty id");
 		}
@@ -93,7 +93,7 @@ namespace DevHive.Services.Tests
 			{
 			};
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.PostService.CreatePost(createPostServiceModel), "CreatePost does not throw excpeion when the user does not exist");
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._postService.CreatePost(createPostServiceModel), "CreatePost does not throw excpeion when the user does not exist");
 
 			Assert.AreEqual(EXCEPTION_MESSAGE, ex.Message, "Excapetion message is not correct");
 		}
@@ -119,11 +119,11 @@ namespace DevHive.Services.Tests
 				Id = creatorId,
 			};
 
-			this.PostRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(post));
-			this.UserRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
-			this.MapperMock.Setup(p => p.Map<ReadPostServiceModel>(It.IsAny<Post>())).Returns(readPostServiceModel);
+			this._postRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(post));
+			this._userRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
+			this._mapperMock.Setup(p => p.Map<ReadPostServiceModel>(It.IsAny<Post>())).Returns(readPostServiceModel);
 
-			ReadPostServiceModel result = await this.PostService.GetPostById(Guid.NewGuid());
+			ReadPostServiceModel result = await this._postService.GetPostById(Guid.NewGuid());
 
 			Assert.AreEqual(MESSAGE, result.Message);
 		}
@@ -140,9 +140,9 @@ namespace DevHive.Services.Tests
 				Creator = creator
 			};
 
-			this.PostRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(post));
+			this._postRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(post));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.PostService.GetPostById(Guid.NewGuid()), "GetPostById does not throw exception when the user does not exist");
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._postService.GetPostById(Guid.NewGuid()), "GetPostById does not throw exception when the user does not exist");
 
 			Assert.AreEqual(EXCEPTION_MESSAGE, ex.Message);
 		}
@@ -157,10 +157,10 @@ namespace DevHive.Services.Tests
 				Id = creatorId,
 			};
 
-			this.PostRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<Post>(null));
-			this.UserRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
+			this._postRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<Post>(null));
+			this._userRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.PostService.GetPostById(Guid.NewGuid()));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._postService.GetPostById(Guid.NewGuid()));
 
 			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}
@@ -183,12 +183,12 @@ namespace DevHive.Services.Tests
 				Files = new List<IFormFile>()
 			};
 
-			this.PostRepositoryMock.Setup(p => p.DoesPostExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this.PostRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<Post>())).Returns(Task.FromResult(true));
-			this.PostRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(post));
-			this.MapperMock.Setup(p => p.Map<Post>(It.IsAny<UpdatePostServiceModel>())).Returns(post);
+			this._postRepositoryMock.Setup(p => p.DoesPostExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this._postRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<Post>())).Returns(Task.FromResult(true));
+			this._postRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(post));
+			this._mapperMock.Setup(p => p.Map<Post>(It.IsAny<UpdatePostServiceModel>())).Returns(post);
 
-			Guid result = await this.PostService.UpdatePost(updatePostServiceModel);
+			Guid result = await this._postService.UpdatePost(updatePostServiceModel);
 
 			Assert.AreEqual(updatePostServiceModel.PostId, result);
 		}
@@ -207,11 +207,11 @@ namespace DevHive.Services.Tests
 				Files = new List<IFormFile>()
 			};
 
-			this.PostRepositoryMock.Setup(p => p.DoesPostExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this.PostRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<Post>())).Returns(Task.FromResult(false));
-			this.MapperMock.Setup(p => p.Map<Post>(It.IsAny<UpdatePostServiceModel>())).Returns(post);
+			this._postRepositoryMock.Setup(p => p.DoesPostExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this._postRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<Post>())).Returns(Task.FromResult(false));
+			this._mapperMock.Setup(p => p.Map<Post>(It.IsAny<UpdatePostServiceModel>())).Returns(post);
 
-			Guid result = await this.PostService.UpdatePost(updatePostServiceModel);
+			Guid result = await this._postService.UpdatePost(updatePostServiceModel);
 
 			Assert.AreEqual(Guid.Empty, result);
 		}
@@ -224,9 +224,9 @@ namespace DevHive.Services.Tests
 			{
 			};
 
-			this.PostRepositoryMock.Setup(p => p.DoesPostExist(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this._postRepositoryMock.Setup(p => p.DoesPostExist(It.IsAny<Guid>())).Returns(Task.FromResult(false));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.PostService.UpdatePost(updatePostServiceModel));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._postService.UpdatePost(updatePostServiceModel));
 
 			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}
@@ -241,11 +241,11 @@ namespace DevHive.Services.Tests
 			Guid id = Guid.NewGuid();
 			Post post = new Post();
 
-			this.PostRepositoryMock.Setup(p => p.DoesPostExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this.PostRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(post));
-			this.PostRepositoryMock.Setup(p => p.DeleteAsync(It.IsAny<Post>())).Returns(Task.FromResult(shouldPass));
+			this._postRepositoryMock.Setup(p => p.DoesPostExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this._postRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(post));
+			this._postRepositoryMock.Setup(p => p.DeleteAsync(It.IsAny<Post>())).Returns(Task.FromResult(shouldPass));
 
-			bool result = await this.PostService.DeletePost(id);
+			bool result = await this._postService.DeletePost(id);
 
 			Assert.AreEqual(shouldPass, result);
 		}
@@ -256,9 +256,9 @@ namespace DevHive.Services.Tests
 			string exceptionMessage = "Post does not exist!";
 			Guid id = Guid.NewGuid();
 
-			this.PostRepositoryMock.Setup(p => p.DoesPostExist(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this._postRepositoryMock.Setup(p => p.DoesPostExist(It.IsAny<Guid>())).Returns(Task.FromResult(false));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.PostService.DeletePost(id));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._postService.DeletePost(id));
 
 			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}
