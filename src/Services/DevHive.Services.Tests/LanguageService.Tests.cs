@@ -44,10 +44,18 @@ namespace DevHive.Services.Tests
 				Id = id
 			};
 
-			this._languageRepositoryMock.Setup(p => p.DoesLanguageNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
-			this._languageRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Language>())).Returns(Task.FromResult(true));
-			this._languageRepositoryMock.Setup(p => p.GetByNameAsync(It.IsAny<string>())).Returns(Task.FromResult(language));
-			this._mapperMock.Setup(p => p.Map<Language>(It.IsAny<CreateLanguageServiceModel>())).Returns(language);
+			this._languageRepositoryMock
+				.Setup(p => p.DoesLanguageNameExistAsync(It.IsAny<string>()))
+				.Returns(Task.FromResult(false));
+			this._languageRepositoryMock
+				.Setup(p => p.AddAsync(It.IsAny<Language>()))
+				.Returns(Task.FromResult(true));
+			this._languageRepositoryMock
+				.Setup(p => p.GetByNameAsync(It.IsAny<string>()))
+				.Returns(Task.FromResult(language));
+			this._mapperMock
+				.Setup(p => p.Map<Language>(It.IsAny<CreateLanguageServiceModel>()))
+				.Returns(language);
 
 			Guid result = await this._languageService.CreateLanguage(createLanguageServiceModel);
 
@@ -68,9 +76,15 @@ namespace DevHive.Services.Tests
 				Name = languageName
 			};
 
-			this._languageRepositoryMock.Setup(p => p.DoesLanguageNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
-			this._languageRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Language>())).Returns(Task.FromResult(false));
-			this._mapperMock.Setup(p => p.Map<Language>(It.IsAny<CreateLanguageServiceModel>())).Returns(language);
+			this._languageRepositoryMock
+				.Setup(p => p.DoesLanguageNameExistAsync(It.IsAny<string>()))
+				.Returns(Task.FromResult(false));
+			this._languageRepositoryMock
+				.Setup(p => p.AddAsync(It.IsAny<Language>()))
+				.Returns(Task.FromResult(false));
+			this._mapperMock
+				.Setup(p => p.Map<Language>(It.IsAny<CreateLanguageServiceModel>()))
+				.Returns(language);
 
 			Guid result = await this._languageService.CreateLanguage(createLanguageServiceModel);
 
@@ -93,7 +107,9 @@ namespace DevHive.Services.Tests
 				Name = languageName
 			};
 
-			this._languageRepositoryMock.Setup(p => p.DoesLanguageNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
+			this._languageRepositoryMock
+				.Setup(p => p.DoesLanguageNameExistAsync(It.IsAny<string>()))
+				.Returns(Task.FromResult(true));
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._languageService.CreateLanguage(createLanguageServiceModel));
 
@@ -116,8 +132,12 @@ namespace DevHive.Services.Tests
 				Name = name
 			};
 
-			this._languageRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(language));
-			this._mapperMock.Setup(p => p.Map<ReadLanguageServiceModel>(It.IsAny<Language>())).Returns(readLanguageServiceModel);
+			this._languageRepositoryMock
+				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
+				.Returns(Task.FromResult(language));
+			this._mapperMock
+				.Setup(p => p.Map<ReadLanguageServiceModel>(It.IsAny<Language>()))
+				.Returns(readLanguageServiceModel);
 
 			ReadLanguageServiceModel result = await this._languageService.GetLanguageById(id);
 
@@ -129,7 +149,9 @@ namespace DevHive.Services.Tests
 		{
 			string exceptionMessage = "The language does not exist";
 			Guid id = Guid.NewGuid();
-			this._languageRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<Language>(null));
+			this._languageRepositoryMock
+				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
+				.Returns(Task.FromResult<Language>(null));
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._languageService.GetLanguageById(id));
 
@@ -147,8 +169,12 @@ namespace DevHive.Services.Tests
 			languges.Add(firstLanguage);
 			languges.Add(secondLanguage);
 
-			this._languageRepositoryMock.Setup(p => p.GetLanguages()).Returns(new HashSet<Language>());
-			this._mapperMock.Setup(p => p.Map<HashSet<ReadLanguageServiceModel>>(It.IsAny<HashSet<Language>>())).Returns(languges);
+			this._languageRepositoryMock
+				.Setup(p => p.GetLanguages())
+				.Returns(new HashSet<Language>());
+			this._mapperMock
+				.Setup(p => p.Map<HashSet<ReadLanguageServiceModel>>(It.IsAny<HashSet<Language>>()))
+				.Returns(languges);
 
 			HashSet<ReadLanguageServiceModel> result = this._languageService.GetLanguages();
 
@@ -158,8 +184,12 @@ namespace DevHive.Services.Tests
 		[Test]
 		public void GetLanguages_ReturnsEmptyHashSet_IfNoLanguagesExist()
 		{
-			this._languageRepositoryMock.Setup(p => p.GetLanguages()).Returns(new HashSet<Language>());
-			this._mapperMock.Setup(p => p.Map<HashSet<ReadLanguageServiceModel>>(It.IsAny<HashSet<Language>>())).Returns(new HashSet<ReadLanguageServiceModel>());
+			this._languageRepositoryMock
+				.Setup(p => p.GetLanguages())
+				.Returns(new HashSet<Language>());
+			this._mapperMock
+				.Setup(p => p.Map<HashSet<ReadLanguageServiceModel>>(It.IsAny<HashSet<Language>>()))
+				.Returns(new HashSet<ReadLanguageServiceModel>());
 
 			HashSet<ReadLanguageServiceModel> result = this._languageService.GetLanguages();
 
@@ -185,10 +215,18 @@ namespace DevHive.Services.Tests
 				Name = name,
 			};
 
-			this._languageRepositoryMock.Setup(p => p.DoesLanguageExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this._languageRepositoryMock.Setup(p => p.DoesLanguageNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
-			this._languageRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<Language>())).Returns(Task.FromResult(shouldPass));
-			this._mapperMock.Setup(p => p.Map<Language>(It.IsAny<UpdateLanguageServiceModel>())).Returns(language);
+			this._languageRepositoryMock
+				.Setup(p => p.DoesLanguageExistAsync(It.IsAny<Guid>()))
+				.Returns(Task.FromResult(true));
+			this._languageRepositoryMock
+				.Setup(p => p.DoesLanguageNameExistAsync(It.IsAny<string>()))
+				.Returns(Task.FromResult(false));
+			this._languageRepositoryMock
+				.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<Language>()))
+				.Returns(Task.FromResult(shouldPass));
+			this._mapperMock
+				.Setup(p => p.Map<Language>(It.IsAny<UpdateLanguageServiceModel>()))
+				.Returns(language);
 
 			bool result = await this._languageService.UpdateLanguage(updateLanguageServiceModel);
 
@@ -203,7 +241,9 @@ namespace DevHive.Services.Tests
 			{
 			};
 
-			this._languageRepositoryMock.Setup(p => p.DoesLanguageExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this._languageRepositoryMock
+				.Setup(p => p.DoesLanguageExistAsync(It.IsAny<Guid>()))
+				.Returns(Task.FromResult(false));
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._languageService.UpdateLanguage(updateTechnologyServiceModel));
 
@@ -218,8 +258,12 @@ namespace DevHive.Services.Tests
 			{
 			};
 
-			this._languageRepositoryMock.Setup(p => p.DoesLanguageExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this._languageRepositoryMock.Setup(p => p.DoesLanguageNameExistAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
+			this._languageRepositoryMock
+				.Setup(p => p.DoesLanguageExistAsync(It.IsAny<Guid>()))
+				.Returns(Task.FromResult(true));
+			this._languageRepositoryMock
+				.Setup(p => p.DoesLanguageNameExistAsync(It.IsAny<string>()))
+				.Returns(Task.FromResult(true));
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._languageService.UpdateLanguage(updateTechnologyServiceModel));
 
@@ -236,9 +280,15 @@ namespace DevHive.Services.Tests
 			Guid id = Guid.NewGuid();
 			Language language = new Language();
 
-			this._languageRepositoryMock.Setup(p => p.DoesLanguageExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this._languageRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(language));
-			this._languageRepositoryMock.Setup(p => p.DeleteAsync(It.IsAny<Language>())).Returns(Task.FromResult(shouldPass));
+			this._languageRepositoryMock
+				.Setup(p => p.DoesLanguageExistAsync(It.IsAny<Guid>()))
+				.Returns(Task.FromResult(true));
+			this._languageRepositoryMock
+				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
+				.Returns(Task.FromResult(language));
+			this._languageRepositoryMock
+				.Setup(p => p.DeleteAsync(It.IsAny<Language>()))
+				.Returns(Task.FromResult(shouldPass));
 
 			bool result = await this._languageService.DeleteLanguage(id);
 
@@ -251,7 +301,9 @@ namespace DevHive.Services.Tests
 			string exceptionMessage = "Language does not exist!";
 			Guid id = Guid.NewGuid();
 
-			this._languageRepositoryMock.Setup(p => p.DoesLanguageExistAsync(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this._languageRepositoryMock
+				.Setup(p => p.DoesLanguageExistAsync(It.IsAny<Guid>()))
+				.Returns(Task.FromResult(false));
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._languageService.DeleteLanguage(id));
 
