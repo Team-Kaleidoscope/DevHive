@@ -12,8 +12,8 @@ namespace DevHive.Data.Tests
     [TestFixture]
 	public class RatingRepositoryTests
 	{
-		private DevHiveContext Context { get; set; }
-		private RatingRepository RatingRepository { get; set; }
+		private DevHiveContext _context;
+		private RatingRepository _ratingRepository;
 
 		#region Setups
 		[SetUp]
@@ -22,14 +22,14 @@ namespace DevHive.Data.Tests
 			var optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
 				.UseInMemoryDatabase(databaseName: "DevHive_Test_Database");
 
-			this.Context = new DevHiveContext(optionsBuilder.Options);
-			this.RatingRepository = new RatingRepository(this.Context, null);
+			this._context = new DevHiveContext(optionsBuilder.Options);
+			this._ratingRepository = new RatingRepository(this._context, null);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			this.Context.Database.EnsureDeleted();
+			this._context.Database.EnsureDeleted();
 		}
 		#endregion
 
@@ -40,7 +40,7 @@ namespace DevHive.Data.Tests
 			Guid ratingId = Guid.NewGuid();
 			await AddDummyRating(ratingId);
 
-			Rating ratingResult = await this.RatingRepository.GetByIdAsync(ratingId);
+			Rating ratingResult = await this._ratingRepository.GetByIdAsync(ratingId);
 
 			Assert.AreEqual(ratingResult.Id, ratingId);
 		}
@@ -48,7 +48,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetByIdAsync_ReturnsNull_IfRatingDoesNotExist()
 		{
-			Rating ratingResult = await this.RatingRepository.GetByIdAsync(Guid.NewGuid());
+			Rating ratingResult = await this._ratingRepository.GetByIdAsync(Guid.NewGuid());
 
 			Assert.IsNull(ratingResult);
 		}
@@ -63,7 +63,7 @@ namespace DevHive.Data.Tests
 			await AddDummyRating(Guid.NewGuid(), postId);
 			await AddDummyRating(Guid.NewGuid(), postId);
 
-			List<Rating> result = await this.RatingRepository.GetRatingsByPostId(postId);
+			List<Rating> result = await this._ratingRepository.GetRatingsByPostId(postId);
 
 			Assert.IsNotEmpty(result);
 		}
@@ -71,7 +71,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetRatingsByPostId_ReturnsEmptyList_WhenThereAreNoRatings()
 		{
-			List<Rating> result = await this.RatingRepository.GetRatingsByPostId(Guid.NewGuid());
+			List<Rating> result = await this._ratingRepository.GetRatingsByPostId(Guid.NewGuid());
 
 			Assert.IsEmpty(result);
 		}
@@ -88,7 +88,7 @@ namespace DevHive.Data.Tests
 			await AddDummyUser(userId);
 			await AddDummyRating(ratingId, postId, userId);
 
-			Rating result = await this.RatingRepository.GetRatingByUserAndPostId(userId, postId);
+			Rating result = await this._ratingRepository.GetRatingByUserAndPostId(userId, postId);
 
 			Assert.AreEqual(result.Id, ratingId);
 		}
@@ -96,7 +96,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetRatingByUserAndPostId_ReturnsNull_WhenRatingDoesNotExist()
 		{
-			Rating result = await this.RatingRepository.GetRatingByUserAndPostId(Guid.NewGuid(), Guid.NewGuid());
+			Rating result = await this._ratingRepository.GetRatingByUserAndPostId(Guid.NewGuid(), Guid.NewGuid());
 
 			Assert.IsNull(result);
 		}
@@ -112,7 +112,7 @@ namespace DevHive.Data.Tests
 			await AddDummyUser(userId);
 			await AddDummyRating(Guid.NewGuid(), postId, userId);
 
-			bool result = await this.RatingRepository.UserRatedPost(userId, postId);
+			bool result = await this._ratingRepository.UserRatedPost(userId, postId);
 
 			Assert.IsTrue(result);
 		}
@@ -120,7 +120,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task UserRatedPost_ReturnsFalse_WhenUserHasNotRatedPost()
 		{
-			bool result = await this.RatingRepository.UserRatedPost(Guid.NewGuid(), Guid.NewGuid());
+			bool result = await this._ratingRepository.UserRatedPost(Guid.NewGuid(), Guid.NewGuid());
 
 			Assert.IsFalse(result);
 		}
@@ -133,7 +133,7 @@ namespace DevHive.Data.Tests
 			Guid ratingId = Guid.NewGuid();
 			await AddDummyRating(ratingId);
 
-			bool result = await this.RatingRepository.DoesRatingExist(ratingId);
+			bool result = await this._ratingRepository.DoesRatingExist(ratingId);
 
 			Assert.IsTrue(result);
 		}
@@ -141,7 +141,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task DoesRatingExist_ReturnsFalse_WhenRatingDoesNotExist()
 		{
-			bool result = await this.RatingRepository.DoesRatingExist(Guid.NewGuid());
+			bool result = await this._ratingRepository.DoesRatingExist(Guid.NewGuid());
 
 			Assert.IsFalse(result);
 		}
@@ -153,12 +153,12 @@ namespace DevHive.Data.Tests
 			Rating rating = new Rating
 			{
 				Id = ratingId,
-				Post = this.Context.Posts.FirstOrDefault(x => x.Id == postId),
-				User = this.Context.Users.FirstOrDefault(x => x.Id == userId)
+				Post = this._context.Posts.FirstOrDefault(x => x.Id == postId),
+				User = this._context.Users.FirstOrDefault(x => x.Id == userId)
 			};
 
-			await this.Context.Rating.AddAsync(rating);
-			await this.Context.SaveChangesAsync();
+			await this._context.Rating.AddAsync(rating);
+			await this._context.SaveChangesAsync();
 		}
 
 		private async Task AddDummyPost(Guid postId)
@@ -169,8 +169,8 @@ namespace DevHive.Data.Tests
 				Message = "Never gonna give you up"
 			};
 
-			await this.Context.Posts.AddAsync(post);
-			await this.Context.SaveChangesAsync();
+			await this._context.Posts.AddAsync(post);
+			await this._context.SaveChangesAsync();
 		}
 
 		private async Task AddDummyUser(Guid userId)
@@ -180,8 +180,8 @@ namespace DevHive.Data.Tests
 				Id = userId
 			};
 
-			await this.Context.Users.AddAsync(user);
-			await this.Context.SaveChangesAsync();
+			await this._context.Users.AddAsync(user);
+			await this._context.SaveChangesAsync();
 		}
 		#endregion
 	}

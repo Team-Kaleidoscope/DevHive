@@ -13,21 +13,21 @@ namespace DevHive.Services.Tests
     [TestFixture]
 	public class RatingServiceTests
 	{
-		private Mock<IPostRepository> PostRepositoryMock { get; set; }
-		private Mock<IRatingRepository> RatingRepositoryMock { get; set; }
-		private Mock<IUserRepository> UserRepositoryMock { get; set; }
-		private Mock<IMapper> MapperMock { get; set; }
-		private RatingService RatingService { get; set; }
+		private Mock<IPostRepository> _postRepositoryMock;
+		private Mock<IRatingRepository> _ratingRepositoryMock;
+		private Mock<IUserRepository> _userRepositoryMock;
+		private Mock<IMapper> _mapperMock;
+		private RatingService _ratingService;
 
 		#region SetUps
 		[SetUp]
 		public void SetUp()
 		{
-			this.PostRepositoryMock = new Mock<IPostRepository>();
-			this.RatingRepositoryMock = new Mock<IRatingRepository>();
-			this.UserRepositoryMock = new Mock<IUserRepository>();
-			this.MapperMock = new Mock<IMapper>();
-			this.RatingService = new RatingService(this.PostRepositoryMock.Object, this.RatingRepositoryMock.Object, this.UserRepositoryMock.Object, this.MapperMock.Object);
+			this._postRepositoryMock = new Mock<IPostRepository>();
+			this._ratingRepositoryMock = new Mock<IRatingRepository>();
+			this._userRepositoryMock = new Mock<IUserRepository>();
+			this._mapperMock = new Mock<IMapper>();
+			this._ratingService = new RatingService(this._postRepositoryMock.Object, this._ratingRepositoryMock.Object, this._userRepositoryMock.Object, this._mapperMock.Object);
 		}
 		#endregion
 
@@ -59,15 +59,29 @@ namespace DevHive.Services.Tests
 				Id = postId
 			};
 
-			this.PostRepositoryMock.Setup(p => p.DoesPostExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this.RatingRepositoryMock.Setup(p => p.UserRatedPost(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult(false));
-			this.UserRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
-			this.PostRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(post));
-			this.RatingRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Rating>())).Returns(Task.FromResult(true));
-			this.RatingRepositoryMock.Setup(p => p.GetRatingByUserAndPostId(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult(rating));
-			this.MapperMock.Setup(p => p.Map<Rating>(It.IsAny<CreateRatingServiceModel>())).Returns(rating);
+			this._postRepositoryMock
+				.Setup(p => p.DoesPostExist(It.IsAny<Guid>()))
+				.ReturnsAsync(true);
+			this._ratingRepositoryMock
+				.Setup(p => p.UserRatedPost(It.IsAny<Guid>(), It.IsAny<Guid>()))
+				.ReturnsAsync(false);
+			this._userRepositoryMock
+				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
+				.ReturnsAsync(user);
+			this._postRepositoryMock
+				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
+				.ReturnsAsync(post);
+			this._ratingRepositoryMock
+				.Setup(p => p.AddAsync(It.IsAny<Rating>()))
+				.ReturnsAsync(true);
+			this._ratingRepositoryMock
+				.Setup(p => p.GetRatingByUserAndPostId(It.IsAny<Guid>(), It.IsAny<Guid>()))
+				.ReturnsAsync(rating);
+			this._mapperMock
+				.Setup(p => p.Map<Rating>(It.IsAny<CreateRatingServiceModel>()))
+				.Returns(rating);
 
-			Guid result = await this.RatingService.RatePost(createRatingServiceModel);
+			Guid result = await this._ratingService.RatePost(createRatingServiceModel);
 
 			Assert.AreEqual(id, result);
 		}
@@ -99,14 +113,26 @@ namespace DevHive.Services.Tests
 				Id = postId
 			};
 
-			this.PostRepositoryMock.Setup(p => p.DoesPostExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this.RatingRepositoryMock.Setup(p => p.UserRatedPost(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult(false));
-			this.UserRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
-			this.PostRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(post));
-			this.RatingRepositoryMock.Setup(p => p.AddAsync(It.IsAny<Rating>())).Returns(Task.FromResult(false));
-			this.MapperMock.Setup(p => p.Map<Rating>(It.IsAny<CreateRatingServiceModel>())).Returns(rating);
+			this._postRepositoryMock
+				.Setup(p => p.DoesPostExist(It.IsAny<Guid>()))
+				.ReturnsAsync(true);
+			this._ratingRepositoryMock
+				.Setup(p => p.UserRatedPost(It.IsAny<Guid>(), It.IsAny<Guid>()))
+				.ReturnsAsync(false);
+			this._userRepositoryMock
+				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
+				.ReturnsAsync(user);
+			this._postRepositoryMock
+				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
+				.ReturnsAsync(post);
+			this._ratingRepositoryMock
+				.Setup(p => p.AddAsync(It.IsAny<Rating>()))
+				.ReturnsAsync(false);
+			this._mapperMock
+				.Setup(p => p.Map<Rating>(It.IsAny<CreateRatingServiceModel>()))
+				.Returns(rating);
 
-			Guid result = await this.RatingService.RatePost(createRatingServiceModel);
+			Guid result = await this._ratingService.RatePost(createRatingServiceModel);
 
 			Assert.AreEqual(result, Guid.Empty);
 		}
@@ -134,10 +160,14 @@ namespace DevHive.Services.Tests
 				IsLike = isLike
 			};
 
-			this.RatingRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(rating));
-			this.MapperMock.Setup(p => p.Map<ReadRatingServiceModel>(It.IsAny<Rating>())).Returns(readRatingServiceModel);
+			this._ratingRepositoryMock
+				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
+				.ReturnsAsync(rating);
+			this._mapperMock
+				.Setup(p => p.Map<ReadRatingServiceModel>(It.IsAny<Rating>()))
+				.Returns(readRatingServiceModel);
 
-			ReadRatingServiceModel result = await this.RatingService.GetRatingById(id);
+			ReadRatingServiceModel result = await this._ratingService.GetRatingById(id);
 
 			Assert.AreEqual(isLike, result.IsLike);
 		}
@@ -146,9 +176,11 @@ namespace DevHive.Services.Tests
 		public void GetRatingById_ThrowsException_WhenRatingDoesNotExist()
 		{
 			string exceptionMessage = "The rating does not exist";
-			this.RatingRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<Rating>(null));
+			this._ratingRepositoryMock
+				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
+				.Returns(Task.FromResult<Rating>(null));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.RatingService.GetRatingById(Guid.Empty));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._ratingService.GetRatingById(Guid.Empty));
 
 			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}
@@ -174,10 +206,14 @@ namespace DevHive.Services.Tests
 				IsLike = isLike
 			};
 
-			this.RatingRepositoryMock.Setup(p => p.GetRatingByUserAndPostId(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult(rating));
-			this.MapperMock.Setup(p => p.Map<ReadRatingServiceModel>(It.IsAny<Rating>())).Returns(readRatingServiceModel);
+			this._ratingRepositoryMock
+				.Setup(p => p.GetRatingByUserAndPostId(It.IsAny<Guid>(), It.IsAny<Guid>()))
+				.ReturnsAsync(rating);
+			this._mapperMock
+				.Setup(p => p.Map<ReadRatingServiceModel>(It.IsAny<Rating>()))
+				.Returns(readRatingServiceModel);
 
-			ReadRatingServiceModel result = await this.RatingService.GetRatingByPostAndUser(user.Id, Guid.Empty);
+			ReadRatingServiceModel result = await this._ratingService.GetRatingByPostAndUser(user.Id, Guid.Empty);
 
 			Assert.AreEqual(isLike, result.IsLike);
 		}
@@ -186,9 +222,11 @@ namespace DevHive.Services.Tests
 		public void GetRatingByPostAndUser_ThrowsException_WhenRatingDoesNotExist()
 		{
 			string exceptionMessage = "The rating does not exist";
-			this.RatingRepositoryMock.Setup(p => p.GetRatingByUserAndPostId(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult<Rating>(null));
+			this._ratingRepositoryMock
+				.Setup(p => p.GetRatingByUserAndPostId(It.IsAny<Guid>(), It.IsAny<Guid>()))
+				.Returns(Task.FromResult<Rating>(null));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.RatingService.GetRatingById(Guid.Empty));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._ratingService.GetRatingById(Guid.Empty));
 
 			Assert.AreEqual(exceptionMessage, ex.Message, "Incorecct exception message");
 		}
@@ -221,13 +259,23 @@ namespace DevHive.Services.Tests
 				IsLike = isLike
 			};
 
-			this.RatingRepositoryMock.Setup(p => p.GetRatingByUserAndPostId(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult(rating));
-			this.UserRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
-			this.RatingRepositoryMock.Setup(p => p.UserRatedPost(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this.RatingRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<Rating>())).Returns(Task.FromResult(true));
-			this.MapperMock.Setup(p => p.Map<ReadRatingServiceModel>(It.IsAny<Rating>())).Returns(readRatingServiceModel);
+			this._ratingRepositoryMock
+				.Setup(p => p.GetRatingByUserAndPostId(It.IsAny<Guid>(), It.IsAny<Guid>()))
+				.ReturnsAsync(rating);
+			this._userRepositoryMock
+				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
+				.ReturnsAsync(user);
+			this._ratingRepositoryMock
+				.Setup(p => p.UserRatedPost(It.IsAny<Guid>(), It.IsAny<Guid>()))
+				.ReturnsAsync(true);
+			this._ratingRepositoryMock
+				.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<Rating>()))
+				.ReturnsAsync(true);
+			this._mapperMock
+				.Setup(p => p.Map<ReadRatingServiceModel>(It.IsAny<Rating>()))
+				.Returns(readRatingServiceModel);
 
-			ReadRatingServiceModel result = await this.RatingService.UpdateRating(updateRatingServiceModel);
+			ReadRatingServiceModel result = await this._ratingService.UpdateRating(updateRatingServiceModel);
 
 			Assert.AreEqual(result, readRatingServiceModel);
 		}
@@ -258,12 +306,20 @@ namespace DevHive.Services.Tests
 				IsLike = isLike
 			};
 
-			this.RatingRepositoryMock.Setup(p => p.GetRatingByUserAndPostId(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult(rating));
-			this.UserRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
-			this.RatingRepositoryMock.Setup(p => p.UserRatedPost(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this.RatingRepositoryMock.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<Rating>())).Returns(Task.FromResult(false));
+			this._ratingRepositoryMock
+				.Setup(p => p.GetRatingByUserAndPostId(It.IsAny<Guid>(), It.IsAny<Guid>()))
+				.ReturnsAsync(rating);
+			this._userRepositoryMock
+				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
+				.ReturnsAsync(user);
+			this._ratingRepositoryMock
+				.Setup(p => p.UserRatedPost(It.IsAny<Guid>(), It.IsAny<Guid>()))
+				.ReturnsAsync(true);
+			this._ratingRepositoryMock
+				.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<Rating>()))
+				.ReturnsAsync(false);
 
-			ReadRatingServiceModel result = await this.RatingService.UpdateRating(updateRatingServiceModel);
+			ReadRatingServiceModel result = await this._ratingService.UpdateRating(updateRatingServiceModel);
 
 			Assert.IsNull(result);
 		}
@@ -278,9 +334,11 @@ namespace DevHive.Services.Tests
 				IsLike = true
 			};
 
-			this.RatingRepositoryMock.Setup(p => p.GetRatingByUserAndPostId(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult<Rating>(null));
+			this._ratingRepositoryMock
+				.Setup(p => p.GetRatingByUserAndPostId(It.IsAny<Guid>(), It.IsAny<Guid>()))
+				.Returns(Task.FromResult<Rating>(null));
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.RatingService.UpdateRating(updateRatingServiceModel));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._ratingService.UpdateRating(updateRatingServiceModel));
 
 			Assert.AreEqual(ex.Message, exceptionMessage);
 		}
@@ -307,11 +365,17 @@ namespace DevHive.Services.Tests
 				User = user
 			};
 
-			this.RatingRepositoryMock.Setup(p => p.GetRatingByUserAndPostId(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult(rating));
-			this.UserRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult(user));
-			this.RatingRepositoryMock.Setup(p => p.UserRatedPost(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this._ratingRepositoryMock
+				.Setup(p => p.GetRatingByUserAndPostId(It.IsAny<Guid>(), It.IsAny<Guid>()))
+				.ReturnsAsync(rating);
+			this._userRepositoryMock
+				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
+				.ReturnsAsync(user);
+			this._ratingRepositoryMock
+				.Setup(p => p.UserRatedPost(It.IsAny<Guid>(), It.IsAny<Guid>()))
+				.ReturnsAsync(false);
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.RatingService.UpdateRating(updateRatingServiceModel));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._ratingService.UpdateRating(updateRatingServiceModel));
 
 			Assert.AreEqual(ex.Message, exceptionMessage);
 		}
@@ -327,11 +391,17 @@ namespace DevHive.Services.Tests
 				Id = ratingId
 			};
 
-			this.RatingRepositoryMock.Setup(p => p.DoesRatingExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this.RatingRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<Rating>(null));
-			this.RatingRepositoryMock.Setup(p => p.DeleteAsync(It.IsAny<Rating>())).Returns(Task.FromResult(true));
+			this._ratingRepositoryMock
+				.Setup(p => p.DoesRatingExist(It.IsAny<Guid>()))
+				.ReturnsAsync(true);
+			this._ratingRepositoryMock
+				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
+				.Returns(Task.FromResult<Rating>(null));
+			this._ratingRepositoryMock
+				.Setup(p => p.DeleteAsync(It.IsAny<Rating>()))
+				.ReturnsAsync(true);
 
-			bool result = await this.RatingService.DeleteRating(ratingId);
+			bool result = await this._ratingService.DeleteRating(ratingId);
 
 			Assert.IsTrue(result);
 		}
@@ -345,11 +415,17 @@ namespace DevHive.Services.Tests
 				Id = ratingId
 			};
 
-			this.RatingRepositoryMock.Setup(p => p.DoesRatingExist(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this.RatingRepositoryMock.Setup(p => p.GetByIdAsync(It.IsAny<Guid>())).Returns(Task.FromResult<Rating>(null));
-			this.RatingRepositoryMock.Setup(p => p.DeleteAsync(It.IsAny<Rating>())).Returns(Task.FromResult(false));
+			this._ratingRepositoryMock
+				.Setup(p => p.DoesRatingExist(It.IsAny<Guid>()))
+				.ReturnsAsync(true);
+			this._ratingRepositoryMock
+				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
+				.Returns(Task.FromResult<Rating>(null));
+			this._ratingRepositoryMock
+				.Setup(p => p.DeleteAsync(It.IsAny<Rating>()))
+				.ReturnsAsync(false);
 
-			bool result = await this.RatingService.DeleteRating(ratingId);
+			bool result = await this._ratingService.DeleteRating(ratingId);
 
 			Assert.IsFalse(result);
 		}
@@ -359,9 +435,11 @@ namespace DevHive.Services.Tests
 		{
 			string exceptionMessage = "Rating does not exist!";
 
-			this.RatingRepositoryMock.Setup(p => p.DoesRatingExist(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this._ratingRepositoryMock
+				.Setup(p => p.DoesRatingExist(It.IsAny<Guid>()))
+				.ReturnsAsync(false);
 
-			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this.RatingService.DeleteRating(Guid.Empty));
+			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._ratingService.DeleteRating(Guid.Empty));
 
 			Assert.AreEqual(ex.Message, exceptionMessage);
 		}

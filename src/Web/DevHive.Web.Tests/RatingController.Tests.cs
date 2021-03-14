@@ -16,18 +16,18 @@ namespace DevHive.Web.Tests
 	[TestFixture]
 	public class RatingControllerTests
 	{
-		private Mock<IRatingService> RatingServiceMock { get; set; }
-		private Mock<IMapper> MapperMock { get; set; }
-		private Mock<IJwtService> JwtServiceMock { get; set; }
-		private RatingController RatingController { get; set; }
+		private Mock<IRatingService> _ratingServiceMock;
+		private Mock<IMapper> _mapperMock;
+		private Mock<IJwtService> _jwtServiceMock;
+		private RatingController _ratingController;
 
 		[SetUp]
 		public void SetUp()
 		{
-			this.RatingServiceMock = new Mock<IRatingService>();
-			this.MapperMock = new Mock<IMapper>();
-			this.JwtServiceMock = new Mock<IJwtService>();
-			this.RatingController = new RatingController(this.RatingServiceMock.Object, this.MapperMock.Object, this.JwtServiceMock.Object);
+			this._ratingServiceMock = new Mock<IRatingService>();
+			this._mapperMock = new Mock<IMapper>();
+			this._jwtServiceMock = new Mock<IJwtService>();
+			this._ratingController = new RatingController(this._ratingServiceMock.Object, this._mapperMock.Object, this._jwtServiceMock.Object);
 		}
 
 		#region Create
@@ -47,11 +47,17 @@ namespace DevHive.Web.Tests
 			};
 			Guid ratingId = Guid.NewGuid();
 
-			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this.MapperMock.Setup(p => p.Map<CreateRatingServiceModel>(It.IsAny<CreateRatingWebModel>())).Returns(createRatingServiceModel);
-			this.RatingServiceMock.Setup(p => p.RatePost(It.IsAny<CreateRatingServiceModel>())).Returns(Task.FromResult(ratingId));
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._mapperMock
+				.Setup(p => p.Map<CreateRatingServiceModel>(It.IsAny<CreateRatingWebModel>()))
+				.Returns(createRatingServiceModel);
+			this._ratingServiceMock
+				.Setup(p => p.RatePost(It.IsAny<CreateRatingServiceModel>()))
+				.ReturnsAsync(ratingId);
 
-			IActionResult result = this.RatingController.RatePost(Guid.Empty, createRatingWebModel, String.Empty).Result;
+			IActionResult result = this._ratingController.RatePost(Guid.Empty, createRatingWebModel, String.Empty).Result;
 
 			Assert.IsInstanceOf<OkObjectResult>(result);
 
@@ -82,11 +88,17 @@ namespace DevHive.Web.Tests
 			};
 			Guid ratingId = Guid.NewGuid();
 
-			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this.MapperMock.Setup(p => p.Map<CreateRatingServiceModel>(It.IsAny<CreateRatingWebModel>())).Returns(createRatingServiceModel);
-			this.RatingServiceMock.Setup(p => p.RatePost(It.IsAny<CreateRatingServiceModel>())).Returns(Task.FromResult(Guid.Empty));
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._mapperMock
+				.Setup(p => p.Map<CreateRatingServiceModel>(It.IsAny<CreateRatingWebModel>()))
+				.Returns(createRatingServiceModel);
+			this._ratingServiceMock
+				.Setup(p => p.RatePost(It.IsAny<CreateRatingServiceModel>()))
+				.ReturnsAsync(Guid.Empty);
 
-			IActionResult result = this.RatingController.RatePost(Guid.Empty, createRatingWebModel, String.Empty).Result;
+			IActionResult result = this._ratingController.RatePost(Guid.Empty, createRatingWebModel, String.Empty).Result;
 
 			Assert.IsInstanceOf<BadRequestResult>(result);
 		}
@@ -114,10 +126,14 @@ namespace DevHive.Web.Tests
 				IsLike = true
 			};
 
-			this.MapperMock.Setup(p => p.Map<ReadRatingServiceModel>(It.IsAny<ReadRatingWebModel>())).Returns(readRatingServiceModel);
-			this.RatingServiceMock.Setup(p => p.GetRatingById(It.IsAny<Guid>())).Returns(Task.FromResult(readRatingServiceModel));
+			this._mapperMock
+				.Setup(p => p.Map<ReadRatingServiceModel>(It.IsAny<ReadRatingWebModel>()))
+				.Returns(readRatingServiceModel);
+			this._ratingServiceMock
+				.Setup(p => p.GetRatingById(It.IsAny<Guid>()))
+				.ReturnsAsync(readRatingServiceModel);
 
-			IActionResult result = this.RatingController.GetRatingById(id).Result;
+			IActionResult result = this._ratingController.GetRatingById(id).Result;
 
 			Assert.IsInstanceOf<OkObjectResult>(result);
 		}
@@ -143,10 +159,14 @@ namespace DevHive.Web.Tests
 				IsLike = true
 			};
 
-			this.MapperMock.Setup(p => p.Map<ReadRatingServiceModel>(It.IsAny<ReadRatingWebModel>())).Returns(readRatingServiceModel);
-			this.RatingServiceMock.Setup(p => p.GetRatingByPostAndUser(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(Task.FromResult(readRatingServiceModel));
+			this._mapperMock
+				.Setup(p => p.Map<ReadRatingServiceModel>(It.IsAny<ReadRatingWebModel>()))
+				.Returns(readRatingServiceModel);
+			this._ratingServiceMock
+				.Setup(p => p.GetRatingByPostAndUser(It.IsAny<Guid>(), It.IsAny<Guid>()))
+				.ReturnsAsync(readRatingServiceModel);
 
-			IActionResult result = this.RatingController.GetRatingByUserAndPost(userId, postId).Result;
+			IActionResult result = this._ratingController.GetRatingByUserAndPost(userId, postId).Result;
 
 			Assert.IsInstanceOf<OkObjectResult>(result);
 		}
@@ -186,12 +206,20 @@ namespace DevHive.Web.Tests
 				IsLike = true
 			};
 
-			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this.MapperMock.Setup(p => p.Map<UpdateRatingServiceModel>(It.IsAny<UpdateRatingWebModel>())).Returns(updateRatingServiceModel);
-			this.MapperMock.Setup(p => p.Map<ReadRatingWebModel>(It.IsAny<ReadRatingServiceModel>())).Returns(readRatingWebModel);
-			this.RatingServiceMock.Setup(p => p.UpdateRating(It.IsAny<UpdateRatingServiceModel>())).Returns(Task.FromResult(readRatingServiceModel));
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._mapperMock
+				.Setup(p => p.Map<UpdateRatingServiceModel>(It.IsAny<UpdateRatingWebModel>()))
+				.Returns(updateRatingServiceModel);
+			this._mapperMock
+				.Setup(p => p.Map<ReadRatingWebModel>(It.IsAny<ReadRatingServiceModel>()))
+				.Returns(readRatingWebModel);
+			this._ratingServiceMock
+				.Setup(p => p.UpdateRating(It.IsAny<UpdateRatingServiceModel>()))
+				.ReturnsAsync(readRatingServiceModel);
 
-			IActionResult result = this.RatingController.UpdateRating(userId, postId, updateRatingWebModel, String.Empty).Result;
+			IActionResult result = this._ratingController.UpdateRating(userId, postId, updateRatingWebModel, String.Empty).Result;
 
 			Assert.IsInstanceOf<OkObjectResult>(result);
 		}
@@ -210,11 +238,17 @@ namespace DevHive.Web.Tests
 				IsLike = true
 			};
 
-			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this.MapperMock.Setup(p => p.Map<UpdateRatingServiceModel>(It.IsAny<UpdateRatingWebModel>())).Returns(updateRatingServiceModel);
-			this.RatingServiceMock.Setup(p => p.UpdateRating(It.IsAny<UpdateRatingServiceModel>())).Returns(Task.FromResult<ReadRatingServiceModel>(null));
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._mapperMock
+				.Setup(p => p.Map<UpdateRatingServiceModel>(It.IsAny<UpdateRatingWebModel>()))
+				.Returns(updateRatingServiceModel);
+			this._ratingServiceMock
+				.Setup(p => p.UpdateRating(It.IsAny<UpdateRatingServiceModel>()))
+				.Returns(Task.FromResult<ReadRatingServiceModel>(null));
 
-			IActionResult result = this.RatingController.UpdateRating(Guid.Empty, Guid.Empty, updateRatingWebModel, String.Empty).Result;
+			IActionResult result = this._ratingController.UpdateRating(Guid.Empty, Guid.Empty, updateRatingWebModel, String.Empty).Result;
 
 			Assert.IsInstanceOf<BadRequestResult>(result);
 		}
@@ -226,10 +260,14 @@ namespace DevHive.Web.Tests
 		{
 			Guid id = Guid.NewGuid();
 
-			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this.RatingServiceMock.Setup(p => p.DeleteRating(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._ratingServiceMock
+				.Setup(p => p.DeleteRating(It.IsAny<Guid>()))
+				.ReturnsAsync(true);
 
-			IActionResult result = this.RatingController.DeleteRating(Guid.Empty, Guid.Empty, String.Empty).Result;
+			IActionResult result = this._ratingController.DeleteRating(Guid.Empty, Guid.Empty, String.Empty).Result;
 
 			Assert.IsInstanceOf<OkResult>(result);
 		}
@@ -240,10 +278,14 @@ namespace DevHive.Web.Tests
 			string message = "Could not delete Rating";
 			Guid id = Guid.NewGuid();
 
-			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this.RatingServiceMock.Setup(p => p.DeleteRating(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this._jwtServiceMock
+				.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>()))
+				.Returns(true);
+			this._ratingServiceMock
+				.Setup(p => p.DeleteRating(It.IsAny<Guid>()))
+				.ReturnsAsync(false);
 
-			IActionResult result = this.RatingController.DeleteRating(Guid.Empty, Guid.Empty, String.Empty).Result;
+			IActionResult result = this._ratingController.DeleteRating(Guid.Empty, Guid.Empty, String.Empty).Result;
 
 			Assert.IsInstanceOf<BadRequestObjectResult>(result);
 
