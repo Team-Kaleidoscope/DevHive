@@ -16,16 +16,16 @@ namespace DevHive.Web.Tests
 	public class LanguageControllerTests
 	{
 		const string NAME = "Gosho Trapov";
-		private Mock<ILanguageService> LanguageServiceMock { get; set; }
-		private Mock<IMapper> MapperMock { get; set; }
-		private LanguageController LanguageController { get; set; }
+		private Mock<ILanguageService> _languageServiceMock;
+		private Mock<IMapper> _mapperMock;
+		private LanguageController _languageController;
 
 		[SetUp]
 		public void SetUp()
 		{
-			this.LanguageServiceMock = new Mock<ILanguageService>();
-			this.MapperMock = new Mock<IMapper>();
-			this.LanguageController = new LanguageController(this.LanguageServiceMock.Object, this.MapperMock.Object);
+			this._languageServiceMock = new Mock<ILanguageService>();
+			this._mapperMock = new Mock<IMapper>();
+			this._languageController = new LanguageController(this._languageServiceMock.Object, this._mapperMock.Object);
 		}
 
 		#region Create
@@ -42,10 +42,10 @@ namespace DevHive.Web.Tests
 			};
 			Guid id = Guid.NewGuid();
 
-			this.MapperMock.Setup(p => p.Map<CreateLanguageServiceModel>(It.IsAny<CreateLanguageWebModel>())).Returns(createLanguageServiceModel);
-			this.LanguageServiceMock.Setup(p => p.CreateLanguage(It.IsAny<CreateLanguageServiceModel>())).Returns(Task.FromResult(id));
+			this._mapperMock.Setup(p => p.Map<CreateLanguageServiceModel>(It.IsAny<CreateLanguageWebModel>())).Returns(createLanguageServiceModel);
+			this._languageServiceMock.Setup(p => p.CreateLanguage(It.IsAny<CreateLanguageServiceModel>())).Returns(Task.FromResult(id));
 
-			IActionResult result = this.LanguageController.Create(createLanguageWebModel).Result;
+			IActionResult result = this._languageController.Create(createLanguageWebModel).Result;
 
 			Assert.IsInstanceOf<OkObjectResult>(result);
 
@@ -74,10 +74,10 @@ namespace DevHive.Web.Tests
 			Guid id = Guid.Empty;
 			string errorMessage = $"Could not create language {NAME}";
 
-			this.MapperMock.Setup(p => p.Map<CreateLanguageServiceModel>(It.IsAny<CreateLanguageWebModel>())).Returns(createTechnologyServiceModel);
-			this.LanguageServiceMock.Setup(p => p.CreateLanguage(It.IsAny<CreateLanguageServiceModel>())).Returns(Task.FromResult(id));
+			this._mapperMock.Setup(p => p.Map<CreateLanguageServiceModel>(It.IsAny<CreateLanguageWebModel>())).Returns(createTechnologyServiceModel);
+			this._languageServiceMock.Setup(p => p.CreateLanguage(It.IsAny<CreateLanguageServiceModel>())).Returns(Task.FromResult(id));
 
-			IActionResult result = this.LanguageController.Create(createTechnologyWebModel).Result;
+			IActionResult result = this._languageController.Create(createTechnologyWebModel).Result;
 
 			Assert.IsInstanceOf<BadRequestObjectResult>(result);
 
@@ -103,10 +103,10 @@ namespace DevHive.Web.Tests
 				Name = NAME
 			};
 
-			this.LanguageServiceMock.Setup(p => p.GetLanguageById(It.IsAny<Guid>())).Returns(Task.FromResult(readLanguageServiceModel));
-			this.MapperMock.Setup(p => p.Map<ReadLanguageWebModel>(It.IsAny<ReadLanguageServiceModel>())).Returns(readLanguageWebModel);
+			this._languageServiceMock.Setup(p => p.GetLanguageById(It.IsAny<Guid>())).Returns(Task.FromResult(readLanguageServiceModel));
+			this._mapperMock.Setup(p => p.Map<ReadLanguageWebModel>(It.IsAny<ReadLanguageServiceModel>())).Returns(readLanguageWebModel);
 
-			IActionResult result = this.LanguageController.GetById(id).Result;
+			IActionResult result = this._languageController.GetById(id).Result;
 
 			Assert.IsInstanceOf<OkObjectResult>(result);
 
@@ -131,10 +131,10 @@ namespace DevHive.Web.Tests
 				Name = NAME
 			};
 
-			this.LanguageServiceMock.Setup(p => p.UpdateLanguage(It.IsAny<UpdateLanguageServiceModel>())).Returns(Task.FromResult(true));
-			this.MapperMock.Setup(p => p.Map<UpdateLanguageServiceModel>(It.IsAny<UpdateLanguageWebModel>())).Returns(updateLanguageServiceModel);
+			this._languageServiceMock.Setup(p => p.UpdateLanguage(It.IsAny<UpdateLanguageServiceModel>())).Returns(Task.FromResult(true));
+			this._mapperMock.Setup(p => p.Map<UpdateLanguageServiceModel>(It.IsAny<UpdateLanguageWebModel>())).Returns(updateLanguageServiceModel);
 
-			IActionResult result = this.LanguageController.Update(id, updateLanguageWebModel).Result;
+			IActionResult result = this._languageController.Update(id, updateLanguageWebModel).Result;
 
 			Assert.IsInstanceOf<OkResult>(result);
 		}
@@ -153,10 +153,10 @@ namespace DevHive.Web.Tests
 				Name = NAME
 			};
 
-			this.LanguageServiceMock.Setup(p => p.UpdateLanguage(It.IsAny<UpdateLanguageServiceModel>())).Returns(Task.FromResult(false));
-			this.MapperMock.Setup(p => p.Map<UpdateLanguageServiceModel>(It.IsAny<UpdateLanguageWebModel>())).Returns(updateLanguageServiceModel);
+			this._languageServiceMock.Setup(p => p.UpdateLanguage(It.IsAny<UpdateLanguageServiceModel>())).Returns(Task.FromResult(false));
+			this._mapperMock.Setup(p => p.Map<UpdateLanguageServiceModel>(It.IsAny<UpdateLanguageWebModel>())).Returns(updateLanguageServiceModel);
 
-			IActionResult result = this.LanguageController.Update(id, updateLanguageWebModel).Result;
+			IActionResult result = this._languageController.Update(id, updateLanguageWebModel).Result;
 			Assert.IsInstanceOf<BadRequestObjectResult>(result);
 
 			BadRequestObjectResult badRequestObjectResult = result as BadRequestObjectResult;
@@ -172,9 +172,9 @@ namespace DevHive.Web.Tests
 		{
 			Guid id = Guid.NewGuid();
 
-			this.LanguageServiceMock.Setup(p => p.DeleteLanguage(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this._languageServiceMock.Setup(p => p.DeleteLanguage(It.IsAny<Guid>())).Returns(Task.FromResult(true));
 
-			IActionResult result = this.LanguageController.Delete(id).Result;
+			IActionResult result = this._languageController.Delete(id).Result;
 
 			Assert.IsInstanceOf<OkResult>(result);
 		}
@@ -185,9 +185,9 @@ namespace DevHive.Web.Tests
 			string message = "Could not delete Language";
 			Guid id = Guid.NewGuid();
 
-			this.LanguageServiceMock.Setup(p => p.DeleteLanguage(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this._languageServiceMock.Setup(p => p.DeleteLanguage(It.IsAny<Guid>())).Returns(Task.FromResult(false));
 
-			IActionResult result = this.LanguageController.Delete(id).Result;
+			IActionResult result = this._languageController.Delete(id).Result;
 
 			Assert.IsInstanceOf<BadRequestObjectResult>(result);
 

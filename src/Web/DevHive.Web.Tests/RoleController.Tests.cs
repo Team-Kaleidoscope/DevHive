@@ -16,16 +16,16 @@ namespace DevHive.Web.Tests
 	public class RoleControllerTests
 	{
 		const string NAME = "Gosho Trapov";
-		private Mock<IRoleService> RoleServiceMock { get; set; }
-		private Mock<IMapper> MapperMock { get; set; }
-		private RoleController RoleController { get; set; }
+		private Mock<IRoleService> _roleServiceMock;
+		private Mock<IMapper> _mapperMock;
+		private RoleController _roleController;
 
 		[SetUp]
 		public void SetUp()
 		{
-			this.RoleServiceMock = new Mock<IRoleService>();
-			this.MapperMock = new Mock<IMapper>();
-			this.RoleController = new RoleController(this.RoleServiceMock.Object, this.MapperMock.Object);
+			this._roleServiceMock = new Mock<IRoleService>();
+			this._mapperMock = new Mock<IMapper>();
+			this._roleController = new RoleController(this._roleServiceMock.Object, this._mapperMock.Object);
 		}
 
 		#region Create
@@ -42,10 +42,10 @@ namespace DevHive.Web.Tests
 			};
 			Guid id = Guid.NewGuid();
 
-			this.MapperMock.Setup(p => p.Map<CreateRoleServiceModel>(It.IsAny<CreateRoleWebModel>())).Returns(createRoleServiceModel);
-			this.RoleServiceMock.Setup(p => p.CreateRole(It.IsAny<CreateRoleServiceModel>())).Returns(Task.FromResult(id));
+			this._mapperMock.Setup(p => p.Map<CreateRoleServiceModel>(It.IsAny<CreateRoleWebModel>())).Returns(createRoleServiceModel);
+			this._roleServiceMock.Setup(p => p.CreateRole(It.IsAny<CreateRoleServiceModel>())).Returns(Task.FromResult(id));
 
-			IActionResult result = this.RoleController.Create(createRoleWebModel).Result;
+			IActionResult result = this._roleController.Create(createRoleWebModel).Result;
 
 			Assert.IsInstanceOf<OkObjectResult>(result);
 
@@ -74,10 +74,10 @@ namespace DevHive.Web.Tests
 			Guid id = Guid.Empty;
 			string errorMessage = $"Could not create role {NAME}";
 
-			this.MapperMock.Setup(p => p.Map<CreateRoleServiceModel>(It.IsAny<CreateRoleWebModel>())).Returns(createTechnologyServiceModel);
-			this.RoleServiceMock.Setup(p => p.CreateRole(It.IsAny<CreateRoleServiceModel>())).Returns(Task.FromResult(id));
+			this._mapperMock.Setup(p => p.Map<CreateRoleServiceModel>(It.IsAny<CreateRoleWebModel>())).Returns(createTechnologyServiceModel);
+			this._roleServiceMock.Setup(p => p.CreateRole(It.IsAny<CreateRoleServiceModel>())).Returns(Task.FromResult(id));
 
-			IActionResult result = this.RoleController.Create(createTechnologyWebModel).Result;
+			IActionResult result = this._roleController.Create(createTechnologyWebModel).Result;
 
 			Assert.IsInstanceOf<BadRequestObjectResult>(result);
 
@@ -103,10 +103,10 @@ namespace DevHive.Web.Tests
 				Name = NAME
 			};
 
-			this.RoleServiceMock.Setup(p => p.GetRoleById(It.IsAny<Guid>())).Returns(Task.FromResult(roleServiceModel));
-			this.MapperMock.Setup(p => p.Map<RoleWebModel>(It.IsAny<RoleServiceModel>())).Returns(roleWebModel);
+			this._roleServiceMock.Setup(p => p.GetRoleById(It.IsAny<Guid>())).Returns(Task.FromResult(roleServiceModel));
+			this._mapperMock.Setup(p => p.Map<RoleWebModel>(It.IsAny<RoleServiceModel>())).Returns(roleWebModel);
 
-			IActionResult result = this.RoleController.GetById(id).Result;
+			IActionResult result = this._roleController.GetById(id).Result;
 
 			Assert.IsInstanceOf<OkObjectResult>(result);
 
@@ -131,10 +131,10 @@ namespace DevHive.Web.Tests
 				Name = NAME
 			};
 
-			this.RoleServiceMock.Setup(p => p.UpdateRole(It.IsAny<UpdateRoleServiceModel>())).Returns(Task.FromResult(true));
-			this.MapperMock.Setup(p => p.Map<UpdateRoleServiceModel>(It.IsAny<UpdateRoleWebModel>())).Returns(updateRoleServiceModel);
+			this._roleServiceMock.Setup(p => p.UpdateRole(It.IsAny<UpdateRoleServiceModel>())).Returns(Task.FromResult(true));
+			this._mapperMock.Setup(p => p.Map<UpdateRoleServiceModel>(It.IsAny<UpdateRoleWebModel>())).Returns(updateRoleServiceModel);
 
-			IActionResult result = this.RoleController.Update(id, updateRoleWebModel).Result;
+			IActionResult result = this._roleController.Update(id, updateRoleWebModel).Result;
 
 			Assert.IsInstanceOf<OkResult>(result);
 		}
@@ -153,10 +153,10 @@ namespace DevHive.Web.Tests
 				Name = NAME
 			};
 
-			this.RoleServiceMock.Setup(p => p.UpdateRole(It.IsAny<UpdateRoleServiceModel>())).Returns(Task.FromResult(false));
-			this.MapperMock.Setup(p => p.Map<UpdateRoleServiceModel>(It.IsAny<UpdateRoleWebModel>())).Returns(updateRoleServiceModel);
+			this._roleServiceMock.Setup(p => p.UpdateRole(It.IsAny<UpdateRoleServiceModel>())).Returns(Task.FromResult(false));
+			this._mapperMock.Setup(p => p.Map<UpdateRoleServiceModel>(It.IsAny<UpdateRoleWebModel>())).Returns(updateRoleServiceModel);
 
-			IActionResult result = this.RoleController.Update(id, updateRoleWebModel).Result;
+			IActionResult result = this._roleController.Update(id, updateRoleWebModel).Result;
 			Assert.IsInstanceOf<BadRequestObjectResult>(result);
 
 			BadRequestObjectResult badRequestObjectResult = result as BadRequestObjectResult;
@@ -172,9 +172,9 @@ namespace DevHive.Web.Tests
 		{
 			Guid id = Guid.NewGuid();
 
-			this.RoleServiceMock.Setup(p => p.DeleteRole(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this._roleServiceMock.Setup(p => p.DeleteRole(It.IsAny<Guid>())).Returns(Task.FromResult(true));
 
-			IActionResult result = this.RoleController.Delete(id).Result;
+			IActionResult result = this._roleController.Delete(id).Result;
 
 			Assert.IsInstanceOf<OkResult>(result);
 		}
@@ -185,9 +185,9 @@ namespace DevHive.Web.Tests
 			string message = "Could not delete role!";
 			Guid id = Guid.NewGuid();
 
-			this.RoleServiceMock.Setup(p => p.DeleteRole(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this._roleServiceMock.Setup(p => p.DeleteRole(It.IsAny<Guid>())).Returns(Task.FromResult(false));
 
-			IActionResult result = this.RoleController.Delete(id).Result;
+			IActionResult result = this._roleController.Delete(id).Result;
 
 			Assert.IsInstanceOf<BadRequestObjectResult>(result);
 

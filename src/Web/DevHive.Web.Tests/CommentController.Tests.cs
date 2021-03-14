@@ -17,19 +17,19 @@ namespace DevHive.Web.Tests
 	public class CommentControllerTests
 	{
 		const string MESSAGE = "Gosho Trapov";
-		private Mock<ICommentService> CommentServiceMock { get; set; }
-		private Mock<IMapper> MapperMock { get; set; }
-		private Mock<IJwtService> JwtServiceMock { get; set; }
-		private CommentController CommentController { get; set; }
+		private Mock<ICommentService> _commentServiceMock;
+		private Mock<IMapper> _mapperMock;
+		private Mock<IJwtService> _jwtServiceMock;
+		private CommentController _commentController;
 
 		#region Setup
 		[SetUp]
 		public void SetUp()
 		{
-			this.CommentServiceMock = new Mock<ICommentService>();
-			this.MapperMock = new Mock<IMapper>();
-			this.JwtServiceMock = new Mock<IJwtService>();
-			this.CommentController = new CommentController(this.CommentServiceMock.Object, this.MapperMock.Object, this.JwtServiceMock.Object);
+			this._commentServiceMock = new Mock<ICommentService>();
+			this._mapperMock = new Mock<IMapper>();
+			this._jwtServiceMock = new Mock<IJwtService>();
+			this._commentController = new CommentController(this._commentServiceMock.Object, this._mapperMock.Object, this._jwtServiceMock.Object);
 		}
 		#endregion
 
@@ -47,12 +47,12 @@ namespace DevHive.Web.Tests
 				Message = MESSAGE
 			};
 
-			this.MapperMock.Setup(p => p.Map<CreateCommentServiceModel>(It.IsAny<CreateCommentWebModel>())).Returns(createCommentServiceModel);
-			this.CommentServiceMock.Setup(p => p.AddComment(It.IsAny<CreateCommentServiceModel>())).Returns(Task.FromResult(id));
-			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this.CommentServiceMock.Setup(p => p.ValidateJwtForCreating(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
+			this._mapperMock.Setup(p => p.Map<CreateCommentServiceModel>(It.IsAny<CreateCommentWebModel>())).Returns(createCommentServiceModel);
+			this._commentServiceMock.Setup(p => p.AddComment(It.IsAny<CreateCommentServiceModel>())).Returns(Task.FromResult(id));
+			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
+			this._commentServiceMock.Setup(p => p.ValidateJwtForCreating(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
 
-			IActionResult result = this.CommentController.AddComment(Guid.NewGuid(), createCommentWebModel, null).Result;
+			IActionResult result = this._commentController.AddComment(Guid.NewGuid(), createCommentWebModel, null).Result;
 
 			Assert.IsInstanceOf<OkObjectResult>(result);
 
@@ -81,12 +81,12 @@ namespace DevHive.Web.Tests
 			string errorMessage = $"Could not create comment!";
 
 
-			this.MapperMock.Setup(p => p.Map<CreateCommentServiceModel>(It.IsAny<CreateCommentWebModel>())).Returns(createCommentServiceModel);
-			this.CommentServiceMock.Setup(p => p.AddComment(It.IsAny<CreateCommentServiceModel>())).Returns(Task.FromResult(Guid.Empty));
-			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this.CommentServiceMock.Setup(p => p.ValidateJwtForCreating(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
+			this._mapperMock.Setup(p => p.Map<CreateCommentServiceModel>(It.IsAny<CreateCommentWebModel>())).Returns(createCommentServiceModel);
+			this._commentServiceMock.Setup(p => p.AddComment(It.IsAny<CreateCommentServiceModel>())).Returns(Task.FromResult(Guid.Empty));
+			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
+			this._commentServiceMock.Setup(p => p.ValidateJwtForCreating(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
 
-			IActionResult result = this.CommentController.AddComment(Guid.NewGuid(), createCommentWebModel, null).Result;
+			IActionResult result = this._commentController.AddComment(Guid.NewGuid(), createCommentWebModel, null).Result;
 
 			Assert.IsInstanceOf<BadRequestObjectResult>(result);
 
@@ -104,10 +104,10 @@ namespace DevHive.Web.Tests
 				Message = MESSAGE
 			};
 
-			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this.CommentServiceMock.Setup(p => p.ValidateJwtForCreating(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(false));
+			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
+			this._commentServiceMock.Setup(p => p.ValidateJwtForCreating(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(false));
 
-			IActionResult result = this.CommentController.AddComment(Guid.NewGuid(), createCommentWebModel, null).Result;
+			IActionResult result = this._commentController.AddComment(Guid.NewGuid(), createCommentWebModel, null).Result;
 
 			Assert.IsInstanceOf<UnauthorizedResult>(result);
 		}
@@ -127,11 +127,11 @@ namespace DevHive.Web.Tests
 				Message = MESSAGE
 			};
 
-			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this.CommentServiceMock.Setup(p => p.GetCommentById(It.IsAny<Guid>())).Returns(Task.FromResult(readCommentServiceModel));
-			this.MapperMock.Setup(p => p.Map<ReadCommentWebModel>(It.IsAny<ReadCommentServiceModel>())).Returns(readCommentWebModel);
+			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
+			this._commentServiceMock.Setup(p => p.GetCommentById(It.IsAny<Guid>())).Returns(Task.FromResult(readCommentServiceModel));
+			this._mapperMock.Setup(p => p.Map<ReadCommentWebModel>(It.IsAny<ReadCommentServiceModel>())).Returns(readCommentWebModel);
 
-			IActionResult result = this.CommentController.GetCommentById(id).Result;
+			IActionResult result = this._commentController.GetCommentById(id).Result;
 
 			Assert.IsInstanceOf<OkObjectResult>(result);
 
@@ -156,12 +156,12 @@ namespace DevHive.Web.Tests
 				NewMessage = MESSAGE
 			};
 
-			this.CommentServiceMock.Setup(p => p.UpdateComment(It.IsAny<UpdateCommentServiceModel>())).Returns(Task.FromResult(id));
-			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this.CommentServiceMock.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
-			this.MapperMock.Setup(p => p.Map<UpdateCommentServiceModel>(It.IsAny<UpdateCommentWebModel>())).Returns(updateCommentServiceModel);
+			this._commentServiceMock.Setup(p => p.UpdateComment(It.IsAny<UpdateCommentServiceModel>())).Returns(Task.FromResult(id));
+			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
+			this._commentServiceMock.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
+			this._mapperMock.Setup(p => p.Map<UpdateCommentServiceModel>(It.IsAny<UpdateCommentWebModel>())).Returns(updateCommentServiceModel);
 
-			IActionResult result = this.CommentController.UpdateComment(Guid.Empty, updateCommentWebModel, null).Result;
+			IActionResult result = this._commentController.UpdateComment(Guid.Empty, updateCommentWebModel, null).Result;
 
 			Assert.IsInstanceOf<OkObjectResult>(result);
 
@@ -185,12 +185,12 @@ namespace DevHive.Web.Tests
 				NewMessage = MESSAGE
 			};
 
-			this.CommentServiceMock.Setup(p => p.UpdateComment(It.IsAny<UpdateCommentServiceModel>())).Returns(Task.FromResult(Guid.Empty));
-			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this.CommentServiceMock.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
-			this.MapperMock.Setup(p => p.Map<UpdateCommentServiceModel>(It.IsAny<UpdateCommentWebModel>())).Returns(updateCommentServiceModel);
+			this._commentServiceMock.Setup(p => p.UpdateComment(It.IsAny<UpdateCommentServiceModel>())).Returns(Task.FromResult(Guid.Empty));
+			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
+			this._commentServiceMock.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
+			this._mapperMock.Setup(p => p.Map<UpdateCommentServiceModel>(It.IsAny<UpdateCommentWebModel>())).Returns(updateCommentServiceModel);
 
-			IActionResult result = this.CommentController.UpdateComment(Guid.Empty, updateCommentWebModel, null).Result;
+			IActionResult result = this._commentController.UpdateComment(Guid.Empty, updateCommentWebModel, null).Result;
 			Assert.IsInstanceOf<BadRequestObjectResult>(result);
 
 			BadRequestObjectResult badRequestObjectResult = result as BadRequestObjectResult;
@@ -207,10 +207,10 @@ namespace DevHive.Web.Tests
 				NewMessage = MESSAGE
 			};
 
-			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(false);
+			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(false);
 			// this.CommentServiceMock.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(false));
 
-			IActionResult result = this.CommentController.UpdateComment(Guid.Empty, updateCommentWebModel, null).Result;
+			IActionResult result = this._commentController.UpdateComment(Guid.Empty, updateCommentWebModel, null).Result;
 
 			Assert.IsInstanceOf<UnauthorizedResult>(result);
 		}
@@ -222,11 +222,11 @@ namespace DevHive.Web.Tests
 		{
 			Guid id = Guid.NewGuid();
 
-			this.CommentServiceMock.Setup(p => p.DeleteComment(It.IsAny<Guid>())).Returns(Task.FromResult(true));
-			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this.CommentServiceMock.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
+			this._commentServiceMock.Setup(p => p.DeleteComment(It.IsAny<Guid>())).Returns(Task.FromResult(true));
+			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
+			this._commentServiceMock.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
 
-			IActionResult result = this.CommentController.DeleteComment(id, null).Result;
+			IActionResult result = this._commentController.DeleteComment(id, null).Result;
 
 			Assert.IsInstanceOf<OkResult>(result);
 		}
@@ -237,11 +237,11 @@ namespace DevHive.Web.Tests
 			string message = "Could not delete Comment";
 			Guid id = Guid.NewGuid();
 
-			this.CommentServiceMock.Setup(p => p.DeleteComment(It.IsAny<Guid>())).Returns(Task.FromResult(false));
-			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this.CommentServiceMock.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
+			this._commentServiceMock.Setup(p => p.DeleteComment(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
+			this._commentServiceMock.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(true));
 
-			IActionResult result = this.CommentController.DeleteComment(id, null).Result;
+			IActionResult result = this._commentController.DeleteComment(id, null).Result;
 
 			Assert.IsInstanceOf<BadRequestObjectResult>(result);
 
@@ -254,10 +254,10 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void DeleteComment_ReturnsUnauthorizedResult_WhenUserIsNotAuthorized()
 		{
-			this.JwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
-			this.CommentServiceMock.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(false));
+			this._jwtServiceMock.Setup(p => p.ValidateToken(It.IsAny<Guid>(), It.IsAny<string>())).Returns(true);
+			this._commentServiceMock.Setup(p => p.ValidateJwtForComment(It.IsAny<Guid>(), It.IsAny<string>())).Returns(Task.FromResult(false));
 
-			IActionResult result = this.CommentController.DeleteComment(Guid.Empty, null).Result;
+			IActionResult result = this._commentController.DeleteComment(Guid.Empty, null).Result;
 
 			Assert.IsInstanceOf<UnauthorizedResult>(result);
 		}
