@@ -40,7 +40,7 @@ namespace DevHive.Data.Repositories
 				.Where(x => x.Post.Id == postId).ToListAsync();
 		}
 		/// <summary>
-		/// Checks if a user rated a given post.
+		/// Checks if a user rated a given post. In DevHive every user has one or no rating for every post. 
 		/// </summary>
 		/// <param name="userId">Id of the user.</param>
 		/// <param name="postId">Id of the psot.</param>
