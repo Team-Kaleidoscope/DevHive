@@ -1,6 +1,6 @@
 using AutoMapper;
 using DevHive.Data.Models;
-using DevHive.Services.Models.Post.Rating;
+using DevHive.Services.Models.Rating;
 
 namespace DevHive.Services.Configurations.Mapping
 {

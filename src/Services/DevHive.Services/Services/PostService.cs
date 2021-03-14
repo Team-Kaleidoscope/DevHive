@@ -76,11 +76,21 @@ namespace DevHive.Services.Services
 			User user = await this._userRepository.GetByIdAsync(post.Creator.Id) ??
 				throw new ArgumentException("The user does not exist!");
 
+			int currentRating = 0;
+			foreach (Rating rating in post.Ratings)
+			{
+				if (rating.IsLike)
+					currentRating++;
+				else
+					currentRating--;
+			}
+
 			ReadPostServiceModel readPostServiceModel = this._postMapper.Map<ReadPostServiceModel>(post);
 			readPostServiceModel.CreatorFirstName = user.FirstName;
 			readPostServiceModel.CreatorLastName = user.LastName;
 			readPostServiceModel.CreatorUsername = user.UserName;
 			readPostServiceModel.FileUrls = post.Attachments.Select(x => x.FileUrl).ToList();
+			readPostServiceModel.CurrentRating = currentRating;
 
 			return readPostServiceModel;
 		}
