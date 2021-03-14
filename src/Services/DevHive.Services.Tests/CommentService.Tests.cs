@@ -50,16 +50,16 @@ namespace DevHive.Services.Tests
 
 			this._commentRepositoryMock
 				.Setup(p => p.AddAsync(It.IsAny<Comment>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._commentRepositoryMock
 				.Setup(p => p.GetCommentByIssuerAndTimeCreatedAsync(It.IsAny<Guid>(), It.IsAny<DateTime>()))
-				.Returns(Task.FromResult(comment));
+				.ReturnsAsync(comment);
 			this._postRepositoryMock
 				.Setup(p => p.DoesPostExist(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._userRepositoryMock
 				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(creator));
+				.ReturnsAsync(creator);
 			this._mapperMock
 				.Setup(p => p.Map<Comment>(It.IsAny<CreateCommentServiceModel>()))
 				.Returns(comment);
@@ -83,10 +83,10 @@ namespace DevHive.Services.Tests
 
 			this._commentRepositoryMock
 				.Setup(p => p.AddAsync(It.IsAny<Comment>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 			this._postRepositoryMock
 				.Setup(p => p.DoesPostExist(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._mapperMock
 				.Setup(p => p.Map<Comment>(It.IsAny<CreateCommentServiceModel>()))
 				.Returns(comment);
@@ -134,10 +134,10 @@ namespace DevHive.Services.Tests
 
 			this._commentRepositoryMock
 				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(comment));
+				.ReturnsAsync(comment);
 			this._userRepositoryMock
 				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(user));
+				.ReturnsAsync(user);
 			this._mapperMock
 				.Setup(p => p.Map<ReadCommentServiceModel>(It.IsAny<Comment>()))
 				.Returns(commentServiceModel);
@@ -161,7 +161,7 @@ namespace DevHive.Services.Tests
 
 			this._commentRepositoryMock
 				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(comment));
+				.ReturnsAsync(comment);
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._commentService.GetCommentById(Guid.NewGuid()), "GetCommentById does not throw exception when the user does not exist");
 
@@ -183,7 +183,7 @@ namespace DevHive.Services.Tests
 				.Returns(Task.FromResult<Comment>(null));
 			this._userRepositoryMock
 				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(user));
+				.ReturnsAsync(user);
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._commentService.GetCommentById(Guid.NewGuid()));
 
@@ -209,13 +209,13 @@ namespace DevHive.Services.Tests
 
 			this._commentRepositoryMock
 				.Setup(p => p.DoesCommentExist(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._commentRepositoryMock
 				.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<Comment>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._commentRepositoryMock
 				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(comment));
+				.ReturnsAsync(comment);
 			this._mapperMock
 				.Setup(p => p.Map<Comment>(It.IsAny<UpdateCommentServiceModel>()))
 				.Returns(comment);
@@ -240,10 +240,10 @@ namespace DevHive.Services.Tests
 
 			this._commentRepositoryMock
 				.Setup(p => p.DoesCommentExist(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._commentRepositoryMock
 				.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<Comment>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 			this._mapperMock
 				.Setup(p => p.Map<Comment>(It.IsAny<UpdateCommentServiceModel>()))
 				.Returns(comment);
@@ -263,7 +263,7 @@ namespace DevHive.Services.Tests
 
 			this._commentRepositoryMock
 				.Setup(p => p.DoesCommentExist(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._commentService.UpdateComment(updateCommentServiceModel));
 
@@ -282,13 +282,13 @@ namespace DevHive.Services.Tests
 
 			this._commentRepositoryMock
 				.Setup(p => p.DoesCommentExist(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._commentRepositoryMock
 				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(comment));
+				.ReturnsAsync(comment);
 			this._commentRepositoryMock
 				.Setup(p => p.DeleteAsync(It.IsAny<Comment>()))
-				.Returns(Task.FromResult(shouldPass));
+				.ReturnsAsync(shouldPass);
 
 			bool result = await this._commentService.DeleteComment(id);
 
@@ -303,7 +303,7 @@ namespace DevHive.Services.Tests
 
 			this._commentRepositoryMock
 				.Setup(p => p.DoesCommentExist(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._commentService.DeleteComment(id));
 

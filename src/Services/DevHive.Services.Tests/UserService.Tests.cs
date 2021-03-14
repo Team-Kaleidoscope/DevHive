@@ -67,13 +67,13 @@ namespace DevHive.Services.Tests
 
 			this._userRepositoryMock
 				.Setup(p => p.DoesUsernameExistAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._userRepositoryMock
 				.Setup(p => p.VerifyPassword(It.IsAny<User>(), It.IsAny<string>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._userRepositoryMock
 				.Setup(p => p.GetByUsernameAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(user));
+				.ReturnsAsync(user);
 
 			string jwtSecurityToken = "akjdhfakndvlahdfkljahdlfkjhasldf";
 			this._jwtServiceMock
@@ -91,7 +91,7 @@ namespace DevHive.Services.Tests
 
 			this._userRepositoryMock
 				.Setup(p => p.DoesUsernameExistAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(
 				() => this._userService.LoginUser(loginServiceModel));
@@ -115,10 +115,10 @@ namespace DevHive.Services.Tests
 
 			this._userRepositoryMock
 				.Setup(p => p.DoesUsernameExistAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._userRepositoryMock
 				.Setup(p => p.GetByUsernameAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(user));
+				.ReturnsAsync(user);
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._userService.LoginUser(loginServiceModel));
 
@@ -144,13 +144,13 @@ namespace DevHive.Services.Tests
 
 			this._userRepositoryMock
 				.Setup(p => p.DoesUsernameExistAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 			this._userRepositoryMock
 				.Setup(p => p.VerifyPassword(It.IsAny<User>(), It.IsAny<string>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._userRepositoryMock
 				.Setup(p => p.DoesEmailExistAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 			this._userRepositoryMock
 				.Setup(p => p.AddAsync(It.IsAny<User>()))
 				.ReturnsAsync(true);
@@ -163,10 +163,10 @@ namespace DevHive.Services.Tests
 
 			this._roleRepositoryMock
 				.Setup(p => p.DoesNameExist(It.IsAny<string>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._roleRepositoryMock
 				.Setup(p => p.GetByNameAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(role));
+				.ReturnsAsync(role);
 
 			this._mapperMock
 				.Setup(p => p.Map<User>(It.IsAny<RegisterServiceModel>()))
@@ -189,7 +189,7 @@ namespace DevHive.Services.Tests
 
 			this._userRepositoryMock
 				.Setup(p => p.DoesUsernameExistAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(
 				() => this._userService.RegisterUser(registerServiceModel));
@@ -204,10 +204,10 @@ namespace DevHive.Services.Tests
 
 			this._userRepositoryMock
 				.Setup(p => p.DoesUsernameExistAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 			this._userRepositoryMock
 				.Setup(p => p.DoesEmailExistAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._userService.RegisterUser(registerServiceModel));
 
@@ -229,7 +229,7 @@ namespace DevHive.Services.Tests
 
 			this._userRepositoryMock
 				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(user));
+				.ReturnsAsync(user);
 			this._mapperMock
 				.Setup(p => p.Map<UserServiceModel>(It.IsAny<User>()))
 				.Returns(userServiceModel);
@@ -266,7 +266,7 @@ namespace DevHive.Services.Tests
 
 			this._userRepositoryMock
 				.Setup(p => p.GetByUsernameAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(user));
+				.ReturnsAsync(user);
 			this._mapperMock
 				.Setup(p => p.Map<UserServiceModel>(It.IsAny<User>()))
 				.Returns(userServiceModel);
@@ -316,19 +316,19 @@ namespace DevHive.Services.Tests
 		//
 		// 	this._userRepositoryMock.Setup(p =>
 		// p.DoesUserExistAsync(It.IsAny<Guid>()))
-		// 	.Returns(Task.FromResult(true));
+		// 	.ReturnsAsync(true);
 		// 	this._userRepositoryMock.Setup(p =>
 		// p.DoesUsernameExistAsync(It.IsAny<string>()))
-		// 	.Returns(Task.FromResult(false));
+		// 	.ReturnsAsync(false);
 		// 	this._userRepositoryMock.Setup(p =>
 		// p.DoesUserHaveThisUsernameAsync(It.IsAny<Guid>(), It.IsAny<string>()))
 		// 	.Returns(true);
 		// 	this._userRepositoryMock.Setup(p =>
 		// p.EditAsync(It.IsAny<Guid>(), It.IsAny<User>()))
-		// 	.Returns(Task.FromResult(shouldPass));
+		// 	.ReturnsAsync(shouldPass);
 		// 	this._userRepositoryMock.Setup(p =>
 		// p.GetByIdAsync(It.IsAny<Guid>()))
-		// 	.Returns(Task.FromResult(user));
+		// 	.ReturnsAsync(user);
 		// 	this._mapperMock.Setup(p =>
 		// p.Map<User>(It.IsAny<UpdateUserServiceModel>()))
 		// 	.Returns(user);
@@ -346,7 +346,7 @@ namespace DevHive.Services.Tests
 		// 	{
 		// 		const string EXCEPTION_MESSAGE = "Unable to edit user!";
 		//
-		// 		Exception ex = Assert.ThrowsAsync<InvalidOperationException>(() => this._userService.UpdateUser(updateUserServiceModel));
+		// 		Exception ex = Assert.ThrowsAsync<InvalidOperationException>(() => this._userService.UpdateUser(updateUserServiceModel);
 		//
 		// 		Assert.AreEqual(EXCEPTION_MESSAGE, ex.Message, "Incorrect exception message");
 		// 	}
@@ -359,7 +359,7 @@ namespace DevHive.Services.Tests
 
 			this._userRepositoryMock
 				.Setup(p => p.DoesUserExistAsync(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._userService.UpdateUser(updateUserServiceModel));
 
@@ -373,10 +373,10 @@ namespace DevHive.Services.Tests
 
 			this._userRepositoryMock
 				.Setup(p => p.DoesUserExistAsync(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._userRepositoryMock
 				.Setup(p => p.DoesUsernameExistAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._userService.UpdateUser(updateUserServiceModel));
 
@@ -396,13 +396,13 @@ namespace DevHive.Services.Tests
 		//
 		// 	this._userRepositoryMock.Setup(p =>
 		// p.DoesUserExistAsync(It.IsAny<Guid>()))
-		// 			.Returns(Task.FromResult(true));
+		// 			.ReturnsAsync(true);
 		// 	this._userRepositoryMock.Setup(p =>
 		// p.GetByIdAsync(It.IsAny<Guid>()))
-		// 	.Returns(Task.FromResult(user));
+		// 	.ReturnsAsync(user);
 		// 	this._userRepositoryMock.Setup(p =>
 		// p.DeleteAsync(It.IsAny<User>()))
-		// 			.Returns(Task.FromResult(shouldPass));
+		// 			.ReturnsAsync(shouldPass);
 		//
 		// 	bool result = await this._userService.DeleteUser(id);
 		//
@@ -417,7 +417,7 @@ namespace DevHive.Services.Tests
 
 			this._userRepositoryMock
 				.Setup(p => p.DoesUserExistAsync(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._userService.DeleteUser(id));
 

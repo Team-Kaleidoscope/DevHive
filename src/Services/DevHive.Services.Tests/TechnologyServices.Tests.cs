@@ -46,13 +46,13 @@ namespace DevHive.Services.Tests
 
 			this._technologyRepositoryMock
 				.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 			this._technologyRepositoryMock
 				.Setup(p => p.AddAsync(It.IsAny<Technology>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._technologyRepositoryMock
 				.Setup(p => p.GetByNameAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(technology));
+				.ReturnsAsync(technology);
 			this._mapperMock
 				.Setup(p => p.Map<Technology>(It.IsAny<CreateTechnologyServiceModel>()))
 				.Returns(technology);
@@ -78,10 +78,10 @@ namespace DevHive.Services.Tests
 
 			this._technologyRepositoryMock
 				.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 			this._technologyRepositoryMock
 				.Setup(p => p.AddAsync(It.IsAny<Technology>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 			this._mapperMock
 				.Setup(p => p.Map<Technology>(It.IsAny<CreateTechnologyServiceModel>()))
 				.Returns(technology);
@@ -104,7 +104,7 @@ namespace DevHive.Services.Tests
 
 			this._technologyRepositoryMock
 				.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._technologyService.CreateTechnology(createTechnologyServiceModel));
 
@@ -129,7 +129,7 @@ namespace DevHive.Services.Tests
 
 			this._technologyRepositoryMock
 				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(technology));
+				.ReturnsAsync(technology);
 			this._mapperMock
 				.Setup(p => p.Map<ReadTechnologyServiceModel>(It.IsAny<Technology>()))
 				.Returns(readTechnologyServiceModel);
@@ -212,13 +212,13 @@ namespace DevHive.Services.Tests
 
 			this._technologyRepositoryMock
 				.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._technologyRepositoryMock
 				.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 			this._technologyRepositoryMock
 				.Setup(p => p.EditAsync(It.IsAny<Guid>(), It.IsAny<Technology>()))
-				.Returns(Task.FromResult(shouldPass));
+				.ReturnsAsync(shouldPass);
 			this._mapperMock
 				.Setup(p => p.Map<Technology>(It.IsAny<UpdateTechnologyServiceModel>()))
 				.Returns(technology);
@@ -238,7 +238,7 @@ namespace DevHive.Services.Tests
 
 			this._technologyRepositoryMock
 				.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._technologyService.UpdateTechnology(updateTechnologyServiceModel));
 
@@ -255,10 +255,10 @@ namespace DevHive.Services.Tests
 
 			this._technologyRepositoryMock
 				.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._technologyRepositoryMock
 				.Setup(p => p.DoesTechnologyNameExistAsync(It.IsAny<string>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._technologyService.UpdateTechnology(updateTechnologyServiceModel));
 
@@ -278,13 +278,13 @@ namespace DevHive.Services.Tests
 
 			this._technologyRepositoryMock
 				.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(true));
+				.ReturnsAsync(true);
 			this._technologyRepositoryMock
 				.Setup(p => p.GetByIdAsync(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(technology));
+				.ReturnsAsync(technology);
 			this._technologyRepositoryMock
 				.Setup(p => p.DeleteAsync(It.IsAny<Technology>()))
-				.Returns(Task.FromResult(shouldPass));
+				.ReturnsAsync(shouldPass);
 
 			bool result = await this._technologyService.DeleteTechnology(id);
 
@@ -299,7 +299,7 @@ namespace DevHive.Services.Tests
 
 			this._technologyRepositoryMock
 				.Setup(p => p.DoesTechnologyExistAsync(It.IsAny<Guid>()))
-				.Returns(Task.FromResult(false));
+				.ReturnsAsync(false);
 
 			Exception ex = Assert.ThrowsAsync<ArgumentException>(() => this._technologyService.DeleteTechnology(id));
 
