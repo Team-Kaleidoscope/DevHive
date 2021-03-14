@@ -12,8 +12,8 @@ namespace DevHive.Data.Tests
 	public class LenguageRepositoryTests
 	{
 		private const string LANGUAGE_NAME = "Language test name";
-		protected DevHiveContext Context { get; set; }
-		protected LanguageRepository LanguageRepository { get; set; }
+		private DevHiveContext _context;
+		private LanguageRepository _languageRepository;
 
 		#region Setups
 		[SetUp]
@@ -22,15 +22,15 @@ namespace DevHive.Data.Tests
 			DbContextOptionsBuilder<DevHiveContext> optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
 				.UseInMemoryDatabase(databaseName: "DevHive_Test_Database");
 
-			this.Context = new DevHiveContext(optionsBuilder.Options);
+			this._context = new DevHiveContext(optionsBuilder.Options);
 
-			this.LanguageRepository = new LanguageRepository(this.Context);
+			this._languageRepository = new LanguageRepository(this._context);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			_ = this.Context.Database.EnsureDeleted();
+			_ = this._context.Database.EnsureDeleted();
 		}
 		#endregion
 
@@ -40,9 +40,9 @@ namespace DevHive.Data.Tests
 		{
 			await this.AddEntity();
 
-			Language language = this.Context.Languages.Where(x => x.Name == LANGUAGE_NAME).AsEnumerable().FirstOrDefault();
+			Language language = this._context.Languages.Where(x => x.Name == LANGUAGE_NAME).AsEnumerable().FirstOrDefault();
 
-			Language languageResult = await this.LanguageRepository.GetByNameAsync(LANGUAGE_NAME);
+			Language languageResult = await this._languageRepository.GetByNameAsync(LANGUAGE_NAME);
 
 			Assert.AreEqual(language.Id, languageResult.Id);
 		}
@@ -50,7 +50,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetByNameAsync_ReturnsNull_IfTechnologyDoesNotExists()
 		{
-			Language languageResult = await this.LanguageRepository.GetByNameAsync(LANGUAGE_NAME);
+			Language languageResult = await this._languageRepository.GetByNameAsync(LANGUAGE_NAME);
 
 			Assert.IsNull(languageResult);
 		}
@@ -61,11 +61,11 @@ namespace DevHive.Data.Tests
 		public async Task DoesLanguageExist_ReturnsTrue_IfIdExists()
 		{
 			await this.AddEntity();
-			Language language = this.Context.Languages.Where(x => x.Name == LANGUAGE_NAME).AsEnumerable().FirstOrDefault();
+			Language language = this._context.Languages.Where(x => x.Name == LANGUAGE_NAME).AsEnumerable().FirstOrDefault();
 
 			Guid id = language.Id;
 
-			bool result = await this.LanguageRepository.DoesLanguageExistAsync(id);
+			bool result = await this._languageRepository.DoesLanguageExistAsync(id);
 
 			Assert.IsTrue(result, "DoesLanguageExistAsync returns flase when language exists");
 		}
@@ -75,7 +75,7 @@ namespace DevHive.Data.Tests
 		{
 			Guid id = Guid.NewGuid();
 
-			bool result = await this.LanguageRepository.DoesLanguageExistAsync(id);
+			bool result = await this._languageRepository.DoesLanguageExistAsync(id);
 
 			Assert.IsFalse(result, "DoesLanguageExistAsync returns true when language does not exist");
 		}
@@ -87,7 +87,7 @@ namespace DevHive.Data.Tests
 		{
 			await this.AddEntity();
 
-			bool result = await this.LanguageRepository.DoesLanguageNameExistAsync(LANGUAGE_NAME);
+			bool result = await this._languageRepository.DoesLanguageNameExistAsync(LANGUAGE_NAME);
 
 			Assert.IsTrue(result, "DoesLanguageNameExists returns true when language name does not exist");
 		}
@@ -95,7 +95,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task DoesLanguageNameExist_ReturnsFalse_IfLanguageDoesNotExists()
 		{
-			bool result = await this.LanguageRepository.DoesLanguageNameExistAsync(LANGUAGE_NAME);
+			bool result = await this._languageRepository.DoesLanguageNameExistAsync(LANGUAGE_NAME);
 
 			Assert.False(result, "DoesTechnologyNameExistAsync returns true when language name does not exist");
 		}
@@ -109,7 +109,7 @@ namespace DevHive.Data.Tests
 				Name = name
 			};
 
-			_ = await this.LanguageRepository.AddAsync(language);
+			_ = await this._languageRepository.AddAsync(language);
 		}
 		#endregion
 	}

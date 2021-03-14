@@ -11,9 +11,8 @@ namespace DevHive.Data.Tests
 	[TestFixture]
 	public class FeedRepositoryTests
 	{
-		protected DevHiveContext Context { get; set; }
-
-		protected FeedRepository FeedRepository { get; set; }
+		private DevHiveContext _context;
+		private FeedRepository _feedRepository;
 
 		#region Setups
 		[SetUp]
@@ -22,15 +21,15 @@ namespace DevHive.Data.Tests
 			DbContextOptionsBuilder<DevHiveContext> optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
 				.UseInMemoryDatabase(databaseName: "DevHive_Test_Database");
 
-			this.Context = new DevHiveContext(optionsBuilder.Options);
+			this._context = new DevHiveContext(optionsBuilder.Options);
 
-			this.FeedRepository = new FeedRepository(this.Context);
+			this._feedRepository = new FeedRepository(this._context);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			_ = this.Context.Database.EnsureDeleted();
+			_ = this._context.Database.EnsureDeleted();
 		}
 		#endregion
 
@@ -50,7 +49,7 @@ namespace DevHive.Data.Tests
 			const int PAGE_NUMBER = 1;
 			const int PAGE_SIZE = 10;
 
-			List<Post> resultList = await this.FeedRepository.GetFriendsPosts(friendsList, dateTime, PAGE_NUMBER, PAGE_SIZE);
+			List<Post> resultList = await this._feedRepository.GetFriendsPosts(friendsList, dateTime, PAGE_NUMBER, PAGE_SIZE);
 
 			Assert.GreaterOrEqual(2, resultList.Count, "GetFriendsPosts does not return all correct posts");
 		}
@@ -69,7 +68,7 @@ namespace DevHive.Data.Tests
 			const int PAGE_NUMBER = 1;
 			const int PAGE_SIZE = 10;
 
-			List<Post> resultList = await this.FeedRepository.GetFriendsPosts(friendsList, dateTime, PAGE_NUMBER, PAGE_SIZE);
+			List<Post> resultList = await this._feedRepository.GetFriendsPosts(friendsList, dateTime, PAGE_NUMBER, PAGE_SIZE);
 
 			Assert.LessOrEqual(0, resultList.Count, "GetFriendsPosts does not return all correct posts");
 		}

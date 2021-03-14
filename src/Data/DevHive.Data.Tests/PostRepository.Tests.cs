@@ -15,12 +15,9 @@ namespace DevHive.Data.Tests
 	public class PostRepositoryTests
 	{
 		private const string POST_MESSAGE = "Post test message";
-
-		private DevHiveContext Context { get; set; }
-
-		private Mock<IUserRepository> UserRepository { get; set; }
-
-		private PostRepository PostRepository { get; set; }
+		private DevHiveContext _context;
+		private Mock<IUserRepository> _userRepository;
+		private PostRepository _postRepository;
 
 		#region Setups
 		[SetUp]
@@ -29,17 +26,17 @@ namespace DevHive.Data.Tests
 			DbContextOptionsBuilder<DevHiveContext> optionsBuilder = new DbContextOptionsBuilder<DevHiveContext>()
 				.UseInMemoryDatabase(databaseName: "DevHive_Test_Database");
 
-			this.Context = new DevHiveContext(optionsBuilder.Options);
+			this._context = new DevHiveContext(optionsBuilder.Options);
 
-			this.UserRepository = new Mock<IUserRepository>();
+			this._userRepository = new Mock<IUserRepository>();
 
-			this.PostRepository = new PostRepository(this.Context, this.UserRepository.Object);
+			this._postRepository = new PostRepository(this._context, this._userRepository.Object);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			_ = this.Context.Database.EnsureDeleted();
+			_ = this._context.Database.EnsureDeleted();
 		}
 		#endregion
 
@@ -64,7 +61,7 @@ namespace DevHive.Data.Tests
 		{
 			Post post = await this.AddEntity();
 
-			Post resultTechnology = await this.PostRepository.GetByIdAsync(post.Id);
+			Post resultTechnology = await this._postRepository.GetByIdAsync(post.Id);
 
 			Assert.AreEqual(post.Id, resultTechnology.Id, "GetByIdAsync does not return the correct post");
 		}
@@ -72,7 +69,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetByIdAsync_ReturnsNull_IfTechnologyDoesNotExists()
 		{
-			Post resultPost = await this.PostRepository.GetByIdAsync(Guid.NewGuid());
+			Post resultPost = await this._postRepository.GetByIdAsync(Guid.NewGuid());
 
 			Assert.IsNull(resultPost);
 		}
@@ -84,7 +81,7 @@ namespace DevHive.Data.Tests
 		{
 			Post post = await this.AddEntity();
 
-			Post resultPost = await this.PostRepository.GetPostByCreatorAndTimeCreatedAsync(post.Creator.Id, post.TimeCreated);
+			Post resultPost = await this._postRepository.GetPostByCreatorAndTimeCreatedAsync(post.Creator.Id, post.TimeCreated);
 
 			Assert.AreEqual(post.Id, resultPost.Id, "GetPostByCreatorAndTimeCreatedAsync does not return the corect post when it exists");
 		}
@@ -94,7 +91,7 @@ namespace DevHive.Data.Tests
 		{
 			_ = await this.AddEntity();
 
-			Post resutPost = await this.PostRepository.GetPostByCreatorAndTimeCreatedAsync(Guid.Empty, DateTime.Now);
+			Post resutPost = await this._postRepository.GetPostByCreatorAndTimeCreatedAsync(Guid.Empty, DateTime.Now);
 
 			Assert.IsNull(resutPost, "GetPostByCreatorAndTimeCreatedAsync does not return null when the post does not exist");
 		}
@@ -106,7 +103,7 @@ namespace DevHive.Data.Tests
 		{
 			Post post = await this.AddEntity();
 
-			bool result = await this.PostRepository.DoesPostExist(post.Id);
+			bool result = await this._postRepository.DoesPostExist(post.Id);
 
 			Assert.IsTrue(result, "DoesPostExist does not return true whenm the Post exists");
 		}
@@ -114,7 +111,7 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task DoesPostExist_ReturnsFalse_WhenThePostDoesNotExist()
 		{
-			bool result = await this.PostRepository.DoesPostExist(Guid.Empty);
+			bool result = await this._postRepository.DoesPostExist(Guid.Empty);
 
 			Assert.IsFalse(result, "DoesPostExist does not return false whenm the Post does not exist");
 		}
@@ -124,7 +121,7 @@ namespace DevHive.Data.Tests
 		private async Task<Post> AddEntity()
 		{
 			User creator = new() { Id = Guid.NewGuid() };
-			_ = await this.Context.Users.AddAsync(creator);
+			_ = await this._context.Users.AddAsync(creator);
 			Post post = new()
 			{
 				Message = POST_MESSAGE,
@@ -135,8 +132,8 @@ namespace DevHive.Data.Tests
 				Comments = new List<Comment>()
 			};
 
-			_ = await this.Context.Posts.AddAsync(post);
-			_ = await this.Context.SaveChangesAsync();
+			_ = await this._context.Posts.AddAsync(post);
+			_ = await this._context.SaveChangesAsync();
 
 			return post;
 		}
