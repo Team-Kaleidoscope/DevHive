@@ -1,6 +1,6 @@
 using System;
 
-namespace DevHive.Services.Models.Post.Rating
+namespace DevHive.Services.Models.Rating
 {
 	public class ReadRatingServiceModel
 	{

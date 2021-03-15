@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevHive.Web.Controllers
 {
+	/// <summary>
+	/// All endpoints for interacting with the language layer
+	/// </summary>
 	[ApiController]
 	[Route("/api/[controller]")]
 	public class LanguageController
@@ -23,6 +26,11 @@ namespace DevHive.Web.Controllers
 			this._languageMapper = mapper;
 		}
 
+		/// <summary>
+		/// Create a new language, so users can have a choice. Admin only!
+		/// </summary>
+		/// <param name="createLanguageWebModel">The new language's parametars</param>
+		/// <returns>The new language's Id</returns>
 		[HttpPost]
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Create([FromBody] CreateLanguageWebModel createLanguageWebModel)
@@ -36,6 +44,11 @@ namespace DevHive.Web.Controllers
 				new OkObjectResult(new { Id = id });
 		}
 
+		/// <summary>
+		/// Query full language data by Id
+		/// </summary>
+		/// <param name="id">The language's Id</param>
+		/// <returns>Full language data</returns>
 		[HttpGet]
 		[AllowAnonymous]
 		public async Task<IActionResult> GetById(Guid id)
@@ -46,6 +59,10 @@ namespace DevHive.Web.Controllers
 			return new OkObjectResult(languageWebModel);
 		}
 
+		/// <summary>
+		/// Query all languages in the database
+		/// </summary>
+		/// <returns>All languages in the database</returns>
 		[HttpGet]
 		[Route("GetLanguages")]
 		[Authorize(Roles = "User,Admin")]
@@ -57,6 +74,12 @@ namespace DevHive.Web.Controllers
 			return new OkObjectResult(languageWebModels);
 		}
 
+		/// <summary>
+		/// Alter language's properties. Admin only!
+		/// </summary>
+		/// <param name="id">The language's Id</param>
+		/// <param name="updateModel">The langauge's new parametars</param>
+		/// <returns>Ok result</returns>
 		[HttpPut]
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Update(Guid id, [FromBody] UpdateLanguageWebModel updateModel)
@@ -72,11 +95,16 @@ namespace DevHive.Web.Controllers
 			return new OkResult();
 		}
 
+		/// <summary>
+		/// Delete a language. Admin only!
+		/// </summary>
+		/// <param name="langaugeId">The language's Id</param>
+		/// <returns>Ok result</returns>
 		[HttpDelete]
 		[Authorize(Roles = "Admin")]
-		public async Task<IActionResult> Delete(Guid id)
+		public async Task<IActionResult> Delete(Guid langaugeId)
 		{
-			bool result = await this._languageService.DeleteLanguage(id);
+			bool result = await this._languageService.DeleteLanguage(langaugeId);
 
 			if (!result)
 				return new BadRequestObjectResult("Could not delete Language");

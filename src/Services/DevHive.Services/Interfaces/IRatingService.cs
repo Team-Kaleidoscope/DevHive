@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using DevHive.Data.Models;
-using DevHive.Services.Models.Post.Rating;
+using DevHive.Services.Models.Rating;
 
 namespace DevHive.Services.Interfaces
 {
@@ -16,7 +16,5 @@ namespace DevHive.Services.Interfaces
 		Task<ReadRatingServiceModel> UpdateRating(UpdateRatingServiceModel updateRatingServiceModel);
 
 		Task<bool> DeleteRating(Guid ratingId);
-
-		Task<bool> HasUserRatedThisPost(Guid userId, Guid postId);
 	}
 }

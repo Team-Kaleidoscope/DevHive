@@ -17,17 +17,17 @@ namespace DevHive.Web.Tests
 	[TestFixture]
 	public class FeedControllerTests
 	{
-		private Mock<IFeedService> FeedServiceMock { get; set; }
-		private Mock<IMapper> MapperMock { get; set; }
-		private FeedController FeedController { get; set; }
+		private Mock<IFeedService> _feedServiceMock;
+		private Mock<IMapper> _mapperMock;
+		private FeedController _feedController;
 
 		#region SetUp
 		[SetUp]
 		public void SetUp()
 		{
-			this.FeedServiceMock = new();
-			this.MapperMock = new();
-			this.FeedController = new(this.FeedServiceMock.Object, this.MapperMock.Object);
+			this._feedServiceMock = new Mock<IFeedService>();
+			this._mapperMock = new Mock<IMapper>();
+			this._feedController = new FeedController(this._feedServiceMock.Object, this._mapperMock.Object);
 		}
 		#endregion
 
@@ -48,11 +48,17 @@ namespace DevHive.Web.Tests
 				}
 			};
 
-			this.FeedServiceMock.Setup(p => p.GetPage(It.IsAny<GetPageServiceModel>())).Returns(Task.FromResult(readPageServiceModel));
-			this.MapperMock.Setup(p => p.Map<GetPageServiceModel>(It.IsAny<GetPageWebModel>())).Returns(getPageServiceModel);
-			this.MapperMock.Setup(p => p.Map<ReadPageWebModel>(It.IsAny<ReadPageServiceModel>())).Returns(readPageWebModel);
+			this._feedServiceMock
+				.Setup(p => p.GetPage(It.IsAny<GetPageServiceModel>()))
+				.ReturnsAsync(readPageServiceModel);
+			this._mapperMock
+				.Setup(p => p.Map<GetPageServiceModel>(It.IsAny<GetPageWebModel>()))
+				.Returns(getPageServiceModel);
+			this._mapperMock
+				.Setup(p => p.Map<ReadPageWebModel>(It.IsAny<ReadPageServiceModel>()))
+				.Returns(readPageWebModel);
 
-			IActionResult result = await this.FeedController.GetPosts(Guid.Empty, getPageWebModel);
+			IActionResult result = await this._feedController.GetPosts(Guid.Empty, getPageWebModel);
 
 			Assert.IsInstanceOf<OkObjectResult>(result);
 
@@ -80,11 +86,17 @@ namespace DevHive.Web.Tests
 				}
 			};
 
-			this.FeedServiceMock.Setup(p => p.GetUserPage(It.IsAny<GetPageServiceModel>())).Returns(Task.FromResult(readPageServiceModel));
-			this.MapperMock.Setup(p => p.Map<GetPageServiceModel>(It.IsAny<GetPageWebModel>())).Returns(getPageServiceModel);
-			this.MapperMock.Setup(p => p.Map<ReadPageWebModel>(It.IsAny<ReadPageServiceModel>())).Returns(readPageWebModel);
+			this._feedServiceMock
+				.Setup(p => p.GetUserPage(It.IsAny<GetPageServiceModel>()))
+				.ReturnsAsync(readPageServiceModel);
+			this._mapperMock
+				.Setup(p => p.Map<GetPageServiceModel>(It.IsAny<GetPageWebModel>()))
+				.Returns(getPageServiceModel);
+			this._mapperMock
+				.Setup(p => p.Map<ReadPageWebModel>(It.IsAny<ReadPageServiceModel>()))
+				.Returns(readPageWebModel);
 
-			IActionResult result = await this.FeedController.GetUserPosts(null, getPageWebModel);
+			IActionResult result = await this._feedController.GetUserPosts(null, getPageWebModel);
 
 			Assert.IsInstanceOf<OkObjectResult>(result);
 
