@@ -23,9 +23,9 @@ namespace DevHive.Web.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			this.UserServiceMock = new Mock<IUserService>();
-			this.MapperMock = new Mock<IMapper>();
-			this.UserController = new UserController(this.UserServiceMock.Object, this.MapperMock.Object);
+			this.UserServiceMock = new();
+			this.MapperMock = new();
+			this.UserController = new(this.UserServiceMock.Object, this.MapperMock.Object);
 		}
 
 		#region Create

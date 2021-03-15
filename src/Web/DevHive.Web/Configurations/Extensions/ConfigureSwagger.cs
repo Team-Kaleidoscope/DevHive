@@ -30,14 +30,14 @@ namespace DevHive.Web.Configurations.Extensions
 					doc.Info.Title = "API";
 					doc.Info.Description = "DevHive Social Media's first official API release";
 					doc.Info.TermsOfService = TermsOfServiceUri;
-					doc.Info.License = new NSwag.OpenApiLicense
+					doc.Info.License = new()
 					{
 						Name = LicenseName,
 						Url = LicenseUri
 					};
 				};
 
-				c.AddSecurity("Bearer", Enumerable.Empty<string>(), new OpenApiSecurityScheme
+				c.AddSecurity("Bearer", Enumerable.Empty<string>(), new()
 				{
 					Type = OpenApiSecuritySchemeType.ApiKey,
 					Name = "Authorization",

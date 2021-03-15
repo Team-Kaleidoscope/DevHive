@@ -23,20 +23,20 @@ namespace DevHive.Web.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			this.LanguageServiceMock = new Mock<ILanguageService>();
-			this.MapperMock = new Mock<IMapper>();
-			this.LanguageController = new LanguageController(this.LanguageServiceMock.Object, this.MapperMock.Object);
+			this.LanguageServiceMock = new();
+			this.MapperMock = new();
+			this.LanguageController = new(this.LanguageServiceMock.Object, this.MapperMock.Object);
 		}
 
 		#region Create
 		[Test]
 		public void CreateLanguage_ReturnsOkObjectResult_WhenLanguageIsSuccessfullyCreated()
 		{
-			CreateLanguageWebModel createLanguageWebModel = new CreateLanguageWebModel
+			CreateLanguageWebModel createLanguageWebModel = new()
 			{
 				Name = NAME
 			};
-			CreateLanguageServiceModel createLanguageServiceModel = new CreateLanguageServiceModel
+			CreateLanguageServiceModel createLanguageServiceModel = new()
 			{
 				Name = NAME
 			};
@@ -63,11 +63,11 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void CreateLanguage_ReturnsBadRequestObjectResult_WhenLanguageIsNotCreatedSuccessfully()
 		{
-			CreateLanguageWebModel createTechnologyWebModel = new CreateLanguageWebModel
+			CreateLanguageWebModel createTechnologyWebModel = new()
 			{
 				Name = NAME
 			};
-			CreateLanguageServiceModel createTechnologyServiceModel = new CreateLanguageServiceModel
+			CreateLanguageServiceModel createTechnologyServiceModel = new()
 			{
 				Name = NAME
 			};
@@ -94,11 +94,11 @@ namespace DevHive.Web.Tests
 		{
 			Guid id = Guid.NewGuid();
 
-			ReadLanguageServiceModel readLanguageServiceModel = new ReadLanguageServiceModel
+			ReadLanguageServiceModel readLanguageServiceModel = new()
 			{
 				Name = NAME
 			};
-			ReadLanguageWebModel readLanguageWebModel = new ReadLanguageWebModel
+			ReadLanguageWebModel readLanguageWebModel = new()
 			{
 				Name = NAME
 			};
@@ -122,11 +122,11 @@ namespace DevHive.Web.Tests
 		public void Update_ShouldReturnOkResult_WhenLanguageIsUpdatedSuccessfully()
 		{
 			Guid id = Guid.NewGuid();
-			UpdateLanguageWebModel updateLanguageWebModel = new UpdateLanguageWebModel
+			UpdateLanguageWebModel updateLanguageWebModel = new()
 			{
 				Name = NAME
 			};
-			UpdateLanguageServiceModel updateLanguageServiceModel = new UpdateLanguageServiceModel
+			UpdateLanguageServiceModel updateLanguageServiceModel = new()
 			{
 				Name = NAME
 			};
@@ -144,11 +144,11 @@ namespace DevHive.Web.Tests
 		{
 			Guid id = Guid.NewGuid();
 			string message = "Could not update Language";
-			UpdateLanguageWebModel updateLanguageWebModel = new UpdateLanguageWebModel
+			UpdateLanguageWebModel updateLanguageWebModel = new()
 			{
 				Name = NAME
 			};
-			UpdateLanguageServiceModel updateLanguageServiceModel = new UpdateLanguageServiceModel
+			UpdateLanguageServiceModel updateLanguageServiceModel = new()
 			{
 				Name = NAME
 			};

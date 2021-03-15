@@ -23,20 +23,20 @@ namespace DevHive.Web.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			this.RoleServiceMock = new Mock<IRoleService>();
-			this.MapperMock = new Mock<IMapper>();
-			this.RoleController = new RoleController(this.RoleServiceMock.Object, this.MapperMock.Object);
+			this.RoleServiceMock = new();
+			this.MapperMock = new();
+			this.RoleController = new(this.RoleServiceMock.Object, this.MapperMock.Object);
 		}
 
 		#region Create
 		[Test]
 		public void CreateRole_ReturnsOkObjectResult_WhenRoleIsSuccessfullyCreated()
 		{
-			CreateRoleWebModel createRoleWebModel = new CreateRoleWebModel
+			CreateRoleWebModel createRoleWebModel = new()
 			{
 				Name = NAME
 			};
-			CreateRoleServiceModel createRoleServiceModel = new CreateRoleServiceModel
+			CreateRoleServiceModel createRoleServiceModel = new()
 			{
 				Name = NAME
 			};
@@ -63,11 +63,11 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void CreateRole_ReturnsBadRequestObjectResult_WhenRoleIsNotCreatedSuccessfully()
 		{
-			CreateRoleWebModel createTechnologyWebModel = new CreateRoleWebModel
+			CreateRoleWebModel createTechnologyWebModel = new()
 			{
 				Name = NAME
 			};
-			CreateRoleServiceModel createTechnologyServiceModel = new CreateRoleServiceModel
+			CreateRoleServiceModel createTechnologyServiceModel = new()
 			{
 				Name = NAME
 			};
@@ -94,11 +94,11 @@ namespace DevHive.Web.Tests
 		{
 			Guid id = Guid.NewGuid();
 
-			RoleServiceModel roleServiceModel = new RoleServiceModel
+			RoleServiceModel roleServiceModel = new()
 			{
 				Name = NAME
 			};
-			RoleWebModel roleWebModel = new RoleWebModel
+			RoleWebModel roleWebModel = new()
 			{
 				Name = NAME
 			};
@@ -122,11 +122,11 @@ namespace DevHive.Web.Tests
 		public void Update_ShouldReturnOkResult_WhenRoleIsUpdatedSuccessfully()
 		{
 			Guid id = Guid.NewGuid();
-			UpdateRoleWebModel updateRoleWebModel = new UpdateRoleWebModel
+			UpdateRoleWebModel updateRoleWebModel = new()
 			{
 				Name = NAME
 			};
-			UpdateRoleServiceModel updateRoleServiceModel = new UpdateRoleServiceModel
+			UpdateRoleServiceModel updateRoleServiceModel = new()
 			{
 				Name = NAME
 			};
@@ -144,11 +144,11 @@ namespace DevHive.Web.Tests
 		{
 			Guid id = Guid.NewGuid();
 			string message = "Could not update role!";
-			UpdateRoleWebModel updateRoleWebModel = new UpdateRoleWebModel
+			UpdateRoleWebModel updateRoleWebModel = new()
 			{
 				Name = NAME
 			};
-			UpdateRoleServiceModel updateRoleServiceModel = new UpdateRoleServiceModel
+			UpdateRoleServiceModel updateRoleServiceModel = new()
 			{
 				Name = NAME
 			};

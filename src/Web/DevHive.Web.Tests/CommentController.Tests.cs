@@ -24,9 +24,9 @@ namespace DevHive.Web.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			this.CommentServiceMock = new Mock<ICommentService>();
-			this.MapperMock = new Mock<IMapper>();
-			this.CommentController = new CommentController(this.CommentServiceMock.Object, this.MapperMock.Object);
+			this.CommentServiceMock = new();
+			this.MapperMock = new();
+			this.CommentController = new(this.CommentServiceMock.Object, this.MapperMock.Object);
 		}
 		#endregion
 

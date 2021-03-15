@@ -25,9 +25,9 @@ namespace DevHive.Web.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			this.TechnologyServiceMock = new Mock<ITechnologyService>();
-			this.MapperMock = new Mock<IMapper>();
-			this.TechnologyController = new TechnologyController(this.TechnologyServiceMock.Object, this.MapperMock.Object);
+			this.TechnologyServiceMock = new();
+			this.MapperMock = new();
+			this.TechnologyController = new(this.TechnologyServiceMock.Object, this.MapperMock.Object);
 		}
 		#endregion
 
@@ -35,11 +35,11 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void Create_ReturnsOkObjectResult_WhenTechnologyIsSuccessfullyCreated()
 		{
-			CreateTechnologyWebModel createTechnologyWebModel = new CreateTechnologyWebModel
+			CreateTechnologyWebModel createTechnologyWebModel = new()
 			{
 				Name = NAME
 			};
-			CreateTechnologyServiceModel createTechnologyServiceModel = new CreateTechnologyServiceModel
+			CreateTechnologyServiceModel createTechnologyServiceModel = new()
 			{
 				Name = NAME
 			};
@@ -66,11 +66,11 @@ namespace DevHive.Web.Tests
 		[Test]
 		public void Create_ReturnsBadRequestObjectResult_WhenTechnologyIsNotCreatedSuccessfully()
 		{
-			CreateTechnologyWebModel createTechnologyWebModel = new CreateTechnologyWebModel
+			CreateTechnologyWebModel createTechnologyWebModel = new()
 			{
 				Name = NAME
 			};
-			CreateTechnologyServiceModel createTechnologyServiceModel = new CreateTechnologyServiceModel
+			CreateTechnologyServiceModel createTechnologyServiceModel = new()
 			{
 				Name = NAME
 			};
@@ -97,11 +97,11 @@ namespace DevHive.Web.Tests
 		{
 			Guid id = Guid.NewGuid();
 
-			ReadTechnologyWebModel readTechnologyWebModel = new ReadTechnologyWebModel
+			ReadTechnologyWebModel readTechnologyWebModel = new()
 			{
 				Name = NAME
 			};
-			ReadTechnologyServiceModel readTechnologyServiceModel = new ReadTechnologyServiceModel
+			ReadTechnologyServiceModel readTechnologyServiceModel = new()
 			{
 				Name = NAME
 			};
@@ -125,11 +125,11 @@ namespace DevHive.Web.Tests
 		public void Update_ShouldReturnOkResult_WhenTechnologyIsUpdatedSuccessfully()
 		{
 			Guid id = Guid.NewGuid();
-			UpdateTechnologyWebModel updateTechnologyWebModel = new UpdateTechnologyWebModel
+			UpdateTechnologyWebModel updateTechnologyWebModel = new()
 			{
 				Name = NAME
 			};
-			UpdateTechnologyServiceModel updateTechnologyServiceModel = new UpdateTechnologyServiceModel
+			UpdateTechnologyServiceModel updateTechnologyServiceModel = new()
 			{
 				Name = NAME
 			};
@@ -147,11 +147,11 @@ namespace DevHive.Web.Tests
 		{
 			Guid id = Guid.NewGuid();
 			string message = "Could not update Technology";
-			UpdateTechnologyWebModel updateTechnologyWebModel = new UpdateTechnologyWebModel
+			UpdateTechnologyWebModel updateTechnologyWebModel = new()
 			{
 				Name = NAME
 			};
-			UpdateTechnologyServiceModel updateTechnologyServiceModel = new UpdateTechnologyServiceModel
+			UpdateTechnologyServiceModel updateTechnologyServiceModel = new()
 			{
 				Name = NAME
 			};

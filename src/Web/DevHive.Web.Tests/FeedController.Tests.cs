@@ -25,9 +25,9 @@ namespace DevHive.Web.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			this.FeedServiceMock = new Mock<IFeedService>();
-			this.MapperMock = new Mock<IMapper>();
-			this.FeedController = new FeedController(this.FeedServiceMock.Object, this.MapperMock.Object);
+			this.FeedServiceMock = new();
+			this.MapperMock = new();
+			this.FeedController = new(this.FeedServiceMock.Object, this.MapperMock.Object);
 		}
 		#endregion
 
@@ -35,12 +35,12 @@ namespace DevHive.Web.Tests
 		[Test]
 		public async Task GetPosts_ReturnsOkObjectResultWithCorrectReadPageWebModel_WhenPostsExist()
 		{
-			GetPageWebModel getPageWebModel = new GetPageWebModel { };
-			GetPageServiceModel getPageServiceModel = new GetPageServiceModel { };
-			ReadPageServiceModel readPageServiceModel = new ReadPageServiceModel { };
-			ReadPageWebModel readPageWebModel = new ReadPageWebModel
+			GetPageWebModel getPageWebModel = new();
+			GetPageServiceModel getPageServiceModel = new();
+			ReadPageServiceModel readPageServiceModel = new();
+			ReadPageWebModel readPageWebModel = new()
 			{
-				Posts = new List<ReadPostWebModel>
+				Posts = new()
 				{
 					new ReadPostWebModel(),
 					new ReadPostWebModel(),
@@ -67,12 +67,12 @@ namespace DevHive.Web.Tests
 		[Test]
 		public async Task GetUserPosts_GetsPostsOfUser_WhenTheyExist()
 		{
-			GetPageWebModel getPageWebModel = new GetPageWebModel { };
-			GetPageServiceModel getPageServiceModel = new GetPageServiceModel { };
-			ReadPageServiceModel readPageServiceModel = new ReadPageServiceModel { };
-			ReadPageWebModel readPageWebModel = new ReadPageWebModel
+			GetPageWebModel getPageWebModel = new();
+			GetPageServiceModel getPageServiceModel = new();
+			ReadPageServiceModel readPageServiceModel = new();
+			ReadPageWebModel readPageWebModel = new()
 			{
-				Posts = new List<ReadPostWebModel>
+				Posts = new()
 				{
 					new ReadPostWebModel(),
 					new ReadPostWebModel(),

@@ -23,9 +23,9 @@ namespace DevHive.Web.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			this.PostServiceMock = new Mock<IPostService>();
-			this.MapperMock = new Mock<IMapper>();
-			this.PostController = new PostController(this.PostServiceMock.Object, this.MapperMock.Object);
+			this.PostServiceMock = new();
+			this.MapperMock = new();
+			this.PostController = new(this.PostServiceMock.Object, this.MapperMock.Object);
 		}
 
 		#region Create
