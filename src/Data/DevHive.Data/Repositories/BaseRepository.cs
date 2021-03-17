@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using DevHive.Data.Repositories.Interfaces;
+using DevHive.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevHive.Data.Repositories
