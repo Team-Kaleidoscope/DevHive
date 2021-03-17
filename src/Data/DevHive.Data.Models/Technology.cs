@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using DevHive.Data.Models.Interfaces;
 
 namespace DevHive.Data.Models
 {
-	public class Technology : ITechnology
+	public class Technology
 	{
 		public Guid Id { get; set; }
 

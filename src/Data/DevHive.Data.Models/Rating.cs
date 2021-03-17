@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
-using DevHive.Data.Models.Interfaces;
 
 namespace DevHive.Data.Models
 {
-	public class Rating : IRating
+	public class Rating
 	{
 		//if adding rating to comments change Post for intreface IRatable!
 		public Guid Id { get; set; }

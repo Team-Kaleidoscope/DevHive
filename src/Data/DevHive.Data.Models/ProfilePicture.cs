@@ -1,9 +1,8 @@
 using System;
-using DevHive.Data.Models.Interfaces;
 
 namespace DevHive.Data.Models
 {
-	public class ProfilePicture : IProfilePicture
+	public class ProfilePicture
 	{
 		public Guid Id { get; set; }
 

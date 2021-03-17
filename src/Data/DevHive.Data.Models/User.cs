@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using DevHive.Data.Models.Interfaces;
 using DevHive.Data.Models.Relational;
 using Microsoft.AspNetCore.Identity;
 
 namespace DevHive.Data.Models
 {
 	[Table("Users")]
-	public class User : IdentityUser<Guid>, IUser
+	public class User : IdentityUser<Guid>
 	{
 		public string FirstName { get; set; }
 

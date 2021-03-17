@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using DevHive.Data.Models.Interfaces;
 using DevHive.Data.Models.Relational;
 
 namespace DevHive.Data.Models
 {
 	[Table("Posts")]
-	public class Post : IPost
+	public class Post
 	{
 		public Guid Id { get; set; }
 
