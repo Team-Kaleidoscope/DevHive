@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DevHive.Data.Models;
 using DevHive.Data.Repositories;
@@ -14,7 +15,7 @@ namespace DevHive.Data.Tests
 		private DevHiveContext _context;
 		private CommentRepository _commentRepository;
 
-		#region Setups
+		#region SetUp
 		[SetUp]
 		public void Setup()
 		{
@@ -33,6 +34,59 @@ namespace DevHive.Data.Tests
 		}
 		#endregion
 
+		#region GetByIdAsync
+		[Test]
+		public async Task GetByIdAsync_ReturnsTheCorrectComment_IfItExists()
+		{
+			Comment comment = await this.AddEntity();
+
+			Comment resultComment = await this._commentRepository.GetByIdAsync(comment.Id);
+
+			Assert.AreEqual(comment.Id, resultComment.Id, "GetByIdAsync does not return the correct comment when it exists.");
+		}
+
+		[Test]
+		public async Task GetByIdAsync_ReturnsNull_IfCommentDoesNotExist()
+		{
+			Comment resultComment = await this._commentRepository.GetByIdAsync(Guid.Empty);
+
+			Assert.IsNull(resultComment, "GetByIdAsync does not return null when the comment does not exist");
+		}
+		#endregion
+
+		#region GetPostComments
+		[Test]
+		public async Task GetPostComments_ReturnsAllCommentsForPost_IfAnyExist()
+		{
+			List<Comment> comments = new List<Comment>
+			{
+				new Comment(),
+				new Comment(),
+				new Comment()
+			};
+			Post post = new Post
+			{
+				Id = Guid.NewGuid(),
+				Comments = comments
+			};
+
+			this._context.Posts.Add(post);
+			await this._context.SaveChangesAsync();
+
+			List<Comment> resultComments = await this._commentRepository.GetPostComments(post.Id);
+
+			Assert.AreEqual(comments.Count, resultComments.Count, "GetPostComments does not return the comments for a given post correctly");
+		}
+
+		[Test]
+		public async Task GetPostComments_ReturnsEmptyList_WhenPostDoesNotExist()
+		{
+			List<Comment> resultComments = await this._commentRepository.GetPostComments(Guid.Empty);
+
+			Assert.IsEmpty(resultComments, "GetPostComments does not return empty string when post does not exist");
+		}
+		#endregion
+
 		#region GetCommentByIssuerAndTimeCreatedAsync
 		[Test]
 		public async Task GetCommentByCreatorAndTimeCreatedAsync_ReturnsTheCorrectComment_IfItExists()
@@ -47,11 +101,27 @@ namespace DevHive.Data.Tests
 		[Test]
 		public async Task GetPostByCreatorAndTimeCreatedAsync_ReturnsNull_IfThePostDoesNotExist()
 		{
-			await this.AddEntity();
-
 			Comment resultComment = await this._commentRepository.GetCommentByIssuerAndTimeCreatedAsync(Guid.Empty, DateTime.Now);
 
 			Assert.IsNull(resultComment, "GetCommentByIssuerAndTimeCreatedAsync does not return null when the comment does not exist");
+		}
+		#endregion
+
+		#region EditAsync
+		[Test]
+		public async Task EditAsync_ReturnsTrue_WhenCommentIsUpdatedSuccessfully()
+		{
+			string newMessage = "New message!";
+			Comment comment = await this.AddEntity();
+			Comment updatedComment = new Comment
+			{
+				Id = comment.Id,
+				Message = newMessage
+			};
+
+			bool result = await this._commentRepository.EditAsync(comment.Id, updatedComment);
+
+			Assert.IsTrue(result, "EditAsync does not return true when comment is updated successfully");
 		}
 		#endregion
 
@@ -82,6 +152,7 @@ namespace DevHive.Data.Tests
 			User creator = new() { Id = Guid.NewGuid() };
 			Comment comment = new()
 			{
+				Id = Guid.NewGuid(),
 				Message = COMMENT_MESSAGE,
 				Creator = creator,
 				TimeCreated = DateTime.Now
