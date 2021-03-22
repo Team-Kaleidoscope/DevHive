@@ -26,7 +26,5 @@ namespace DevHive.Data.Models
 		public HashSet<User> Friends { get; set; } = new();
 
 		public HashSet<Comment> Comments { get; set; } = new();
-
-		public HashSet<RatedPost> RatedPosts { get; set; } = new();
 	}
 }
