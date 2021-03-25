@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Http;
 
-namespace DevHive.Web.Models.User
+namespace DevHive.Web.Models.ProfilePicture
 {
-	public class UpdateProfilePictureWebModel
+	public class ProfilePictureWebModel
 	{
 		public IFormFile Picture { get; set; }
 	}

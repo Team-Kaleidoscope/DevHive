@@ -119,28 +119,6 @@ namespace DevHive.Services.Services
 			User newUser = await this._userRepository.GetByIdAsync(user.Id);
 			return this._userMapper.Map<UserServiceModel>(newUser);
 		}
-
-		public async Task<ProfilePictureServiceModel> UpdateProfilePicture(UpdateProfilePictureServiceModel updateProfilePictureServiceModel)
-		{
-			User user = await this._userRepository.GetByIdAsync(updateProfilePictureServiceModel.UserId);
-
-			if (!string.IsNullOrEmpty(user.ProfilePicture.PictureURL))
-			{
-				bool success = await _cloudService.RemoveFilesFromCloud(new List<string> { user.ProfilePicture.PictureURL });
-				if (!success)
-					throw new InvalidCastException("Could not delete old profile picture!");
-			}
-
-			string fileUrl = (await this._cloudService.UploadFilesToCloud(new List<IFormFile> { updateProfilePictureServiceModel.Picture }))[0] ??
-				throw new ArgumentException("Unable to upload profile picture to cloud");
-
-			bool successful = await this._userRepository.UpdateProfilePicture(updateProfilePictureServiceModel.UserId, fileUrl);
-
-			if (!successful)
-				throw new InvalidOperationException("Unable to change profile picture!");
-
-			return new ProfilePictureServiceModel() { ProfilePictureURL = fileUrl };
-		}
 		#endregion
 
 		#region Delete

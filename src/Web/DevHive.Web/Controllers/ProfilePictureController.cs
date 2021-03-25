@@ -1,8 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using DevHive.Web.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using DevHive.Services.Interfaces;
+using DevHive.Services.Models.ProfilePicture;
+using DevHive.Common.Jwt.Interfaces;
+using AutoMapper;
+using DevHive.Web.Models.ProfilePicture;
 
 namespace DevHive.Web.Controllers
 {
@@ -13,36 +17,36 @@ namespace DevHive.Web.Controllers
 	[Route("api/[controller]")]
 	public class ProfilePictureController
 	{
-		// private readonly ProfilePictureService _profilePictureService;
+		private readonly IProfilePictureService _profilePictureService;
+		private readonly IJwtService _jwtService;
+		private readonly IMapper _profilePictureMapper;
 
-		// public ProfilePictureController(ProfilePictureService profilePictureService)
-		// {
-		// 	this._profilePictureService = profilePictureService;
-		// }
+		public ProfilePictureController(IProfilePictureService profilePictureService, IJwtService jwtService, IMapper profilePictureMapper)
+		{
+			this._profilePictureService = profilePictureService;
+			this._jwtService = jwtService;
+			this._profilePictureMapper = profilePictureMapper;
+		}
 
 		/// <summary>
 		/// Alter the profile picture of a user
 		/// </summary>
 		/// <param name="userId">The user's Id</param>
-		/// <param name="updateProfilePictureWebModel">The new profile picture</param>
+		/// <param name="profilePictureWebModel">The new profile picture</param>
 		/// <param name="authorization">JWT Bearer Token</param>
-		/// <returns>???</returns>
+		/// <returns>The URL of the new profile picture</returns>
 		[HttpPut]
-		[Route("ProfilePicture")]
 		[Authorize(Roles = "User,Admin")]
-		public async Task<IActionResult> UpdateProfilePicture(Guid userId, [FromForm] UpdateProfilePictureWebModel updateProfilePictureWebModel, [FromHeader] string authorization)
+		public async Task<IActionResult> UpdateProfilePicture(Guid userId, [FromForm] ProfilePictureWebModel profilePictureWebModel, [FromHeader] string authorization)
 		{
-			throw new NotImplementedException();
-			// if (!await this._userService.ValidJWT(userId, authorization))
-			// 	return new UnauthorizedResult();
+			if (!this._jwtService.ValidateToken(userId, authorization))
+				return new UnauthorizedResult();
 
-			// UpdateProfilePictureServiceModel updateProfilePictureServiceModel = this._userMapper.Map<UpdateProfilePictureServiceModel>(updateProfilePictureWebModel);
-			// updateProfilePictureServiceModel.UserId = userId;
+			ProfilePictureServiceModel profilePictureServiceModel = this._profilePictureMapper.Map<ProfilePictureServiceModel>(profilePictureWebModel);
+			profilePictureServiceModel.UserId = userId;
 
-			// ProfilePictureServiceModel profilePictureServiceModel = await this._userService.UpdateProfilePicture(updateProfilePictureServiceModel);
-			// ProfilePictureWebModel profilePictureWebModel = this._userMapper.Map<ProfilePictureWebModel>(profilePictureServiceModel);
-
-			// return new AcceptedResult("UpdateProfilePicture", profilePictureWebModel);
+			string url = await this._profilePictureService.UpdateProfilePicture(profilePictureServiceModel);
+			return new OkObjectResult(new { URL = url });
 		}
 	}
 }

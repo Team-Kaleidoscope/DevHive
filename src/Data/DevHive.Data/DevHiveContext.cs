@@ -17,6 +17,7 @@ namespace DevHive.Data
 		public DbSet<PostAttachments> PostAttachments { get; set; }
 		public DbSet<Comment> Comments { get; set; }
 		public DbSet<Rating> Rating { get; set; }
+		public DbSet<ProfilePicture> ProfilePicture { get; set; }
 		public DbSet<RatedPost> RatedPost { get; set; }
 		public DbSet<UserRate> UserRate { get; set; }
 
@@ -28,9 +29,7 @@ namespace DevHive.Data
 				.IsUnique();
 
 			builder.Entity<User>()
-				.HasOne(x => x.ProfilePicture)
-				.WithOne(x => x.User)
-				.HasForeignKey<ProfilePicture>(x => x.UserId);
+				.HasOne(x => x.ProfilePicture);
 
 			/* Roles */
 			builder.Entity<User>()
