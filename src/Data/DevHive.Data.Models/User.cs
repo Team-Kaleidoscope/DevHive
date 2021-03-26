@@ -13,7 +13,7 @@ namespace DevHive.Data.Models
 
 		public string LastName { get; set; }
 
-		public ProfilePicture ProfilePicture { get; set; } = new() { PictureURL = "/assets/images/feed/profile-pic.png" };
+		public ProfilePicture ProfilePicture { get; set; } = new() { PictureURL = "/assets/icons/tabler-icon-user.svg" };
 
 		public HashSet<Language> Languages { get; set; } = new();
 
