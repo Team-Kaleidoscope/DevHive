@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using DevHive.Data.Models.Relational;
 using Microsoft.AspNetCore.Identity;
 
 namespace DevHive.Data.Models
@@ -13,7 +12,7 @@ namespace DevHive.Data.Models
 
 		public string LastName { get; set; }
 
-		public ProfilePicture ProfilePicture { get; set; } = new();
+		public ProfilePicture ProfilePicture { get; set; } = new() { PictureURL = ProfilePicture.DefaultURL };
 
 		public HashSet<Language> Languages { get; set; } = new();
 

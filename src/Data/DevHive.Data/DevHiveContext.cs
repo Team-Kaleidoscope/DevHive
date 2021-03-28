@@ -26,9 +26,6 @@ namespace DevHive.Data
 				.HasIndex(x => x.UserName)
 				.IsUnique();
 
-			builder.Entity<User>()
-				.HasOne(x => x.ProfilePicture);
-
 			/* Roles */
 			builder.Entity<User>()
 				.HasMany(x => x.Roles)
@@ -90,6 +87,15 @@ namespace DevHive.Data
 			builder.Entity<Post>()
 			 	.HasMany(x => x.Ratings)
 			 	.WithOne(x => x.Post);
+
+			/* Profile Picture */
+			builder.Entity<ProfilePicture>()
+				.HasKey(x => x.Id);
+
+			builder.Entity<User>()
+				.HasOne(x => x.ProfilePicture)
+				.WithOne(x => x.User)
+				.HasForeignKey<ProfilePicture>(x => x.UserId);
 
 			base.OnModelCreating(builder);
 		}
