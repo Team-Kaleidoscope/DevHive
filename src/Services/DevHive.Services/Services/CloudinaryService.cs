@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
@@ -11,6 +12,10 @@ namespace DevHive.Services.Services
 {
 	public class CloudinaryService : ICloudService
 	{
+		// Regex for getting the filename without (final) filename extension
+		// So, from image.png, it will match image, and from doc.my.txt will match doc.my
+		private static Regex _imageRegex = new Regex(".*(?=\\.)");
+
 		private readonly Cloudinary _cloudinary;
 
 		public CloudinaryService(string cloudName, string apiKey, string apiSecret)
@@ -23,7 +28,7 @@ namespace DevHive.Services.Services
 			List<string> fileUrls = new();
 			foreach (var formFile in formFiles)
 			{
-				string formFileId = Guid.NewGuid().ToString();
+				string fileName = _imageRegex.Match(formFile.FileName).ToString();
 
 				using (var ms = new MemoryStream())
 				{
@@ -32,8 +37,8 @@ namespace DevHive.Services.Services
 
 					RawUploadParams rawUploadParams = new()
 					{
-						File = new FileDescription(formFileId, new MemoryStream(formBytes)),
-						PublicId = formFileId,
+						File = new FileDescription(fileName, new MemoryStream(formBytes)),
+						PublicId = fileName,
 						UseFilename = true
 					};
 
