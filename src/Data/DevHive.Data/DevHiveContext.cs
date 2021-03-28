@@ -18,8 +18,6 @@ namespace DevHive.Data
 		public DbSet<Comment> Comments { get; set; }
 		public DbSet<Rating> Rating { get; set; }
 		public DbSet<ProfilePicture> ProfilePicture { get; set; }
-		public DbSet<RatedPost> RatedPost { get; set; }
-		public DbSet<UserRate> UserRate { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
@@ -92,20 +90,6 @@ namespace DevHive.Data
 			builder.Entity<Post>()
 			 	.HasMany(x => x.Ratings)
 			 	.WithOne(x => x.Post);
-
-			/* User Rated Posts */
-			builder.Entity<RatedPost>()
-				.HasKey(x => new { x.UserId, x.PostId });
-
-			builder.Entity<RatedPost>()
-			 	.HasOne(x => x.User)
-				.WithMany(x => x.RatedPosts);
-
-			builder.Entity<RatedPost>()
-				.HasOne(x => x.Post);
-
-			builder.Entity<User>()
-				.HasMany(x => x.RatedPosts);
 
 			base.OnModelCreating(builder);
 		}

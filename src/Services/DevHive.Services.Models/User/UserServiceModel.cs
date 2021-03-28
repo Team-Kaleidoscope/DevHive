@@ -8,7 +8,7 @@ namespace DevHive.Services.Models.User
 {
 	public class UserServiceModel : BaseUserServiceModel
 	{
-		public string ProfilePictureURL { get; set; }
+		public string ProfilePictureURL { get; set; } = new("/assets/icons/tabler-icon-user.svg");
 
 		public HashSet<RoleServiceModel> Roles { get; set; } = new();
 

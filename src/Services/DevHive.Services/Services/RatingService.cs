@@ -57,8 +57,9 @@ namespace DevHive.Services.Services
 		#region Read
 		public async Task<ReadRatingServiceModel> GetRatingById(Guid ratingId)
 		{
-			Rating rating = await this._ratingRepository.GetByIdAsync(ratingId) ??
-				throw new ArgumentException("The rating does not exist");
+			Rating rating = await this._ratingRepository.GetByIdAsync(ratingId);
+			if (rating is null)
+				return null;
 
 			ReadRatingServiceModel readRatingServiceModel = this._mapper.Map<ReadRatingServiceModel>(rating);
 			readRatingServiceModel.UserId = rating.User.Id;
@@ -68,8 +69,9 @@ namespace DevHive.Services.Services
 
 		public async Task<ReadRatingServiceModel> GetRatingByPostAndUser(Guid userId, Guid postId)
 		{
-			Rating rating = await this._ratingRepository.GetRatingByUserAndPostId(userId, postId) ??
-				throw new ArgumentException("The rating does not exist");
+			Rating rating = await this._ratingRepository.GetRatingByUserAndPostId(userId, postId);
+			if (rating is null)
+				return null;
 
 			ReadRatingServiceModel readRatingServiceModel = this._mapper.Map<ReadRatingServiceModel>(rating);
 			readRatingServiceModel.UserId = rating.User.Id;

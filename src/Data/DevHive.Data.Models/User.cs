@@ -13,7 +13,7 @@ namespace DevHive.Data.Models
 
 		public string LastName { get; set; }
 
-		public ProfilePicture ProfilePicture { get; set; } = new() { PictureURL = "/assets/icons/tabler-icon-user.svg" };
+		public ProfilePicture ProfilePicture { get; set; } = new();
 
 		public HashSet<Language> Languages { get; set; } = new();
 
@@ -26,7 +26,5 @@ namespace DevHive.Data.Models
 		public HashSet<User> Friends { get; set; } = new();
 
 		public HashSet<Comment> Comments { get; set; } = new();
-
-		public HashSet<RatedPost> RatedPosts { get; set; } = new();
 	}
 }

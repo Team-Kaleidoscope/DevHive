@@ -41,7 +41,7 @@ namespace DevHive.Services.Services
 			await ValidateUserExistsAsync(profilePictureServiceModel.UserId);
 
 			User user = await this._userRepository.GetByIdAsync(profilePictureServiceModel.UserId);
-			if (!string.IsNullOrEmpty(user.ProfilePicture.PictureURL))
+			if (user.ProfilePicture.Id != Guid.Empty)
 			{
 				List<string> file = new() { user.ProfilePicture.PictureURL };
 				bool removed = await this._cloudinaryService.RemoveFilesFromCloud(file);
@@ -81,8 +81,9 @@ namespace DevHive.Services.Services
 				throw new ArgumentException("Unable to upload picture!");
 
 			User user = await this._userRepository.GetByIdAsync(profilePictureServiceModel.UserId);
-			user.ProfilePicture = await this._profilePictureRepository.GetByURLAsync(picUrl);
+			user.ProfilePicture = profilePic;
 			bool userProfilePicAlter = await this._userRepository.EditAsync(user.Id, user);
+
 			if (!userProfilePicAlter)
 				throw new ArgumentException("Unable to alter user's profile picture");
 

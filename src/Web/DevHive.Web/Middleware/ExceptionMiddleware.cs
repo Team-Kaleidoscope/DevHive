@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace DevHive.Web.Middleware
 {
@@ -32,11 +32,14 @@ namespace DevHive.Web.Middleware
 			context.Response.ContentType = "application/json";
 			context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-			return context.Response.WriteAsync(new
-			{
-				context.Response.StatusCode,
-				exception.Message
-			}.ToString());
+			// Made to ressemble the formatting of property validation errors (like [MinLength(3)])
+			string message = JsonConvert.SerializeObject(new {
+								errors = new {
+									Exception = new String[] { exception.Message }
+								}
+							});
+
+			return context.Response.WriteAsync(message);
 		}
 	}
 }
