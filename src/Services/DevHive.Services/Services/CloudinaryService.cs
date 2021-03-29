@@ -52,6 +52,9 @@ namespace DevHive.Services.Services
 
 		public async Task<bool> RemoveFilesFromCloud(List<string> fileUrls)
 		{
+			// Workaround, this method isn't fully implemented yet
+			await Task.Run(null);
+
 			return true;
 		}
 	}
