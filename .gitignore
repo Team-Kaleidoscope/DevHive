@@ -355,3 +355,4 @@ MigrationBackup/
 appsettings.Development.json
 **/.vscode/
 **/*.swp
+**/Logs
