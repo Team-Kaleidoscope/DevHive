@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using DevHive.Web.Configurations.Extensions;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace DevHive.Web
 {
@@ -46,7 +47,8 @@ namespace DevHive.Web
 
 			if (env.IsDevelopment())
 			{
-				app.UseDeveloperExceptionPage();
+				app.UseExceptionHandlerMiddlewareConfiguration();
+				// app.UseDeveloperExceptionPage();
 			}
 			else
 			{
@@ -57,6 +59,8 @@ namespace DevHive.Web
 			app.UseSwaggerConfiguration();
 			app.UseDatabaseConfiguration();
 			app.UseAutoMapperConfiguration();
+
+			app.UseSerilogRequestLogging();
 
 			app.UseEndpoints(endpoints =>
 			{

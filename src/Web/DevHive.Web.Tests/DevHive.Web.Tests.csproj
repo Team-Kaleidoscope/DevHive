@@ -8,7 +8,7 @@
     <PackageReference Include="NUnit" Version="3.13.1"/>
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0"/>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1"/>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.19.0.28253"/>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.20.0.28934"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DevHive.Web\DevHive.Web.csproj"/>
