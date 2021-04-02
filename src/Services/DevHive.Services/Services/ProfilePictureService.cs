@@ -22,14 +22,6 @@ namespace DevHive.Services.Services
 			this._cloudinaryService = cloudinaryService;
 		}
 
-		public async Task<string> InsertProfilePicture(ProfilePictureServiceModel profilePictureServiceModel)
-		{
-			ValidateProfPic(profilePictureServiceModel.ProfilePictureFormFile);
-			await ValidateUserExistsAsync(profilePictureServiceModel.UserId);
-
-			return await SaveProfilePictureInDatabase(profilePictureServiceModel);
-		}
-
 		public async Task<string> GetProfilePictureById(Guid id)
 		{
 			return (await this._profilePictureRepository.GetByIdAsync(id)).PictureURL;
