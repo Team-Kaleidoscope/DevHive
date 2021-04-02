@@ -29,6 +29,20 @@ namespace DevHive.Web.Controllers
 		}
 
 		/// <summary>
+		/// Get the URL of user's profile picture
+		/// </summary>
+		/// <param name="profilePictureId">The profile picture's Id</param>
+		/// <param name="authorization">JWT Bearer Token</param>
+		/// <returns>The URL of the profile picture</returns>
+		[HttpGet]
+		[AllowAnonymous]
+		public async Task<IActionResult> ReadProfilePicture(Guid profilePictureId, [FromHeader] string authorization)
+		{
+			string profilePicURL = await this._profilePictureService.GetProfilePictureById(profilePictureId);
+			return new OkObjectResult(new { ProfilePictureURL = profilePicURL} );
+		}
+
+		/// <summary>
 		/// Alter the profile picture of a user
 		/// </summary>
 		/// <param name="userId">The user's Id</param>
