@@ -60,7 +60,6 @@ namespace DevHive.Data.Repositories
 		public override async Task<bool> EditAsync(Guid id, Post newEntity)
 		{
 			Post post = await this.GetByIdAsync(id);
-			// var ratingId = post.Rating.Id;
 
 			this._context
 				.Entry(post)
@@ -75,8 +74,6 @@ namespace DevHive.Data.Repositories
 			post.Comments.Clear();
 			foreach (var comment in newEntity.Comments)
 				post.Comments.Add(comment);
-
-			// post.Rating.Id = ratingId;
 
 			this._context.Entry(post).State = EntityState.Modified;
 

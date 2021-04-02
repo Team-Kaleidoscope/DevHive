@@ -32,12 +32,8 @@ namespace DevHive.Web.Middleware
 			context.Response.ContentType = "application/json";
 			context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-			// Made to ressemble the formatting of property validation errors (like [MinLength(3)])
-			string message = JsonConvert.SerializeObject(new {
-								errors = new {
-									Exception = new String[] { exception.Message }
-								}
-							});
+			// Made to resemble the formatting of property validation errors (like [MinLength(3)])
+			string message = JsonConvert.SerializeObject(new { Error = exception.Message });
 
 			return context.Response.WriteAsync(message);
 		}
