@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DevHive.Data.Migrations
 {
     [DbContext(typeof(DevHiveContext))]
-    [Migration("20210322171857_Remove_old_rating_system")]
-    partial class Remove_old_rating_system
+    [Migration("20210328161726_Profile_Pic_Property_Alter")]
+    partial class Profile_Pic_Property_Alter
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -101,7 +101,7 @@ namespace DevHive.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("ProfilePicture");
+                    b.ToTable("ProfilePictures");
                 });
 
             modelBuilder.Entity("DevHive.Data.Models.Rating", b =>

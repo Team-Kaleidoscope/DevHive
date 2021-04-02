@@ -45,14 +45,6 @@ namespace DevHive.Services.Interfaces
 		Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateUserServiceModel);
 
 		/// <summary>
-		/// Uploads the given picture and assigns it's link to the user in the database
-		/// Requires authenticated user
-		/// </summary>
-		/// <param name="updateProfilePictureServiceModel">Contains User's Guid and the new picture to be updated</param>
-		/// <returns>The new picture's URL</returns>
-		Task<ProfilePictureServiceModel> UpdateProfilePicture(UpdateProfilePictureServiceModel updateProfilePictureServiceModel);
-
-		/// <summary>
 		/// Deletes a user from the database and removes his data entirely
 		/// Requires authenticated user
 		/// </summary>
