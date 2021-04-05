@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using DevHive.Common.Constants;
 using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
 using DevHive.Services.Interfaces;
@@ -19,6 +16,8 @@ namespace DevHive.Services.Services
 		private readonly IRatingRepository _ratingRepository;
 		private readonly IMapper _mapper;
 
+		private const string NotRated = "{0} has not rated" + ClassesConstants.Post;
+
 		public RatingService(IPostRepository postRepository, IRatingRepository ratingRepository, IUserRepository userRepository, IMapper mapper)
 		{
 			this._postRepository = postRepository;
@@ -31,7 +30,7 @@ namespace DevHive.Services.Services
 		public async Task<Guid> RatePost(CreateRatingServiceModel createRatingServiceModel)
 		{
 			if (!await this._postRepository.DoesPostExist(createRatingServiceModel.PostId))
-				throw new ArgumentException("Post does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Post));
 
 			if (await this._ratingRepository.UserRatedPost(createRatingServiceModel.UserId, createRatingServiceModel.PostId))
 				throw new ArgumentException("User already rated the post!");
@@ -84,13 +83,13 @@ namespace DevHive.Services.Services
 		public async Task<ReadRatingServiceModel> UpdateRating(UpdateRatingServiceModel updateRatingServiceModel)
 		{
 			Rating rating = await this._ratingRepository.GetRatingByUserAndPostId(updateRatingServiceModel.UserId, updateRatingServiceModel.PostId) ??
-				throw new ArgumentException("Rating does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Rating));
 
 			User user = await this._userRepository.GetByIdAsync(updateRatingServiceModel.UserId) ??
-				throw new ArgumentException("User does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.User));
 
 			if (!await this._ratingRepository.UserRatedPost(updateRatingServiceModel.UserId, updateRatingServiceModel.PostId))
-				throw new ArgumentException("User has not rated the post!");
+				throw new ArgumentException(string.Format(NotRated, ClassesConstants.User));
 
 			rating.User = user;
 			rating.IsLike = updateRatingServiceModel.IsLike;
@@ -111,7 +110,7 @@ namespace DevHive.Services.Services
 		public async Task<bool> DeleteRating(Guid ratingId)
 		{
 			if (!await this._ratingRepository.DoesRatingExist(ratingId))
-				throw new ArgumentException("Rating does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Rating));
 
 			Rating rating = await this._ratingRepository.GetByIdAsync(ratingId);
 			return await this._ratingRepository.DeleteAsync(rating);

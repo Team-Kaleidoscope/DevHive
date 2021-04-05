@@ -11,13 +11,11 @@ namespace DevHive.Data.Repositories
 	public class RatingRepository : BaseRepository<Rating>, IRatingRepository
 	{
 		private readonly DevHiveContext _context;
-		private readonly IPostRepository _postRepository;
 
-		public RatingRepository(DevHiveContext context, IPostRepository postRepository)
+		public RatingRepository(DevHiveContext context)
 			: base(context)
 		{
 			this._context = context;
-			this._postRepository = postRepository;
 		}
 
 		public override async Task<Rating> GetByIdAsync(Guid id)
@@ -28,7 +26,7 @@ namespace DevHive.Data.Repositories
 				.FirstOrDefaultAsync(x => x.Id == id);
 		}
 		/// <summary>
-		/// Gets all the ratings for a psot.
+		/// Gets all the ratings for a post.
 		/// </summary>
 		/// <param name="postId">Id of the post.</param>
 		/// <returns></returns>
@@ -40,10 +38,10 @@ namespace DevHive.Data.Repositories
 				.Where(x => x.Post.Id == postId).ToListAsync();
 		}
 		/// <summary>
-		/// Checks if a user rated a given post. In DevHive every user has one or no rating for every post. 
+		/// Checks if a user rated a given post. In DevHive every user has one or no rating for every post.
 		/// </summary>
 		/// <param name="userId">Id of the user.</param>
-		/// <param name="postId">Id of the psot.</param>
+		/// <param name="postId">Id of the post.</param>
 		/// <returns>True if the user has already rated the post and false if he hasn't.</returns>
 		public async Task<bool> UserRatedPost(Guid userId, Guid postId)
 		{

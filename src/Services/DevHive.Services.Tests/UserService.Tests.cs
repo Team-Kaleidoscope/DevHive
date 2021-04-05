@@ -344,7 +344,7 @@ namespace DevHive.Services.Tests
 		// 	}
 		// 	else
 		// 	{
-		// 		const string EXCEPTION_MESSAGE = "Unable to edit user!";
+		// 		const string EXCEPTION_MESSAGE = string.Format(ErrorMessages.CannotEdit, ClassesConstants.User.ToLower());
 		//
 		// 		Exception ex = Assert.ThrowsAsync<InvalidOperationException>(() => this._userService.UpdateUser(updateUserServiceModel);
 		//

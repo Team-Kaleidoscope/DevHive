@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DevHive.Common.Constants;
 using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
 using DevHive.Services.Interfaces;
@@ -33,14 +34,13 @@ namespace DevHive.Services.Services
 			await ValidateUserExistsAsync(profilePictureServiceModel.UserId);
 
 			User user = await this._userRepository.GetByIdAsync(profilePictureServiceModel.UserId);
-			// if (user.ProfilePicture.PictureURL != ProfilePicture.DefaultURL)
 			if (user.ProfilePicture.Id != Guid.Empty)
 			{
 				List<string> file = new() { user.ProfilePicture.PictureURL };
 				bool removed = await this._cloudinaryService.RemoveFilesFromCloud(file);
 
 				if (!removed)
-					throw new ArgumentException("Cannot delete old picture");
+					throw new InvalidOperationException(string.Format(ErrorMessages.CannotDelete, ClassesConstants.Picture.ToLower()));
 			}
 
 			return await SaveProfilePictureInDatabase(profilePictureServiceModel);
@@ -49,16 +49,16 @@ namespace DevHive.Services.Services
 		public async Task<bool> DeleteProfilePicture(Guid id)
 		{
 			ProfilePicture profilePic = await this._profilePictureRepository.GetByIdAsync(id) ??
-				throw new ArgumentException("Such picture doesn't exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Picture));
 
 			bool removedFromDb = await this._profilePictureRepository.DeleteAsync(profilePic);
 			if (!removedFromDb)
-				throw new ArgumentException("Cannot delete picture from database!");
+				throw new InvalidOperationException(string.Format(ErrorMessages.CannotDelete, ClassesConstants.Picture.ToLower()));
 
 			List<string> file = new() { profilePic.PictureURL };
 			bool removedFromCloud = await this._cloudinaryService.RemoveFilesFromCloud(file);
 			if (!removedFromCloud)
-				throw new ArgumentException("Cannot delete picture from cloud!");
+				throw new InvalidOperationException(string.Format(ErrorMessages.CannotDelete, ClassesConstants.Picture.ToLower()));
 
 			return true;
 		}
@@ -75,13 +75,13 @@ namespace DevHive.Services.Services
 
 			bool success = await this._profilePictureRepository.AddAsync(profilePic);
 			if (!success)
-				throw new ArgumentException("Unable to upload picture!");
+				throw new InvalidOperationException(string.Format(ErrorMessages.CannotUpload, ClassesConstants.Files.ToLower()));
 
 			user.ProfilePicture = profilePic;
 			bool userProfilePicAlter = await this._userRepository.EditAsync(user.Id, user);
 
 			if (!userProfilePicAlter)
-				throw new ArgumentException("Unable to alter user's profile picture");
+				throw new InvalidOperationException(string.Format(ErrorMessages.CannotEdit, "user's profile picture"));
 
 			return picUrl;
 		}
@@ -89,13 +89,13 @@ namespace DevHive.Services.Services
 		private static void ValidateProfPic(IFormFile profilePictureFormFile)
 		{
 			if (profilePictureFormFile.Length == 0)
-				throw new ArgumentException("Picture cannot be null");
+				throw new ArgumentNullException(nameof(profilePictureFormFile), string.Format(ErrorMessages.InvalidData, ClassesConstants.Data.ToLower()));
 		}
 
 		private async Task ValidateUserExistsAsync(Guid userId)
 		{
 			if (!await this._userRepository.DoesUserExistAsync(userId))
-				throw new ArgumentException("User does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.User));
 		}
 	}
 }

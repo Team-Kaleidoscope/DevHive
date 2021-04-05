@@ -1,6 +1,8 @@
 using System;
+using System.Data;
 using System.Threading.Tasks;
 using AutoMapper;
+using DevHive.Common.Constants;
 using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
 using DevHive.Services.Interfaces;
@@ -22,7 +24,7 @@ namespace DevHive.Services.Services
 		public async Task<Guid> CreateRole(CreateRoleServiceModel createRoleServiceModel)
 		{
 			if (await this._roleRepository.DoesNameExist(createRoleServiceModel.Name))
-				throw new ArgumentException("Role already exists!");
+				throw new DuplicateNameException(string.Format(ErrorMessages.AlreadyExists, ClassesConstants.Role));
 
 			Role role = this._roleMapper.Map<Role>(createRoleServiceModel);
 			bool success = await this._roleRepository.AddAsync(role);
@@ -40,7 +42,7 @@ namespace DevHive.Services.Services
 		public async Task<RoleServiceModel> GetRoleById(Guid id)
 		{
 			Role role = await this._roleRepository.GetByIdAsync(id) ??
-				throw new ArgumentException("Role does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Role));
 
 			return this._roleMapper.Map<RoleServiceModel>(role);
 		}
@@ -48,10 +50,10 @@ namespace DevHive.Services.Services
 		public async Task<bool> UpdateRole(UpdateRoleServiceModel updateRoleServiceModel)
 		{
 			if (!await this._roleRepository.DoesRoleExist(updateRoleServiceModel.Id))
-				throw new ArgumentException("Role does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Role));
 
 			if (await this._roleRepository.DoesNameExist(updateRoleServiceModel.Name))
-				throw new ArgumentException("Role name already exists!");
+				throw new DuplicateNameException(string.Format(ErrorMessages.AlreadyExists, ClassesConstants.Role));
 
 			Role role = this._roleMapper.Map<Role>(updateRoleServiceModel);
 			return await this._roleRepository.EditAsync(updateRoleServiceModel.Id, role);
@@ -60,7 +62,7 @@ namespace DevHive.Services.Services
 		public async Task<bool> DeleteRole(Guid id)
 		{
 			if (!await this._roleRepository.DoesRoleExist(id))
-				throw new ArgumentException("Role does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Role));
 
 			Role role = await this._roleRepository.GetByIdAsync(id);
 			return await this._roleRepository.DeleteAsync(role);

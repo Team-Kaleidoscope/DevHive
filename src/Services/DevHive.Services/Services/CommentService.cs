@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
-using DevHive.Data.Models;
-using DevHive.Services.Models.Comment;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using DevHive.Services.Interfaces;
+using DevHive.Common.Constants;
 using DevHive.Data.Interfaces;
-using System.Linq;
+using DevHive.Data.Models;
+using DevHive.Services.Interfaces;
+using DevHive.Services.Models.Comment;
 
 namespace DevHive.Services.Services
 {
@@ -31,7 +32,7 @@ namespace DevHive.Services.Services
 		public async Task<Guid> AddComment(CreateCommentServiceModel createCommentServiceModel)
 		{
 			if (!await this._postRepository.DoesPostExist(createCommentServiceModel.PostId))
-				throw new ArgumentException("Post does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Post));
 
 			Comment comment = this._postMapper.Map<Comment>(createCommentServiceModel);
 			comment.TimeCreated = DateTime.Now;
@@ -56,10 +57,10 @@ namespace DevHive.Services.Services
 		public async Task<ReadCommentServiceModel> GetCommentById(Guid id)
 		{
 			Comment comment = await this._commentRepository.GetByIdAsync(id) ??
-				throw new ArgumentException("The comment does not exist");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Comment));
 
 			User user = await this._userRepository.GetByIdAsync(comment.Creator.Id) ??
-				throw new ArgumentException("The user does not exist");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.User));
 
 			ReadCommentServiceModel readCommentServiceModel = this._postMapper.Map<ReadCommentServiceModel>(comment);
 			readCommentServiceModel.IssuerFirstName = user.FirstName;
@@ -74,7 +75,7 @@ namespace DevHive.Services.Services
 		public async Task<Guid> UpdateComment(UpdateCommentServiceModel updateCommentServiceModel)
 		{
 			if (!await this._commentRepository.DoesCommentExist(updateCommentServiceModel.CommentId))
-				throw new ArgumentException("Comment does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Comment));
 
 			Comment comment = this._postMapper.Map<Comment>(updateCommentServiceModel);
 			comment.TimeCreated = DateTime.Now;
@@ -95,7 +96,7 @@ namespace DevHive.Services.Services
 		public async Task<bool> DeleteComment(Guid id)
 		{
 			if (!await this._commentRepository.DoesCommentExist(id))
-				throw new ArgumentException("Comment does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Comment));
 
 			Comment comment = await this._commentRepository.GetByIdAsync(id);
 			return await this._commentRepository.DeleteAsync(comment);
@@ -121,7 +122,7 @@ namespace DevHive.Services.Services
 		public async Task<bool> ValidateJwtForComment(Guid commentId, string rawTokenData)
 		{
 			Comment comment = await this._commentRepository.GetByIdAsync(commentId) ??
-				throw new ArgumentException("Comment does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Comment));
 			User user = await this.GetUserForValidation(rawTokenData);
 
 			//If user made the comment
@@ -141,10 +142,10 @@ namespace DevHive.Services.Services
 		{
 			JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(rawTokenData.Remove(0, 7));
 
-			Guid jwtUserId = Guid.Parse(this.GetClaimTypeValues("ID", jwt.Claims).First());
+			Guid jwtUserId = Guid.Parse(GetClaimTypeValues("ID", jwt.Claims).First());
 
 			User user = await this._userRepository.GetByIdAsync(jwtUserId) ??
-				throw new ArgumentException("User does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.User));
 
 			return user;
 		}
@@ -152,7 +153,7 @@ namespace DevHive.Services.Services
 		/// <summary>
 		/// Returns all values from a given claim type
 		/// </summary>
-		private List<string> GetClaimTypeValues(string type, IEnumerable<Claim> claims)
+		private static List<string> GetClaimTypeValues(string type, IEnumerable<Claim> claims)
 		{
 			List<string> toReturn = new();
 

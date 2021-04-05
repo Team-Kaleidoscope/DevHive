@@ -14,7 +14,7 @@ namespace DevHive.Services.Services
 	{
 		// Regex for getting the filename without (final) filename extension
 		// So, from image.png, it will match image, and from doc.my.txt will match doc.my
-		private static Regex _imageRegex = new Regex(".*(?=\\.)");
+		private static readonly Regex s_imageRegex = new(".*(?=\\.)");
 
 		private readonly Cloudinary _cloudinary;
 
@@ -28,23 +28,21 @@ namespace DevHive.Services.Services
 			List<string> fileUrls = new();
 			foreach (var formFile in formFiles)
 			{
-				string fileName = _imageRegex.Match(formFile.FileName).ToString();
+				string fileName = s_imageRegex.Match(formFile.FileName).ToString();
 
-				using (var ms = new MemoryStream())
+				using var ms = new MemoryStream();
+				formFile.CopyTo(ms);
+				byte[] formBytes = ms.ToArray();
+
+				RawUploadParams rawUploadParams = new()
 				{
-					formFile.CopyTo(ms);
-					byte[] formBytes = ms.ToArray();
+					File = new FileDescription(fileName, new MemoryStream(formBytes)),
+					PublicId = fileName,
+					UseFilename = true
+				};
 
-					RawUploadParams rawUploadParams = new()
-					{
-						File = new FileDescription(fileName, new MemoryStream(formBytes)),
-						PublicId = fileName,
-						UseFilename = true
-					};
-
-					RawUploadResult rawUploadResult = await this._cloudinary.UploadAsync(rawUploadParams);
-					fileUrls.Add(rawUploadResult.Url.AbsoluteUri);
-				}
+				RawUploadResult rawUploadResult = await this._cloudinary.UploadAsync(rawUploadParams);
+				fileUrls.Add(rawUploadResult.Url.AbsoluteUri);
 			}
 
 			return fileUrls;
