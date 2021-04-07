@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.2"/>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.19.0.28253"/>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.20.0.28934"/>
   </ItemGroup>
   <PropertyGroup>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>

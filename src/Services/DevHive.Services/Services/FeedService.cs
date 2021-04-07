@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using DevHive.Common.Constants;
 using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
 using DevHive.Services.Interfaces;
@@ -26,10 +28,11 @@ namespace DevHive.Services.Services
 
 		/// <summary>
 		/// This method is used in the feed page.
-		/// See the FeedRepository "GetFriendsPosts" menthod for more information on how it works.
+		/// See the FeedRepository "GetFriendsPosts" method for more information on how it works.
 		/// </summary>
 		public async Task<ReadPageServiceModel> GetPage(GetPageServiceModel getPageServiceModel)
 		{
+			//TODO: Rework the initialization of User
 			User user = null;
 
 			if (getPageServiceModel.UserId != Guid.Empty)
@@ -37,10 +40,10 @@ namespace DevHive.Services.Services
 			else if (!string.IsNullOrEmpty(getPageServiceModel.Username))
 				user = await this._userRepository.GetByUsernameAsync(getPageServiceModel.Username);
 			else
-				throw new ArgumentException("Invalid given data!");
+				throw new InvalidDataException(string.Format(ErrorMessages.InvalidData, ClassesConstants.Data.ToLower()));
 
 			if (user == null)
-				throw new ArgumentException("User doesn't exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.User));
 
 			List<Post> posts = await this._feedRepository
 				.GetFriendsPosts(user.Friends.ToList(), getPageServiceModel.FirstRequestIssued, getPageServiceModel.PageNumber, getPageServiceModel.PageSize);
@@ -58,15 +61,16 @@ namespace DevHive.Services.Services
 		/// </summary>
 		public async Task<ReadPageServiceModel> GetUserPage(GetPageServiceModel model)
 		{
+			//TODO: Rework the initialization of User
 			User user = null;
 
 			if (!string.IsNullOrEmpty(model.Username))
 				user = await this._userRepository.GetByUsernameAsync(model.Username);
 			else
-				throw new ArgumentException("Invalid given data!");
+				throw new InvalidDataException(string.Format(ErrorMessages.InvalidData, ClassesConstants.Data.ToLower()));
 
 			if (user == null)
-				throw new ArgumentException("User doesn't exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.User));
 
 			List<Post> posts = await this._feedRepository
 				.GetUsersPosts(user, model.FirstRequestIssued, model.PageNumber, model.PageSize);

@@ -1,15 +1,17 @@
-using AutoMapper;
-using DevHive.Services.Models.User;
-using System.Threading.Tasks;
-using DevHive.Data.Models;
 using System;
 using System.Collections.Generic;
-using DevHive.Common.Models.Identity;
-using DevHive.Services.Interfaces;
-using DevHive.Data.Interfaces;
+using System.Data;
+using System.IO;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+using AutoMapper;
+using DevHive.Common.Constants;
 using DevHive.Common.Jwt.Interfaces;
+using DevHive.Common.Models.Identity;
+using DevHive.Data.Interfaces;
+using DevHive.Data.Models;
+using DevHive.Services.Interfaces;
+using DevHive.Services.Models.User;
 
 namespace DevHive.Services.Services
 {
@@ -20,15 +22,17 @@ namespace DevHive.Services.Services
 		private readonly ILanguageRepository _languageRepository;
 		private readonly ITechnologyRepository _technologyRepository;
 		private readonly IMapper _userMapper;
-		private readonly ICloudService _cloudService;
 		private readonly IJwtService _jwtService;
+
+		private const string NoYourselfAsFriend = "You cant add yourself as a friend(sry, bro)!";
+		private const string Rant = "Can't promote shit in this country...";
+
 
 		public UserService(IUserRepository userRepository,
 			ILanguageRepository languageRepository,
 			IRoleRepository roleRepository,
 			ITechnologyRepository technologyRepository,
 			IMapper mapper,
-			ICloudService cloudService,
 			IJwtService jwtService)
 		{
 			this._userRepository = userRepository;
@@ -36,7 +40,6 @@ namespace DevHive.Services.Services
 			this._userMapper = mapper;
 			this._languageRepository = languageRepository;
 			this._technologyRepository = technologyRepository;
-			this._cloudService = cloudService;
 			this._jwtService = jwtService;
 		}
 
@@ -44,12 +47,12 @@ namespace DevHive.Services.Services
 		public async Task<TokenModel> LoginUser(LoginServiceModel loginModel)
 		{
 			if (!await this._userRepository.DoesUsernameExistAsync(loginModel.UserName))
-				throw new ArgumentException("Invalid username!");
+				throw new InvalidDataException(string.Format(ErrorMessages.InvalidData, ClassesConstants.Username));
 
 			User user = await this._userRepository.GetByUsernameAsync(loginModel.UserName);
 
 			if (!await this._userRepository.VerifyPassword(user, loginModel.Password))
-				throw new ArgumentException("Incorrect password!");
+				throw new InvalidDataException(string.Format(ErrorMessages.IncorrectData, ClassesConstants.Password.ToLower()));
 
 			List<string> roleNames = user.Roles.Select(x => x.Name).ToList();
 			return new TokenModel(this._jwtService.GenerateJwtToken(user.Id, user.UserName, roleNames));
@@ -58,10 +61,11 @@ namespace DevHive.Services.Services
 		public async Task<TokenModel> RegisterUser(RegisterServiceModel registerModel)
 		{
 			if (await this._userRepository.DoesUsernameExistAsync(registerModel.UserName))
-				throw new ArgumentException("Username already exists!");
+				throw new DuplicateNameException(string.Format(ErrorMessages.AlreadyExists, ClassesConstants.Username));
 
 			if (await this._userRepository.DoesEmailExistAsync(registerModel.Email))
-				throw new ArgumentException("Email already exists!");
+				throw new DuplicateNameException(string.Format(ErrorMessages.AlreadyExists, ClassesConstants.Email));
+
 
 			User user = this._userMapper.Map<User>(registerModel);
 
@@ -69,9 +73,9 @@ namespace DevHive.Services.Services
 			bool roleResult = await this._userRepository.AddRoleToUser(user, Role.DefaultRole);
 
 			if (!userResult)
-				throw new ArgumentException("Unable to create a user");
+				throw new InvalidOperationException(string.Format(ErrorMessages.CannotCreate, ClassesConstants.User.ToLower()));
 			if (!roleResult)
-				throw new ArgumentException("Unable to add role to user");
+				throw new InvalidOperationException(string.Format(ErrorMessages.CannotAdd, ClassesConstants.Role.ToLower()));
 
 			User createdUser = await this._userRepository.GetByUsernameAsync(registerModel.UserName);
 
@@ -84,7 +88,7 @@ namespace DevHive.Services.Services
 		public async Task<UserServiceModel> GetUserById(Guid id)
 		{
 			User user = await this._userRepository.GetByIdAsync(id) ??
-				throw new ArgumentException("User does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.User));
 
 			return this._userMapper.Map<UserServiceModel>(user);
 		}
@@ -92,7 +96,7 @@ namespace DevHive.Services.Services
 		public async Task<UserServiceModel> GetUserByUsername(string username)
 		{
 			User user = await this._userRepository.GetByUsernameAsync(username) ??
-				throw new ArgumentException("User does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.User));
 
 			return this._userMapper.Map<UserServiceModel>(user);
 		}
@@ -101,45 +105,23 @@ namespace DevHive.Services.Services
 		#region Update
 		public async Task<UserServiceModel> UpdateUser(UpdateUserServiceModel updateUserServiceModel)
 		{
-			await this.ValidateUserOnUpdate(updateUserServiceModel);
+			await ValidateUserOnUpdate(updateUserServiceModel);
 
 			User user = await this._userRepository.GetByIdAsync(updateUserServiceModel.Id);
-			await this.PopulateUserModel(user, updateUserServiceModel);
+			await PopulateUserModel(user, updateUserServiceModel);
 
 			if (updateUserServiceModel.Friends.Count > 0)
-				await this.CreateRelationToFriends(user, updateUserServiceModel.Friends.ToList());
+				await CreateRelationToFriends(user, updateUserServiceModel.Friends.ToList());
 			else
 				user.Friends.Clear();
 
 			bool result = await this._userRepository.EditAsync(user.Id, user);
 
 			if (!result)
-				throw new InvalidOperationException("Unable to edit user!");
+				throw new InvalidOperationException(string.Format(ErrorMessages.CannotEdit, ClassesConstants.User.ToLower()));
 
 			User newUser = await this._userRepository.GetByIdAsync(user.Id);
 			return this._userMapper.Map<UserServiceModel>(newUser);
-		}
-
-		public async Task<ProfilePictureServiceModel> UpdateProfilePicture(UpdateProfilePictureServiceModel updateProfilePictureServiceModel)
-		{
-			User user = await this._userRepository.GetByIdAsync(updateProfilePictureServiceModel.UserId);
-
-			if (!string.IsNullOrEmpty(user.ProfilePicture.PictureURL))
-			{
-				bool success = await _cloudService.RemoveFilesFromCloud(new List<string> { user.ProfilePicture.PictureURL });
-				if (!success)
-					throw new InvalidCastException("Could not delete old profile picture!");
-			}
-
-			string fileUrl = (await this._cloudService.UploadFilesToCloud(new List<IFormFile> { updateProfilePictureServiceModel.Picture }))[0] ??
-				throw new ArgumentException("Unable to upload profile picture to cloud");
-
-			bool successful = await this._userRepository.UpdateProfilePicture(updateProfilePictureServiceModel.UserId, fileUrl);
-
-			if (!successful)
-				throw new InvalidOperationException("Unable to change profile picture!");
-
-			return new ProfilePictureServiceModel() { ProfilePictureURL = fileUrl };
 		}
 		#endregion
 
@@ -147,7 +129,7 @@ namespace DevHive.Services.Services
 		public async Task<bool> DeleteUser(Guid id)
 		{
 			if (!await this._userRepository.DoesUserExistAsync(id))
-				throw new ArgumentException("User does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.User));
 
 			User user = await this._userRepository.GetByIdAsync(id);
 			return await this._userRepository.DeleteAsync(user);
@@ -162,21 +144,21 @@ namespace DevHive.Services.Services
 		private async Task ValidateUserOnUpdate(UpdateUserServiceModel updateUserServiceModel)
 		{
 			if (!await this._userRepository.DoesUserExistAsync(updateUserServiceModel.Id))
-				throw new ArgumentException("User does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.User));
 
 			if (updateUserServiceModel.Friends.Any(x => x.UserName == updateUserServiceModel.UserName))
-				throw new ArgumentException("You cant add yourself as a friend(sry, bro)!");
+				throw new InvalidOperationException(NoYourselfAsFriend);
 
 			if (!await this._userRepository.DoesUserHaveThisUsernameAsync(updateUserServiceModel.Id, updateUserServiceModel.UserName)
 					&& await this._userRepository.DoesUsernameExistAsync(updateUserServiceModel.UserName))
-				throw new ArgumentException("Username already exists!");
+				throw new DuplicateNameException(string.Format(ErrorMessages.AlreadyExists, ClassesConstants.Username.ToLower()));
 
 			List<string> usernames = new();
 			foreach (var friend in updateUserServiceModel.Friends)
 				usernames.Add(friend.UserName);
 
 			if (!await this._userRepository.ValidateFriendsCollectionAsync(usernames))
-				throw new ArgumentException("One or more friends do not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.OneOrMoreFriends));
 		}
 		#endregion
 
@@ -184,7 +166,7 @@ namespace DevHive.Services.Services
 		public async Task<TokenModel> SuperSecretPromotionToAdmin(Guid userId)
 		{
 			User user = await this._userRepository.GetByIdAsync(userId) ??
-				throw new ArgumentException("User does not exist! Can't promote shit in this country...");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.User) + " " + Rant);
 
 			if (!await this._roleRepository.DoesNameExist(Role.AdminRole))
 			{
@@ -224,7 +206,7 @@ namespace DevHive.Services.Services
 				foreach (var role in updateUserServiceModel.Roles)
 				{
 					Role returnedRole = await this._roleRepository.GetByNameAsync(role.Name) ??
-						throw new ArgumentException($"Role {role.Name} does not exist!");
+						throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Role));
 
 					roles.Add(returnedRole);
 				}
@@ -236,7 +218,7 @@ namespace DevHive.Services.Services
 			for (int i = 0; i < languagesCount; i++)
 			{
 				Language language = await this._languageRepository.GetByNameAsync(updateUserServiceModel.Languages.ElementAt(i).Name) ??
-					throw new ArgumentException("Invalid language name!");
+					throw new InvalidDataException(string.Format(ErrorMessages.InvalidData, nameof(Language)));
 
 				languages.Add(language);
 			}
@@ -248,7 +230,8 @@ namespace DevHive.Services.Services
 			for (int i = 0; i < technologiesCount; i++)
 			{
 				Technology technology = await this._technologyRepository.GetByNameAsync(updateUserServiceModel.Technologies.ElementAt(i).Name) ??
-					throw new ArgumentException("Invalid technology name!");
+					throw new InvalidDataException(string.Format(ErrorMessages.InvalidData, nameof(Technology)));
+
 
 				technologies.Add(technology);
 			}

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using AutoMapper;
+using DevHive.Common.Constants;
 using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
 using DevHive.Services.Interfaces;
@@ -24,7 +26,7 @@ namespace DevHive.Services.Services
 		public async Task<Guid> CreateLanguage(CreateLanguageServiceModel createLanguageServiceModel)
 		{
 			if (await this._languageRepository.DoesLanguageNameExistAsync(createLanguageServiceModel.Name))
-				throw new ArgumentException("Language already exists!");
+				throw new DuplicateNameException(string.Format(ErrorMessages.AlreadyExists, ClassesConstants.Language));
 
 			Language language = this._languageMapper.Map<Language>(createLanguageServiceModel);
 			bool success = await this._languageRepository.AddAsync(language);
@@ -45,7 +47,7 @@ namespace DevHive.Services.Services
 			Language language = await this._languageRepository.GetByIdAsync(id);
 
 			if (language == null)
-				throw new ArgumentException("The language does not exist");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Language));
 
 			return this._languageMapper.Map<ReadLanguageServiceModel>(language);
 		}
@@ -65,10 +67,10 @@ namespace DevHive.Services.Services
 			bool newLangNameExists = await this._languageRepository.DoesLanguageNameExistAsync(languageServiceModel.Name);
 
 			if (!langExists)
-				throw new ArgumentException("Language does not exist!");
+				throw new DuplicateNameException(string.Format(ErrorMessages.AlreadyExists, ClassesConstants.Language));
 
 			if (newLangNameExists)
-				throw new ArgumentException("Language name already exists in our data base!");
+				throw new DuplicateNameException(string.Format(ErrorMessages.AlreadyExists, ClassesConstants.Language));
 
 			Language lang = this._languageMapper.Map<Language>(languageServiceModel);
 			return await this._languageRepository.EditAsync(languageServiceModel.Id, lang);
@@ -79,7 +81,7 @@ namespace DevHive.Services.Services
 		public async Task<bool> DeleteLanguage(Guid id)
 		{
 			if (!await this._languageRepository.DoesLanguageExistAsync(id))
-				throw new ArgumentException("Language does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Language));
 
 			Language language = await this._languageRepository.GetByIdAsync(id);
 			return await this._languageRepository.DeleteAsync(language);

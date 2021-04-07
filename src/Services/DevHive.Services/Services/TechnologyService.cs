@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using AutoMapper;
+using DevHive.Common.Constants;
 using DevHive.Data.Interfaces;
 using DevHive.Data.Models;
 using DevHive.Services.Interfaces;
@@ -24,7 +26,7 @@ namespace DevHive.Services.Services
 		public async Task<Guid> CreateTechnology(CreateTechnologyServiceModel technologyServiceModel)
 		{
 			if (await this._technologyRepository.DoesTechnologyNameExistAsync(technologyServiceModel.Name))
-				throw new ArgumentException("Technology already exists!");
+				throw new DuplicateNameException(string.Format(ErrorMessages.AlreadyExists, ClassesConstants.Technology));
 
 			Technology technology = this._technologyMapper.Map<Technology>(technologyServiceModel);
 			bool success = await this._technologyRepository.AddAsync(technology);
@@ -45,7 +47,7 @@ namespace DevHive.Services.Services
 			Technology technology = await this._technologyRepository.GetByIdAsync(id);
 
 			if (technology == null)
-				throw new ArgumentException("The technology does not exist");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Technology));
 
 			return this._technologyMapper.Map<ReadTechnologyServiceModel>(technology);
 		}
@@ -62,10 +64,10 @@ namespace DevHive.Services.Services
 		public async Task<bool> UpdateTechnology(UpdateTechnologyServiceModel updateTechnologyServiceModel)
 		{
 			if (!await this._technologyRepository.DoesTechnologyExistAsync(updateTechnologyServiceModel.Id))
-				throw new ArgumentException("Technology does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Technology));
 
 			if (await this._technologyRepository.DoesTechnologyNameExistAsync(updateTechnologyServiceModel.Name))
-				throw new ArgumentException("Technology name already exists!");
+				throw new DuplicateNameException(string.Format(ErrorMessages.AlreadyExists, ClassesConstants.Technology));
 
 			Technology technology = this._technologyMapper.Map<Technology>(updateTechnologyServiceModel);
 			bool result = await this._technologyRepository.EditAsync(updateTechnologyServiceModel.Id, technology);
@@ -78,7 +80,7 @@ namespace DevHive.Services.Services
 		public async Task<bool> DeleteTechnology(Guid id)
 		{
 			if (!await this._technologyRepository.DoesTechnologyExistAsync(id))
-				throw new ArgumentException("Technology does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Technology));
 
 			Technology technology = await this._technologyRepository.GetByIdAsync(id);
 			bool result = await this._technologyRepository.DeleteAsync(technology);

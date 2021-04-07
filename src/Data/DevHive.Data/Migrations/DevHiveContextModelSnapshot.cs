@@ -99,7 +99,7 @@ namespace DevHive.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("ProfilePicture");
+                    b.ToTable("ProfilePictures");
                 });
 
             modelBuilder.Entity("DevHive.Data.Models.Rating", b =>

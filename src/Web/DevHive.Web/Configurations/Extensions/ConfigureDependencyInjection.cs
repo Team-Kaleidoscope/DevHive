@@ -17,16 +17,16 @@ namespace DevHive.Web.Configurations.Extensions
 			services.AddTransient<ILanguageRepository, LanguageRepository>();
 			services.AddTransient<IRoleRepository, RoleRepository>();
 			services.AddTransient<ITechnologyRepository, TechnologyRepository>();
-			services.AddTransient<IUserRepository, UserRepository>();
 			services.AddTransient<IPostRepository, PostRepository>();
 			services.AddTransient<ICommentRepository, CommentRepository>();
 			services.AddTransient<IFeedRepository, FeedRepository>();
 			services.AddTransient<IRatingRepository, RatingRepository>();
+			services.AddTransient<IProfilePictureRepository, ProfilePictureRepository>();
+			services.AddTransient<IUserRepository, UserRepository>();
 
 			services.AddTransient<ILanguageService, LanguageService>();
 			services.AddTransient<IRoleService, RoleService>();
 			services.AddTransient<ITechnologyService, TechnologyService>();
-			services.AddTransient<IUserService, UserService>();
 			services.AddTransient<IPostService, PostService>();
 			services.AddTransient<ICommentService, CommentService>();
 			services.AddTransient<IFeedService, FeedService>();
@@ -46,7 +46,6 @@ namespace DevHive.Web.Configurations.Extensions
 					signingKey: Encoding.ASCII.GetBytes(configuration.GetSection("Jwt").GetSection("signingKey").Value),
 					validationIssuer: configuration.GetSection("Jwt").GetSection("validationIssuer").Value,
 					audience: configuration.GetSection("Jwt").GetSection("audience").Value));
-			services.AddTransient<IRatingService, RatingService>();
 		}
 	}
 }

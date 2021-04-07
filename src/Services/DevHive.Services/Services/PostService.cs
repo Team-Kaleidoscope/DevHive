@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
-using DevHive.Data.Models;
-using DevHive.Services.Models.Post;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using DevHive.Services.Interfaces;
+using DevHive.Common.Constants;
 using DevHive.Data.Interfaces;
-using System.Linq;
+using DevHive.Data.Models;
 using DevHive.Data.Models.Relational;
+using DevHive.Services.Interfaces;
+using DevHive.Services.Models.Post;
 
 namespace DevHive.Services.Services
 {
@@ -34,7 +35,7 @@ namespace DevHive.Services.Services
 		public async Task<Guid> CreatePost(CreatePostServiceModel createPostServiceModel)
 		{
 			if (!await this._userRepository.DoesUserExistAsync(createPostServiceModel.CreatorId))
-				throw new ArgumentException("User does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.User));
 
 			Post post = this._postMapper.Map<Post>(createPostServiceModel);
 
@@ -66,7 +67,7 @@ namespace DevHive.Services.Services
 		public async Task<ReadPostServiceModel> GetPostById(Guid id)
 		{
 			Post post = await this._postRepository.GetByIdAsync(id) ??
-				throw new ArgumentException("The post does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Post));
 
 			// This can't happen in repo, because of how time is usually compared
 			post.Comments = post.Comments
@@ -74,7 +75,7 @@ namespace DevHive.Services.Services
 				.ToList();
 
 			User user = await this._userRepository.GetByIdAsync(post.Creator.Id) ??
-				throw new ArgumentException("The user does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.User));
 
 			int currentRating = 0;
 			foreach (Rating rating in post.Ratings)
@@ -100,7 +101,7 @@ namespace DevHive.Services.Services
 		public async Task<Guid> UpdatePost(UpdatePostServiceModel updatePostServiceModel)
 		{
 			if (!await this._postRepository.DoesPostExist(updatePostServiceModel.PostId))
-				throw new ArgumentException("Post does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Post));
 
 			Post post = this._postMapper.Map<Post>(updatePostServiceModel);
 
@@ -111,11 +112,11 @@ namespace DevHive.Services.Services
 					List<string> fileUrlsToRemove = await this._postRepository.GetFileUrls(updatePostServiceModel.PostId);
 					bool success = await _cloudService.RemoveFilesFromCloud(fileUrlsToRemove);
 					if (!success)
-						throw new InvalidCastException("Could not delete files from the post!");
+						throw new InvalidOperationException(string.Format(ErrorMessages.CannotDelete, ClassesConstants.Files.ToLower()));
 				}
 
 				List<string> fileUrls = await _cloudService.UploadFilesToCloud(updatePostServiceModel.Files) ??
-					throw new ArgumentException("Unable to upload images to cloud!");
+					throw new InvalidOperationException(string.Format(ErrorMessages.CannotUpload, ClassesConstants.Files.ToLower()));
 				post.Attachments = GetPostAttachmentsFromUrls(post, fileUrls);
 			}
 
@@ -136,7 +137,7 @@ namespace DevHive.Services.Services
 		public async Task<bool> DeletePost(Guid id)
 		{
 			if (!await this._postRepository.DoesPostExist(id))
-				throw new ArgumentException("Post does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Post));
 
 			Post post = await this._postRepository.GetByIdAsync(id);
 
@@ -145,7 +146,7 @@ namespace DevHive.Services.Services
 				List<string> fileUrls = await this._postRepository.GetFileUrls(id);
 				bool success = await _cloudService.RemoveFilesFromCloud(fileUrls);
 				if (!success)
-					throw new InvalidCastException("Could not delete files from the post. Please try again");
+					throw new InvalidOperationException(string.Format(ErrorMessages.CannotDelete, ClassesConstants.Files.ToLower()));
 			}
 
 			return await this._postRepository.DeleteAsync(post);
@@ -158,7 +159,7 @@ namespace DevHive.Services.Services
 		/// </summary>
 		public async Task<bool> ValidateJwtForCreating(Guid userId, string rawTokenData)
 		{
-			User user = await this.GetUserForValidation(rawTokenData);
+			User user = await GetUserForValidation(rawTokenData);
 
 			return user.Id == userId;
 		}
@@ -171,8 +172,8 @@ namespace DevHive.Services.Services
 		public async Task<bool> ValidateJwtForPost(Guid postId, string rawTokenData)
 		{
 			Post post = await this._postRepository.GetByIdAsync(postId) ??
-				throw new ArgumentException("Post does not exist!");
-			User user = await this.GetUserForValidation(rawTokenData);
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Post));
+			User user = await GetUserForValidation(rawTokenData);
 
 			//If user made the post
 			if (post.Creator.Id == user.Id)
@@ -192,8 +193,8 @@ namespace DevHive.Services.Services
 		public async Task<bool> ValidateJwtForComment(Guid commentId, string rawTokenData)
 		{
 			Comment comment = await this._commentRepository.GetByIdAsync(commentId) ??
-				throw new ArgumentException("Comment does not exist!");
-			User user = await this.GetUserForValidation(rawTokenData);
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.Comment));
+			User user = await GetUserForValidation(rawTokenData);
 
 			//If user made the comment
 			if (comment.Creator.Id == user.Id)
@@ -215,7 +216,7 @@ namespace DevHive.Services.Services
 			Guid jwtUserId = Guid.Parse(GetClaimTypeValues("ID", jwt.Claims).First());
 
 			User user = await this._userRepository.GetByIdAsync(jwtUserId) ??
-				throw new ArgumentException("User does not exist!");
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, ClassesConstants.User));
 
 			return user;
 		}

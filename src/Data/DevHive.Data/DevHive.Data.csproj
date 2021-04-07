@@ -5,14 +5,14 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1"/>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1"/>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.3"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.3">
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.4"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.4">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0"/>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.2"/>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.19.0.28253"/>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.20.0.28934"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DevHive.Data.Models\DevHive.Data.Models.csproj"/>
