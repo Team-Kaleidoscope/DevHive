@@ -36,7 +36,7 @@ namespace DevHive.Web.Controllers
 		/// <returns>The URL of the profile picture</returns>
 		[HttpGet]
 		[AllowAnonymous]
-		public async Task<IActionResult> ReadProfilePicture(Guid profilePictureId, [FromHeader] string authorization)
+		public async Task<IActionResult> ReadProfilePicture(Guid profilePictureId)
 		{
 			string profilePicURL = await this._profilePictureService.GetProfilePictureById(profilePictureId);
 			return new OkObjectResult(new { ProfilePictureURL = profilePicURL} );
