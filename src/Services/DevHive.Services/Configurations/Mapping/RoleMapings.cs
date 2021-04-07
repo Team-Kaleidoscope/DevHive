@@ -1,5 +1,5 @@
-using DevHive.Data.Models;
 using AutoMapper;
+using DevHive.Data.Models;
 using DevHive.Services.Models.Role;
 
 namespace DevHive.Services.Configurations.Mapping
@@ -14,6 +14,8 @@ namespace DevHive.Services.Configurations.Mapping
 
 			CreateMap<Role, RoleServiceModel>();
 			CreateMap<Role, UpdateRoleServiceModel>();
+
+			CreateMap<RoleServiceModel, UpdateRoleServiceModel>();
 		}
 	}
 }

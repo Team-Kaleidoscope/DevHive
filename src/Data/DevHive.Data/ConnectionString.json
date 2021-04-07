@@ -1,5 +1,5 @@
 {
-	"ConnectionStrings": {
-		"DEV": "Server=localhost;Port=5432;Database=DevHive_API;User Id=postgres;Password=password;"
-	}
+  "ConnectionStrings": {
+    "DEV": "Server=localhost;Port=5432;Database=DevHive_API;User Id=postgres;Password=;"
+  }
 }
