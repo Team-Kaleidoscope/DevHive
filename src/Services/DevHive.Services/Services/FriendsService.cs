@@ -1,51 +1,45 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
-using DevHive.Common.Jwt.Interfaces;
+using DevHive.Common.Constants;
+using DevHive.Data.Interfaces;
+using DevHive.Data.Models;
 using DevHive.Services.Interfaces;
-using DevHive.Services.Models.User;
 
 namespace DevHive.Services.Services
 {
 	public class FriendsService : IFriendsService
 	{
-		private readonly IUserService _userService;
-		private readonly IMapper _userMapper;
+		private readonly IUserRepository _friendRepository;
 
-		public FriendsService(IUserService userService,
-			IMapper mapper)
+		public FriendsService(IUserRepository friendRepository)
 		{
-			this._userService = userService;
-			this._userMapper = mapper;
+			this._friendRepository = friendRepository;
 		}
 
 		public async Task<bool> AddFriend(Guid userId, Guid friendId)
 		{
-			UserServiceModel user = await this._userService.GetUserById(userId);
-			UserServiceModel friendUser = await this._userService.GetUserById(friendId);
+			User user = await this._friendRepository.GetByIdAsync(userId) ??
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, nameof(user)));
 
-			UpdateUserServiceModel updateUser = this._userMapper.Map<UpdateUserServiceModel>(user);
-			UpdateFriendServiceModel updatefriendUser = this._userMapper.Map<UpdateFriendServiceModel>(friendUser);
+			User friend = await this._friendRepository.GetByIdAsync(friendId) ??
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, nameof(friend)));
 
-			updateUser.Friends.Add(updatefriendUser);
-
-			return (await this._userService.UpdateUser(updateUser))
-				.Friends.Any(x => x.Id == friendId);
+			bool addedToUser = user.Friends.Add(friend) && await this._friendRepository.EditAsync(userId, user);
+			bool addedToFriend = friend.Friends.Add(user) && await this._friendRepository.EditAsync(friendId, friend);
+			return addedToUser && addedToFriend;
 		}
 
 		public async Task<bool> RemoveFriend(Guid userId, Guid friendId)
 		{
-			UserServiceModel user = await this._userService.GetUserById(userId);
-			UserServiceModel friendUser = await this._userService.GetUserById(friendId);
+			User user = await this._friendRepository.GetByIdAsync(userId) ??
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, nameof(user)));
 
-			UpdateUserServiceModel updateUser = this._userMapper.Map<UpdateUserServiceModel>(user);
-			UpdateFriendServiceModel updatefriendUser = this._userMapper.Map<UpdateFriendServiceModel>(friendUser);
+			User friend = await this._friendRepository.GetByIdAsync(friendId) ??
+				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, nameof(friend)));
 
-			updateUser.Friends.Remove(updatefriendUser);
-
-			return !(await this._userService.UpdateUser(updateUser))
-				.Friends.Any(x => x.Id == friendId);
+			bool addedToUser = user.Friends.Remove(friend) && await this._friendRepository.EditAsync(userId, user);
+			bool addedToFriend = friend.Friends.Remove(user) && await this._friendRepository.EditAsync(friendId, friend);
+			return addedToUser && addedToFriend;
 		}
 	}
 }
