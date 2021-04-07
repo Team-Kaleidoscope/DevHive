@@ -23,6 +23,9 @@ namespace DevHive.Services.Configurations.Mapping
 			CreateMap<User, UpdateUserServiceModel>()
 				.ForMember(dest => dest.ProfilePictureURL, src => src.MapFrom(p => p.ProfilePicture.PictureURL));
 			CreateMap<User, FriendServiceModel>();
+
+			CreateMap<UserServiceModel, UpdateUserServiceModel>();
+			CreateMap<UserServiceModel, UpdateFriendServiceModel>();
 		}
 	}
 }

@@ -5,7 +5,7 @@ namespace DevHive.Services.Interfaces
 {
 	public interface IFriendsService
 	{
-		Task<object> AddFriend(Guid userId, Guid friendId);
-		Task<object> RemoveFriend(Guid userId, Guid friendId);
+		Task<bool> AddFriend(Guid userId, Guid friendId);
+		Task<bool> RemoveFriend(Guid userId, Guid friendId);
 	}
 }

@@ -34,7 +34,9 @@ namespace DevHive.Web.Controllers
 			if (!this._jwtService.ValidateToken(userId, authorization))
 				return new UnauthorizedResult();
 
-			return null;
+			return (await this._friendsService.AddFriend(userId, friendId)) ?
+				new OkResult() :
+				new BadRequestResult();
 		}
 
 		[HttpDelete]
@@ -44,7 +46,9 @@ namespace DevHive.Web.Controllers
 			if (!this._jwtService.ValidateToken(userId, authorization))
 				return new UnauthorizedResult();
 
-			return null;
+			return (await this._friendsService.RemoveFriend(userId, friendId)) ?
+				new OkResult() :
+				new BadRequestResult();
 		}
 	}
 }
