@@ -34,6 +34,7 @@ namespace DevHive.Web
 			services.SwaggerConfiguration();
 			services.JWTConfiguration(Configuration);
 			services.AutoMapperConfiguration();
+			services.ConfigureExceptionHandler(this.Configuration);
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
