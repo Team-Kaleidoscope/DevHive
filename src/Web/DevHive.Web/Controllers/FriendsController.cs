@@ -29,24 +29,24 @@ namespace DevHive.Web.Controllers
 
 		[HttpPost]
 		[Authorize(Roles = "User,Admin")]
-		public async Task<IActionResult> AddFriend(Guid userId, Guid friendId, [FromHeader] string authorization)
+		public async Task<IActionResult> AddFriend(Guid userId, string friendUsername, [FromHeader] string authorization)
 		{
 			if (!this._jwtService.ValidateToken(userId, authorization))
 				return new UnauthorizedResult();
 
-			return (await this._friendsService.AddFriend(userId, friendId)) ?
+			return (await this._friendsService.AddFriend(userId, friendUsername)) ?
 				new OkResult() :
 				new BadRequestResult();
 		}
 
 		[HttpDelete]
 		[Authorize(Roles = "User,Admin")]
-		public async Task<IActionResult> RemoveFriend(Guid userId, Guid friendId, [FromHeader] string authorization)
+		public async Task<IActionResult> RemoveFriend(Guid userId, string friendUsername, [FromHeader] string authorization)
 		{
 			if (!this._jwtService.ValidateToken(userId, authorization))
 				return new UnauthorizedResult();
 
-			return (await this._friendsService.RemoveFriend(userId, friendId)) ?
+			return (await this._friendsService.RemoveFriend(userId, friendUsername)) ?
 				new OkResult() :
 				new BadRequestResult();
 		}

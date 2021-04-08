@@ -16,29 +16,29 @@ namespace DevHive.Services.Services
 			this._friendRepository = friendRepository;
 		}
 
-		public async Task<bool> AddFriend(Guid userId, Guid friendId)
+		public async Task<bool> AddFriend(Guid userId, string friendUsername)
 		{
 			User user = await this._friendRepository.GetByIdAsync(userId) ??
 				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, nameof(user)));
 
-			User friend = await this._friendRepository.GetByIdAsync(friendId) ??
+			User friend = await this._friendRepository.GetByUsernameAsync(friendUsername) ??
 				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, nameof(friend)));
 
 			bool addedToUser = user.Friends.Add(friend) && await this._friendRepository.EditAsync(userId, user);
-			bool addedToFriend = friend.Friends.Add(user) && await this._friendRepository.EditAsync(friendId, friend);
+			bool addedToFriend = friend.Friends.Add(user) && await this._friendRepository.EditAsync(friend.Id, friend);
 			return addedToUser && addedToFriend;
 		}
 
-		public async Task<bool> RemoveFriend(Guid userId, Guid friendId)
+		public async Task<bool> RemoveFriend(Guid userId, string friendUsername)
 		{
 			User user = await this._friendRepository.GetByIdAsync(userId) ??
 				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, nameof(user)));
 
-			User friend = await this._friendRepository.GetByIdAsync(friendId) ??
+			User friend = await this._friendRepository.GetByUsernameAsync(friendUsername) ??
 				throw new ArgumentNullException(string.Format(ErrorMessages.DoesNotExist, nameof(friend)));
 
 			bool addedToUser = user.Friends.Remove(friend) && await this._friendRepository.EditAsync(userId, user);
-			bool addedToFriend = friend.Friends.Remove(user) && await this._friendRepository.EditAsync(friendId, friend);
+			bool addedToFriend = friend.Friends.Remove(user) && await this._friendRepository.EditAsync(friend.Id, friend);
 			return addedToUser && addedToFriend;
 		}
 	}
