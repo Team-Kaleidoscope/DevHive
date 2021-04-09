@@ -23,7 +23,7 @@ namespace DevHive.Data.Tests
 				.UseInMemoryDatabase(databaseName: "DevHive_Test_Database");
 
 			this._context = new DevHiveContext(optionsBuilder.Options);
-			this._ratingRepository = new RatingRepository(this._context, null);
+			this._ratingRepository = new RatingRepository(this._context);
 		}
 
 		[TearDown]
