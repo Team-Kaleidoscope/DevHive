@@ -48,7 +48,7 @@ After installing all of the tools and setting up the database, you should have a
 3. Run `dotnet run`
    - feel free to [run the command in background](https://linuxize.com/post/how-to-run-linux-commands-in-background/) or [create a systemd service](https://medium.com/@benmorel/creating-a-linux-service-with-systemd-611b5c8b91d6)
 
-If everything went well, you can now access the API on `http://localhost:5000/api` with something like [Postman](https://www.postman.com/) or the FOSS alternative [Insomnia Designer](https://github.com/Kong/insomnia). On where to send requests, refer to the [API Endpoints](https://github.com/Team-Kaleidoscope/DevHive/wiki/API-Endpoints) page in the Wiki.
+If everything went well, you can now access the API on `http://localhost:5000/api` with something like [Postman](https://www.postman.com/) or the FOSS alternative [Insomnia Designer](https://github.com/Kong/insomnia). On where to send requests, refer to the "API-Endpoints" page in docs.
 
 ### Important notes
 
