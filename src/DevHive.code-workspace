@@ -1,29 +1,21 @@
 {
 	"folders": [
 		{
-			"name": "DevHive.Web",
-			"path": "./DevHive.Web"
+			"name": "Web",
+			"path": "./Web"
 		},
 		{
-			"name": "DevHive.Services",
-			"path": "./DevHive.Services"
+			"name": "Services",
+			"path": "./Services"
 		},
 		{
-			"name": "DevHive.Data",
-			"path": "./DevHive.Data"
+			"name": "Data",
+			"path": "./Data"
 		},
 		{
-			"name": "DevHive.Common",
-			"path": "./DevHive.Common"
-		},
-		{
-			"name": "DevHive.Tests",
-			"path": "./DevHive.Tests"
-		},
-		{
-			"name": "DevHive.Angular",
-			"path": "./DevHive.Angular"
-		},
+			"name": "Common",
+			"path": "./Common"
+		}
 	],
 	"settings": {
 		"files.exclude": {
@@ -31,17 +23,14 @@
 			"**/bin": true,
 
 			"**/obj": true,
-			".gitignore" : true,
-
-			"**/node_modules" : true,
-			"e2e" : true,
+			".gitignore": true
 		},
 		"code-runner.fileDirectoryAsCwd": true,
 		"dotnet-test-explorer.runInParallel": true,
 		"dotnet-test-explorer.testProjectPath": "**/*.Tests.csproj",
 		"omnisharp.enableEditorConfigSupport": true,
 		"omnisharp.enableRoslynAnalyzers": true,
-		"prettier.useEditorConfig": true,
+		"prettier.useEditorConfig": true
 	},
 	"launch": {
 		"configurations": [
@@ -50,25 +39,25 @@
 				"type": "coreclr",
 				"request": "launch",
 				"preLaunchTask": "workspace-build",
-				"program": "${workspaceFolder:DevHive.Web}/bin/Debug/net5.0/DevHive.Web.dll",
+				"program": "${workspaceFolder:Web}/DevHive.Web/bin/Debug/net5.0/DevHive.Web.dll",
 				"args": [],
-				"cwd": "${workspaceFolder:DevHive.Web}",
+				"cwd": "${workspaceFolder:Web}/DevHive.Web",
 				"stopAtEntry": false,
 				"env": {
 					"ASPNETCORE_ENVIRONMENT": "Development"
-				},
-			},
-			{
-				"name": "Launch Data Tests",
-				"type": "coreclr",
-				"request": "launch",
-				"preLaunchTask": "workspace-build",
-				"program": "${workspaceFolder:DevHive.Tests}/DevHive.Data.Tests/bin/Debug/net5.0/DevHive.Data.Tests.dll",
-				"args": [],
-				"cwd": "${workspaceFolder:DevHive.Tests}/DevHive.Data.Tests",
-				"console": "internalConsole",
-				"stopAtEntry": false
-			},
+				}
+			}
+			// {
+			// 	"name": "Launch Data Tests",
+			// 	"type": "coreclr",
+			// 	"request": "launch",
+			// 	"preLaunchTask": "workspace-build",
+			// 	"program": "${workspaceFolder:DevHive.Tests}/DevHive.Data.Tests/bin/Debug/net5.0/DevHive.Data.Tests.dll",
+			// 	"args": [],
+			// 	"cwd": "${workspaceFolder:DevHive.Tests}/DevHive.Data.Tests",
+			// 	"console": "internalConsole",
+			// 	"stopAtEntry": false
+			// },
 		],
 		"compounds": []
 	},
@@ -79,6 +68,9 @@
 				"label": "workspace-build",
 				"command": "dotnet",
 				"type": "shell",
+				"options": {
+					"cwd": "${workspaceFolder:Web}/DevHive.Web"
+				},
 				"args": [
 					"build",
 					"/property:GenerateFullPaths=true",
@@ -97,11 +89,8 @@
 	},
 	"extensions": {
 		"recommendations": [
-			"esbenp.prettier-vscode"
+			"esbenp.prettier-vscode",
+			"editorconfig.editorconfig"
 		]
-	},
-	"recommendations": [
-		"esbenp.prettier-vscode",
-		"editorconfig.editorconfig"
-	]
+	}
 }
