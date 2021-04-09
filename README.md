@@ -12,7 +12,6 @@ In the `docs` folder you can find relevenat information and documentation about 
   - [Getting started with the database](#getting-started-with-the-database)
   - [Starting up](#starting-up)
   - [Important notes](#important-notes)
-- [Screenshots](#screenshots)
 
 ## Setting up locally
 
