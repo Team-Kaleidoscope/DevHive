@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace DevHive.Data.Tests
 {
-    [TestFixture]
+	[TestFixture]
 	public class RatingRepositoryTests
 	{
 		private DevHiveContext _context;

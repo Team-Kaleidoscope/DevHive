@@ -124,7 +124,8 @@ namespace DevHive.Services.Tests
 			Post post = new Post
 			{
 				Message = MESSAGE,
-				Creator = creator
+				Creator = creator,
+				Ratings = new List<Rating>()
 			};
 			ReadPostServiceModel readPostServiceModel = new ReadPostServiceModel
 			{

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DevHive.Data.Models;
@@ -56,6 +57,20 @@ namespace DevHive.Data.Tests
 		}
 		#endregion
 
+		#region GetLanguages
+		[Test]
+		public async Task GetLanguages_ReturnsAllLanguages()
+		{
+			await this.AddEntity();
+			await this.AddEntity("secondLanguage");
+			await this.AddEntity("thirdLanguage");
+
+			HashSet<Language> languages = this._languageRepository.GetLanguages();
+
+			Assert.GreaterOrEqual(languages.Count, 3, "GetLanguages does not get all Languages");
+		}
+		#endregion
+
 		#region DoesLanguageExistAsync
 		[Test]
 		public async Task DoesLanguageExist_ReturnsTrue_IfIdExists()
@@ -106,10 +121,12 @@ namespace DevHive.Data.Tests
 		{
 			Language language = new()
 			{
+				Id = Guid.NewGuid(),
 				Name = name
 			};
 
-			await this._languageRepository.AddAsync(language);
+			await this._context.Languages.AddAsync(language);
+			await this._context.SaveChangesAsync();
 		}
 		#endregion
 	}
